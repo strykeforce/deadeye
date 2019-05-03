@@ -1,0 +1,3 @@
+[submodule "vendor/tinyfsm"]
+	path = vendor/tinyfsm
+	url = https://github.com/digint/tinyfsm.git
