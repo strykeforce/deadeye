@@ -9,6 +9,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(spdlog REQUIRED)
+find_package(ntcore REQUIRED)
+find_package(Threads REQUIRED) # required for ntcore
 
 add_subdirectory(vendor)
 add_subdirectory(src)
