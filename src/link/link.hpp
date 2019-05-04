@@ -10,9 +10,9 @@ struct Command {
 
 class Link {
  public:
-  virtual void init(){};
-  virtual bool poll() = 0;
-  Command get() { return command; }
+  virtual void Init(){};
+  virtual bool Poll() = 0;
+  Command Get() { return command; }
   operator Command() { return command; };
 
  protected:
