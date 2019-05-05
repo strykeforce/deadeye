@@ -1,5 +1,4 @@
 add_executable(deadeye
-    link/nt_link.cpp
     controller.cpp
     main.cpp
 )
