@@ -16,7 +16,7 @@ class Controller {
 
   static spdlog::level::level_enum Nt2spdlogLevel(const nt::LogMessage& msg);
   void StartNetworkTables();
-  void SetDefaults();
+  void SetNetworkTablesDefaults();
   void StartPoller();
 };
 }  // namespace deadeye

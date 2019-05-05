@@ -36,7 +36,7 @@ Controller::Controller() {
   std::signal(SIGTERM, signal_handler);
 
   StartNetworkTables();
-  SetDefaults();
+  SetNetworkTablesDefaults();
   StartPoller();
 }
 
@@ -118,9 +118,9 @@ void Controller::StartPoller() {
 }
 
 /**
- * SetDefaults sets up default values in network tables.
+ * SetNetworkTablesDefaults sets up default values in network tables.
  */
-void Controller::SetDefaults() {
+void Controller::SetNetworkTablesDefaults() {
   auto nti = nt::NetworkTableInstance(inst);
   auto table = nti.GetTable(kControlTable);
   log::debug("Deadeye table path = {}", table->GetPath().str());
