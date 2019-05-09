@@ -8,4 +8,5 @@ target_link_libraries(deadeye
     ntcore
     spdlog::spdlog
     tinyfsm
+    hedley
 )
