@@ -63,8 +63,8 @@ int Controller::Run() {
 
     // check for signal or network tables error condition
     if (HEDLEY_UNLIKELY(quit.load())) {
-      fsm::dispatch(CameraOff());
       spdlog::debug("Controller recieved shutdown signal");
+      fsm::dispatch(CameraOff());  // all off
       return EXIT_SUCCESS;
     }
     if (HEDLEY_UNLIKELY(!timed_out && entries.empty())) {
@@ -77,12 +77,24 @@ int Controller::Run() {
     for (const auto& entry : entries) {
       switch (hash(entry.name.c_str())) {
         case hash(DE_CAMERA0_CONTROL(DE_ENABLED)):
-          if (entry.value->GetBoolean())
-            fsm::dispatch(CameraOn());
-          else
-            fsm::dispatch(CameraOff());
+          if (entry.value->GetBoolean()) {
+            Camera<0>::dispatch(CameraOn());
+          } else
+            Camera<0>::dispatch(CameraOff());
+          break;
+        case hash(DE_CAMERA1_CONTROL(DE_ENABLED)):
+          if (entry.value->GetBoolean()) {
+            Camera<1>::dispatch(CameraOn());
+          } else
+            Camera<1>::dispatch(CameraOff());
           break;
         case hash(DE_CAMERA0_CONTROL(DE_LIGHTS)):
+          if (entry.value->GetBoolean())
+            fsm::dispatch(LightsOn());
+          else
+            fsm::dispatch(LightsOff());
+          break;
+        case hash(DE_CAMERA1_CONTROL(DE_LIGHTS)):
           if (entry.value->GetBoolean())
             fsm::dispatch(LightsOn());
           else
@@ -138,15 +150,18 @@ void Controller::StartPoller() {
       poller, DE_CONTROL_TABLE, NT_NOTIFY_IMMEDIATE | NT_NOTIFY_UPDATE);
 }
 
+static void SetCameraControlTableDefaults(std::shared_ptr<NetworkTable> table) {
+  table->SetDefaultBoolean(DE_ENABLED, false);
+  table->SetDefaultBoolean(DE_LIGHTS, false);
+  spdlog::debug("Setting default values for {}", table->GetPath().str());
+}
 /**
  * SetNetworkTablesDefaults sets up default values in network tables.
  */
 void Controller::SetNetworkTablesDefaults() {
   auto nti = nt::NetworkTableInstance(inst);
-  auto table = nti.GetTable(DE_CAMERA0_CONTROL_TABLE);
-  spdlog::debug("Setting default values for {}", table->GetPath().str());
-  table->SetDefaultBoolean(DE_ENABLED, false);
-  table->SetDefaultBoolean(DE_LIGHTS, false);
+  SetCameraControlTableDefaults(nti.GetTable(DE_CAMERA0_CONTROL_TABLE));
+  SetCameraControlTableDefaults(nti.GetTable(DE_CAMERA1_CONTROL_TABLE));
 }
 
 /**

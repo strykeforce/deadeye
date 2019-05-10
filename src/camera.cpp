@@ -2,6 +2,7 @@
 #include <tinyfsm.hpp>
 #include "camera.hpp"
 #include "fsm.hpp"
+#include "lights.hpp"
 
 using namespace deadeye;
 
@@ -9,25 +10,33 @@ using namespace deadeye;
 // Camera states
 //
 namespace camera {
+template <int inum>
 class Off;
 
-class On : public Camera {
-  void entry() override { spdlog::info("Camera On"); }
+template <int inum>
+class On : public Camera<inum> {
+  using base = Camera<inum>;
+
+  void entry() override { spdlog::info("Camera<{}> On", inum); }
 
   void react(CameraOff const &) override {
     fsm::dispatch(LightsOff());
-    transit<camera::Off>();
+    base::template transit<camera::Off<inum>>();
   }
 };
 
-class Off : public Camera {
-  void entry() override { spdlog::info("Camera Off"); }
+template <int inum>
+class Off : public Camera<inum> {
+  using base = Camera<inum>;
+
+  void entry() override { spdlog::info("Camera<{}> Off", inum); }
 
   void react(CameraOn const &) override {
     fsm::dispatch(LightsOn());
-    transit<camera::On>();
+    Camera<inum>::template transit<camera::On<inum>>();
   }
 };
 }  // namespace camera
 
-FSM_INITIAL_STATE(Camera, camera::Off);
+FSM_INITIAL_STATE(Camera<0>, camera::Off<0>);
+FSM_INITIAL_STATE(Camera<1>, camera::Off<1>);

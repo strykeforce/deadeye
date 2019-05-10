@@ -9,7 +9,5 @@ using namespace deadeye;
 int main(int argc, char** argv) {
   spdlog::set_level(spdlog::level::debug);
   spdlog::info("Deadeye starting");
-
-  auto controller = Controller::GetInstance();
-  return controller.Run();
+  return Controller::GetInstance().Run();
 }

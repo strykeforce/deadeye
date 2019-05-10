@@ -10,6 +10,8 @@ class Controller {
     return instance;
   }
 
+  Controller(const Controller&) = delete;
+  Controller& operator=(const Controller&) = delete;
   ~Controller();
   int Run();
   void EnableLights(bool enabled);

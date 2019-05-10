@@ -7,13 +7,15 @@ namespace deadeye {
 // Events
 //
 struct CameraOn : tinyfsm::Event {};
+
 struct CameraOff : tinyfsm::Event {};
 
 // ---------------------------------------------------------------------------
 // Camera FSM
 //
-class Camera : public tinyfsm::Fsm<Camera> {
-  friend class tinyfsm::Fsm<Camera>;
+template <int inum>
+class Camera : public tinyfsm::Fsm<Camera<inum>> {
+  friend class tinyfsm::Fsm<Camera<inum>>;
 
  private:
   // default reaction for unhandled events

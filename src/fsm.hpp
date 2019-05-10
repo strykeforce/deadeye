@@ -5,7 +5,7 @@
 #include "lights.hpp"
 
 namespace deadeye {
-using fsm = tinyfsm::FsmList<Camera, Lights>;
+using fsm = tinyfsm::FsmList<Camera<0>, Camera<1>, Lights>;
 
 template <typename E>
 void SendEvent(E const& event) {
