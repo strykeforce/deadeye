@@ -1,4 +1,6 @@
 add_executable(deadeye
+    camera.cpp
+    lights.cpp
     controller.cpp
     main.cpp
 )

@@ -5,12 +5,11 @@
 #include "controller.hpp"
 
 using namespace deadeye;
-namespace log = spdlog;
 
 int main(int argc, char** argv) {
-  log::set_level(log::level::debug);
-  log::info("Deadeye starting");
+  spdlog::set_level(spdlog::level::debug);
+  spdlog::info("Deadeye starting");
 
-  Controller controller;
+  auto controller = Controller::GetInstance();
   return controller.Run();
 }
