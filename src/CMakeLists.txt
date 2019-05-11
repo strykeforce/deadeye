@@ -8,6 +8,7 @@ add_executable(deadeye
 target_link_libraries(deadeye
     PRIVATE
     ntcore
+    cscore
     spdlog::spdlog
     tinyfsm
     hedley

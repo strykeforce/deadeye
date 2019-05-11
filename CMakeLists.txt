@@ -10,6 +10,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(spdlog REQUIRED)
 find_package(ntcore REQUIRED)
+find_package(cscore REQUIRED)
 find_package(Threads REQUIRED) # required for ntcore
 
 add_subdirectory(vendor)
