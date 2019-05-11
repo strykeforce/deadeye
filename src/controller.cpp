@@ -3,11 +3,8 @@
 #include <networktables/NetworkTableValue.h>
 #include <spdlog/spdlog.h>
 #include <atomic>
-#include <cassert>
-#include <chrono>
 #include <csignal>
 #include <cstdlib>
-#include <thread>
 #include "camera.hpp"
 #include "controller.hpp"
 #include "events.hpp"
@@ -50,7 +47,7 @@ Controller::Controller() {
  * Destructor for Controller.
  */
 Controller::~Controller() {
-  nt::DestroyEntryListenerPoller(poller);
+  nt::DestroyEntryListenerPoller(poller_);
   spdlog::info("Deadeye Controller exiting.");
 }
 
@@ -61,7 +58,7 @@ int Controller::Run() {
   fsm::start();
 
   for (bool timed_out = false;;) {
-    auto entries = nt::PollEntryListener(poller, kPollTimeout, &timed_out);
+    auto entries = nt::PollEntryListener(poller_, kPollTimeout, &timed_out);
 
     // check for signal or network tables error condition
     if (HEDLEY_UNLIKELY(quit.load())) {
@@ -119,10 +116,10 @@ void Controller::SetCameraStatus(int inum, bool enabled) {
   NT_Entry entry;
   switch (inum) {
     case 0:
-      entry = nt::GetEntry(inst, DE_CAMERA_CONTROL("0", DE_ENABLED));
+      entry = nt::GetEntry(inst_, DE_CAMERA_CONTROL("0", DE_ENABLED));
       break;
     case 1:
-      entry = nt::GetEntry(inst, DE_CAMERA_CONTROL("1", DE_ENABLED));
+      entry = nt::GetEntry(inst_, DE_CAMERA_CONTROL("1", DE_ENABLED));
       break;
     default:
       spdlog::error("Unrecognized Camera<{}> in {}, line {}", inum, __FILE__,
@@ -140,10 +137,10 @@ void Controller::SetLightsStatus(int inum, bool enabled) {
   NT_Entry entry;
   switch (inum) {
     case 0:
-      entry = nt::GetEntry(inst, DE_CAMERA_CONTROL("0", DE_LIGHTS));
+      entry = nt::GetEntry(inst_, DE_CAMERA_CONTROL("0", DE_LIGHTS));
       break;
     case 1:
-      entry = nt::GetEntry(inst, DE_CAMERA_CONTROL("1", DE_LIGHTS));
+      entry = nt::GetEntry(inst_, DE_CAMERA_CONTROL("1", DE_LIGHTS));
       break;
     default:
       spdlog::error("Unrecognized Lights<{}> in {}, line {}", inum, __FILE__,
@@ -157,10 +154,10 @@ void Controller::SetLightsStatus(int inum, bool enabled) {
  * StartNetworkTables starts network tables in client or server mode.
  */
 void Controller::StartNetworkTables() {
-  inst = nt::GetDefaultInstance();
+  inst_ = nt::GetDefaultInstance();
 
   nt::AddLogger(
-      inst,
+      inst_,
       [](const nt::LogMessage& msg) {
         spdlog::log(Nt2spdlogLevel(msg), msg.message);
       },
@@ -168,11 +165,11 @@ void Controller::StartNetworkTables() {
 
   if (std::getenv("DEADEYE_NT_SERVER")) {
     spdlog::info("Starting NetworkTables server");
-    nt::StartServer(inst, "persistent.ini", "", NT_DEFAULT_PORT);
+    nt::StartServer(inst_, "persistent.ini", "", NT_DEFAULT_PORT);
   } else {
     spdlog::info("Starting NetworkTables client connecting to {}",
                  kNTServerAddress);
-    nt::StartClient(inst, kNTServerAddress.data(), NT_DEFAULT_PORT);
+    nt::StartClient(inst_, kNTServerAddress.data(), NT_DEFAULT_PORT);
   }
 }
 
@@ -180,9 +177,9 @@ void Controller::StartNetworkTables() {
  * StartPoller sets up polling for command and config events.
  */
 void Controller::StartPoller() {
-  poller = nt::CreateEntryListenerPoller(inst);
-  entry_listener = nt::AddPolledEntryListener(
-      poller, DE_CONTROL_TABLE, NT_NOTIFY_IMMEDIATE | NT_NOTIFY_UPDATE);
+  poller_ = nt::CreateEntryListenerPoller(inst_);
+  entry_listener_ = nt::AddPolledEntryListener(
+      poller_, DE_CONTROL_TABLE, NT_NOTIFY_IMMEDIATE | NT_NOTIFY_UPDATE);
 }
 
 static void SetCameraControlTableDefaults(std::shared_ptr<NetworkTable> table) {
@@ -194,7 +191,7 @@ static void SetCameraControlTableDefaults(std::shared_ptr<NetworkTable> table) {
  * SetNetworkTablesDefaults sets up default values in network tables.
  */
 void Controller::SetNetworkTablesDefaults() {
-  auto nti = nt::NetworkTableInstance(inst);
+  auto nti = nt::NetworkTableInstance(inst_);
   SetCameraControlTableDefaults(nti.GetTable(DE_CAMERA_CONTROL_TABLE("0")));
   SetCameraControlTableDefaults(nti.GetTable(DE_CAMERA_CONTROL_TABLE("1")));
 }

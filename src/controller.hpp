@@ -24,8 +24,8 @@ class Controller {
   void StartPoller();
   static spdlog::level::level_enum Nt2spdlogLevel(const nt::LogMessage& msg);
 
-  NT_Inst inst;
-  NT_EntryListenerPoller poller;
-  NT_EntryListener entry_listener;
+  NT_Inst inst_;
+  NT_EntryListenerPoller poller_;
+  NT_EntryListener entry_listener_;
 };
 }  // namespace deadeye
