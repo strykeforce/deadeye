@@ -1,5 +1,6 @@
 add_executable(deadeye
     camera.cpp
+    pipeline.cpp
     lights.cpp
     controller.cpp
     main.cpp

@@ -1,5 +1,4 @@
 #include <spdlog/spdlog.h>
-#include <chrono>
 #include <sstream>
 #include <string>
 #include <thread>
@@ -7,6 +6,7 @@
 #include "camera.hpp"
 #include "fsm.hpp"
 #include "lights.hpp"
+#include "pipeline.hpp"
 
 using namespace std::chrono_literals;
 
@@ -23,21 +23,9 @@ class On : public Camera<inum> {
   using base = Camera<inum>;
 
   void entry() override {
-    base::quit_.store(false);
-    base::pipeline_thread_ = std::make_unique<std::thread>([] {
-      while (true) {
-        std::stringstream ss;
-        ss << std::this_thread::get_id();
-
-        if (base::quit_.load()) {
-          spdlog::info("Camera<{}> ({}) stopping", inum, ss.str());
-          break;
-        }
-
-        spdlog::info("Camera<{}> ({}) on", inum, ss.str());
-        std::this_thread::sleep_for(2s);
-      }
-    });
+    base::pipeline_thread_ =
+        std::make_unique<std::thread>([] { base::pipeline_.Run(); });
+    spdlog::info("Camera<{}> on", inum);
   }
 
   void react(CameraOff const &) override {
@@ -58,9 +46,10 @@ class Off : public Camera<inum> {
   using base = Camera<inum>;
 
   void entry() override {
-    base::quit_.store(true);
-    if (base::pipeline_thread_ && base::pipeline_thread_->joinable())
+    base::pipeline_.Quit();
+    if (base::pipeline_thread_ && base::pipeline_thread_->joinable()) {
       base::pipeline_thread_->join();
+    }
     spdlog::info("Camera<{}> off", inum);
   }
 

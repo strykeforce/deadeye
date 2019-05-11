@@ -9,6 +9,7 @@
 #include "events.hpp"
 #include "fmt/format.h"
 #include "lights.hpp"
+#include "pipeline.hpp"
 
 namespace deadeye {
 
@@ -41,7 +42,7 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
 
  protected:
   static std::unique_ptr<std::thread> pipeline_thread_;
-  static std::atomic<bool> quit_;
+  static Pipeline pipeline_;
 };
 
 // state variable definitions
@@ -49,7 +50,7 @@ template <int inum>
 std::unique_ptr<std::thread> Camera<inum>::pipeline_thread_{};
 
 template <int inum>
-std::atomic<bool> Camera<inum>::quit_{false};
+Pipeline Camera<inum>::pipeline_{inum};
 
 }  // namespace deadeye
 
