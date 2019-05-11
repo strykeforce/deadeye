@@ -4,39 +4,43 @@
 #include "fsm.hpp"
 #include "lights.hpp"
 
-using namespace deadeye;
-
-// ---------------------------------------------------------------------------
-// Camera states
-//
+namespace deadeye {
 namespace camera {
 template <int inum>
-class Off;
+class Off;  // forward declaration
 
+// ---------------------------------------------------------------------------
+// Camera State: On
+//
 template <int inum>
 class On : public Camera<inum> {
-  using base = Camera<inum>;
-
   void entry() override { spdlog::info("Camera<{}> On", inum); }
 
   void react(CameraOff const &) override {
-    fsm::dispatch(LightsOff());
-    base::template transit<camera::Off<inum>>();
+    Lights<inum>::dispatch(LightsOff());
+    Camera<inum>::template transit<camera::Off<inum>>();
+  }
+
+  void react(ShutDown const &) override {
+    Camera<inum>::template transit<camera::Off<inum>>();
   }
 };
 
+// ---------------------------------------------------------------------------
+// Camera State: Off
+//
 template <int inum>
 class Off : public Camera<inum> {
-  using base = Camera<inum>;
-
   void entry() override { spdlog::info("Camera<{}> Off", inum); }
 
   void react(CameraOn const &) override {
-    fsm::dispatch(LightsOn());
+    Lights<inum>::dispatch(LightsOn());
     Camera<inum>::template transit<camera::On<inum>>();
   }
 };
 }  // namespace camera
 
-FSM_INITIAL_STATE(Camera<0>, camera::Off<0>);
-FSM_INITIAL_STATE(Camera<1>, camera::Off<1>);
+}  // namespace deadeye
+
+FSM_INITIAL_STATE(deadeye::Camera<0>, deadeye::camera::Off<0>);
+FSM_INITIAL_STATE(deadeye::Camera<1>, deadeye::camera::Off<1>);

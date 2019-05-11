@@ -14,7 +14,8 @@ class Controller {
   Controller& operator=(const Controller&) = delete;
   ~Controller();
   int Run();
-  void EnableLights(bool enabled);
+  void SetCameraStatus(int inum, bool enabled);
+  void SetLightsStatus(int inum, bool enabled);
 
  private:
   Controller();

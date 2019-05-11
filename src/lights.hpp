@@ -1,6 +1,7 @@
 #pragma once
 
 #include <tinyfsm.hpp>
+#include "events.hpp"
 
 namespace deadeye {
 // ---------------------------------------------------------------------------
@@ -12,8 +13,9 @@ struct LightsOff : tinyfsm::Event {};
 // ---------------------------------------------------------------------------
 // Lights FSM
 //
-class Lights : public tinyfsm::Fsm<Lights> {
-  friend class tinyfsm::Fsm<Lights>;
+template <int inum>
+class Lights : public tinyfsm::Fsm<Lights<inum>> {
+  friend class tinyfsm::Fsm<Lights<inum>>;
 
  private:
   // default reaction for unhandled events
@@ -21,6 +23,7 @@ class Lights : public tinyfsm::Fsm<Lights> {
 
   virtual void react(LightsOn const &) {}
   virtual void react(LightsOff const &) {}
+  virtual void react(ShutDown const &) {}
 
   virtual void entry() = 0;
   void exit() {}

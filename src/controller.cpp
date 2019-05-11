@@ -3,12 +3,14 @@
 #include <networktables/NetworkTableValue.h>
 #include <spdlog/spdlog.h>
 #include <atomic>
+#include <cassert>
 #include <chrono>
 #include <csignal>
 #include <cstdlib>
 #include <thread>
 #include "camera.hpp"
 #include "controller.hpp"
+#include "events.hpp"
 #include "fsm.hpp"
 #include "lights.hpp"
 #include "nt_constants.hpp"
@@ -64,7 +66,7 @@ int Controller::Run() {
     // check for signal or network tables error condition
     if (HEDLEY_UNLIKELY(quit.load())) {
       spdlog::debug("Controller recieved shutdown signal");
-      fsm::dispatch(CameraOff());  // all off
+      fsm::dispatch(ShutDown());  // all off
       return EXIT_SUCCESS;
     }
     if (HEDLEY_UNLIKELY(!timed_out && entries.empty())) {
@@ -76,29 +78,29 @@ int Controller::Run() {
     // issue FSM events from network tables entry update notifications
     for (const auto& entry : entries) {
       switch (hash(entry.name.c_str())) {
-        case hash(DE_CAMERA0_CONTROL(DE_ENABLED)):
+        case hash(DE_CAMERA_CONTROL("0", DE_ENABLED)):
           if (entry.value->GetBoolean()) {
             Camera<0>::dispatch(CameraOn());
           } else
             Camera<0>::dispatch(CameraOff());
           break;
-        case hash(DE_CAMERA1_CONTROL(DE_ENABLED)):
+        case hash(DE_CAMERA_CONTROL("1", DE_ENABLED)):
           if (entry.value->GetBoolean()) {
             Camera<1>::dispatch(CameraOn());
           } else
             Camera<1>::dispatch(CameraOff());
           break;
-        case hash(DE_CAMERA0_CONTROL(DE_LIGHTS)):
+        case hash(DE_CAMERA_CONTROL("0", DE_LIGHTS)):
           if (entry.value->GetBoolean())
-            fsm::dispatch(LightsOn());
+            Lights<0>::dispatch(LightsOn());
           else
-            fsm::dispatch(LightsOff());
+            Lights<0>::dispatch(LightsOff());
           break;
-        case hash(DE_CAMERA1_CONTROL(DE_LIGHTS)):
+        case hash(DE_CAMERA_CONTROL("1", DE_LIGHTS)):
           if (entry.value->GetBoolean())
-            fsm::dispatch(LightsOn());
+            Lights<1>::dispatch(LightsOn());
           else
-            fsm::dispatch(LightsOff());
+            Lights<1>::dispatch(LightsOff());
           break;
         default:
           spdlog::debug("{} unrecognized", entry.name);
@@ -110,11 +112,44 @@ int Controller::Run() {
 }
 
 /**
- * EnableLights updates network tables with current state of lights.
+ * SetCameraStatus updates network tables with current state of lights.
  */
-void Controller::EnableLights(bool enabled) {
+void Controller::SetCameraStatus(int inum, bool enabled) {
   auto val = nt::Value::MakeBoolean(enabled);
-  auto entry = nt::GetEntry(inst, DE_CAMERA0_CONTROL(DE_LIGHTS));
+  NT_Entry entry;
+  switch (inum) {
+    case 0:
+      entry = nt::GetEntry(inst, DE_CAMERA_CONTROL("0", DE_ENABLED));
+      break;
+    case 1:
+      entry = nt::GetEntry(inst, DE_CAMERA_CONTROL("1", DE_ENABLED));
+      break;
+    default:
+      spdlog::error("Unrecognized Camera<{}> in {}, line {}", inum, __FILE__,
+                    __LINE__);
+      return;
+  }
+  nt::SetEntryValue(entry, val);
+}
+
+/**
+ * SetLightsStatus updates network tables with current state of lights.
+ */
+void Controller::SetLightsStatus(int inum, bool enabled) {
+  auto val = nt::Value::MakeBoolean(enabled);
+  NT_Entry entry;
+  switch (inum) {
+    case 0:
+      entry = nt::GetEntry(inst, DE_CAMERA_CONTROL("0", DE_LIGHTS));
+      break;
+    case 1:
+      entry = nt::GetEntry(inst, DE_CAMERA_CONTROL("1", DE_LIGHTS));
+      break;
+    default:
+      spdlog::error("Unrecognized Lights<{}> in {}, line {}", inum, __FILE__,
+                    __LINE__);
+      return;
+  }
   nt::SetEntryValue(entry, val);
 }
 
@@ -160,8 +195,8 @@ static void SetCameraControlTableDefaults(std::shared_ptr<NetworkTable> table) {
  */
 void Controller::SetNetworkTablesDefaults() {
   auto nti = nt::NetworkTableInstance(inst);
-  SetCameraControlTableDefaults(nti.GetTable(DE_CAMERA0_CONTROL_TABLE));
-  SetCameraControlTableDefaults(nti.GetTable(DE_CAMERA1_CONTROL_TABLE));
+  SetCameraControlTableDefaults(nti.GetTable(DE_CAMERA_CONTROL_TABLE("0")));
+  SetCameraControlTableDefaults(nti.GetTable(DE_CAMERA_CONTROL_TABLE("1")));
 }
 
 /**

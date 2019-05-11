@@ -9,23 +9,36 @@ using namespace deadeye;
 // Lights states
 //
 namespace lights {
+template <int inum>
 class Off;
 
-class On : public Lights {
+template <int inum>
+class On : public Lights<inum> {
   void entry() override {
-    Controller::GetInstance().EnableLights(true);
-    spdlog::info("Lights On");
+    Controller::GetInstance().SetLightsStatus(inum, true);
+    spdlog::info("Lights<{}> On", inum);
   }
-  void react(LightsOff const &) override { transit<lights::Off>(); }
+
+  void react(LightsOff const &) override {
+    Lights<inum>::template transit<lights::Off<inum>>();
+  }
+
+  void react(ShutDown const &) override {
+    Lights<inum>::template transit<lights::Off<inum>>();
+  }
 };
 
-class Off : public Lights {
+template <int inum>
+class Off : public Lights<inum> {
   void entry() override {
-    Controller::GetInstance().EnableLights(false);
-    spdlog::info("Lights Off");
+    Controller::GetInstance().SetLightsStatus(inum, false);
+    spdlog::info("Lights<{}> Off", inum);
   }
-  void react(LightsOn const &) override { transit<lights::On>(); }
+  void react(LightsOn const &) override {
+    Lights<inum>::template transit<lights::On<inum>>();
+  }
 };
 }  // namespace lights
 
-FSM_INITIAL_STATE(Lights, lights::Off);
+FSM_INITIAL_STATE(Lights<0>, lights::Off<0>);
+FSM_INITIAL_STATE(Lights<1>, lights::Off<1>);
