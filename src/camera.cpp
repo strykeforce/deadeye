@@ -2,6 +2,7 @@
 #include <thread>
 #include <tinyfsm.hpp>
 #include "camera.hpp"
+#include "controller.hpp"
 #include "fsm.hpp"
 #include "lights.hpp"
 #include "pipeline.hpp"
@@ -44,6 +45,7 @@ class Off : public Camera<inum> {
   using base = Camera<inum>;
 
   void entry() override {
+    Controller::GetInstance().SetCameraStatus(inum, false);
     base::pipeline_.Quit();
     if (base::pipeline_thread_ && base::pipeline_thread_->joinable()) {
       base::pipeline_thread_->join();

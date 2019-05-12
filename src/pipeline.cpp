@@ -8,8 +8,8 @@ using namespace deadeye;
 void Pipeline::Quit() { quit_.store(true); }
 
 void Pipeline::Run() {
-  spdlog::info("{} starting", *this);
   quit_.store(false);
+  spdlog::info("{} starting", *this);
 
   cs::CvSource cvsource{"cvsource", cs::VideoMode::kMJPEG, 320, 180, 30};
   cs::MjpegServer cvMjpegServer{"cvhttpserver", 8083};

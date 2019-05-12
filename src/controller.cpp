@@ -47,6 +47,7 @@ Controller::Controller() {
  * Destructor for Controller.
  */
 Controller::~Controller() {
+  nt::Flush(inst_);
   nt::DestroyEntryListenerPoller(poller_);
   spdlog::info("Deadeye Controller exiting.");
 }
