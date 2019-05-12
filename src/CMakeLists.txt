@@ -1,9 +1,9 @@
 add_executable(deadeye
-    camera.cpp
-    pipeline.cpp
-    lights.cpp
-    controller.cpp
     main.cpp
+    controller.cpp
+    camera.cpp
+    default_pipeline.cpp
+    lights.cpp
 )
 
 target_link_libraries(deadeye

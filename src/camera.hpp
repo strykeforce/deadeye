@@ -5,10 +5,10 @@
 #include <memory>
 #include <thread>
 #include <tinyfsm.hpp>
+#include "default_pipeline.hpp"
 #include "events.hpp"
 #include "fmt/format.h"
 #include "lights.hpp"
-#include "pipeline.hpp"
 
 namespace deadeye {
 
@@ -38,7 +38,7 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
 
  protected:
   static std::unique_ptr<std::thread> pipeline_thread_;
-  static Pipeline pipeline_;
+  static DefaultPipeline pipeline_;
 };
 
 // state variable definitions
@@ -46,7 +46,7 @@ template <int inum>
 std::unique_ptr<std::thread> Camera<inum>::pipeline_thread_{};
 
 template <int inum>
-Pipeline Camera<inum>::pipeline_{inum};
+DefaultPipeline Camera<inum>::pipeline_{inum};
 
 }  // namespace deadeye
 
@@ -60,7 +60,6 @@ struct fmt::formatter<deadeye::Camera<inum>> {
 
   template <typename FormatContext>
   auto format(const deadeye::Camera<inum> &c, FormatContext &ctx) {
-    return format_to(ctx.out(), "Camera<{}> {{ {} }}", inum,
-                     deadeye::Camera<inum>::pipeline_);
+    return format_to(ctx.out(), "Camera<{}>", inum);
   }
 };
