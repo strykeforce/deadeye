@@ -3,7 +3,6 @@
 #include <spdlog/spdlog.h>
 #include <atomic>
 #include <memory>
-#include <sstream>
 #include <thread>
 #include <tinyfsm.hpp>
 #include "events.hpp"
@@ -25,13 +24,10 @@ struct CameraOff : tinyfsm::Event {};
 template <int inum>
 class Camera : public tinyfsm::Fsm<Camera<inum>> {
   friend class tinyfsm::Fsm<Camera<inum>>;
-
-  //  Camera(const Camera &) = delete;
-  //  Camera &operator=(const Camera &) = delete;
+  friend fmt::formatter<Camera<inum>>;
 
  private:
-  // default reaction for unhandled events
-  void react(tinyfsm::Event const &) {}
+  void react(tinyfsm::Event const &) {}  // default
 
   virtual void react(CameraOn const &) {}
   virtual void react(CameraOff const &) {}
@@ -64,9 +60,7 @@ struct fmt::formatter<deadeye::Camera<inum>> {
 
   template <typename FormatContext>
   auto format(const deadeye::Camera<inum> &c, FormatContext &ctx) {
-    auto myid = std::this_thread::get_id();
-    std::stringstream ss;
-    ss << myid;
-    return format_to(ctx.out(), "Camera ({})", ss.str());
+    return format_to(ctx.out(), "Camera<{}> {{ {} }}", inum,
+                     deadeye::Camera<inum>::pipeline_);
   }
 };

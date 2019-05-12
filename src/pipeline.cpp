@@ -8,10 +8,7 @@ using namespace deadeye;
 void Pipeline::Quit() { quit_.store(true); }
 
 void Pipeline::Run() {
-  std::stringstream ss;
-  ss << std::this_thread::get_id();
-
-  spdlog::info("Pipeline<{}> ({}) starting", inum_, ss.str());
+  spdlog::info("{} starting", *this);
   quit_.store(false);
 
   cs::CvSource cvsource{"cvsource", cs::VideoMode::kMJPEG, 320, 180, 30};
@@ -20,18 +17,18 @@ void Pipeline::Run() {
 
   cv::Mat test;
   cv::Mat flip;
-  spdlog::info("Pipeline<{}> initializing camera", inum_);
+  spdlog::info("{} initializing camera", *this);
   cv::VideoCapture cap{0};
 
-  spdlog::debug("Pipeline<{}> checking camera is opened", inum_);
+  spdlog::debug("{} checking camera is opened", *this);
   if (!cap.isOpened()) {
-    spdlog::critical("Pipeline<{}> camera not opened", inum_);
+    spdlog::critical("{} camera not opened", *this);
     return;
   }
 
   while (true) {
     if (quit_.load()) {
-      spdlog::info("Pipeline<{}> ({}) stopping", inum_, ss.str());
+      spdlog::info("{} stopping", *this);
       return;
     }
 

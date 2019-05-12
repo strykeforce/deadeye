@@ -1,6 +1,4 @@
 #include <spdlog/spdlog.h>
-#include <sstream>
-#include <string>
 #include <thread>
 #include <tinyfsm.hpp>
 #include "camera.hpp"
@@ -25,7 +23,7 @@ class On : public Camera<inum> {
   void entry() override {
     base::pipeline_thread_ =
         std::make_unique<std::thread>([] { base::pipeline_.Run(); });
-    spdlog::info("Camera<{}> on", inum);
+    spdlog::info("{} on", static_cast<base &>(*this));
   }
 
   void react(CameraOff const &) override {
@@ -50,7 +48,7 @@ class Off : public Camera<inum> {
     if (base::pipeline_thread_ && base::pipeline_thread_->joinable()) {
       base::pipeline_thread_->join();
     }
-    spdlog::info("Camera<{}> off", inum);
+    spdlog::info("{} off", static_cast<base &>(*this));
   }
 
   void react(CameraOn const &) override {

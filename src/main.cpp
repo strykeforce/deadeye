@@ -1,13 +1,18 @@
 #include <spdlog/spdlog.h>
-#include <chrono>
-#include <csignal>
-#include <thread>
 #include "controller.hpp"
 
 using namespace deadeye;
 
-int main(int argc, char** argv) {
+namespace {
+void ConfigureLogging() {
   spdlog::set_level(spdlog::level::debug);
+  spdlog::set_pattern("[%H:%M:%S.%e] [%t] [%^%l%$]: %v");
+}
+}  // namespace
+
+int main(int argc, char** argv) {
+  ConfigureLogging();
   spdlog::info("Deadeye starting");
+
   return Controller::GetInstance().Run();
 }
