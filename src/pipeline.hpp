@@ -28,7 +28,7 @@ class Pipeline {
   Pipeline(int inum);
   virtual ~Pipeline() {}
 
-  void Quit() { quit_.store(true); }
+  void Quit() { quit_ = true; }
   void Run();
 
  protected:
@@ -74,7 +74,7 @@ Pipeline<t>::Pipeline(int inum) : inum_(inum) {
  */
 template <typename T>
 void Pipeline<T>::Run() {
-  quit_.store(false);
+  quit_ = false;
   spdlog::info("Pipeline<{}>: starting", inum_);
 
   cs::CvSource cvsource{"cvsource", cs::VideoMode::kMJPEG, 320, 180, 30};
