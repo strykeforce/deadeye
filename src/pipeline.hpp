@@ -1,6 +1,8 @@
 #pragma once
 #include <spdlog/spdlog.h>
+#include <wpi/Logger.h>
 #include <atomic>
+#include <map>
 #include <opencv2/core/mat.hpp>
 #include <opencv2/opencv.hpp>
 #include <vector>
@@ -9,13 +11,21 @@
 
 namespace deadeye {
 
+class PipelineException : public std::exception {
+  char const *what_;
+
+ public:
+  PipelineException(char const *what) : what_{what} {}
+  const char *what() const throw() { return what_; }
+};
+
 /**
  * Pipeline class definition.
  */
 template <typename T>
 class Pipeline {
  public:
-  Pipeline(int inum) : inum_(inum) {}
+  Pipeline(int inum);
   virtual ~Pipeline() {}
 
   void Quit() { quit_.store(true); }
@@ -37,6 +47,29 @@ class Pipeline {
 };
 
 /**
+ * constructor configures cscore logging.
+ */
+template <typename t>
+Pipeline<t>::Pipeline(int inum) : inum_(inum) {
+  using namespace wpi;
+  using namespace spdlog;
+  static std::map<unsigned int, level::level_enum> levels{
+      {WPI_LOG_DEBUG4, level::debug},     {WPI_LOG_DEBUG3, level::debug},
+      {WPI_LOG_DEBUG2, level::debug},     {WPI_LOG_DEBUG1, level::debug},
+      {WPI_LOG_DEBUG, level::debug},      {WPI_LOG_INFO, level::info},
+      {WPI_LOG_WARNING, level::warn},     {WPI_LOG_ERROR, level::err},
+      {WPI_LOG_CRITICAL, level::critical}};
+
+  cs::SetLogger(
+      [](unsigned int level, char const *file, unsigned int line,
+         char const *msg) {
+        spdlog::log(levels[level], "cscore: {} in {}, line {}", msg, file,
+                    line);
+      },
+      WPI_LOG_WARNING);
+}
+
+/**
  * Run is started in a new thread to start the pipeline.
  */
 template <typename T>
@@ -54,7 +87,7 @@ void Pipeline<T>::Run() {
   if (!cap.isOpened()) {
     spdlog::critical("Pipeline<{}>: camera not opened in {}, line {}", inum_,
                      __FILE__, __LINE__);
-    return;
+    throw PipelineException("Camera not open");
   }
 
   // loop until told to quit

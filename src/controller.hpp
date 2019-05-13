@@ -15,6 +15,7 @@ class Controller {
   ~Controller();
   int Run();
   void SetCameraStatus(int inum, bool enabled);
+  void SetCameraError(int inum, bool error);
   void SetLightsStatus(int inum, bool enabled);
 
  private:

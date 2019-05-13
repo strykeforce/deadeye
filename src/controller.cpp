@@ -14,7 +14,7 @@
 
 namespace {
 static char const* kNTServerAddress = "127.0.0.1";
-static constexpr double kPollTimeout = 0.5;
+static constexpr double kPollTimeout = 0.25;
 // static const char* kConfigTable = "/Deadeye/Config";
 
 std::atomic<bool> quit{false};
@@ -47,8 +47,12 @@ Controller::Controller() {
  * Destructor for Controller.
  */
 Controller::~Controller() {
-  nt::Flush(inst_);
-  nt::DestroyEntryListenerPoller(poller_);
+  try {
+    nt::Flush(inst_);
+    nt::DestroyEntryListenerPoller(poller_);
+  } catch (std::exception const& e) {
+    spdlog::error("~Controller: {}", e.what());
+  }
   spdlog::info("Deadeye Controller exiting.");
 }
 
@@ -63,7 +67,7 @@ int Controller::Run() {
 
     // check for signal or network tables error condition
     if (HEDLEY_UNLIKELY(quit.load())) {
-      spdlog::debug("Controller recieved shutdown signal");
+      spdlog::debug("Controller received shutdown signal");
       fsm::dispatch(CameraOff());  // all off
       fsm::dispatch(LightsOff());  // all off
       return EXIT_SUCCESS;
@@ -78,15 +82,15 @@ int Controller::Run() {
     for (const auto& entry : entries) {
       switch (hash(entry.name.c_str())) {
         case hash(DE_CAMERA_CONTROL("0", DE_ENABLED)):
-          if (entry.value->GetBoolean()) {
+          if (entry.value->GetBoolean())
             Camera<0>::dispatch(CameraOn());
-          } else
+          else
             Camera<0>::dispatch(CameraOff());
           break;
         case hash(DE_CAMERA_CONTROL("1", DE_ENABLED)):
-          if (entry.value->GetBoolean()) {
+          if (entry.value->GetBoolean())
             Camera<1>::dispatch(CameraOn());
-          } else
+          else
             Camera<1>::dispatch(CameraOff());
           break;
         case hash(DE_CAMERA_CONTROL("0", DE_LIGHTS)):
@@ -101,8 +105,13 @@ int Controller::Run() {
           else
             Lights<1>::dispatch(LightsOff());
           break;
+        case hash(DE_CAMERA_CONTROL("0", DE_ERROR)):
+        case hash(DE_CAMERA_CONTROL("1", DE_ERROR)):
+          // camera error state updates NT but we don't dispatch event
+          break;
         default:
-          spdlog::debug("{} unrecognized", entry.name);
+          spdlog::warn("Controller: {} event unrecognized in {}, line {}",
+                       entry.name, __FILE__, __LINE__);
           break;
       }
     }
@@ -122,6 +131,27 @@ void Controller::SetCameraStatus(int inum, bool enabled) {
       break;
     case 1:
       entry = nt::GetEntry(inst_, DE_CAMERA_CONTROL("1", DE_ENABLED));
+      break;
+    default:
+      spdlog::error("Unrecognized Camera<{}> in {}, line {}", inum, __FILE__,
+                    __LINE__);
+      return;
+  }
+  nt::SetEntryValue(entry, val);
+}
+
+/**
+ * SetCameraError updates network tables with camera error.
+ */
+void Controller::SetCameraError(int inum, bool error) {
+  auto val = nt::Value::MakeBoolean(error);
+  NT_Entry entry;
+  switch (inum) {
+    case 0:
+      entry = nt::GetEntry(inst_, DE_CAMERA_CONTROL("0", DE_ERROR));
+      break;
+    case 1:
+      entry = nt::GetEntry(inst_, DE_CAMERA_CONTROL("1", DE_ERROR));
       break;
     default:
       spdlog::error("Unrecognized Camera<{}> in {}, line {}", inum, __FILE__,
@@ -186,6 +216,7 @@ void Controller::StartPoller() {
 
 static void SetCameraControlTableDefaults(std::shared_ptr<NetworkTable> table) {
   table->SetDefaultBoolean(DE_ENABLED, false);
+  table->SetDefaultBoolean(DE_ERROR, false);
   table->SetDefaultBoolean(DE_LIGHTS, false);
   spdlog::debug("Setting default values for {}", table->GetPath().str());
 }

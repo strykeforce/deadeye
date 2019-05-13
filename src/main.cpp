@@ -14,5 +14,11 @@ int main(int argc, char** argv) {
   ConfigureLogging();
   spdlog::info("Deadeye starting");
 
-  return Controller::GetInstance().Run();
+  int rv;
+  try {
+    rv = Controller::GetInstance().Run();
+  } catch (std::exception const& e) {
+    spdlog::critical("Controller::Run: {}", e.what());
+  }
+  return rv;
 }

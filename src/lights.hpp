@@ -1,7 +1,6 @@
 #pragma once
 
 #include <tinyfsm.hpp>
-#include "events.hpp"
 
 namespace deadeye {
 // ---------------------------------------------------------------------------

@@ -26,8 +26,15 @@ class On : public Camera<inum> {
   using base = Camera<inum>;
 
   void entry() override {
-    base::pipeline_future_ =
-        std::async(std::launch::async, [] { base::pipeline_.Run(); });
+    base::pipeline_future_ = std::async(std::launch::async, [] {
+      try {
+        base::pipeline_.Run();
+      } catch (...) {
+        // queue CameraOff via Controller
+        Controller::GetInstance().SetCameraStatus(inum, false);
+        std::rethrow_exception(std::current_exception());
+      }
+    });
     spdlog::info("Camera<{}> on", inum);
   }
 
@@ -39,7 +46,7 @@ class On : public Camera<inum> {
     if (base::pipeline_future_.valid()) {
       try {
         base::pipeline_future_.get();
-      } catch (const std::exception &e) {
+      } catch (std::exception const &e) {
         base::error_ = e.what();
         base::template transit<camera::Error<inum>>();
         return;
@@ -57,12 +64,12 @@ class Off : public Camera<inum> {
   using base = Camera<inum>;
 
   void entry() override {
+    // make sure NT reflects off state
     Controller::GetInstance().SetCameraStatus(inum, false);
     spdlog::info("Camera<{}> off", inum);
   }
 
   void react(CameraOn const &) override {
-    spdlog::debug("Off<{}> reacting to CameraOn", inum);
     Lights<inum>::dispatch(LightsOn());
     base::template transit<camera::On<inum>>();
   }
@@ -76,18 +83,20 @@ class Error : public Camera<inum> {
   using base = Camera<inum>;
 
   void entry() override {
-    Controller::GetInstance().SetCameraStatus(inum, false);
+    // make sure NT reflects error state
+    Controller::GetInstance().SetCameraError(inum, true);
     spdlog::error("Camera<{}> error: {}", inum, base::error_);
   }
 
   void react(CameraOn const &) override {
+    // make sure NT reflects off state
     Controller::GetInstance().SetCameraStatus(inum, false);
     spdlog::warn("Camera<{}> attempting to restart camera in error state: {}",
                  inum, base::error_);
   }
 };
-}  // namespace camera
 
+}  // namespace camera
 }  // namespace deadeye
 
 FSM_INITIAL_STATE(deadeye::Camera<0>, deadeye::camera::Off<0>)
