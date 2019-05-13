@@ -75,6 +75,8 @@ int Controller::Run() {
 
     // issue FSM events from network tables entry update notifications
     for (const auto& entry : entries) {
+      spdlog::debug("Controller: NT entry {} = {}", entry.name.c_str(),
+                    entry.value->GetBoolean());
       switch (hash(entry.name.c_str())) {
         case hash(DE_CAMERA_CONTROL("0", DE_ENABLED)):
           if (entry.value->GetBoolean()) {
@@ -180,7 +182,7 @@ void Controller::StartNetworkTables() {
 void Controller::StartPoller() {
   poller_ = nt::CreateEntryListenerPoller(inst_);
   entry_listener_ = nt::AddPolledEntryListener(
-      poller_, DE_CONTROL_TABLE, NT_NOTIFY_IMMEDIATE | NT_NOTIFY_UPDATE);
+      poller_, DE_CONTROL_TABLE, NT_NOTIFY_LOCAL | NT_NOTIFY_UPDATE);
 }
 
 static void SetCameraControlTableDefaults(std::shared_ptr<NetworkTable> table) {
