@@ -64,7 +64,8 @@ int Controller::Run() {
     // check for signal or network tables error condition
     if (HEDLEY_UNLIKELY(quit.load())) {
       spdlog::debug("Controller recieved shutdown signal");
-      fsm::dispatch(ShutDown());  // all off
+      fsm::dispatch(CameraOff());  // all off
+      fsm::dispatch(LightsOff());  // all off
       return EXIT_SUCCESS;
     }
     if (HEDLEY_UNLIKELY(!timed_out && entries.empty())) {
@@ -75,8 +76,6 @@ int Controller::Run() {
 
     // issue FSM events from network tables entry update notifications
     for (const auto& entry : entries) {
-      spdlog::debug("Controller: NT entry {} = {}", entry.name.c_str(),
-                    entry.value->GetBoolean());
       switch (hash(entry.name.c_str())) {
         case hash(DE_CAMERA_CONTROL("0", DE_ENABLED)):
           if (entry.value->GetBoolean()) {

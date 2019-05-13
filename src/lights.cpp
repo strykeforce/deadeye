@@ -16,14 +16,10 @@ template <int inum>
 class On : public Lights<inum> {
   void entry() override {
     Controller::GetInstance().SetLightsStatus(inum, true);
-    spdlog::info("Lights<{}> On", inum);
+    spdlog::info("Lights<{}> on", inum);
   }
 
   void react(LightsOff const &) override {
-    Lights<inum>::template transit<lights::Off<inum>>();
-  }
-
-  void react(ShutDown const &) override {
     Lights<inum>::template transit<lights::Off<inum>>();
   }
 };
@@ -32,7 +28,7 @@ template <int inum>
 class Off : public Lights<inum> {
   void entry() override {
     Controller::GetInstance().SetLightsStatus(inum, false);
-    spdlog::info("Lights<{}> Off", inum);
+    spdlog::info("Lights<{}> off", inum);
   }
   void react(LightsOn const &) override {
     Lights<inum>::template transit<lights::On<inum>>();

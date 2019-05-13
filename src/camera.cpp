@@ -11,8 +11,12 @@ using namespace std::chrono_literals;
 
 namespace deadeye {
 namespace camera {
+
+// forward declarations
 template <int inum>
-class Off;  // forward declaration
+class Off;
+template <int inum>
+class Error;
 
 // ---------------------------------------------------------------------------
 // Camera State: On
@@ -22,17 +26,25 @@ class On : public Camera<inum> {
   using base = Camera<inum>;
 
   void entry() override {
-    base::pipeline_thread_ =
-        std::make_unique<std::thread>([] { base::pipeline_.Run(); });
-    spdlog::info("{} on", static_cast<base &>(*this));
+    base::pipeline_future_ =
+        std::async(std::launch::async, [] { base::pipeline_.Run(); });
+    spdlog::info("Camera<{}> on", inum);
   }
 
   void react(CameraOff const &) override {
     Lights<inum>::dispatch(LightsOff());
-    base::template transit<camera::Off<inum>>();
-  }
+    base::pipeline_.Quit();
 
-  void react(ShutDown const &) override {
+    // future will not be valid at start-up since pipeline task not started yet
+    if (base::pipeline_future_.valid()) {
+      try {
+        base::pipeline_future_.get();
+      } catch (const std::exception &e) {
+        base::error_ = e.what();
+        base::template transit<camera::Error<inum>>();
+        return;
+      }
+    }
     base::template transit<camera::Off<inum>>();
   }
 };
@@ -46,16 +58,32 @@ class Off : public Camera<inum> {
 
   void entry() override {
     Controller::GetInstance().SetCameraStatus(inum, false);
-    base::pipeline_.Quit();
-    if (base::pipeline_thread_ && base::pipeline_thread_->joinable()) {
-      base::pipeline_thread_->join();
-    }
-    spdlog::info("{} off", static_cast<base &>(*this));
+    spdlog::info("Camera<{}> off", inum);
   }
 
   void react(CameraOn const &) override {
+    spdlog::debug("Off<{}> reacting to CameraOn", inum);
     Lights<inum>::dispatch(LightsOn());
     base::template transit<camera::On<inum>>();
+  }
+};
+
+// ---------------------------------------------------------------------------
+// Camera State: Error
+//
+template <int inum>
+class Error : public Camera<inum> {
+  using base = Camera<inum>;
+
+  void entry() override {
+    Controller::GetInstance().SetCameraStatus(inum, false);
+    spdlog::error("Camera<{}> error: {}", inum, base::error_);
+  }
+
+  void react(CameraOn const &) override {
+    Controller::GetInstance().SetCameraStatus(inum, false);
+    spdlog::warn("Camera<{}> attempting to restart camera in error state: {}",
+                 inum, base::error_);
   }
 };
 }  // namespace camera

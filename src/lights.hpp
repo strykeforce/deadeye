@@ -23,7 +23,6 @@ class Lights : public tinyfsm::Fsm<Lights<inum>> {
 
   virtual void react(LightsOn const &) {}
   virtual void react(LightsOff const &) {}
-  virtual void react(ShutDown const &) {}
 
   virtual void entry() = 0;
   void exit() {}

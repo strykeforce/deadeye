@@ -2,8 +2,8 @@
 
 #include <spdlog/spdlog.h>
 #include <atomic>
+#include <future>
 #include <memory>
-#include <thread>
 #include <tinyfsm.hpp>
 #include "default_pipeline.hpp"
 #include "events.hpp"
@@ -31,35 +31,24 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
 
   virtual void react(CameraOn const &) {}
   virtual void react(CameraOff const &) {}
-  virtual void react(ShutDown const &) {}
 
   virtual void entry() = 0;
   void exit() {}
 
  protected:
-  static std::unique_ptr<std::thread> pipeline_thread_;
   static DefaultPipeline pipeline_;
+  static std::future<void> pipeline_future_;
+  static std::string error_;
 };
 
 // state variable definitions
 template <int inum>
-std::unique_ptr<std::thread> Camera<inum>::pipeline_thread_{};
-
-template <int inum>
 DefaultPipeline Camera<inum>::pipeline_{inum};
 
-}  // namespace deadeye
-
-// custom formatting for fmt library
 template <int inum>
-struct fmt::formatter<deadeye::Camera<inum>> {
-  template <typename ParseContext>
-  constexpr auto parse(ParseContext &ctx) {
-    return ctx.begin();
-  }
+std::future<void> Camera<inum>::pipeline_future_;
 
-  template <typename FormatContext>
-  auto format(const deadeye::Camera<inum> &c, FormatContext &ctx) {
-    return format_to(ctx.out(), "Camera<{}>", inum);
-  }
-};
+template <int inum>
+std::string Camera<inum>::error_;
+
+}  // namespace deadeye
