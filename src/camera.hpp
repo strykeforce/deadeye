@@ -7,7 +7,6 @@
 #include <tinyfsm.hpp>
 #include "default_pipeline.hpp"
 #include "events.hpp"
-#include "fmt/format.h"
 #include "lights.hpp"
 
 namespace deadeye {

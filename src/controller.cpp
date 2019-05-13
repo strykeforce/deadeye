@@ -13,7 +13,7 @@
 #include "nt_constants.hpp"
 
 namespace {
-std::string_view kNTServerAddress{"127.0.0.1"};
+static char const* kNTServerAddress = "127.0.0.1";
 static constexpr double kPollTimeout = 0.5;
 // static const char* kConfigTable = "/Deadeye/Config";
 
@@ -171,7 +171,7 @@ void Controller::StartNetworkTables() {
   } else {
     spdlog::info("Starting NetworkTables client connecting to {}",
                  kNTServerAddress);
-    nt::StartClient(inst_, kNTServerAddress.data(), NT_DEFAULT_PORT);
+    nt::StartClient(inst_, kNTServerAddress, NT_DEFAULT_PORT);
   }
 }
 
@@ -217,4 +217,4 @@ spdlog::level::level_enum Controller::Nt2spdlogLevel(
     default:
       return debug;
   }
-};
+}

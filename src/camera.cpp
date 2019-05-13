@@ -90,5 +90,5 @@ class Error : public Camera<inum> {
 
 }  // namespace deadeye
 
-FSM_INITIAL_STATE(deadeye::Camera<0>, deadeye::camera::Off<0>);
-FSM_INITIAL_STATE(deadeye::Camera<1>, deadeye::camera::Off<1>);
+FSM_INITIAL_STATE(deadeye::Camera<0>, deadeye::camera::Off<0>)
+FSM_INITIAL_STATE(deadeye::Camera<1>, deadeye::camera::Off<1>)

@@ -36,5 +36,5 @@ class Off : public Lights<inum> {
 };
 }  // namespace lights
 
-FSM_INITIAL_STATE(Lights<0>, lights::Off<0>);
-FSM_INITIAL_STATE(Lights<1>, lights::Off<1>);
+FSM_INITIAL_STATE(Lights<0>, lights::Off<0>)
+FSM_INITIAL_STATE(Lights<1>, lights::Off<1>)
