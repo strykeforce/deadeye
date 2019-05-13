@@ -82,12 +82,12 @@ void Pipeline<T>::Run() {
   cvMjpegServer.SetSource(cvsource);
 
   cv::Mat frame;
-  cv::VideoCapture cap{0};
+  cv::VideoCapture cap;
 
-  if (!cap.isOpened()) {
-    spdlog::critical("Pipeline<{}>: camera not opened in {}, line {}", inum_,
-                     __FILE__, __LINE__);
-    throw PipelineException("Camera not open");
+  if (!cap.open(inum_)) {
+    spdlog::critical("Pipeline<{}>: unable to open camera({}) in {}, line {}",
+                     inum_, inum_, __FILE__, __LINE__);
+    throw PipelineException("unable to open camera");
   }
 
   // loop until told to quit
