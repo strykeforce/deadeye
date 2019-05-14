@@ -25,10 +25,7 @@ class Blinking;
 template <int inum>
 class On : public Lights<inum> {
   void entry() override {
-    auto &controller = Controller::GetInstance();
-    controller.SetLightsStatus(inum, DE_ON, true);
-    controller.SetLightsStatus(inum, DE_OFF, false);
-    controller.SetLightsStatus(inum, DE_BLINK, false);
+    Controller::GetInstance().SetLightsStatus(inum, DE_ON, true);
     spdlog::info("Lights<{}> on", inum);
   }
 
@@ -39,6 +36,10 @@ class On : public Lights<inum> {
   void react(LightsOff const &) override {
     Lights<inum>::template transit<lights::Off<inum>>();
   }
+
+  void exit() override {
+    Controller::GetInstance().SetLightsStatus(inum, DE_ON, false);
+  }
 };
 
 template <int inum>
@@ -46,29 +47,28 @@ class Blinking : public Lights<inum> {
   using base = Lights<inum>;
 
   void entry() override {
-    auto &controller = Controller::GetInstance();
-    controller.SetLightsStatus(inum, DE_ON, false);
-    controller.SetLightsStatus(inum, DE_OFF, false);
-    controller.SetLightsStatus(inum, DE_BLINK, true);
-    base::cancel_ = false;
-    base::blink_task_future_ = std::async(std::launch::async, [] {
+    Controller::GetInstance().SetLightsStatus(inum, DE_BLINK, true);
+
+    base::cancel_task_ = false;
+    base::task_future_ = std::async(std::launch::async, [] {
       while (true) {
         spdlog::info("Lights<{}> on", inum);
         std::this_thread::sleep_for(kBlinkPeriod);
-        if (base::cancel_.load()) break;
+        if (base::cancel_task_.load()) break;
+
         spdlog::info("Lights<{}> off", inum);
         std::this_thread::sleep_for(kBlinkPeriod);
-        if (base::cancel_.load()) break;
+        if (base::cancel_task_.load()) break;
       }
     });
     spdlog::info("Lights<{}> blink", inum);
   }
 
-  void Cancel() {
-    base::cancel_ = true;
-    if (base::blink_task_future_.valid()) {
+  void CancelTask() {
+    base::cancel_task_ = true;
+    if (base::task_future_.valid()) {
       try {
-        base::blink_task_future_.get();
+        base::task_future_.get();
       } catch (std::exception const &e) {
         spdlog::error("Lights<{}> error while cancelling blink: {}", inum,
                       e.what());
@@ -77,13 +77,17 @@ class Blinking : public Lights<inum> {
   }
 
   void react(LightsOn const &) override {
-    Cancel();
+    CancelTask();
     Lights<inum>::template transit<lights::On<inum>>();
   }
 
   void react(LightsOff const &) override {
-    Cancel();
+    CancelTask();
     Lights<inum>::template transit<lights::Off<inum>>();
+  }
+
+  void exit() override {
+    Controller::GetInstance().SetLightsStatus(inum, DE_BLINK, false);
   }
 };
 
@@ -92,10 +96,7 @@ class Off : public Lights<inum> {
   using base = Lights<inum>;
 
   void entry() override {
-    auto &controller = Controller::GetInstance();
-    controller.SetLightsStatus(inum, DE_ON, false);
-    controller.SetLightsStatus(inum, DE_OFF, true);
-    controller.SetLightsStatus(inum, DE_BLINK, false);
+    Controller::GetInstance().SetLightsStatus(inum, DE_OFF, true);
     spdlog::info("Lights<{}> off", inum);
   }
 
@@ -105,6 +106,10 @@ class Off : public Lights<inum> {
 
   void react(LightsBlink const &) override {
     Lights<inum>::template transit<lights::Blinking<inum>>();
+  }
+
+  void exit() override {
+    Controller::GetInstance().SetLightsStatus(inum, DE_OFF, false);
   }
 };
 }  // namespace lights

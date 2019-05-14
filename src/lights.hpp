@@ -28,18 +28,18 @@ class Lights : public tinyfsm::Fsm<Lights<inum>> {
   virtual void react(LightsBlink const &) {}
 
   virtual void entry() = 0;
-  void exit() {}
+  virtual void exit() = 0;
 
  protected:
-  static std::future<void> blink_task_future_;
-  static std::atomic<bool> cancel_;
+  static std::future<void> task_future_;
+  static std::atomic<bool> cancel_task_;
 };
 
 // state variable definitions
 template <int inum>
-std::future<void> Lights<inum>::blink_task_future_;
+std::future<void> Lights<inum>::task_future_;
 
 template <int inum>
-std::atomic<bool> Lights<inum>::cancel_{false};
+std::atomic<bool> Lights<inum>::cancel_task_{false};
 
 }  // namespace deadeye

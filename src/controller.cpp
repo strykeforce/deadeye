@@ -180,8 +180,6 @@ void Controller::SetCameraError(int inum, bool error) {
 void Controller::SetLightsStatus(int inum, char const* name, bool state) {
   std::stringstream path;
   path << DE_CONTROL_TABLE << DE_CAMERA << inum << DE_LIGHTS << "/" << name;
-  spdlog::debug("SetLightsStatus: inum = {}, name = {}, state = {}, path = {}",
-                inum, name, state, path.str());
 
   auto entry = nt::GetEntry(inst_, path.str().c_str());
   nt::SetEntryValue(entry, nt::Value::MakeBoolean(state));
