@@ -59,10 +59,6 @@ class On : public Camera<inum> {
     base::template transit<camera::Off<inum>>();
   }
 
-  void react(CameraError const &) override {
-    base::template transit<camera::Error<inum>>();
-  }
-
   void exit() override {
     Controller::GetInstance().SetCameraStatus(inum, DE_ON, false);
   }
@@ -83,10 +79,6 @@ class Off : public Camera<inum> {
   void react(CameraOn const &) override {
     Lights<inum>::dispatch(LightsOn());
     base::template transit<camera::On<inum>>();
-  }
-
-  void react(CameraError const &) override {
-    base::template transit<camera::Error<inum>>();
   }
 
   void exit() override {

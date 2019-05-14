@@ -19,7 +19,7 @@ static constexpr double kPollTimeout = 0.25;
 
 std::atomic<bool> quit{false};
 
-void signal_handler(int signal) { quit.store(true); }
+void signal_handler(int signal) { quit = true; }
 
 /**
  * From http://www.rioki.org/2016/03/31/cpp-switch-string.html
@@ -101,10 +101,6 @@ int Controller::Run() {
           break;
         case hash(DE_CAMERA_CONTROL("1", DE_OFF)):
           if (entry.value->GetBoolean()) Camera<1>::dispatch(CameraOff());
-          break;
-        case hash(DE_CAMERA_CONTROL("0", DE_ERROR)):
-        case hash(DE_CAMERA_CONTROL("1", DE_ERROR)):
-          // camera error state updates NT but we don't dispatch event
           break;
         //
         // Lights events

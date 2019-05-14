@@ -16,7 +16,6 @@ namespace deadeye {
 //
 struct CameraOn : tinyfsm::Event {};
 struct CameraOff : tinyfsm::Event {};
-struct CameraError : tinyfsm::Event {};
 
 // ---------------------------------------------------------------------------
 // Camera FSM
@@ -33,7 +32,6 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
 
   virtual void react(CameraOn const &) {}
   virtual void react(CameraOff const &) {}
-  virtual void react(CameraError const &) {}
 
   virtual void entry() = 0;
   virtual void exit() = 0;
