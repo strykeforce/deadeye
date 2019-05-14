@@ -11,7 +11,6 @@
 #define DE_CAMERA_CONTROL_TABLE(inum) DE_CONTROL_TABLE DE_CAMERA inum
 #define DE_LIGHTS_CONTROL_TABLE(inum) DE_CAMERA_CONTROL_TABLE(inum) DE_LIGHTS
 
-#define DE_ENABLED "Enabled"
 #define DE_ERROR "Error"
 #define DE_ON "On"
 #define DE_OFF "Off"

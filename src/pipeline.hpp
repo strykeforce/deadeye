@@ -27,9 +27,8 @@ class Pipeline {
  public:
   Pipeline(int inum);
   virtual ~Pipeline() {}
-
-  void Quit() { quit_ = true; }
   void Run();
+  void CancelTask() { cancel_ = true; }
 
  protected:
   void ProcessFrame(cv::Mat const &frame);
@@ -40,7 +39,7 @@ class Pipeline {
 
  private:
   int inum_;
-  std::atomic<bool> quit_{false};
+  std::atomic<bool> cancel_{false};
   cv::Mat cvt_color_output_;
   std::vector<std::vector<cv::Point>> find_contours_input_;
   std::vector<std::vector<cv::Point>> find_contours_output_;
@@ -74,7 +73,7 @@ Pipeline<t>::Pipeline(int inum) : inum_(inum) {
  */
 template <typename T>
 void Pipeline<T>::Run() {
-  quit_ = false;
+  cancel_ = false;
   spdlog::info("Pipeline<{}>: starting", inum_);
 
   cs::CvSource cvsource{"cvsource", cs::VideoMode::kMJPEG, 320, 180, 30};
@@ -92,7 +91,7 @@ void Pipeline<T>::Run() {
 
   // loop until told to quit
   while (true) {
-    if (quit_.load()) {
+    if (cancel_.load()) {
       spdlog::info("Pipeline<{}>: stopping", inum_);
       return;
     }

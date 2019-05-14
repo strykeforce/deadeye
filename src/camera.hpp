@@ -16,6 +16,7 @@ namespace deadeye {
 //
 struct CameraOn : tinyfsm::Event {};
 struct CameraOff : tinyfsm::Event {};
+struct CameraError : tinyfsm::Event {};
 
 // ---------------------------------------------------------------------------
 // Camera FSM
@@ -23,20 +24,24 @@ struct CameraOff : tinyfsm::Event {};
 template <int inum>
 class Camera : public tinyfsm::Fsm<Camera<inum>> {
   friend class tinyfsm::Fsm<Camera<inum>>;
-  friend fmt::formatter<Camera<inum>>;
+
+ public:
+  static bool HasError() { return has_error_.load(); }
 
  private:
   void react(tinyfsm::Event const &) {}  // default
 
   virtual void react(CameraOn const &) {}
   virtual void react(CameraOff const &) {}
+  virtual void react(CameraError const &) {}
 
   virtual void entry() = 0;
-  void exit() {}
+  virtual void exit() = 0;
 
  protected:
   static DefaultPipeline pipeline_;
   static std::future<void> pipeline_future_;
+  static std::atomic<bool> has_error_;
   static std::string error_;
 };
 
@@ -46,6 +51,9 @@ DefaultPipeline Camera<inum>::pipeline_{inum};
 
 template <int inum>
 std::future<void> Camera<inum>::pipeline_future_;
+
+template <int inum>
+std::atomic<bool> Camera<inum>::has_error_{false};
 
 template <int inum>
 std::string Camera<inum>::error_;

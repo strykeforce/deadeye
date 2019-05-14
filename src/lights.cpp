@@ -52,11 +52,11 @@ class Blinking : public Lights<inum> {
     base::cancel_task_ = false;
     base::task_future_ = std::async(std::launch::async, [] {
       while (true) {
-        spdlog::info("Lights<{}> on", inum);
+        // spdlog::debug("Lights<{}> on", inum);
         std::this_thread::sleep_for(kBlinkPeriod);
         if (base::cancel_task_.load()) break;
 
-        spdlog::info("Lights<{}> off", inum);
+        // spdlog::debug("Lights<{}> off", inum);
         std::this_thread::sleep_for(kBlinkPeriod);
         if (base::cancel_task_.load()) break;
       }
