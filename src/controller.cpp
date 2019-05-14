@@ -1,4 +1,3 @@
-#include <hedley.h>
 #include <networktables/NetworkTableInstance.h>
 #include <networktables/NetworkTableValue.h>
 #include <spdlog/spdlog.h>
@@ -63,19 +62,17 @@ Controller::~Controller() {
 int Controller::Run() {
   fsm::start();
 
-  spdlog::debug(">>> {} <<<", DE_CAMERA_CONTROL("0", DE_ON));
-
   for (bool timed_out = false;;) {
     auto entries = nt::PollEntryListener(poller_, kPollTimeout, &timed_out);
 
     // check for signal or network tables error condition
-    if (HEDLEY_UNLIKELY(quit.load())) {
+    if (quit.load()) {
       spdlog::debug("Controller received shutdown signal");
       fsm::dispatch(CameraOff());  // all off
       fsm::dispatch(LightsOff());  // all off
       return EXIT_SUCCESS;
     }
-    if (HEDLEY_UNLIKELY(!timed_out && entries.empty())) {
+    if (!timed_out && entries.empty()) {
       spdlog::critical("PollEntryListener entries is empty in {}, line {}",
                        __FILE__, __LINE__);
       return EXIT_FAILURE;

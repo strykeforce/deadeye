@@ -12,5 +12,4 @@ target_link_libraries(deadeye
     cscore
     spdlog::spdlog
     tinyfsm
-    hedley
 )

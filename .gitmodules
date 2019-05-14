@@ -1,6 +1,3 @@
 [submodule "vendor/tinyfsm"]
 	path = vendor/tinyfsm
 	url = https://github.com/digint/tinyfsm.git
-[submodule "vendor/hedley"]
-	path = vendor/hedley
-	url = https://github.com/nemequ/hedley.git

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <hedley.h>
-
 #define DE_DEADEYE_TABLE "/Deadeye"
 #define DE_CAMERA "/Camera"
 #define DE_LIGHTS "/Lights"
