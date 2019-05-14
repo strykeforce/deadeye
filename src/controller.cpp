@@ -15,7 +15,6 @@
 namespace {
 static char const* kNTServerAddress = "127.0.0.1";
 static constexpr double kPollTimeout = 0.25;
-// static const char* kConfigTable = "/Deadeye/Config";
 
 std::atomic<bool> quit{false};
 
@@ -68,8 +67,8 @@ int Controller::Run() {
     // check for signal or network tables error condition
     if (quit.load()) {
       spdlog::debug("Controller received shutdown signal");
-      fsm::dispatch(CameraOff());  // all off
-      fsm::dispatch(LightsOff());  // all off
+      fsm::dispatch(CameraOff());
+      fsm::dispatch(LightsOff());
       return EXIT_SUCCESS;
     }
     if (!timed_out && entries.empty()) {
@@ -79,7 +78,7 @@ int Controller::Run() {
     }
 
     // issue FSM events for camera errors
-    // On state receiving CameraOff event will cancel pipeline task, catch
+    // The On state receiving CameraOff event will cancel pipeline task, catch
     // exception and transition to Error state.
     if (Camera<0>::HasError()) Camera<0>::dispatch(CameraOff());
     if (Camera<1>::HasError()) Camera<1>::dispatch(CameraOff());
