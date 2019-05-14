@@ -16,7 +16,7 @@ class Controller {
   int Run();
   void SetCameraStatus(int inum, bool enabled);
   void SetCameraError(int inum, bool error);
-  void SetLightsStatus(int inum, bool enabled);
+  void SetLightsStatus(int inum, char const* name, bool state);
 
  private:
   Controller();
