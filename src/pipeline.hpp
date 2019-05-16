@@ -83,7 +83,9 @@ void Pipeline<T>::Run() {
   cv::Mat frame;
   cv::VideoCapture cap;
 
-  if (!cap.open(inum_)) {
+  if (!cap.open("videotestsrc ! video/x-raw, width=640, height=360, "
+                "framerate=30/1 ! videoconvert ! appsink",
+                cv::CAP_GSTREAMER)) {
     spdlog::critical("Pipeline<{}>: unable to open camera({}) in {}, line {}",
                      inum_, inum_, __FILE__, __LINE__);
     throw PipelineException("unable to open camera");
