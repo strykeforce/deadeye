@@ -3,11 +3,13 @@
 #include <wpi/Logger.h>
 #include <atomic>
 #include <map>
+#include <mutex>
 #include <opencv2/core/mat.hpp>
 #include <opencv2/opencv.hpp>
 #include <vector>
 #include "cscore.h"
 #include "pipeline.hpp"
+#include "pipeline_config.hpp"
 
 namespace deadeye {
 
@@ -29,6 +31,11 @@ class Pipeline {
   virtual ~Pipeline() {}
   void Run();
   void CancelTask() { cancel_ = true; }
+  void UpdateConfig(PipelineConfig config) {
+    std::lock_guard<std::mutex> lock{update_mutex_};
+    config_ = config;
+    update_sn_++;
+  }
 
  protected:
   void ProcessFrame(cv::Mat const &frame);
@@ -40,6 +47,9 @@ class Pipeline {
  private:
   int inum_;
   std::atomic<bool> cancel_{false};
+  std::atomic<int> update_sn_{1};
+  std::mutex update_mutex_;
+  PipelineConfig config_;
   cv::Mat cvt_color_output_;
   std::vector<std::vector<cv::Point>> find_contours_input_;
   std::vector<std::vector<cv::Point>> find_contours_output_;
@@ -84,23 +94,45 @@ void Pipeline<T>::Run() {
   cv::VideoCapture cap;
 
   if (!cap.open("videotestsrc ! video/x-raw, width=640, height=360, "
-                "framerate=30/1 ! videoconvert ! appsink",
+                "framerate=90/1 ! videoconvert ! appsink",
                 cv::CAP_GSTREAMER)) {
     spdlog::critical("Pipeline<{}>: unable to open camera({}) in {}, line {}",
                      inum_, inum_, __FILE__, __LINE__);
     throw PipelineException("unable to open camera");
   }
 
-  // loop until told to quit
+  PipelineConfig config;
+  cv::TickMeter tm;
+
+  // Loop until task cancelled.
   while (true) {
+    tm.start();
+
+    // Check for cancellation of this task.
     if (cancel_.load()) {
       spdlog::info("Pipeline<{}>: stopping", inum_);
+      double avg = tm.getTimeSec() / tm.getCounter();
+      double fps = 1.0 / avg;
+      spdlog::debug("Pipeline<{}>: avg. time = {}, FPS = {}", inum_, avg, fps);
       return;
     }
 
+    // Check for new pipeline config. Atomic int is incremented in
+    // UpdateConfig() above and compared here with last update. If updated
+    // again during this, catch new update next time around.
+    int update_sn = update_sn_.load();
+    if (update_sn > config.sn) {
+      std::lock_guard<std::mutex> lock{update_mutex_};
+      config = config_;
+      config.sn = update_sn;
+      spdlog::debug("Pipeline<{}>: {}", inum_, config);
+    }
+
+    // Get new frame and process it.
     cap >> frame;
     ProcessFrame(frame);
     cvsource.PutFrame(cvt_color_output_);
+    tm.stop();
   }
 }
 

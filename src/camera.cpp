@@ -7,6 +7,7 @@
 #include "lights.hpp"
 #include "nt_constants.hpp"
 #include "pipeline.hpp"
+#include "spdlog/fmt/ostr.h"
 
 using namespace std::chrono_literals;
 

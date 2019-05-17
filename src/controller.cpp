@@ -11,6 +11,8 @@
 #include "fsm.hpp"
 #include "lights.hpp"
 #include "nt_constants.hpp"
+#include "pipeline_config.hpp"
+#include "spdlog/fmt/ostr.h"
 
 namespace {
 static char const* kNTServerAddress = "127.0.0.1";
@@ -87,7 +89,7 @@ int Controller::Run() {
     for (const auto& entry : entries) {
       switch (hash(entry.name.c_str())) {
         //
-        // Camera events
+        // Camera control events
         //
         case hash(DE_CAMERA_CONTROL("0", DE_ON)):
           if (entry.value->GetBoolean()) Camera<0>::dispatch(CameraOn());
@@ -102,7 +104,7 @@ int Controller::Run() {
           if (entry.value->GetBoolean()) Camera<1>::dispatch(CameraOff());
           break;
         //
-        // Lights events
+        // Lights control events
         //
         case hash(DE_LIGHTS_CONTROL("0", DE_ON)):
           if (entry.value->GetBoolean()) Lights<0>::dispatch(LightsOn());
@@ -122,6 +124,22 @@ int Controller::Run() {
         case hash(DE_LIGHTS_CONTROL("1", DE_OFF)):
           if (entry.value->GetBoolean()) Lights<1>::dispatch(LightsOff());
           break;
+        //
+        // Camera config events
+        //
+        case hash(DE_CAMERA_CONFIG_ENTRY("0")): {
+          CameraConfig event;
+          event.config = PipelineConfig::New(entry.value);
+          spdlog::debug("Controller: {}", event.config);
+          Camera<0>::dispatch(event);
+          break;
+        }
+        case hash(DE_CAMERA_CONFIG_ENTRY("1")): {
+          CameraConfig event;
+          event.config = PipelineConfig::New(entry.value);
+          Camera<1>::dispatch(event);
+          break;
+        }
         default:
           spdlog::warn("Controller: {} event unrecognized in {}, line {}",
                        entry.name, __FILE__, __LINE__);
@@ -184,21 +202,32 @@ void Controller::StartPoller() {
   poller_ = nt::CreateEntryListenerPoller(inst_);
   entry_listener_ =
       nt::AddPolledEntryListener(poller_, DE_CONTROL_TABLE, NT_NOTIFY_UPDATE);
+  nt::AddPolledEntryListener(poller_, DE_CONFIG_TABLE, NT_NOTIFY_UPDATE);
 }
 
-static void SetCameraControlTableDefaults(std::shared_ptr<NetworkTable> table) {
+namespace {
+void SetCameraControlTableDefaults(std::shared_ptr<NetworkTable> table) {
   table->SetDefaultBoolean(DE_ON, false);
   table->SetDefaultBoolean(DE_OFF, false);
   table->SetDefaultBoolean(DE_ERROR, false);
   spdlog::debug("Setting default values for {}", table->GetPath().str());
 }
 
-static void SetLightsControlTableDefaults(std::shared_ptr<NetworkTable> table) {
+void SetLightsControlTableDefaults(std::shared_ptr<NetworkTable> table) {
   table->SetDefaultBoolean(DE_ON, false);
   table->SetDefaultBoolean(DE_OFF, false);
   table->SetDefaultBoolean(DE_BLINK, false);
   spdlog::debug("Setting default values for {}", table->GetPath().str());
 }
+
+void SetCameraConfigEntryDefault(nt::NetworkTableEntry entry) {
+  PipelineConfig def{0, {0, 0, 0}, {254, 254, 254}, 0.5};
+  json j = def;
+  entry.SetDefaultString(j.dump());
+  entry.SetPersistent();
+}
+}  // namespace
+
 /**
  * SetNetworkTablesDefaults sets up default values in network tables.
  */
@@ -208,6 +237,8 @@ void Controller::SetNetworkTablesDefaults() {
   SetCameraControlTableDefaults(nti.GetTable(DE_CAMERA_CONTROL_TABLE("1")));
   SetLightsControlTableDefaults(nti.GetTable(DE_LIGHTS_CONTROL_TABLE("0")));
   SetLightsControlTableDefaults(nti.GetTable(DE_LIGHTS_CONTROL_TABLE("1")));
+  SetCameraConfigEntryDefault(nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("0")));
+  SetCameraConfigEntryDefault(nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("1")));
 }
 
 /**

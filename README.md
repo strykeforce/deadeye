@@ -2,6 +2,19 @@
 
 Stryke Force Deadeye Vision App
 
+# Build Dependencies
+
+The following should be installed via CMake:
+
+- [ntcore & cscore](https://github.com/wpilibsuite/allwpilib)
+- [spdlog](https://github.com/gabime/spdlog)
+- [Catch2](https://github.com/catchorg/Catch2)
+- [nlohmann/json](https://github.com/nlohmann/json)
+
+These may be installed or need to be installed:
+
+- OpenCV: see below
+
 ```
 /Deadeye
   /ControlA
