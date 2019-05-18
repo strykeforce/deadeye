@@ -34,7 +34,7 @@ class Controller {
   Controller(const Controller&) = delete;
   Controller& operator=(const Controller&) = delete;
   ~Controller();
-  int Run();
+  void Run();
   void SetCameraStatus(int inum, char const* name, bool state);
   void SetLightsStatus(int inum, char const* name, bool state);
 

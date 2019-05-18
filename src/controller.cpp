@@ -59,7 +59,7 @@ Controller::~Controller() {
 /**
  * Run listens for commands and config changes.
  */
-int Controller::Run() {
+void Controller::Run() {
   fsm::start();
 
   for (bool timed_out = false;;) {
@@ -68,14 +68,15 @@ int Controller::Run() {
     // check for signal or network tables error condition
     if (quit.load()) {
       spdlog::debug("Controller received shutdown signal");
+      // fsm dispatches to all instances
       fsm::dispatch(CameraOff());
       fsm::dispatch(LightsOff());
-      return EXIT_SUCCESS;
+      return;
     }
     if (!timed_out && entries.empty()) {
       spdlog::critical("PollEntryListener entries is empty in {}, line {}",
                        __FILE__, __LINE__);
-      return EXIT_FAILURE;
+      throw std::runtime_error("NetworkTables error");
     }
 
     // issue FSM events for camera errors
@@ -101,6 +102,7 @@ int Controller::Run() {
           break;
         case hash(DE_LIGHTS_CONTROL("0", DE_BLINK)):
           if (entry.value->GetBoolean()) Lights<0>::dispatch(LightsBlink());
+          throw std::runtime_error("NetworkTables error");
           break;
         case hash(DE_LIGHTS_CONTROL("0", DE_OFF)):
           if (entry.value->GetBoolean()) Lights<0>::dispatch(LightsOff());
@@ -143,7 +145,6 @@ int Controller::Run() {
       }
     }
   }
-  return EXIT_SUCCESS;
 }
 
 /**
