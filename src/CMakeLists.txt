@@ -1,3 +1,4 @@
+# Build as static library to facilitate testing
 set(BUILD_SHARED_LIBS NO)
 
 add_library(deadeye
@@ -7,6 +8,7 @@ add_library(deadeye
     pipeline_config.cpp
     lights.cpp
 )
+
 target_include_directories(deadeye PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(deadeye
@@ -18,6 +20,7 @@ target_link_libraries(deadeye
     nlohmann_json::nlohmann_json
 )
 
+# Build main target
 add_executable(deadeyed
     main.cpp
 )
