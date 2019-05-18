@@ -5,6 +5,7 @@
 #include <future>
 #include <memory>
 #include <tinyfsm.hpp>
+#include "base_pipeline.hpp"
 #include "default_pipeline.hpp"
 #include "events.hpp"
 #include "lights.hpp"
@@ -30,6 +31,9 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
 
  public:
   static bool HasError() { return has_error_.load(); }
+  static void SetPipeline(std::unique_ptr<Pipeline> pipeline) {
+    pipeline_ = std::move(pipeline);
+  }
 
  private:
   void react(tinyfsm::Event const &) {}  // default
@@ -37,15 +41,14 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
   virtual void react(CameraOn const &) {}
   virtual void react(CameraOff const &) {}
   virtual void react(CameraConfig const &c) {
-    spdlog::debug("Camera<{}>: {}", inum, c.config);
-    Camera<inum>::pipeline_.UpdateConfig(c.config);
+    Camera<inum>::pipeline_->UpdateConfig(c.config);
   }
 
   virtual void entry() = 0;
   virtual void exit() = 0;
 
  protected:
-  static DefaultPipeline pipeline_;
+  static std::unique_ptr<Pipeline> pipeline_;
   static std::future<void> pipeline_future_;
   static std::atomic<bool> has_error_;
   static std::string error_;
@@ -53,7 +56,8 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
 
 // state variable definitions
 template <int inum>
-DefaultPipeline Camera<inum>::pipeline_{inum};
+std::unique_ptr<Pipeline> Camera<inum>::pipeline_ =
+    std::make_unique<DefaultPipeline>(inum);
 
 template <int inum>
 std::future<void> Camera<inum>::pipeline_future_;

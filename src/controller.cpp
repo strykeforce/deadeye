@@ -12,7 +12,6 @@
 #include "lights.hpp"
 #include "nt_constants.hpp"
 #include "pipeline_config.hpp"
-#include "spdlog/fmt/ostr.h"
 
 namespace {
 static char const* kNTServerAddress = "127.0.0.1";
@@ -109,7 +108,6 @@ int Controller::Run() {
         case hash(DE_CAMERA_CONFIG_ENTRY("0")): {
           CameraConfig event;
           event.config = PipelineConfig::New(entry.value);
-          spdlog::debug("Controller: {}", event.config);
           Camera<0>::dispatch(event);
           break;
         }
