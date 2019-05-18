@@ -67,9 +67,7 @@ void Controller::Run() {
     // check for signal or network tables error condition
     if (quit.load()) {
       spdlog::debug("Controller received shutdown signal");
-      // fsm dispatches to all instances
-      fsm::dispatch(CameraOff());
-      fsm::dispatch(LightsOff());
+      ShutDown();
       return;
     }
     if (!timed_out && entries.empty()) {
@@ -101,7 +99,6 @@ void Controller::Run() {
           break;
         case hash(DE_LIGHTS_CONTROL("0", DE_BLINK)):
           if (entry.value->GetBoolean()) Lights<0>::dispatch(LightsBlink());
-          throw std::runtime_error("NetworkTables error");
           break;
         case hash(DE_LIGHTS_CONTROL("0", DE_OFF)):
           if (entry.value->GetBoolean()) Lights<0>::dispatch(LightsOff());
@@ -143,6 +140,12 @@ void Controller::Run() {
       }
     }
   }
+}
+
+void Controller::ShutDown() {
+  // fsm dispatches to all instances
+  fsm::dispatch(CameraOff());
+  fsm::dispatch(LightsOff());
 }
 
 /**
