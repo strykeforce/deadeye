@@ -1,12 +1,12 @@
 #include <spdlog/spdlog.h>
 #include <future>
 #include <tinyfsm.hpp>
+#include "base_pipeline.hpp"
 #include "camera.hpp"
 #include "controller.hpp"
 #include "fsm.hpp"
 #include "lights.hpp"
 #include "pipeline.hpp"
-#include "spdlog/fmt/ostr.h"
 
 using namespace std::chrono_literals;
 
@@ -32,7 +32,7 @@ class On : public Camera<inum> {
 
     base::pipeline_future_ = std::async(std::launch::async, [] {
       try {
-        base::pipeline_.Run();
+        base::pipeline_->Run();
       } catch (...) {
         base::has_error_ = true;
         std::rethrow_exception(std::current_exception());
@@ -43,7 +43,7 @@ class On : public Camera<inum> {
 
   void react(CameraOff const &) override {
     Lights<inum>::dispatch(LightsOff());
-    base::pipeline_.CancelTask();
+    base::pipeline_->CancelTask();
 
     // future will not be valid at start-up since pipeline task not started yet
     if (base::pipeline_future_.valid()) {

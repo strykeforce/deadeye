@@ -1,4 +1,5 @@
 #include <spdlog/spdlog.h>
+#include "camera.hpp"
 #include "controller.hpp"
 
 using namespace deadeye;
@@ -14,6 +15,10 @@ int main(int argc, char** argv) {
   ConfigureLogging();
   spdlog::info("Deadeye starting");
 
+  // TODO: make this macro?
+  Camera<0>::SetPipeline(std::make_unique<DefaultPipeline>(0));
+
+  // TODO: make this macro?
   try {
     Controller::GetInstance().Run();
   } catch (std::exception const& e) {
