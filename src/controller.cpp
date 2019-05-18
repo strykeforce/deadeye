@@ -89,44 +89,23 @@ int Controller::Run() {
     for (const auto& entry : entries) {
       switch (hash(entry.name.c_str())) {
         //
-        // Camera control events
+        // Camera 0 events
         //
         case hash(DE_CAMERA_CONTROL("0", DE_ON)):
           if (entry.value->GetBoolean()) Camera<0>::dispatch(CameraOn());
           break;
-        case hash(DE_CAMERA_CONTROL("1", DE_ON)):
-          if (entry.value->GetBoolean()) Camera<1>::dispatch(CameraOn());
-          break;
         case hash(DE_CAMERA_CONTROL("0", DE_OFF)):
           if (entry.value->GetBoolean()) Camera<0>::dispatch(CameraOff());
           break;
-        case hash(DE_CAMERA_CONTROL("1", DE_OFF)):
-          if (entry.value->GetBoolean()) Camera<1>::dispatch(CameraOff());
-          break;
-        //
-        // Lights control events
-        //
         case hash(DE_LIGHTS_CONTROL("0", DE_ON)):
           if (entry.value->GetBoolean()) Lights<0>::dispatch(LightsOn());
-          break;
-        case hash(DE_LIGHTS_CONTROL("1", DE_ON)):
-          if (entry.value->GetBoolean()) Lights<1>::dispatch(LightsOn());
           break;
         case hash(DE_LIGHTS_CONTROL("0", DE_BLINK)):
           if (entry.value->GetBoolean()) Lights<0>::dispatch(LightsBlink());
           break;
-        case hash(DE_LIGHTS_CONTROL("1", DE_BLINK)):
-          if (entry.value->GetBoolean()) Lights<1>::dispatch(LightsBlink());
-          break;
         case hash(DE_LIGHTS_CONTROL("0", DE_OFF)):
           if (entry.value->GetBoolean()) Lights<0>::dispatch(LightsOff());
           break;
-        case hash(DE_LIGHTS_CONTROL("1", DE_OFF)):
-          if (entry.value->GetBoolean()) Lights<1>::dispatch(LightsOff());
-          break;
-        //
-        // Camera config events
-        //
         case hash(DE_CAMERA_CONFIG_ENTRY("0")): {
           CameraConfig event;
           event.config = PipelineConfig::New(entry.value);
@@ -134,6 +113,24 @@ int Controller::Run() {
           Camera<0>::dispatch(event);
           break;
         }
+        //
+        // Camera 1 events
+        //
+        case hash(DE_CAMERA_CONTROL("1", DE_ON)):
+          if (entry.value->GetBoolean()) Camera<1>::dispatch(CameraOn());
+          break;
+        case hash(DE_CAMERA_CONTROL("1", DE_OFF)):
+          if (entry.value->GetBoolean()) Camera<1>::dispatch(CameraOff());
+          break;
+        case hash(DE_LIGHTS_CONTROL("1", DE_ON)):
+          if (entry.value->GetBoolean()) Lights<1>::dispatch(LightsOn());
+          break;
+        case hash(DE_LIGHTS_CONTROL("1", DE_BLINK)):
+          if (entry.value->GetBoolean()) Lights<1>::dispatch(LightsBlink());
+          break;
+        case hash(DE_LIGHTS_CONTROL("1", DE_OFF)):
+          if (entry.value->GetBoolean()) Lights<1>::dispatch(LightsOff());
+          break;
         case hash(DE_CAMERA_CONFIG_ENTRY("1")): {
           CameraConfig event;
           event.config = PipelineConfig::New(entry.value);
