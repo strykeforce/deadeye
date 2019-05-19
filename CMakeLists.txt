@@ -10,6 +10,10 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(BUILD_SHARED_LIBS NO)
 
+# Build options
+set(DEADEYE_CAMERA0_PIPELINE "" CACHE STRING "Camera 0 Pipeline class")
+set(DEADEYE_CAMERA1_PIPELINE "" CACHE STRING "Camera 1 Pipeline class")
+
 # Dependencies
 find_package(spdlog REQUIRED)
 find_package(ntcore REQUIRED)

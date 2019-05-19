@@ -1,16 +1,10 @@
 #include <networktables/NetworkTableInstance.h>
 #include <networktables/NetworkTableValue.h>
-#include <spdlog/spdlog.h>
 #include <atomic>
 #include <csignal>
 #include <cstdlib>
 #include <sstream>
-#include "camera.hpp"
-#include "controller.hpp"
-#include "events.hpp"
-#include "fsm.hpp"
-#include "lights.hpp"
-#include "pipeline_config.hpp"
+#include "deadeye.hpp"
 
 namespace {
 static char const* kNTServerAddress = "127.0.0.1";

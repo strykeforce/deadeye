@@ -1,12 +1,5 @@
-#include <spdlog/spdlog.h>
 #include <future>
-#include <tinyfsm.hpp>
-#include "base_pipeline.hpp"
-#include "camera.hpp"
-#include "controller.hpp"
-#include "fsm.hpp"
-#include "lights.hpp"
-#include "pipeline.hpp"
+#include "deadeye.hpp"
 
 using namespace std::chrono_literals;
 

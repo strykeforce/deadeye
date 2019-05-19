@@ -1,7 +1,4 @@
-#include <spdlog/spdlog.h>
-#include "camera.hpp"
-#include "controller.hpp"
-#include "test_pattern_pipeline.hpp"
+#include "deadeye.hpp"
 
 using namespace deadeye;
 
@@ -17,8 +14,14 @@ int main(int argc, char** argv) {
   spdlog::info("Deadeye starting");
 
   // TODO: make this macro?
-  Camera<0>::SetPipeline(std::make_unique<TestPatternPipeline>(0));
-  Camera<1>::SetPipeline(std::make_unique<DefaultPipeline>(1));
+#ifdef DEADEYE_CAMERA0_PIPELINE
+  Camera<0>::SetPipeline(std::make_unique<DEADEYE_CAMERA0_PIPELINE>(0));
+  spdlog::info("Camera<0> pipeline: {}", de_xstr(DEADEYE_CAMERA0_PIPELINE));
+#endif
+#ifdef DEADEYE_CAMERA1_PIPELINE
+  Camera<1>::SetPipeline(std::make_unique<DEADEYE_CAMERA1_PIPELINE>(0));
+  spdlog::info("Camera<1> pipeline: {}", de_xstr(DEADEYE_CAMERA1_PIPELINE));
+#endif
 
   // TODO: make this macro?
   try {

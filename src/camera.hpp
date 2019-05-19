@@ -1,15 +1,9 @@
 #pragma once
 
-#include <spdlog/spdlog.h>
 #include <atomic>
 #include <future>
 #include <memory>
-#include <tinyfsm.hpp>
-#include "base_pipeline.hpp"
-#include "default_pipeline.hpp"
-#include "events.hpp"
-#include "lights.hpp"
-#include "pipeline_config.hpp"
+#include "deadeye.hpp"
 
 namespace deadeye {
 
