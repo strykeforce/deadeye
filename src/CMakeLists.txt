@@ -2,10 +2,9 @@
 add_library(Deadeye_library
     controller.cpp
     camera.cpp
-    default_pipeline.cpp
-    pipeline_config.cpp
     lights.cpp
 )
+add_subdirectory(pipeline)
 add_library(Deadeye::library ALIAS Deadeye_library)
 set_target_properties(Deadeye_library PROPERTIES
   OUTPUT_NAME deadeye

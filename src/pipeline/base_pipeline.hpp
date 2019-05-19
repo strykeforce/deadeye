@@ -30,6 +30,16 @@ class BasePipeline : public Pipeline {
   }
 
  protected:
+  virtual cv::VideoCapture GetVideoCapture() {
+    spdlog::debug("{}", __PRETTY_FUNCTION__);
+    cv::VideoCapture cap;
+    std::string s{
+        "videotestsrc ! video/x-raw, width=640, "
+        "height=360, "
+        "framerate=90/1 ! videoconvert ! appsink"};
+    cap.open(s, cv::CAP_GSTREAMER);
+    return cap;
+  }
   void ProcessFrame(cv::Mat const &frame);
 
   // implemented in concrete pipeline classes
@@ -82,11 +92,9 @@ void BasePipeline<T>::Run() {
   cvMjpegServer.SetSource(cvsource);
 
   cv::Mat frame;
-  cv::VideoCapture cap;
+  cv::VideoCapture cap = GetVideoCapture();
 
-  if (!cap.open("videotestsrc ! video/x-raw, width=640, height=360, "
-                "framerate=90/1 ! videoconvert ! appsink",
-                cv::CAP_GSTREAMER)) {
+  if (!cap.isOpened()) {
     spdlog::critical("Pipeline<{}>: unable to open camera({}) in {}, line {}",
                      inum_, inum_, __FILE__, __LINE__);
     throw PipelineException("unable to open camera");
