@@ -1,9 +1,3 @@
-# Set build options
-add_compile_definitions(
-  $<$<BOOL:${DEADEYE_CAMERA0_PIPELINE}>:DEADEYE_CAMERA0_PIPELINE=${DEADEYE_CAMERA0_PIPELINE}>
-  $<$<BOOL:${DEADEYE_CAMERA1_PIPELINE}>:DEADEYE_CAMERA1_PIPELINE=${DEADEYE_CAMERA1_PIPELINE}>
-)
-
 # Build library to facilitate testing
 add_library(Deadeye_library
     controller.cpp
@@ -16,6 +10,13 @@ set_target_properties(Deadeye_library PROPERTIES
   OUTPUT_NAME deadeye
   EXPORT_NAME deadeye
 )
+
+target_compile_definitions(Deadeye_library
+  PUBLIC
+  $<$<BOOL:${DEADEYE_CAMERA0_PIPELINE}>:DEADEYE_CAMERA0_PIPELINE=${DEADEYE_CAMERA0_PIPELINE}>
+  $<$<BOOL:${DEADEYE_CAMERA1_PIPELINE}>:DEADEYE_CAMERA1_PIPELINE=${DEADEYE_CAMERA1_PIPELINE}>
+)
+
 
 target_include_directories(Deadeye_library
   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
