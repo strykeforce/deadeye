@@ -1,6 +1,9 @@
 #pragma once
 
-#include "deadeye.hpp"
+#include <tinyfsm.hpp>
+
+#include "camera.hpp"
+#include "lights.hpp"
 
 namespace deadeye {
 using fsm = tinyfsm::FsmList<Camera<0>, Camera<1>, Lights<0>, Lights<1>>;

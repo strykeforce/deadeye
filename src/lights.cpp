@@ -2,7 +2,9 @@
 #include <future>
 #include <thread>
 #include <tinyfsm.hpp>
-#include "deadeye.hpp"
+
+#include "controller.hpp"
+#include "lights.hpp"
 
 using namespace deadeye;
 

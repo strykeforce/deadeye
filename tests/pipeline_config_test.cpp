@@ -1,4 +1,4 @@
-#include "deadeye.hpp"
+#include "pipeline.hpp"
 
 #include <opencv2/core/mat.hpp>
 #include "catch2/catch.hpp"

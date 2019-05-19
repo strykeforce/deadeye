@@ -1,9 +1,12 @@
 #pragma once
 
+#include <spdlog/spdlog.h>
 #include <atomic>
 #include <future>
 #include <memory>
-#include "deadeye.hpp"
+#include <tinyfsm.hpp>
+
+#include "pipeline.hpp"
 
 namespace deadeye {
 
@@ -51,7 +54,7 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
 // state variable definitions
 template <int inum>
 std::unique_ptr<Pipeline> Camera<inum>::pipeline_ =
-    std::make_unique<DefaultPipeline>(inum);
+    std::make_unique<TestPatternPipeline>(inum);
 
 template <int inum>
 std::future<void> Camera<inum>::pipeline_future_;

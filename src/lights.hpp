@@ -2,6 +2,7 @@
 
 #include <atomic>
 #include <future>
+#include <tinyfsm.hpp>
 
 namespace deadeye {
 // ---------------------------------------------------------------------------
