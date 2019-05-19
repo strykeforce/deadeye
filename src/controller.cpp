@@ -4,9 +4,10 @@
 #include <csignal>
 #include <tinyfsm.hpp>
 
-#include "fsm.hpp"
-
+#include "camera.hpp"
 #include "controller.hpp"
+#include "lights.hpp"
+#include "pipeline.hpp"
 
 namespace {
 static char const* kNTServerAddress = "127.0.0.1";
@@ -33,6 +34,19 @@ Controller::Controller() {
   std::signal(SIGINT, signal_handler);
   std::signal(SIGTERM, signal_handler);
 
+#ifdef DEADEYE_CAMERA0_PIPELINE
+  Camera<0>::SetPipeline(std::make_unique<DEADEYE_CAMERA0_PIPELINE>(0));
+  spdlog::info("Camera<0> pipeline: {}", de_xstr(DEADEYE_CAMERA0_PIPELINE));
+#else
+  spdlog::info("Camera<0> pipeline: NA");
+#endif
+#ifdef DEADEYE_CAMERA1_PIPELINE
+  Camera<1>::SetPipeline(std::make_unique<DEADEYE_CAMERA1_PIPELINE>(1));
+  spdlog::info("Camera<1> pipeline: {}", de_xstr(DEADEYE_CAMERA1_PIPELINE));
+#else
+  spdlog::info("Camera<1> pipeline: NA");
+#endif
+
   StartNetworkTables();
   SetNetworkTablesDefaults();
   StartPoller();
@@ -55,7 +69,14 @@ Controller::~Controller() {
  * Run listens for commands and config changes.
  */
 void Controller::Run() {
-  fsm::start();
+#ifdef DEADEYE_CAMERA0_PIPELINE
+  Camera<0>::start();
+  Lights<0>::start();
+#endif
+#ifdef DEADEYE_CAMERA1_PIPELINE
+  Camera<1>::start();
+  Lights<1>::start();
+#endif
 
   for (bool timed_out = false;;) {
     auto entries = nt::PollEntryListener(poller_, kPollTimeout, &timed_out);
@@ -75,12 +96,17 @@ void Controller::Run() {
     // issue FSM events for camera errors
     // The On state receiving CameraOff event will cancel pipeline task, catch
     // exception and transition to Error state.
+#ifdef DEADEYE_CAMERA0_PIPELINE
     if (Camera<0>::HasError()) Camera<0>::dispatch(CameraOff());
+#endif
+#ifdef DEADEYE_CAMERA1_PIPELINE
     if (Camera<1>::HasError()) Camera<1>::dispatch(CameraOff());
+#endif
 
     // issue FSM events from network tables entry update notifications
     for (const auto& entry : entries) {
       switch (hash(entry.name.c_str())) {
+#ifdef DEADEYE_CAMERA0_PIPELINE
         //
         // Camera 0 events
         //
@@ -105,6 +131,8 @@ void Controller::Run() {
           Camera<0>::dispatch(event);
           break;
         }
+#endif
+#ifdef DEADEYE_CAMERA1_PIPELINE
         //
         // Camera 1 events
         //
@@ -129,6 +157,7 @@ void Controller::Run() {
           Camera<1>::dispatch(event);
           break;
         }
+#endif
         default:
           spdlog::warn("Controller: {} event unrecognized in {}, line {}",
                        entry.name, __FILE__, __LINE__);
@@ -140,8 +169,14 @@ void Controller::Run() {
 
 void Controller::ShutDown() {
   // fsm dispatches to all instances
-  fsm::dispatch(CameraOff());
-  fsm::dispatch(LightsOff());
+#ifdef DEADEYE_CAMERA0_PIPELINE
+  Camera<0>::dispatch(CameraOff());
+  Lights<0>::dispatch(LightsOff());
+#endif
+#ifdef DEADEYE_CAMERA1_PIPELINE
+  Camera<1>::dispatch(CameraOff());
+  Lights<1>::dispatch(LightsOff());
+#endif
 }
 
 /**
@@ -227,12 +262,16 @@ void SetCameraConfigEntryDefault(nt::NetworkTableEntry entry) {
  */
 void Controller::SetNetworkTablesDefaults() {
   auto nti = nt::NetworkTableInstance(inst_);
+#ifdef DEADEYE_CAMERA0_PIPELINE
   SetCameraControlTableDefaults(nti.GetTable(DE_CAMERA_CONTROL_TABLE("0")));
-  SetCameraControlTableDefaults(nti.GetTable(DE_CAMERA_CONTROL_TABLE("1")));
   SetLightsControlTableDefaults(nti.GetTable(DE_LIGHTS_CONTROL_TABLE("0")));
-  SetLightsControlTableDefaults(nti.GetTable(DE_LIGHTS_CONTROL_TABLE("1")));
   SetCameraConfigEntryDefault(nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("0")));
+#endif
+#ifdef DEADEYE_CAMERA1_PIPELINE
+  SetCameraControlTableDefaults(nti.GetTable(DE_CAMERA_CONTROL_TABLE("1")));
+  SetLightsControlTableDefaults(nti.GetTable(DE_LIGHTS_CONTROL_TABLE("1")));
   SetCameraConfigEntryDefault(nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("1")));
+#endif
 }
 
 /**

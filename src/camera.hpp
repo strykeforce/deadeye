@@ -6,7 +6,7 @@
 #include <memory>
 #include <tinyfsm.hpp>
 
-#include "pipeline.hpp"
+#include "pipeline/pipeline.hpp"
 
 namespace deadeye {
 
@@ -53,8 +53,7 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
 
 // state variable definitions
 template <int inum>
-std::unique_ptr<Pipeline> Camera<inum>::pipeline_ =
-    std::make_unique<TestPatternPipeline>(inum);
+std::unique_ptr<Pipeline> Camera<inum>::pipeline_;
 
 template <int inum>
 std::future<void> Camera<inum>::pipeline_future_;

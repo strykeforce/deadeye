@@ -87,9 +87,11 @@ void BasePipeline<T>::Run() {
   cancel_ = false;
   spdlog::info("Pipeline<{}>: starting", inum_);
 
+  int port = 5800 + inum_;
   cs::CvSource cvsource{"cvsource", cs::VideoMode::kMJPEG, 320, 180, 30};
-  cs::MjpegServer cvMjpegServer{"cvhttpserver", 8083};
+  cs::MjpegServer cvMjpegServer{"cvhttpserver", port};
   cvMjpegServer.SetSource(cvsource);
+  spdlog::info("Pipeline<{}> listening on port {}", inum_, port);
 
   cv::Mat frame;
   cv::VideoCapture cap = GetVideoCapture();
