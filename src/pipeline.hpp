@@ -1,8 +1,5 @@
 #pragma once
 
-#define de_xstr(s) de_str(s)
-#define de_str(s) #s
-
 #include <spdlog/spdlog.h>
 #include <tinyfsm.hpp>
 

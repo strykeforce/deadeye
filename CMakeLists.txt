@@ -11,6 +11,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(BUILD_SHARED_LIBS NO)
 
 # Build options
+set(DEADEYE_UNIT "A" CACHE STRING "Deadeye unique unit ID")
 set(DEADEYE_CAMERA0_PIPELINE "TestPatternPipeline" CACHE STRING "Camera 0 Pipeline class")
 set(DEADEYE_CAMERA1_PIPELINE "TestPatternPipeline" CACHE STRING "Camera 1 Pipeline class")
 

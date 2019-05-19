@@ -3,13 +3,16 @@
 #include <ntcore.h>
 #include <spdlog/spdlog.h>
 
-#define DE_UNIT "A"
+#define DE_STRINGIFY(s) DE_STR(s)
+#define DE_STR(s) #s
+
+#define DEADEYE_UNIT DE_STRINGIFY(DE_UNIT)
 
 #define DE_DEADEYE_TABLE "/Deadeye"
 #define DE_CAMERA "/Camera"
 #define DE_LIGHTS "/Lights"
-#define DE_CONTROL_TABLE DE_DEADEYE_TABLE "/Control" DE_UNIT
-#define DE_CONFIG_TABLE DE_DEADEYE_TABLE "/Config" DE_UNIT
+#define DE_CONTROL_TABLE DE_DEADEYE_TABLE "/Control" DEADEYE_UNIT
+#define DE_CONFIG_TABLE DE_DEADEYE_TABLE "/Config" DEADEYE_UNIT
 
 #define DE_CAMERA_CONTROL_TABLE(inum) DE_CONTROL_TABLE DE_CAMERA inum
 #define DE_LIGHTS_CONTROL_TABLE(inum) DE_CAMERA_CONTROL_TABLE(inum) DE_LIGHTS

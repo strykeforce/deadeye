@@ -36,13 +36,15 @@ Controller::Controller() {
 
 #ifdef DEADEYE_CAMERA0_PIPELINE
   Camera<0>::SetPipeline(std::make_unique<DEADEYE_CAMERA0_PIPELINE>(0));
-  spdlog::info("Camera<0> pipeline: {}", de_xstr(DEADEYE_CAMERA0_PIPELINE));
+  spdlog::info("Camera<0> pipeline: {}",
+               DE_STRINGIFY(DEADEYE_CAMERA0_PIPELINE));
 #else
   spdlog::info("Camera<0> pipeline: NA");
 #endif
 #ifdef DEADEYE_CAMERA1_PIPELINE
   Camera<1>::SetPipeline(std::make_unique<DEADEYE_CAMERA1_PIPELINE>(1));
-  spdlog::info("Camera<1> pipeline: {}", de_xstr(DEADEYE_CAMERA1_PIPELINE));
+  spdlog::info("Camera<1> pipeline: {}",
+               DE_STRINGIFY(DEADEYE_CAMERA1_PIPELINE));
 #else
   spdlog::info("Camera<1> pipeline: NA");
 #endif
