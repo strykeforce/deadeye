@@ -8,12 +8,13 @@
 using json = nlohmann::json;
 
 namespace deadeye {
-static char const* kSerialKey{"sn"};
-static char const* kHsvLowKey{"hsv_low"};
-static char const* kHsvHighKey{"hsv_high"};
-static char const* kExposureKey{"exposure"};
 
 struct PipelineConfig {
+  static char const* kSerialKey;
+  static char const* kHsvLowKey;
+  static char const* kHsvHighKey;
+  static char const* kExposureKey;
+
   int sn = 0;
   std::array<int, 3> hsv_low;
   std::array<int, 3> hsv_high;

@@ -22,15 +22,15 @@ TEST_CASE("PipelineConfig equality", "[pipeline]") {
 
 TEST_CASE("PipelineConfig from JSON", "[pipeline]") {
   json j;
-  j[kSerialKey] = 2767;
-  j[kHsvLowKey] = {1, 2, 3};
-  j[kHsvHighKey] = {100, 200, 300};
-  j[kExposureKey] = 0.33;
+  j[PipelineConfig::kSerialKey] = 2767;
+  j[PipelineConfig::kHsvLowKey] = {1, 2, 3};
+  j[PipelineConfig::kHsvHighKey] = {100, 200, 300};
+  j[PipelineConfig::kExposureKey] = 0.33;
 
   auto pc = j.get<PipelineConfig>();
   REQUIRE(pc.sn == 2767);
-  REQUIRE(pc.hsv_low == j[kHsvLowKey]);
-  REQUIRE(pc.hsv_high == j[kHsvHighKey]);
+  REQUIRE(pc.hsv_low == j[PipelineConfig::kHsvLowKey]);
+  REQUIRE(pc.hsv_high == j[PipelineConfig::kHsvHighKey]);
   REQUIRE(pc.exposure == 0.33);
 }
 
@@ -38,10 +38,10 @@ TEST_CASE("PipelineConfig to JSON", "[pipeline]") {
   PipelineConfig pc{2767, {1, 2, 3}, {253, 254, 255}, 0.5};
   json j = pc;
   json expected;
-  expected[kSerialKey] = 2767;
-  expected[kHsvLowKey] = {1, 2, 3};
-  expected[kHsvHighKey] = {253, 254, 255};
-  expected[kExposureKey] = 0.5;
+  expected[PipelineConfig::kSerialKey] = 2767;
+  expected[PipelineConfig::kHsvLowKey] = {1, 2, 3};
+  expected[PipelineConfig::kHsvHighKey] = {253, 254, 255};
+  expected[PipelineConfig::kExposureKey] = 0.5;
 
   REQUIRE(j == expected);
 }
