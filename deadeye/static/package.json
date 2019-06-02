@@ -1,22 +1,25 @@
 {
   "name": "deadeye",
-  "version": "1.0.0",
-  "description": "Deadeye Vision System Dashboard",
-  "scripts": {
-    "build": "webpack -p --progress --config webpack.config.js",
-    "dev-build": "webpack --progress -d --config webpack.config.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "webpack --progress -d --config webpack.config.js --watch"
-  },
-  "repository": "https://github.com/strykeforce/deadeye-dash",
-  "author": "Stryke Force",
-  "license": "MIT",
+  "version": "0.1.0",
   "private": true,
-  "babel": {
-    "presets": [
-      "@babel/preset-env",
-      "@babel/preset-react"
-    ]
+  "proxy": "http://localhost:5000",
+  "dependencies": {
+    "@material-ui/core": "^4.0.1",
+    "@material-ui/icons": "^4.0.1",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-scripts": "3.0.1",
+    "socket.io-client": "^2.2.0",
+    "typeface-roboto": "^0.0.54"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
   },
   "browserslist": {
     "production": [
@@ -29,25 +32,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@babel/core": "^7.4.5",
-    "@babel/preset-env": "^7.4.5",
-    "@babel/preset-react": "^7.0.0",
-    "babel-loader": "^8.0.6",
-    "css-loader": "^2.1.1",
-    "eslint": "^5.16.0",
-    "eslint-plugin-react": "^7.13.0",
-    "eslint-plugin-react-hooks": "^1.6.0",
-    "style-loader": "^0.23.1",
-    "webpack": "^4.32.2",
-    "webpack-cli": "^3.3.2"
-  },
-  "peerDependencies": {},
-  "dependencies": {
-    "bootstrap": "^4.3.1",
-    "react": "^16.8.6",
-    "react-bootstrap": "^1.0.0-beta.8",
-    "react-dom": "^16.8.6"
   }
 }
