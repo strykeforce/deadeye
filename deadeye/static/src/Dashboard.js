@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
@@ -18,11 +18,10 @@ import CameraList from "./CameraList";
 function MadeWithLove() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
-      {"Built with love by the "}
       <Link color="inherit" href="https://www.strykeforce.org/">
         Stryke Force
       </Link>
-      {" team."}
+      {" © 2019"}
     </Typography>
   );
 }
@@ -111,6 +110,8 @@ const useStyles = makeStyles(theme => ({
 export default function Dashboard(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
+  const [selectedId, setSelectedId] = useState("A");
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -118,6 +119,11 @@ export default function Dashboard(props) {
     setOpen(false);
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+
+  const handleCameraListClick = id => {
+    setSelectedId(id);
+    console.log(`id = ${id}`);
+  };
 
   return (
     <div className={classes.root}>
@@ -169,7 +175,11 @@ export default function Dashboard(props) {
           </IconButton>
         </div>
         <Divider />
-        <CameraList units={props.units} />
+        <CameraList
+          units={props.units}
+          selectedId={selectedId}
+          onClick={handleCameraListClick}
+        />
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
