@@ -15,6 +15,8 @@ class Unit:
     def __init__(self, unit, cameras):
         self.cameras = []
         self.id = unit
+        config_table = NetworkTables.getTable(f"/Deadeye/Config{unit}")
+        self.ip = config_table.getString("IP", "0.0.0.0")
         for inum in cameras:
             cam = Camera(unit, inum)
             self.cameras.append(cam)
@@ -40,10 +42,15 @@ class Camera:
         self.unit = unit_id
         self.inum = inum
         self.id = f"{unit_id}{inum}"
-        my_table = NetworkTables.getTable(f"/Deadeye/Control{unit_id}/Camera{inum}")
-        self.on = my_table.getBoolean("On", False)
-        self.error = my_table.getBoolean("Error", False)
-        my_table.addEntryListenerEx(self.entry_listener, NotifyFlags.UPDATE)
+        control_table = NetworkTables.getTable(
+            f"/Deadeye/Control{unit_id}/Camera{inum}"
+        )
+        self.on = control_table.getBoolean("On", False)
+        self.error = control_table.getBoolean("Error", False)
+        control_table.addEntryListenerEx(self.entry_listener, NotifyFlags.UPDATE)
+
+        config_table = NetworkTables.getTable(f"/Deadeye/Config{unit_id}")
+        self.config = json.loads(config_table.getString(f"Camera{inum}", "{}"))
 
     def entry_listener(self, table, key, value, is_new):
         del is_new  # unused
