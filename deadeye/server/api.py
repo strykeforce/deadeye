@@ -15,12 +15,16 @@ nt_connected = False
 
 @socketio.on("message")
 def handle_message(message):
-    app.logger.debug("received message: " + message)
+    app.logger.debug("received message: " + str(message))
 
 
-@socketio.on("my event")
-def handle_my_custom_event(j):
-    app.logger.debug("received json: " + str(j))
+@socketio.on("camera_control")
+def handle_camera_control_event(j):
+    unit = models.Unit.units[j["unit"]]
+    camera = unit.cameras[str(j["inum"])]
+    enabled = j["enabled"]
+    camera.enable(enabled)
+    app.logger.debug("unit: %s, camera: %s, enabled: %s", unit.id, camera.id, enabled)
 
 
 @socketio.on("connect")

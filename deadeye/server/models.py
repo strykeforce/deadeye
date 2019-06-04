@@ -51,6 +51,16 @@ class Camera:
         config_table = NetworkTables.getTable(f"/Deadeye/Config{unit_id}")
         self.config = json.loads(config_table.getString(f"Camera{inum}", "{}"))
 
+    def enable(self, enabled):
+        control_table = NetworkTables.getTable(
+            f"/Deadeye/Control{self.unit}/Camera{self.inum}"
+        )
+        self.on = control_table.putBoolean("On", enabled)
+        self.on = control_table.putBoolean("Off", not enabled)
+        self.on = enabled
+        global update_available
+        update_available = True
+
     def entry_listener(self, table, key, value, is_new):
         del is_new  # unused
 

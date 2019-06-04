@@ -16,9 +16,9 @@ export default function CameraStream({ camera }) {
 
   const Image = () => {
     if (camera.on) {
-      return (
-        <img border={1} src={camera.streamUrl} width={width} alt="Stream" />
-      );
+      const stream = `${camera.streamUrl}?t=${Date.now()}`;
+      console.log(`starting camera stream: ${stream}`);
+      return <img border={1} src={stream} width={width} alt="Stream" />;
     }
     return <img border={1} src={standBy} width={width} alt="Please Stand By" />;
   };

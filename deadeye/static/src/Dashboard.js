@@ -107,7 +107,6 @@ export default function Dashboard({ units }) {
 
   const handleCameraListClick = id => {
     setSelectedId(id);
-    console.log(`id = ${id}`);
   };
 
   const Content = () => {

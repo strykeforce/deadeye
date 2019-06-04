@@ -1,23 +1,20 @@
 import React, { useState, useEffect } from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import io from "socket.io-client";
 import Dashboard from "./Dashboard.js";
+import { subscribe, close } from "./api";
 
 function App() {
   const [units, setUnits] = useState({});
 
   useEffect(() => {
-    function handleUnitsChange(status) {
-      setUnits(JSON.parse(status));
+    function handleUnitsChange(units) {
+      setUnits(JSON.parse(units));
     }
-    const socket = io("http://" + document.domain + ":" + window.location.port);
 
-    socket.on("connect", () =>
-      socket.emit("my event", { data: "I'm connected!" })
-    );
-    socket.on("refresh", data => handleUnitsChange(data));
+    subscribe(handleUnitsChange);
+
     return () => {
-      socket.close();
+      close();
     };
   }, []);
 

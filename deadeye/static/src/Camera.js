@@ -5,6 +5,7 @@ import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import CameraStream from "./CameraStream";
+import CameraControl from "./CameraControl";
 import { get } from "./util";
 
 const useStyles = makeStyles(theme => ({
@@ -29,13 +30,13 @@ export default function Camera({ units, selectedId }) {
   const unitId = selectedId.charAt(0);
   const cameraId = selectedId.charAt(1);
   const camera = get([unitId, "cameras", cameraId])(units);
-  console.log(camera);
   return (
     <Container maxWidth="lg" className={classes.container}>
       <Grid container spacing={3}>
         {/* Chart */}
         <Grid item xs={"auto"}>
           <Paper className={fixedHeightPaper}>
+            <CameraControl camera={camera} />
             <ul>
               <li>{JSON.stringify()}</li>
               <li>
