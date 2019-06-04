@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "column"
   },
   fixedHeight: {
-    height: 240
+    height: 279
   }
 }));
 
@@ -33,16 +33,10 @@ export default function Camera({ units, selectedId }) {
   return (
     <Container maxWidth="lg" className={classes.container}>
       <Grid container spacing={3}>
-        {/* Chart */}
+        {/* Camera Controls */}
         <Grid item xs={"auto"}>
           <Paper className={fixedHeightPaper}>
             <CameraControl camera={camera} />
-            <ul>
-              <li>{JSON.stringify()}</li>
-              <li>
-                <pre>{JSON.stringify(units, null, "  ")}</pre>
-              </li>
-            </ul>
           </Paper>
         </Grid>
         {/* Camera Stream */}

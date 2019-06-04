@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
+
 import standBy from "./deadeye.png";
 
 const width = 322;
@@ -11,21 +13,26 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function CameraStream({ camera }) {
+export default function CameraStream({ camera, displayName }) {
   const classes = useStyles();
+  const [source, setSource] = useState(standBy);
 
-  const Image = () => {
+  useEffect(() => {
     if (camera.on) {
-      const stream = `${camera.streamUrl}?t=${Date.now()}`;
-      console.log(`starting camera stream: ${stream}`);
-      return <img border={1} src={stream} width={width} alt="Stream" />;
+      setTimeout(() => setSource(camera.streamUrl), 500);
+    } else {
+      setSource(standBy);
     }
-    return <img border={1} src={standBy} width={width} alt="Please Stand By" />;
-  };
+  }, [camera.on, camera.streamUrl]);
 
   return (
     <Paper className={classes.root}>
-      <Image />
+      <img border={1} src={source} width={width} alt="Stream" />
+      {displayName && (
+        <Typography variant="body1">Camera {camera.id}</Typography>
+      )}
     </Paper>
   );
 }
+
+CameraStream.defaultProps = { displayName: false };

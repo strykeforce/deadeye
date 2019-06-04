@@ -96,7 +96,7 @@ const useStyles = makeStyles(theme => ({
 export default function Dashboard({ units }) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
-  const [selectedId, setSelectedId] = useState("A");
+  const [selectedId, setSelectedId] = useState(null);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -110,6 +110,7 @@ export default function Dashboard({ units }) {
   };
 
   const Content = () => {
+    if (!selectedId) return null;
     if (selectedId.length === 1) {
       return <Unit units={units} selectedId={selectedId} />;
     }
