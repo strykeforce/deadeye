@@ -35,7 +35,7 @@ class BasePipeline : public Pipeline {
     cv::VideoCapture cap;
     std::string s{
         "videotestsrc ! video/x-raw, width=640, "
-        "height=360, "
+        "height=480, "
         "framerate=90/1 ! videoconvert ! appsink"};
     cap.open(s, cv::CAP_GSTREAMER);
     return cap;
@@ -88,7 +88,7 @@ void BasePipeline<T>::Run() {
   spdlog::info("Pipeline<{}>: starting", inum_);
 
   int port = 5800 + inum_;
-  cs::CvSource cvsource{"cvsource", cs::VideoMode::kMJPEG, 320, 180, 30};
+  cs::CvSource cvsource{"cvsource", cs::VideoMode::kMJPEG, 320, 240, 30};
   cs::MjpegServer cvMjpegServer{"cvhttpserver", port};
   cvMjpegServer.SetSource(cvsource);
   spdlog::info("Pipeline<{}> listening on port {}", inum_, port);
@@ -146,7 +146,7 @@ void BasePipeline<T>::ProcessFrame(cv::Mat const &frame) {
   // CRTP cast to concrete pipeline implementation.
   T &impl = static_cast<T &>(*this);
 
-  cv::resize(frame, cvt_color_output_, cv::Size(320, 180));
+  cv::resize(frame, cvt_color_output_, cv::Size(320, 240));
   impl.FindContours(find_contours_input_, find_contours_output_);
 }
 }  // namespace deadeye
