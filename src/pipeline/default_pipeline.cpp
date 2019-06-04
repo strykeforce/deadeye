@@ -15,3 +15,11 @@ cv::VideoCapture DefaultPipeline::GetVideoCapture() {
   cap.open(0, cv::CAP_AVFOUNDATION);
   return cap;
 }
+
+cv::Mat DefaultPipeline::PreProcessFrame(cv::Mat const &frame) {
+  // need 1280 x 960
+  cv::Mat result;
+  cv::copyMakeBorder(frame, result, 120, 120, 0, 0, cv::BORDER_CONSTANT,
+                     cv::Scalar(0, 0, 0));
+  return result;
+}

@@ -29,13 +29,17 @@ class BasePipeline : public Pipeline {
     update_sn_++;
   }
 
- protected:
-  virtual cv::VideoCapture GetVideoCapture() = 0;
-  void ProcessFrame(cv::Mat const &frame);
-
   // implemented in concrete pipeline classes
+  //
+  // cv::Mat PreProcessFrame(cv::Mat const &frame);
+  //
   // void FilterContours(std::vector<std::vector<cv::Point>> const &src,
   //                     std::vector<std::vector<cv::Point>> &dest);
+  //
+ protected:
+  virtual cv::VideoCapture GetVideoCapture() = 0;
+
+  cv::Mat ProcessFrame(cv::Mat const &frame);
 
  private:
   std::atomic<bool> cancel_{false};
@@ -122,8 +126,8 @@ void BasePipeline<T>::Run() {
 
     // Get new frame and process it.
     cap >> frame;
-    ProcessFrame(frame);
-    cvsource.PutFrame(cvt_color_output_);
+    auto preview = ProcessFrame(frame);
+    cvsource.PutFrame(preview);
     tm.stop();
   }
 }
@@ -133,11 +137,15 @@ void BasePipeline<T>::Run() {
  * concrete pipeline implementation.
  */
 template <typename T>
-void BasePipeline<T>::ProcessFrame(cv::Mat const &frame) {
+cv::Mat BasePipeline<T>::ProcessFrame(cv::Mat const &frame) {
   // CRTP cast to concrete pipeline implementation.
   T &impl = static_cast<T &>(*this);
 
-  cv::resize(frame, cvt_color_output_, cv::Size(320, 240));
+  auto pre = impl.PreProcessFrame(frame);
+  cv::Mat result;
+
+  cv::resize(pre, result, cv::Size(320, 240), 0, 0, cv::INTER_AREA);
   impl.FindContours(find_contours_input_, find_contours_output_);
+  return result;
 }
 }  // namespace deadeye

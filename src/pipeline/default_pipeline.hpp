@@ -5,6 +5,9 @@ namespace deadeye {
 class DefaultPipeline : public BasePipeline<DefaultPipeline> {
  public:
   DefaultPipeline(int inum) : BasePipeline<DefaultPipeline>{inum} {}
+
+  cv::Mat PreProcessFrame(cv::Mat const &frame);
+
   void FindContours(std::vector<std::vector<cv::Point>> const &src,
                     std::vector<std::vector<cv::Point>> &dest);
 

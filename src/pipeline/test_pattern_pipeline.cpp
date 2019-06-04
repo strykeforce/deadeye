@@ -13,6 +13,7 @@ cv::VideoCapture TestPatternPipeline::GetVideoCapture() {
   cap.open(s, cv::CAP_GSTREAMER);
   return cap;
 }
+
 void TestPatternPipeline::FindContours(
     std::vector<std::vector<cv::Point>> const &src,
     std::vector<std::vector<cv::Point>> &dest) {
