@@ -7,5 +7,8 @@ class TestPatternPipeline : public BasePipeline<TestPatternPipeline> {
   TestPatternPipeline(int inum) : BasePipeline<TestPatternPipeline>{inum} {}
   void FindContours(std::vector<std::vector<cv::Point>> const &src,
                     std::vector<std::vector<cv::Point>> &dest);
+
+ protected:
+  cv::VideoCapture GetVideoCapture() override;
 };
 }  // namespace deadeye
