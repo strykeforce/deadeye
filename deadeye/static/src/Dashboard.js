@@ -7,13 +7,12 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
-import Container from "@material-ui/core/Container";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
 import Link from "@material-ui/core/Link";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import CameraList from "./CameraList";
+import Camera from "./Camera";
+import Unit from "./Unit";
 
 function MadeWithLove() {
   return (
@@ -91,23 +90,10 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
     height: "100vh",
     overflow: "auto"
-  },
-  container: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4)
-  },
-  paper: {
-    padding: theme.spacing(2),
-    display: "flex",
-    overflow: "auto",
-    flexDirection: "column"
-  },
-  fixedHeight: {
-    height: 240
   }
 }));
 
-export default function Dashboard(props) {
+export default function Dashboard({ units }) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const [selectedId, setSelectedId] = useState("A");
@@ -118,11 +104,17 @@ export default function Dashboard(props) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   const handleCameraListClick = id => {
     setSelectedId(id);
     console.log(`id = ${id}`);
+  };
+
+  const Content = () => {
+    if (selectedId.length === 1) {
+      return <Unit units={units} selectedId={selectedId} />;
+    }
+    return <Camera units={units} selectedId={selectedId} />;
   };
 
   return (
@@ -176,37 +168,14 @@ export default function Dashboard(props) {
         </div>
         <Divider />
         <CameraList
-          units={props.units}
+          units={units}
           selectedId={selectedId}
           onClick={handleCameraListClick}
         />
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        <Container maxWidth="lg" className={classes.container}>
-          <Grid container spacing={3}>
-            {/* Chart */}
-            <Grid item xs={12} md={8} lg={9}>
-              <Paper className={fixedHeightPaper}>
-                <ul>
-                  <li>{JSON.stringify(props.units.A)}</li>
-                </ul>
-              </Paper>
-            </Grid>
-            {/* Recent Deposits */}
-            <Grid item xs={12} md={4} lg={3}>
-              <Paper className={fixedHeightPaper}>
-                <div />
-              </Paper>
-            </Grid>
-            {/* Recent Orders */}
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                <div />
-              </Paper>
-            </Grid>
-          </Grid>
-        </Container>
+        <Content />
         <MadeWithLove />
       </main>
     </div>

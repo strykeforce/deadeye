@@ -13,13 +13,11 @@ class Unit:
     units = {}
 
     def __init__(self, unit, cameras):
-        self.cameras = []
+        self.cameras = {}
         self.id = unit
-        config_table = NetworkTables.getTable(f"/Deadeye/Config{unit}")
-        self.ip = config_table.getString("IP", "0.0.0.0")
         for inum in cameras:
             cam = Camera(unit, inum)
-            self.cameras.append(cam)
+            self.cameras[inum] = cam
 
     @classmethod
     def init(cls):
@@ -40,13 +38,14 @@ class Unit:
 class Camera:
     def __init__(self, unit_id, inum):
         self.unit = unit_id
-        self.inum = inum
+        self.inum = int(inum)
         self.id = f"{unit_id}{inum}"
         control_table = NetworkTables.getTable(
             f"/Deadeye/Control{unit_id}/Camera{inum}"
         )
         self.on = control_table.getBoolean("On", False)
         self.error = control_table.getBoolean("Error", False)
+        self.streamUrl = control_table.getString("StreamUrl", "")
         control_table.addEntryListenerEx(self.entry_listener, NotifyFlags.UPDATE)
 
         config_table = NetworkTables.getTable(f"/Deadeye/Config{unit_id}")

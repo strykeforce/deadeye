@@ -14,7 +14,7 @@ const useStyles = makeStyles({
 });
 
 export default function CameraList(props) {
-  const { units } = props;
+  const { units, selectedId, onClick } = props;
   const classes = useStyles();
 
   return (
@@ -23,8 +23,8 @@ export default function CameraList(props) {
         <div key={unit.id}>
           <ListItem
             button
-            selected={props.selectedId === unit.id}
-            onClick={event => props.onClick(unit.id)}
+            selected={selectedId === unit.id}
+            onClick={event => onClick(unit.id)}
           >
             <ListItemIcon>
               <DeadeyeIcon />
@@ -35,8 +35,8 @@ export default function CameraList(props) {
             <ListItem
               button
               key={camera.id}
-              selected={props.selectedId === camera.id}
-              onClick={event => props.onClick(camera.id)}
+              selected={selectedId === camera.id}
+              onClick={event => onClick(camera.id)}
             >
               <ListItemIcon>
                 {camera.on ? (
