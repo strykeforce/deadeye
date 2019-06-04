@@ -4,8 +4,9 @@ using namespace deadeye;
 using json = nlohmann::json;
 
 char const* PipelineConfig::kSerialKey{"sn"};
-char const* PipelineConfig::kHsvLowKey{"hsv_low"};
-char const* PipelineConfig::kHsvHighKey{"hsv_high"};
+char const* PipelineConfig::kHsvHueKey{"hue"};
+char const* PipelineConfig::kHsvSatKey{"sat"};
+char const* PipelineConfig::kHsvValKey{"val"};
 char const* PipelineConfig::kExposureKey{"exposure"};
 
 PipelineConfig PipelineConfig::New(std::shared_ptr<nt::Value> value) {
@@ -18,15 +19,17 @@ PipelineConfig PipelineConfig::New(std::shared_ptr<nt::Value> value) {
 //
 void deadeye::to_json(json& j, const PipelineConfig& p) {
   j = json{{PipelineConfig::kSerialKey, p.sn},
-           {PipelineConfig::kHsvLowKey, p.hsv_low},
-           {PipelineConfig::kHsvHighKey, p.hsv_high},
+           {PipelineConfig::kHsvHueKey, p.hue},
+           {PipelineConfig::kHsvSatKey, p.sat},
+           {PipelineConfig::kHsvValKey, p.val},
            {PipelineConfig::kExposureKey, p.exposure}};
 }
 
 void deadeye::from_json(const json& j, PipelineConfig& p) {
   j.at(PipelineConfig::kSerialKey).get_to(p.sn);
-  j.at(PipelineConfig::kHsvLowKey).get_to(p.hsv_low);
-  j.at(PipelineConfig::kHsvHighKey).get_to(p.hsv_high);
+  j.at(PipelineConfig::kHsvHueKey).get_to(p.hue);
+  j.at(PipelineConfig::kHsvSatKey).get_to(p.sat);
+  j.at(PipelineConfig::kHsvValKey).get_to(p.val);
   j.at(PipelineConfig::kExposureKey).get_to(p.exposure);
 }
 
@@ -34,14 +37,14 @@ void deadeye::from_json(const json& j, PipelineConfig& p) {
 // iostream support
 //
 namespace {
-std::ostream& operator<<(std::ostream& os, std::array<int, 3> const& s) {
-  os << "[" << s[0] << "," << s[1] << "," << s[2] << "]";
+std::ostream& operator<<(std::ostream& os, std::array<int, 2> const& s) {
+  os << "[" << s[0] << "," << s[1] << "]";
   return os;
 }
 }  // namespace
 
 std::ostream& operator<<(std::ostream& os, PipelineConfig const& pc) {
-  os << "PipelineConfig{" << pc.sn << ", " << pc.hsv_low << ", " << pc.hsv_high
-     << ", " << pc.exposure << "}";
+  os << "PipelineConfig{" << pc.sn << ", " << pc.hue << ", " << pc.sat << ", "
+     << pc.val << ", " << pc.exposure << "}";
   return os;
 }

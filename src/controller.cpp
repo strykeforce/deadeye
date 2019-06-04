@@ -10,6 +10,7 @@
 #include "pipeline.hpp"
 
 namespace {
+// static char const* kNTServerAddress = "titan.lan.j3ff.io";
 static char const* kNTServerAddress = "127.0.0.1";
 static constexpr double kPollTimeout = 0.25;
 
@@ -252,10 +253,18 @@ void SetLightsControlTableDefaults(std::shared_ptr<NetworkTable> table) {
 }
 
 void SetCameraConfigEntryDefault(nt::NetworkTableEntry entry) {
-  PipelineConfig def{0, {0, 0, 0}, {254, 254, 254}, 0.5};
+  PipelineConfig def{0, {0, 254}, {0, 254}, {0, 254}, 0.5};
   json j = def;
   entry.SetDefaultString(j.dump());
   entry.SetPersistent();
+}
+
+void SetCameraStreamInfo(int inum, std::shared_ptr<NetworkTable> table) {
+  std::string url{"http://localhost:"};
+  url += std::to_string(5800 + inum);
+  url += "/stream.mjpg";
+  table->PutString(DE_STREAM_URL, url);
+  spdlog::debug("Setting stream url for camera {}: {}", inum, url);
 }
 }  // namespace
 
@@ -266,11 +275,13 @@ void Controller::SetNetworkTablesDefaults() {
   auto nti = nt::NetworkTableInstance(inst_);
 #ifdef DEADEYE_CAMERA0_PIPELINE
   SetCameraControlTableDefaults(nti.GetTable(DE_CAMERA_CONTROL_TABLE("0")));
+  SetCameraStreamInfo(0, nti.GetTable(DE_CAMERA_CONTROL_TABLE("0")));
   SetLightsControlTableDefaults(nti.GetTable(DE_LIGHTS_CONTROL_TABLE("0")));
   SetCameraConfigEntryDefault(nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("0")));
 #endif
 #ifdef DEADEYE_CAMERA1_PIPELINE
   SetCameraControlTableDefaults(nti.GetTable(DE_CAMERA_CONTROL_TABLE("1")));
+  SetCameraStreamInfo(1, nti.GetTable(DE_CAMERA_CONTROL_TABLE("1")));
   SetLightsControlTableDefaults(nti.GetTable(DE_LIGHTS_CONTROL_TABLE("1")));
   SetCameraConfigEntryDefault(nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("1")));
 #endif

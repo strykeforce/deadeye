@@ -11,13 +11,15 @@ namespace deadeye {
 
 struct PipelineConfig {
   static char const* kSerialKey;
-  static char const* kHsvLowKey;
-  static char const* kHsvHighKey;
+  static char const* kHsvHueKey;
+  static char const* kHsvSatKey;
+  static char const* kHsvValKey;
   static char const* kExposureKey;
 
   int sn = 0;
-  std::array<int, 3> hsv_low;
-  std::array<int, 3> hsv_high;
+  std::array<int, 2> hue;
+  std::array<int, 2> sat;
+  std::array<int, 2> val;
   double exposure;
 
   /**
@@ -30,8 +32,8 @@ void to_json(json& j, const PipelineConfig& p);
 void from_json(const json& j, PipelineConfig& p);
 
 inline bool operator==(PipelineConfig const& lhs, PipelineConfig const& rhs) {
-  return lhs.sn == rhs.sn && lhs.hsv_low == rhs.hsv_low &&
-         lhs.hsv_high == rhs.hsv_high && lhs.exposure == rhs.exposure;
+  return lhs.sn == rhs.sn && lhs.hue == rhs.hue && lhs.sat == rhs.sat &&
+         lhs.val == rhs.val && lhs.exposure == rhs.exposure;
 }
 
 inline bool operator!=(PipelineConfig const& lhs, PipelineConfig const& rhs) {

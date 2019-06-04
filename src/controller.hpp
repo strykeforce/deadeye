@@ -22,6 +22,7 @@
 #define DE_ON "On"
 #define DE_OFF "Off"
 #define DE_BLINK "Blink"
+#define DE_STREAM_URL "StreamUrl"
 
 #define DE_CAMERA_CONTROL(inum, param) DE_CAMERA_CONTROL_TABLE(inum) "/" param
 #define DE_LIGHTS_CONTROL(inum, param) DE_LIGHTS_CONTROL_TABLE(inum) "/" param
