@@ -27,6 +27,17 @@ def handle_camera_control_event(j):
     app.logger.debug("unit: %s, camera: %s, enabled: %s", unit.id, camera.id, enabled)
 
 
+@socketio.on("camera_config")
+def handle_camera_config_event(j):
+    unit = models.Unit.units[j["unit"]]
+    camera = unit.cameras[str(j["inum"])]
+    config = j["config"]
+    camera.set_config(config)
+    app.logger.debug(
+        "unit: %s, camera: %s, enabled: %s", unit.id, camera.id, camera.config
+    )
+
+
 @socketio.on("connect")
 def handle_connect():
     app.logger.debug("client connected")

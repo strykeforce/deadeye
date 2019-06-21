@@ -15,3 +15,9 @@ export const enableCamera = (unit, inum, enabled) => {
   const message = { unit, inum, enabled };
   socket.emit("camera_control", message);
 };
+
+export const configCamera = (unit, inum, config) => {
+  const message = { unit, inum, config };
+  socket.emit("camera_config", message);
+  // console.log(`configCamera: ${JSON.stringify(message)}`);
+};

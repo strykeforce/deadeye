@@ -55,9 +55,18 @@ class Camera:
         control_table = NetworkTables.getTable(
             f"/Deadeye/Control{self.unit}/Camera{self.inum}"
         )
-        self.on = control_table.putBoolean("On", enabled)
-        self.on = control_table.putBoolean("Off", not enabled)
+        control_table.putBoolean("On", enabled)
+        control_table.putBoolean("Off", not enabled)
         self.on = enabled
+        global update_available
+        update_available = True
+
+    def set_config(self, config):
+        config_entry = NetworkTables.getEntry(
+            f"/Deadeye/Config{self.unit}/Camera{self.inum}"
+        )
+        config_entry.setString(json.dumps(config))
+        self.config = config
         global update_available
         update_available = True
 

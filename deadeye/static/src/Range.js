@@ -24,14 +24,17 @@ export default function Range(props) {
 
   const onRangeChange = props.onRangeChange;
   useEffect(() => {
-    if (debouncedRange) {
+    if (
+      debouncedRange[0] !== props.range[0] ||
+      debouncedRange[1] !== props.range[1]
+    ) {
       onRangeChange(debouncedRange);
-    } else {
-      console.log("no debouncedRange");
     }
-  }, [debouncedRange, onRangeChange]);
+  }, [debouncedRange, onRangeChange, props.range]);
 
-  const handleSliderChange = (event, newValue) => setRange(newValue);
+  const handleSliderChange = (event, newValue) => {
+    setRange(newValue);
+  };
 
   const handleLowerInputChange = event => {
     const newValue = event.target.value === "" ? 0 : Number(event.target.value);
