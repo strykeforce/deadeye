@@ -138,7 +138,7 @@ export default function Dashboard({ units }) {
           </IconButton>
           <Typography
             component="h1"
-            variant="h6"
+            variant="h4"
             color="inherit"
             noWrap
             className={classes.title}

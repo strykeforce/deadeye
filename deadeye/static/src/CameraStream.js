@@ -56,6 +56,7 @@ export default function CameraStream({ camera, displayName }) {
             value="original"
             onChange={handleChange}
           >
+            <FormControlLabel value="none" control={<Radio />} label="None" />
             <FormControlLabel
               value="original"
               control={<Radio />}
