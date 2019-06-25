@@ -1,18 +1,18 @@
 import React from "react";
-import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
 import CameraStream from "./CameraStream";
 import CameraControl from "./CameraControl";
+import CameraCapture from "./CameraCapture";
 import CameraThreshold from "./CameraThreshold";
 import { get } from "./util";
 
 const useStyles = makeStyles(theme => ({
   container: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4)
+    padding: theme.spacing(4),
+    display: "grid",
+    gridTemplateColumns: "1f 1f",
+    gridTemplateRows: "1f 1f 1f",
+    gridGap: theme.spacing(3)
   },
   paper: {
     padding: theme.spacing(2),
@@ -38,28 +38,19 @@ export default function Camera({ units, selectedId }) {
   const cameraId = selectedId.charAt(1);
   const camera = get([unitId, "cameras", cameraId])(units);
   return (
-    <Container maxWidth="lg" className={classes.container}>
-      <Grid container spacing={3}>
-        {/* Camera Controls */}
-        <Grid item xs={5} className={classes.camera}>
-          <Grid container spacing={3} className={classes.controls}>
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                <CameraControl camera={camera} />
-              </Paper>
-            </Grid>
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                <CameraThreshold camera={camera} />
-              </Paper>
-            </Grid>
-          </Grid>
-        </Grid>
-        {/* Camera Stream */}
-        <Grid item xs={5}>
-          <CameraStream camera={camera} />
-        </Grid>
-      </Grid>
-    </Container>
+    <div className={classes.container}>
+      <div style={{ gridColumn: "1/2", gridRow: "1/2" }}>
+        <CameraControl camera={camera} />
+      </div>
+      <div style={{ gridColumn: "1/2", gridRow: "2/3" }}>
+        <CameraCapture camera={camera} />
+      </div>
+      <div style={{ gridColumn: "1/2", gridRow: "3/4" }}>
+        <CameraThreshold camera={camera} />
+      </div>
+      <div style={{ gridColumn: "2/3", gridRow: "1/4" }}>
+        <CameraStream camera={camera} />
+      </div>
+    </div>
   );
 }

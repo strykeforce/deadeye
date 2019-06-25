@@ -2,11 +2,15 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Range from "./Range";
 import Typography from "@material-ui/core/Typography";
+import Paper from "@material-ui/core/Paper";
 import { configCamera } from "./api";
 
 const useStyles = makeStyles(theme => ({
   root: {
-    padding: theme.spacing(2)
+    padding: theme.spacing(2),
+    display: "flex",
+    overflow: "auto",
+    flexDirection: "column"
   }
 }));
 
@@ -20,9 +24,9 @@ export default function CameraThreshold({ camera }) {
   };
 
   return (
-    <div className={classes.root}>
+    <Paper className={classes.root}>
       <Typography component="h2" variant="h6" color="inherit" noWrap>
-        Threshold
+        Threshold Settings
       </Typography>
       <Range
         label="Hue"
@@ -39,6 +43,6 @@ export default function CameraThreshold({ camera }) {
         range={config.val}
         onRangeChange={handleRangeChange("val")}
       />
-    </div>
+    </Paper>
   );
 }
