@@ -6,7 +6,7 @@ import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import CameraStream from "./CameraStream";
 import CameraControl from "./CameraControl";
-import CameraConfig from "./CameraConfig";
+import CameraThreshold from "./CameraThreshold";
 import { get } from "./util";
 
 const useStyles = makeStyles(theme => ({
@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function Camera({ units, selectedId }) {
   const classes = useStyles();
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  // const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const unitId = selectedId.charAt(0);
   const cameraId = selectedId.charAt(1);
   const camera = get([unitId, "cameras", cameraId])(units);
@@ -50,7 +50,7 @@ export default function Camera({ units, selectedId }) {
             </Grid>
             <Grid item xs={12}>
               <Paper className={classes.paper}>
-                <CameraConfig camera={camera} />
+                <CameraThreshold camera={camera} />
               </Paper>
             </Grid>
           </Grid>

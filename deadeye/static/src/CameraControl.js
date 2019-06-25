@@ -22,7 +22,7 @@ export default function CameraControl({ camera }) {
 
   return (
     <>
-      <Typography component="h1" variant="h6" color="inherit" noWrap>
+      <Typography component="h1" variant="h5" color="inherit" noWrap>
         Camera {camera.id}
       </Typography>
       <FormControl component="fieldset" className={classes.formControl}>

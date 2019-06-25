@@ -1,6 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Range from "./Range";
+import Typography from "@material-ui/core/Typography";
 import { configCamera } from "./api";
 
 const useStyles = makeStyles(theme => ({
@@ -9,7 +10,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function CameraConfig({ camera }) {
+export default function CameraThreshold({ camera }) {
   const classes = useStyles();
   const config = camera.config;
 
@@ -20,6 +21,9 @@ export default function CameraConfig({ camera }) {
 
   return (
     <div className={classes.root}>
+      <Typography component="h2" variant="h6" color="inherit" noWrap>
+        Threshold
+      </Typography>
       <Range
         label="Hue"
         range={config.hue}
