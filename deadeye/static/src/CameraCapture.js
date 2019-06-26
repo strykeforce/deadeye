@@ -1,10 +1,9 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
-import Input from "@material-ui/core/Input";
-import Slider from "@material-ui/lab/Slider";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
+import { configCamera } from "./api";
+import Level from "./Level";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -24,48 +23,24 @@ const useStyles = makeStyles(theme => ({
 
 export default function CameraCapture({ camera }) {
   const classes = useStyles();
+  const config = camera.config;
 
-  const handleSliderChange = value => {
-    console.log(`handleSliderChange: ${value}`);
+  const handleLevelChange = name => value => {
+    const newConfig = Object.assign(config, { [name]: value });
+    configCamera(camera.unit, camera.inum, newConfig);
+    console.log(`handleSliderChange: ${name}: ${value}`);
   };
-
-  const handleBlur = () => {};
 
   return (
     <Paper className={classes.root}>
       <Typography component="h2" variant="h6" color="inherit" noWrap>
         Capture Settings
       </Typography>
-      <div className={classes.slider}>
-        <Typography id="input-slider" gutterBottom>
-          Exposure
-        </Typography>
-        <Grid container spacing={2} alignItems="center">
-          <Grid item xs>
-            <Slider
-              value={10}
-              min={0}
-              max={255}
-              onChange={handleSliderChange}
-            />
-          </Grid>
-          <Grid item>
-            <Input
-              className={classes.input}
-              value={10}
-              margin="dense"
-              onChange={null}
-              onBlur={handleBlur}
-              inputProps={{
-                step: 1,
-                min: 0,
-                max: 255,
-                type: "number"
-              }}
-            />
-          </Grid>
-        </Grid>
-      </div>
+      <Level
+        label="Exposure"
+        level={config.exposure}
+        onLevelChange={handleLevelChange("exposure")}
+      />
     </Paper>
   );
 }
