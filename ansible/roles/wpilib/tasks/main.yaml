@@ -1,0 +1,46 @@
+---
+- name: Unarchive sources
+  unarchive:
+    src: https://github.com/wpilibsuite/allwpilib/archive/v{{ wpilib_version }}.tar.gz
+    dest: /usr/local/src
+    remote_src: true
+  tags:
+    - wpilib
+
+- name: Create build directory
+  file:
+    path: /usr/local/src/allwpilib-{{ wpilib_version }}/build
+    state: directory
+  tags:
+    - wpilib
+
+- name: Run cmake
+  command:
+    chdir: /usr/local/src/allwpilib-{{ wpilib_version }}/build
+    argv:
+      - /usr/bin/cmake
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_INSTALL_PREFIX=/usr/local
+      - -DUSE_EXTERNAL_HAL=OFF
+      - -DBUILD_TESTS=OFF
+      - -DWITHOUT_ALLWPILIB=ON
+      - -DWITHOUT_CSCORE=OFF
+      - -DWITHOUT_JAVA=ON
+      - -GNinja
+      - ..
+  environment:
+    LDFLAGS: -latomic
+  tags:
+    - wpilib
+    - build
+    - cmake
+
+- name: Build and install
+  command:
+    chdir: /usr/local/src/allwpilib-{{ wpilib_version }}/build
+    argv:
+      - /usr/bin/ninja
+      - install
+  tags:
+    - wpilib
+    - build

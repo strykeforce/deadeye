@@ -1,0 +1,40 @@
+---
+- name: Unarchive sources
+  unarchive:
+    src: https://github.com/nlohmann/json/archive/v{{ nlohmann_json_version }}.tar.gz
+    dest: /usr/local/src
+    remote_src: true
+  tags:
+    - nlohmann_json
+
+- name: Create build directory
+  file:
+    path: /usr/local/src/json-{{ nlohmann_json_version }}/build
+    state: directory
+  tags:
+    - nlohmann_json
+
+- name: Run cmake
+  command:
+    chdir: /usr/local/src/json-{{ nlohmann_json_version }}/build
+    argv:
+      - /usr/bin/cmake
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_INSTALL_PREFIX=/usr/local
+      - -DJSON_BuildTests=OFF
+      - -GNinja
+      - ..
+  tags:
+    - nlohmann_json
+    - build
+    - cmake
+
+- name: Build and install
+  command:
+    chdir: /usr/local/src/json-{{ nlohmann_json_version }}/build
+    argv:
+      - /usr/bin/ninja
+      - install
+  tags:
+    - nlohmann_json
+    - build

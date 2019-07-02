@@ -1,0 +1,8 @@
+---
+- hosts: all
+  roles:
+    - opencv
+    - wpilib
+    - spdlog
+    - nlohmann_json
+    - catch

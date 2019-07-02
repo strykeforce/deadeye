@@ -1,0 +1,8 @@
+---
+all:
+  hosts:
+    deadeye-a:
+      ansible_host: pi
+      ansible_user: pi
+      ansible_become: true
+      ansible_python_interpreter: /usr/bin/python3

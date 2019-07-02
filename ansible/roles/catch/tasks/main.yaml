@@ -1,0 +1,41 @@
+---
+- name: Unarchive sources
+  unarchive:
+    src: https://github.com/catchorg/Catch2/archive/v{{ catch_version }}.tar.gz
+    dest: /usr/local/src
+    remote_src: true
+  tags:
+    - catch
+
+- name: Create build directory
+  file:
+    path: /usr/local/src/Catch2-{{ catch_version }}/build
+    state: directory
+  tags:
+    - catch
+
+- name: Run cmake
+  command:
+    chdir: /usr/local/src/Catch2-{{ catch_version }}/build
+    argv:
+      - /usr/bin/cmake
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_INSTALL_PREFIX=/usr/local
+      - -DCATCH_BUILD_TESTING=OFF
+      - -DCATCH_INSTALL_DOCS=OFF
+      - -GNinja
+      - ..
+  tags:
+    - catch
+    - build
+    - cmake
+
+- name: Build and install
+  command:
+    chdir: /usr/local/src/Catch2-{{ catch_version }}/build
+    argv:
+      - /usr/bin/ninja
+      - install
+  tags:
+    - catch
+    - build
