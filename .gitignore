@@ -10,5 +10,6 @@ CTestTestfile.cmake
 build/
 tags
 .ignore
+.vaultpw
 networktables.ini
 networktables.ini.bak

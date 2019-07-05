@@ -1,8 +1,13 @@
 ---
-- hosts: all
+- hosts: deadeye
   roles:
-    - opencv
-    - wpilib
-    - spdlog
-    - nlohmann_json
-    - catch
+    - role: wpilib
+      tags: wpilib
+    - role: spdlog
+      tags: spdlog
+    - role: nlohmann_json
+      tags: [json, nlohmann_json]
+    - role: catch
+      tags: catch
+    - role: deadeye
+      tags: deadeye

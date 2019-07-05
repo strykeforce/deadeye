@@ -1,8 +1,15 @@
 ---
-all:
+deadeye:
   hosts:
-    deadeye-a:
+    deadeye-c:
       ansible_host: pi
+      ansible_user: pi
+      ansible_become: true
+      ansible_python_interpreter: /usr/bin/python3
+bootstrap:
+  hosts:
+    raspberrypi:
+      ansible_host: raspberrypi.local
       ansible_user: pi
       ansible_become: true
       ansible_python_interpreter: /usr/bin/python3
