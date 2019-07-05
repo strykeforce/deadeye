@@ -6,7 +6,7 @@
 #define DE_STRINGIFY(s) DE_STR(s)
 #define DE_STR(s) #s
 
-#define DEADEYE_UNIT DE_STRINGIFY(DE_UNIT)
+#define DEADEYE_UNIT DE_STRINGIFY(DEADEYE_UNIT_ID)
 
 #define DE_DEADEYE_TABLE "/Deadeye"
 #define DE_CAMERA "/Camera"

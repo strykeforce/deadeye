@@ -4,6 +4,7 @@
     update_cache: true
     name:
       - git
+      - cmake-curses-gui
 
 - name: Set jhh authorized keys
   authorized_key:
