@@ -3,11 +3,11 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Dashboard from './Dashboard.js';
 import { subscribe, close } from './api';
 
-function App() {
+const App: React.FC<{}> = () => {
   const [units, setUnits] = useState({});
 
   useEffect(() => {
-    function handleUnitsChange(units) {
+    function handleUnitsChange(units: string): void {
       setUnits(JSON.parse(units));
     }
 
@@ -24,6 +24,6 @@ function App() {
       <Dashboard units={units} />
     </>
   );
-}
+};
 
 export default App;
