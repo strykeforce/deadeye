@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Dashboard from './Dashboard.js';
+import Dashboard from './Dashboard';
 import { subscribe, close } from './api';
 
 const App: React.FC<{}> = () => {

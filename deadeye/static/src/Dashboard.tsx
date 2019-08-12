@@ -13,8 +13,9 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import CameraList from './CameraList';
 import Camera from './Camera';
 import Unit from './Unit';
+import { Units } from './models';
 
-function MadeWithLove() {
+function MadeWithLove(): JSX.Element {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       <Link color="inherit" href="https://www.strykeforce.org/">
@@ -93,29 +94,29 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Dashboard({ units }) {
+const Dashboard: React.FC<{ units: Units }> = ({ units }) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
-  const [selectedId, setSelectedId] = useState(null);
+  const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
 
-  const handleDrawerOpen = () => {
+  function handleDrawerOpen(): void {
     setOpen(true);
-  };
-  const handleDrawerClose = () => {
+  }
+  function handleDrawerClose(): void {
     setOpen(false);
-  };
+  }
 
-  const handleCameraListClick = id => {
+  function handleCameraListClick(id: string): void {
     setSelectedId(id);
-  };
+  }
 
-  const Content = () => {
-    if (!selectedId) return null;
+  function Content(): JSX.Element {
+    if (!selectedId) return <div>Please select a unit or camera from menu on left.</div>;
     if (selectedId.length === 1) {
       return <Unit units={units} selectedId={selectedId} />;
     }
     return <Camera units={units} selectedId={selectedId} />;
-  };
+  }
 
   return (
     <div className={classes.root}>
@@ -164,4 +165,6 @@ export default function Dashboard({ units }) {
       </main>
     </div>
   );
-}
+};
+
+export default Dashboard;
