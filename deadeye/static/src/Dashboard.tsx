@@ -11,7 +11,7 @@ import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import CameraList from './CameraList';
-import Camera from './Camera';
+import CameraPanel from './CameraPanel';
 import UnitPanel from './UnitPanel';
 import { Units } from './models';
 
@@ -115,7 +115,7 @@ const Dashboard: React.FC<{ units: Units }> = ({ units }) => {
     if (selectedId.length === 1) {
       return <UnitPanel units={units} selectedId={selectedId} />;
     }
-    return <Camera units={units} selectedId={selectedId} />;
+    return <CameraPanel units={units} selectedId={selectedId} />;
   }
 
   return (

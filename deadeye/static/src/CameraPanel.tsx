@@ -5,6 +5,7 @@ import CameraControl from './CameraControl';
 import CameraCapture from './CameraCapture';
 import CameraThreshold from './CameraThreshold';
 import { get } from './util';
+import { Units } from './models';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -31,7 +32,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Camera({ units, selectedId }) {
+const CameraPanel: React.FC<{ units: Units; selectedId: string }> = ({ units, selectedId }) => {
   const classes = useStyles();
   // const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const unitId = selectedId.charAt(0);
@@ -53,4 +54,6 @@ export default function Camera({ units, selectedId }) {
       </div>
     </div>
   );
-}
+};
+
+export default CameraPanel;
