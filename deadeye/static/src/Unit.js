@@ -22,7 +22,7 @@ export default function Unit({ units, selectedId }) {
   return (
     <Container maxWidth="lg" className={classes.container}>
       <Grid container spacing={3}>
-        {Object.values(cameras).map((camera, i) => (
+        {Object.values(cameras).map(camera => (
           <Grid key={camera.id} item xs={'auto'}>
             <CameraStream camera={camera} displayName />
           </Grid>

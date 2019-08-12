@@ -19,16 +19,16 @@ export default function CameraList(props) {
 
   return (
     <List>
-      {Object.values(units).map((unit, i) => (
+      {Object.values(units).map(unit => (
         <div key={unit.id}>
-          <ListItem button selected={selectedId === unit.id} onClick={event => onClick(unit.id)}>
+          <ListItem button selected={selectedId === unit.id} onClick={() => onClick(unit.id)}>
             <ListItemIcon>
               <DeadeyeIcon />
             </ListItemIcon>
             <ListItemText primary={`Unit ${unit.id}`} />
           </ListItem>
-          {Object.values(unit.cameras).map((camera, i) => (
-            <ListItem button key={camera.id} selected={selectedId === camera.id} onClick={event => onClick(camera.id)}>
+          {Object.values(unit.cameras).map(camera => (
+            <ListItem button key={camera.id} selected={selectedId === camera.id} onClick={() => onClick(camera.id)}>
               <ListItemIcon>
                 {camera.on ? <LinkedCameraIcon /> : <CameraIcon className={classes.cameraIcon} />}
               </ListItemIcon>

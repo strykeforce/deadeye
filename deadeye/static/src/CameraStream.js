@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
 export default function CameraStream({ camera, displayName }) {
   const classes = useStyles();
   const [source, setSource] = useState(standBy);
-  const [value, setValue] = React.useState('original');
+  const [, setValue] = React.useState('original');
 
   useEffect(() => {
     if (camera.on) {
