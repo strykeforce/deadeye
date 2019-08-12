@@ -27,10 +27,11 @@ const useStyles = makeStyles(theme => ({
 export default function CameraStream({ camera, displayName }) {
   const classes = useStyles();
   const [source, setSource] = useState(standBy);
-  const [value, setValue] = React.useState("female");
+  const [value, setValue] = React.useState("original");
 
   useEffect(() => {
     if (camera.on) {
+      console.log("starting camera timeout...");
       setTimeout(() => setSource(camera.streamUrl), 500);
     } else {
       setSource(standBy);
