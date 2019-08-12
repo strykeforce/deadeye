@@ -46,7 +46,7 @@ def handle_connect():
     if not nt_connected and not nt_connecting:
         nt_connecting = True
         app.logger.debug("connecting to NetworkTables...")
-        NetworkTables.initialize(server="127.0.0.1")
+        NetworkTables.initialize(server="10.27.67.2")
         NetworkTables.addConnectionListener(
             nt_connection_listener, immediateNotify=True
         )
