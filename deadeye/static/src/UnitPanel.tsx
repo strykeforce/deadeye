@@ -4,6 +4,7 @@ import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import { get } from './util';
 import CameraStream from './CameraStream';
+import { Units, Cameras } from './models';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -12,10 +13,10 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Unit({ units, selectedId }) {
+const UnitPanel: React.FC<{ units: Units; selectedId: string }> = ({ units, selectedId }) => {
   const classes = useStyles();
   const unitId = selectedId.charAt(0);
-  const cameras = get([unitId, 'cameras'])(units);
+  const cameras: Cameras = get([unitId, 'cameras'])(units);
   console.log(units);
   console.log(cameras);
 
@@ -30,4 +31,6 @@ export default function Unit({ units, selectedId }) {
       </Grid>
     </Container>
   );
-}
+};
+
+export default UnitPanel;

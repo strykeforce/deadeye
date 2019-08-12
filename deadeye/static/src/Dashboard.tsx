@@ -12,7 +12,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import CameraList from './CameraList';
 import Camera from './Camera';
-import Unit from './Unit';
+import UnitPanel from './UnitPanel';
 import { Units } from './models';
 
 function MadeWithLove(): JSX.Element {
@@ -113,7 +113,7 @@ const Dashboard: React.FC<{ units: Units }> = ({ units }) => {
   function Content(): JSX.Element {
     if (!selectedId) return <div>Please select a unit or camera from menu on left.</div>;
     if (selectedId.length === 1) {
-      return <Unit units={units} selectedId={selectedId} />;
+      return <UnitPanel units={units} selectedId={selectedId} />;
     }
     return <Camera units={units} selectedId={selectedId} />;
   }
