@@ -30,7 +30,7 @@ export default function CameraControl({ camera }) {
         Camera {camera.id}
       </Typography>
       <FormControl component="fieldset">
-        <FormGroup row>
+        <FormGroup>
           <FormControlLabel
             control={
               <Switch
