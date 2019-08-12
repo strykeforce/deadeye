@@ -24,7 +24,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "upgrade": "npm-check --update"
+    "upgrade": "npm-check --update",
+    "lint": "eslint --ext .js,.ts,.tsx src"
   },
   "eslintConfig": {
     "extends": "react-app"
