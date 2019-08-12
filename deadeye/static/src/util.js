@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
-export const get = p => o =>
-  p.reduce((xs, x) => (xs && xs[x] ? xs[x] : null), o);
+export const get = p => o => p.reduce((xs, x) => (xs && xs[x] ? xs[x] : null), o);
 
 // from: https://dev.to/gabe_ragland/debouncing-with-react-hooks-jci
 export const useDebounce = (value, delay) => {

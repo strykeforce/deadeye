@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
-import Slider from "@material-ui/lab/Slider";
-import Input from "@material-ui/core/Input";
-import { useDebounce } from "./util";
+import React, { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import Slider from '@material-ui/lab/Slider';
+import Input from '@material-ui/core/Input';
+import { useDebounce } from './util';
 
 const useStyles = makeStyles(theme => ({
   root: {
     adding: theme.spacing(1),
-    width: 341
+    width: 341,
   },
   input: {
-    width: 42
-  }
+    width: 42,
+  },
 }));
 
 export default function Range(props) {
@@ -35,7 +35,7 @@ export default function Range(props) {
   };
 
   const handleInputChange = event => {
-    const newValue = event.target.value === "" ? 0 : Number(event.target.value);
+    const newValue = event.target.value === '' ? 0 : Number(event.target.value);
     setLevel(newValue);
   };
 
@@ -55,12 +55,7 @@ export default function Range(props) {
       </Typography>
       <Grid container spacing={2} alignItems="center">
         <Grid item xs>
-          <Slider
-            value={level}
-            min={0}
-            max={100}
-            onChange={handleSliderChange}
-          />
+          <Slider value={level} min={0} max={100} onChange={handleSliderChange} />
         </Grid>
         <Grid item>
           <Input
@@ -73,7 +68,7 @@ export default function Range(props) {
               step: 1,
               min: 0,
               max: 100,
-              type: "number"
+              type: 'number',
             }}
           />
         </Grid>

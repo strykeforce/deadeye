@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import Slider from "@material-ui/lab/Slider";
-import Input from "@material-ui/core/Input";
-import { useDebounce } from "./util";
+import React, { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Slider from '@material-ui/lab/Slider';
+import Input from '@material-ui/core/Input';
+import { useDebounce } from './util';
 
 const useStyles = makeStyles(theme => ({
   root: {
     padding: theme.spacing(1),
-    width: 350
+    width: 350,
   },
   input: {
-    width: 42
-  }
+    width: 42,
+  },
 }));
 
 export default function Range(props) {
@@ -24,10 +24,7 @@ export default function Range(props) {
 
   const onRangeChange = props.onRangeChange;
   useEffect(() => {
-    if (
-      debouncedRange[0] !== props.range[0] ||
-      debouncedRange[1] !== props.range[1]
-    ) {
+    if (debouncedRange[0] !== props.range[0] || debouncedRange[1] !== props.range[1]) {
       onRangeChange(debouncedRange);
     }
   }, [debouncedRange, onRangeChange, props.range]);
@@ -37,12 +34,12 @@ export default function Range(props) {
   };
 
   const handleLowerInputChange = event => {
-    const newValue = event.target.value === "" ? 0 : Number(event.target.value);
+    const newValue = event.target.value === '' ? 0 : Number(event.target.value);
     setRange([newValue, range[1]]);
   };
 
   const handleUpperInputChange = event => {
-    const newValue = event.target.value === "" ? 0 : Number(event.target.value);
+    const newValue = event.target.value === '' ? 0 : Number(event.target.value);
     setRange([range[0], newValue]);
   };
 
@@ -72,17 +69,12 @@ export default function Range(props) {
             inputProps={{
               step: 1,
               min: 0,
-              max: 255
+              max: 255,
             }}
           />
         </Grid>
         <Grid item xs>
-          <Slider
-            value={range}
-            min={0}
-            max={255}
-            onChange={handleSliderChange}
-          />
+          <Slider value={range} min={0} max={255} onChange={handleSliderChange} />
         </Grid>
         <Grid item>
           <Input
@@ -95,7 +87,7 @@ export default function Range(props) {
               step: 1,
               min: 0,
               max: 255,
-              type: "number"
+              type: 'number',
             }}
           />
         </Grid>

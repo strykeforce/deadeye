@@ -1,24 +1,24 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
-import { configCamera } from "./api";
-import Level from "./Level";
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import { configCamera } from './api';
+import Level from './Level';
 
 const useStyles = makeStyles(theme => ({
   root: {
     padding: theme.spacing(2),
-    display: "flex",
-    overflow: "auto",
-    flexDirection: "column"
+    display: 'flex',
+    overflow: 'auto',
+    flexDirection: 'column',
   },
   slider: {
     adding: theme.spacing(1),
-    width: 350
+    width: 350,
   },
   input: {
-    width: 42
-  }
+    width: 42,
+  },
 }));
 
 export default function CameraCapture({ camera }) {
@@ -36,11 +36,7 @@ export default function CameraCapture({ camera }) {
       <Typography component="h2" variant="h6" color="inherit" noWrap>
         Capture Settings
       </Typography>
-      <Level
-        label="Exposure"
-        level={config.exposure}
-        onLevelChange={handleLevelChange("exposure")}
-      />
+      <Level label="Exposure" level={config.exposure} onLevelChange={handleLevelChange('exposure')} />
     </Paper>
   );
 }
