@@ -11,7 +11,7 @@
 
 namespace {
 // static char const* kNTServerAddress = "titan.lan.j3ff.io";
-static char const* kNTServerAddress = "10.27.67.2";
+static char const* kNTServerAddress = "127.0.0.1";
 static constexpr double kPollTimeout = 0.25;
 
 std::atomic<bool> quit{false};
