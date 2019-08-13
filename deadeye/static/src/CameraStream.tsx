@@ -47,11 +47,11 @@ const CameraStream = (props: Props): JSX.Element => {
     }
   }, [camera.on, camera.streamUrl]);
 
-  function handleChange(event: React.ChangeEvent<{}>, value: string): void {
+  const handleChange = (event: React.ChangeEvent<{}>, value: string): void => {
     event.preventDefault();
     setValue(value);
     console.log(`radio value = ${value}`);
-  }
+  };
 
   return (
     <Paper className={classes.root}>
