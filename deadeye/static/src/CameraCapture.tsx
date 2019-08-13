@@ -4,13 +4,17 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import { configCamera } from './api';
 import Level from './Level';
+import { Camera } from './models';
 
-// FIXME: function
-export default function CameraCapture({ camera }) {
+interface Props {
+  camera: Camera;
+}
+
+const CameraCapture = ({ camera }: Props): JSX.Element => {
   const classes = useStyles();
   const config = camera.config;
 
-  const handleLevelChange = name => value => {
+  const handleLevelChange = (name: string) => (value: number) => {
     const newConfig = Object.assign(config, { [name]: value });
     configCamera(camera.unit, camera.inum, newConfig);
     console.log(`handleSliderChange: ${name}: ${value}`);
@@ -24,7 +28,9 @@ export default function CameraCapture({ camera }) {
       <Level label="Exposure" level={config.exposure} onLevelChange={handleLevelChange('exposure')} />
     </Paper>
   );
-}
+};
+
+export default CameraCapture;
 
 const useStyles = makeStyles(theme => ({
   root: {
