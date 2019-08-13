@@ -6,30 +6,35 @@ import Slider from '@material-ui/core/Slider';
 import Input from '@material-ui/core/Input';
 import { useDebounce } from './util';
 
-// FIXME: function
-export default function Range(props) {
+interface Props {
+  label: string;
+  initialLevel: number;
+  onLevelChange: Function;
+}
+
+const Range = (props: Props): JSX.Element => {
+  const { label, initialLevel, onLevelChange } = props;
   const classes = useStyles();
-  const [level, setLevel] = useState(props.level);
+  const [level, setLevel] = useState(initialLevel);
 
   const debouncedLevel = useDebounce(level, 500);
 
-  const onLevelChange = props.onLevelChange;
   useEffect(() => {
-    if (debouncedLevel !== props.level) {
+    if (debouncedLevel !== initialLevel) {
       onLevelChange(debouncedLevel);
     }
-  }, [debouncedLevel, onLevelChange, props.level]);
+  }, [debouncedLevel, onLevelChange, initialLevel]);
 
-  const handleSliderChange = (event, newValue) => {
-    setLevel(newValue);
+  const handleSliderChange = (event: React.ChangeEvent<{}>, newValue: number | number[]): void => {
+    setLevel(newValue as number);
   };
 
-  const handleInputChange = event => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
     const newValue = event.target.value === '' ? 0 : Number(event.target.value);
     setLevel(newValue);
   };
 
-  const handleBlur = () => {
+  const handleBlur = (): void => {
     if (level < 0) {
       setLevel(0);
     }
@@ -41,7 +46,7 @@ export default function Range(props) {
   return (
     <div className={classes.root}>
       <Typography id="input-slider" gutterBottom>
-        {props.label}
+        {label}
       </Typography>
       <Grid container spacing={2} alignItems="center">
         <Grid item xs>
@@ -65,7 +70,9 @@ export default function Range(props) {
       </Grid>
     </div>
   );
-}
+};
+
+export default Range;
 
 const useStyles = makeStyles(theme => ({
   root: {
