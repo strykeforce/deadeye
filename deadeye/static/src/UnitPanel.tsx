@@ -6,13 +6,7 @@ import { get } from './util';
 import CameraStream from './CameraStream';
 import { Units, Cameras } from './models';
 
-const useStyles = makeStyles(theme => ({
-  container: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4),
-  },
-}));
-
+// FIXME: FC
 const UnitPanel: React.FC<{ units: Units; selectedId: string }> = ({ units, selectedId }) => {
   const classes = useStyles();
   const unitId = selectedId.charAt(0);
@@ -34,3 +28,10 @@ const UnitPanel: React.FC<{ units: Units; selectedId: string }> = ({ units, sele
 };
 
 export default UnitPanel;
+
+const useStyles = makeStyles(theme => ({
+  container: {
+    paddingTop: theme.spacing(4),
+    paddingBottom: theme.spacing(4),
+  },
+}));

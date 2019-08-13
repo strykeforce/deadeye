@@ -7,31 +7,7 @@ import CameraThreshold from './CameraThreshold';
 import { get } from './util';
 import { Units } from './models';
 
-const useStyles = makeStyles(theme => ({
-  container: {
-    padding: theme.spacing(4),
-    display: 'grid',
-    gridTemplateColumns: '1f 1f',
-    gridTemplateRows: '1f 1f 1f',
-    gridGap: theme.spacing(3),
-  },
-  paper: {
-    padding: theme.spacing(2),
-    display: 'flex',
-    overflow: 'auto',
-    flexDirection: 'column',
-  },
-  fixedHeight: {
-    height: 279,
-  },
-  camera: {
-    flexDirection: 'column',
-  },
-  controls: {
-    flexDirection: 'column',
-  },
-}));
-
+// FIXME: FC
 const CameraPanel: React.FC<{ units: Units; selectedId: string }> = ({ units, selectedId }) => {
   const classes = useStyles();
   // const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
@@ -57,3 +33,28 @@ const CameraPanel: React.FC<{ units: Units; selectedId: string }> = ({ units, se
 };
 
 export default CameraPanel;
+
+const useStyles = makeStyles(theme => ({
+  container: {
+    padding: theme.spacing(4),
+    display: 'grid',
+    gridTemplateColumns: '1f 1f',
+    gridTemplateRows: '1f 1f 1f',
+    gridGap: theme.spacing(3),
+  },
+  paper: {
+    padding: theme.spacing(2),
+    display: 'flex',
+    overflow: 'auto',
+    flexDirection: 'column',
+  },
+  fixedHeight: {
+    height: 279,
+  },
+  camera: {
+    flexDirection: 'column',
+  },
+  controls: {
+    flexDirection: 'column',
+  },
+}));

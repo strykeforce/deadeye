@@ -15,6 +15,82 @@ import CameraPanel from './CameraPanel';
 import UnitPanel from './UnitPanel';
 import { Units } from './models';
 
+// FIXME: FC
+const Dashboard: React.FC<{ units: Units }> = ({ units }) => {
+  const classes = useStyles();
+  const [open, setOpen] = React.useState(true);
+  const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
+
+  function handleDrawerOpen(): void {
+    setOpen(true);
+  }
+  function handleDrawerClose(): void {
+    setOpen(false);
+  }
+
+  function handleCameraListClick(id: string): void {
+    setSelectedId(id);
+  }
+
+  function Content(): JSX.Element {
+    if (!selectedId) return <div>Please select a unit or camera from menu on left.</div>;
+    if (selectedId.length === 1) {
+      return <UnitPanel units={units} selectedId={selectedId} />;
+    }
+    return <CameraPanel units={units} selectedId={selectedId} />;
+  }
+
+  return (
+    <div className={classes.root}>
+      <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
+        <Toolbar className={classes.toolbar}>
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="Open drawer"
+            onClick={handleDrawerOpen}
+            className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography component="h1" variant="h4" color="inherit" noWrap className={classes.title}>
+            Deadeye
+          </Typography>
+          {/*
+          <IconButton color="inherit">
+            <Badge badgeContent={4} color="secondary">
+              <NotificationsIcon />
+            </Badge>
+          </IconButton>
+          */}
+        </Toolbar>
+      </AppBar>
+      <Drawer
+        variant="permanent"
+        classes={{
+          paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
+        }}
+        open={open}
+      >
+        <div className={classes.toolbarIcon}>
+          <IconButton onClick={handleDrawerClose}>
+            <ChevronLeftIcon />
+          </IconButton>
+        </div>
+        <Divider />
+        <CameraList units={units} selectedId={selectedId} onClick={handleCameraListClick} />
+      </Drawer>
+      <main className={classes.content}>
+        <div className={classes.appBarSpacer} />
+        <Content />
+        <MadeWithLove />
+      </main>
+    </div>
+  );
+};
+
+export default Dashboard;
+
 function MadeWithLove(): JSX.Element {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -93,78 +169,3 @@ const useStyles = makeStyles(theme => ({
     overflow: 'auto',
   },
 }));
-
-const Dashboard: React.FC<{ units: Units }> = ({ units }) => {
-  const classes = useStyles();
-  const [open, setOpen] = React.useState(true);
-  const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
-
-  function handleDrawerOpen(): void {
-    setOpen(true);
-  }
-  function handleDrawerClose(): void {
-    setOpen(false);
-  }
-
-  function handleCameraListClick(id: string): void {
-    setSelectedId(id);
-  }
-
-  function Content(): JSX.Element {
-    if (!selectedId) return <div>Please select a unit or camera from menu on left.</div>;
-    if (selectedId.length === 1) {
-      return <UnitPanel units={units} selectedId={selectedId} />;
-    }
-    return <CameraPanel units={units} selectedId={selectedId} />;
-  }
-
-  return (
-    <div className={classes.root}>
-      <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
-        <Toolbar className={classes.toolbar}>
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="Open drawer"
-            onClick={handleDrawerOpen}
-            className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography component="h1" variant="h4" color="inherit" noWrap className={classes.title}>
-            Deadeye
-          </Typography>
-          {/*
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
-          */}
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        variant="permanent"
-        classes={{
-          paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-        }}
-        open={open}
-      >
-        <div className={classes.toolbarIcon}>
-          <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </div>
-        <Divider />
-        <CameraList units={units} selectedId={selectedId} onClick={handleCameraListClick} />
-      </Drawer>
-      <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
-        <Content />
-        <MadeWithLove />
-      </main>
-    </div>
-  );
-};
-
-export default Dashboard;

@@ -5,15 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import { configCamera } from './api';
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    padding: theme.spacing(2),
-    display: 'flex',
-    overflow: 'auto',
-    flexDirection: 'column',
-  },
-}));
-
+// FIXME: function
 export default function CameraThreshold({ camera }) {
   const classes = useStyles();
   const config = camera.config;
@@ -34,3 +26,12 @@ export default function CameraThreshold({ camera }) {
     </Paper>
   );
 }
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    padding: theme.spacing(2),
+    display: 'flex',
+    overflow: 'auto',
+    flexDirection: 'column',
+  },
+}));

@@ -9,10 +9,7 @@ import DeadeyeIcon from '@material-ui/icons/GpsFixed';
 import CameraIcon from '@material-ui/icons/CameraAlt';
 import LinkedCameraIcon from '@material-ui/icons/LinkedCamera';
 
-const useStyles = makeStyles({
-  cameraIcon: { paddingTop: '2px' },
-});
-
+// FIXME: function
 export default function CameraList(props) {
   const { units, selectedId, onClick } = props;
   const classes = useStyles();
@@ -41,3 +38,7 @@ export default function CameraList(props) {
     </List>
   );
 }
+
+const useStyles = makeStyles({
+  cameraIcon: { paddingTop: '2px' },
+});

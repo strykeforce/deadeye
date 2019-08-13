@@ -8,15 +8,7 @@ import Paper from '@material-ui/core/Paper';
 import Switch from '@material-ui/core/Switch';
 import { enableCamera } from './api';
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    padding: theme.spacing(2),
-    display: 'flex',
-    overflow: 'auto',
-    flexDirection: 'column',
-  },
-}));
-
+// FIXME: function
 export default function CameraControl({ camera }) {
   const classes = useStyles();
 
@@ -44,3 +36,12 @@ export default function CameraControl({ camera }) {
     </Paper>
   );
 }
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    padding: theme.spacing(2),
+    display: 'flex',
+    overflow: 'auto',
+    flexDirection: 'column',
+  },
+}));

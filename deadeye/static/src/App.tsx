@@ -3,6 +3,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Dashboard from './Dashboard';
 import { subscribe, close } from './api';
 
+// FIXME: FC
 const App: React.FC<{}> = () => {
   const [units, setUnits] = useState({});
 

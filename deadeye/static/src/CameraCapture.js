@@ -5,22 +5,7 @@ import Paper from '@material-ui/core/Paper';
 import { configCamera } from './api';
 import Level from './Level';
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    padding: theme.spacing(2),
-    display: 'flex',
-    overflow: 'auto',
-    flexDirection: 'column',
-  },
-  slider: {
-    adding: theme.spacing(1),
-    width: 350,
-  },
-  input: {
-    width: 42,
-  },
-}));
-
+// FIXME: function
 export default function CameraCapture({ camera }) {
   const classes = useStyles();
   const config = camera.config;
@@ -40,3 +25,19 @@ export default function CameraCapture({ camera }) {
     </Paper>
   );
 }
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    padding: theme.spacing(2),
+    display: 'flex',
+    overflow: 'auto',
+    flexDirection: 'column',
+  },
+  slider: {
+    adding: theme.spacing(1),
+    width: 350,
+  },
+  input: {
+    width: 42,
+  },
+}));

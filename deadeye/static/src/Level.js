@@ -6,16 +6,7 @@ import Slider from '@material-ui/core/Slider';
 import Input from '@material-ui/core/Input';
 import { useDebounce } from './util';
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    adding: theme.spacing(1),
-    width: 341,
-  },
-  input: {
-    width: 42,
-  },
-}));
-
+// FIXME: function
 export default function Range(props) {
   const classes = useStyles();
   const [level, setLevel] = useState(props.level);
@@ -75,3 +66,13 @@ export default function Range(props) {
     </div>
   );
 }
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    adding: theme.spacing(1),
+    width: 341,
+  },
+  input: {
+    width: 42,
+  },
+}));

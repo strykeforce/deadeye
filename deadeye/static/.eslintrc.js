@@ -20,6 +20,10 @@ module.exports = {
       'warn',
       { allowExpressions: true, allowTypedFunctionExpressions: true, allowHigherOrderFunctions: true },
     ],
+    '@typescript-eslint/no-use-before-define': [
+      'error',
+      { variables: false, functions: false, classes: true, typedefs: false },
+    ],
     'react/prop-types': 'off',
     'linebreak-style': ['error', 'unix'],
   },
