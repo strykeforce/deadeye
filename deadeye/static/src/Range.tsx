@@ -9,7 +9,7 @@ import { useDebounce } from './util';
 interface Props {
   label: string;
   initialRange: number[];
-  onRangeChange: Function;
+  onRangeChange: (range: number[]) => void;
 }
 
 const Range = (props: Props): JSX.Element => {

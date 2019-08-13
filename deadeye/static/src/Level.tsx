@@ -9,7 +9,7 @@ import { useDebounce } from './util';
 interface Props {
   label: string;
   initialLevel: number;
-  onLevelChange: Function;
+  onLevelChange: (level: number) => void;
 }
 
 const Range = (props: Props): JSX.Element => {
@@ -17,7 +17,7 @@ const Range = (props: Props): JSX.Element => {
   const classes = useStyles();
   const [level, setLevel] = useState(initialLevel);
 
-  const debouncedLevel = useDebounce(level, 500);
+  const debouncedLevel = useDebounce(level, 500) as number;
 
   useEffect(() => {
     if (debouncedLevel !== initialLevel) {

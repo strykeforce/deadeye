@@ -14,7 +14,7 @@ const CameraThreshold = ({ camera }: Props): JSX.Element => {
   const classes = useStyles();
   const config = camera.config;
 
-  const handleRangeChange = (name: string) => (value: number) => {
+  const handleRangeChange = (name: string) => (value: number[]) => {
     const newConfig = Object.assign(config, { [name]: value });
     configCamera(camera.unit, camera.inum, newConfig);
   };
