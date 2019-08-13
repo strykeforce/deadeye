@@ -8,9 +8,7 @@ const App: React.FC<{}> = () => {
   const [units, setUnits] = useState({});
 
   useEffect(() => {
-    function handleUnitsChange(units: string): void {
-      setUnits(JSON.parse(units));
-    }
+    const handleUnitsChange = (units: string): void => setUnits(JSON.parse(units));
 
     subscribe(handleUnitsChange);
 
