@@ -8,9 +8,15 @@ import Divider from '@material-ui/core/Divider';
 import DeadeyeIcon from '@material-ui/icons/GpsFixed';
 import CameraIcon from '@material-ui/icons/CameraAlt';
 import LinkedCameraIcon from '@material-ui/icons/LinkedCamera';
+import { Units } from './models';
 
-// FIXME: function
-export default function CameraList(props) {
+interface Props {
+  units: Units;
+  selectedId: string | undefined;
+  onClick: (id: string) => void;
+}
+
+const CameraList = (props: Props): JSX.Element => {
   const { units, selectedId, onClick } = props;
   const classes = useStyles();
 
@@ -37,7 +43,9 @@ export default function CameraList(props) {
       ))}
     </List>
   );
-}
+};
+
+export default CameraList;
 
 const useStyles = makeStyles({
   cameraIcon: { paddingTop: '2px' },
