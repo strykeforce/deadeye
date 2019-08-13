@@ -7,12 +7,17 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Paper from '@material-ui/core/Paper';
 import Switch from '@material-ui/core/Switch';
 import { enableCamera } from './api';
+import { Camera } from './models';
 
-// FIXME: function
-export default function CameraControl({ camera }) {
+interface Props {
+  camera: Camera;
+}
+
+// TODO: Camera on/off and lights tied together
+const CameraControl = ({ camera }: Props): JSX.Element => {
   const classes = useStyles();
 
-  const handleChange = event => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     enableCamera(camera.unit, camera.inum, event.target.checked);
   };
 
@@ -35,7 +40,9 @@ export default function CameraControl({ camera }) {
       </FormControl>
     </Paper>
   );
-}
+};
+
+export default CameraControl;
 
 const useStyles = makeStyles(theme => ({
   root: {
