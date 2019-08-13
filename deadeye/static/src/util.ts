@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
-export const get = p => o =>
-  p.reduce((xs, x) => (xs && xs[x] ? xs[x] : null), o);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const get = (p: string[]) => (o: any) => p.reduce((xs, x) => (xs && xs[x] ? xs[x] : null), o);
 
 // from: https://dev.to/gabe_ragland/debouncing-with-react-hooks-jci
-export const useDebounce = (value, delay) => {
+export const useDebounce = (value: unknown, delay: number): typeof value => {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
   useEffect(() => {
