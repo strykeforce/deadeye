@@ -4,13 +4,17 @@ import Range from './Range';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import { configCamera } from './api';
+import { Camera } from './models';
 
-// FIXME: function
-export default function CameraThreshold({ camera }) {
+interface Props {
+  camera: Camera;
+}
+
+const CameraThreshold = ({ camera }: Props): JSX.Element => {
   const classes = useStyles();
   const config = camera.config;
 
-  const handleRangeChange = name => value => {
+  const handleRangeChange = (name: string) => (value: number) => {
     const newConfig = Object.assign(config, { [name]: value });
     configCamera(camera.unit, camera.inum, newConfig);
   };
@@ -25,7 +29,9 @@ export default function CameraThreshold({ camera }) {
       <Range label="Value" range={config.val} onRangeChange={handleRangeChange('val')} />
     </Paper>
   );
-}
+};
+
+export default CameraThreshold;
 
 const useStyles = makeStyles(theme => ({
   root: {
