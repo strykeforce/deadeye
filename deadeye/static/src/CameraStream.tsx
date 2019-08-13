@@ -7,6 +7,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
+import { Camera } from './models';
 
 import standBy from './deadeye.png';
 
@@ -22,9 +23,17 @@ const useStyles = makeStyles(theme => ({
   group: {
     margin: theme.spacing(1, 0),
   },
+  stream: {
+    border: '1px solid black',
+  },
 }));
 
-export default function CameraStream({ camera, displayName }) {
+// eslint-disable-next-line @typescript-eslint/no-use-before-define
+type Props = { camera: Camera } & typeof defaultProps;
+const defaultProps = Object.freeze({ displayName: false });
+
+const CameraStream = (props: Props): JSX.Element => {
+  let { camera, displayName } = props;
   const classes = useStyles();
   const [source, setSource] = useState(standBy);
   const [, setValue] = React.useState('original');
@@ -38,14 +47,16 @@ export default function CameraStream({ camera, displayName }) {
     }
   }, [camera.on, camera.streamUrl]);
 
-  const handleChange = event => {
-    setValue(event.target.value);
-  };
+  function handleChange(event: React.ChangeEvent<{}>, value: string): void {
+    event.preventDefault();
+    setValue(value);
+    console.log(`radio value = ${value}`);
+  }
 
   return (
     <Paper className={classes.root}>
       {displayName && <Typography variant="body1">Camera {camera.id}</Typography>}
-      <img border={1} src={source} width={width} alt="Stream" />
+      <img src={source} width={width} className={classes.stream} alt="Stream" />
       <div className={classes.root}>
         <FormControl component="fieldset" className={classes.formControl}>
           <FormLabel component="legend">View</FormLabel>
@@ -66,6 +77,8 @@ export default function CameraStream({ camera, displayName }) {
       </div>
     </Paper>
   );
-}
+};
 
-CameraStream.defaultProps = { displayName: false };
+CameraStream.defaultProps = defaultProps;
+
+export default CameraStream;
