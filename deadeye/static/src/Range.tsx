@@ -6,35 +6,40 @@ import Slider from '@material-ui/core/Slider';
 import Input from '@material-ui/core/Input';
 import { useDebounce } from './util';
 
-// FIXME: function
-export default function Range(props) {
+interface Props {
+  label: string;
+  initialRange: number[];
+  onRangeChange: Function;
+}
+
+const Range = (props: Props): JSX.Element => {
+  const { label, initialRange, onRangeChange } = props;
   const classes = useStyles();
-  const [range, setRange] = useState(props.range);
+  const [range, setRange] = useState(initialRange);
 
-  const debouncedRange = useDebounce(range, 500);
+  const debouncedRange: number[] = useDebounce(range, 500) as number[];
 
-  const onRangeChange = props.onRangeChange;
   useEffect(() => {
-    if (debouncedRange[0] !== props.range[0] || debouncedRange[1] !== props.range[1]) {
+    if (debouncedRange[0] !== initialRange[0] || debouncedRange[1] !== initialRange[1]) {
       onRangeChange(debouncedRange);
     }
-  }, [debouncedRange, onRangeChange, props.range]);
+  }, [debouncedRange, onRangeChange, initialRange]);
 
-  const handleSliderChange = (event, newValue) => {
-    setRange(newValue);
+  const handleSliderChange = (event: React.ChangeEvent<{}>, newValue: number | number[]): void => {
+    setRange(newValue as number[]);
   };
 
-  const handleLowerInputChange = event => {
+  const handleLowerInputChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
     const newValue = event.target.value === '' ? 0 : Number(event.target.value);
     setRange([newValue, range[1]]);
   };
 
-  const handleUpperInputChange = event => {
+  const handleUpperInputChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
     const newValue = event.target.value === '' ? 0 : Number(event.target.value);
     setRange([range[0], newValue]);
   };
 
-  const handleBlur = () => {
+  const handleBlur = (): void => {
     if (range[0] < 0) {
       setRange([0, range[1]]);
     }
@@ -46,7 +51,7 @@ export default function Range(props) {
   return (
     <div className={classes.root}>
       <Typography id="input-slider" gutterBottom>
-        {props.label}
+        {label}
       </Typography>
       <Grid container spacing={2} alignItems="center">
         <Grid item>
@@ -85,7 +90,9 @@ export default function Range(props) {
       </Grid>
     </div>
   );
-}
+};
+
+export default Range;
 
 const useStyles = makeStyles(theme => ({
   root: {

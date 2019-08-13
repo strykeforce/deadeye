@@ -24,9 +24,9 @@ const CameraThreshold = ({ camera }: Props): JSX.Element => {
       <Typography component="h2" variant="h6" color="inherit" noWrap>
         Threshold Settings
       </Typography>
-      <Range label="Hue" range={config.hue} onRangeChange={handleRangeChange('hue')} />
-      <Range label="Saturation" range={config.sat} onRangeChange={handleRangeChange('sat')} />
-      <Range label="Value" range={config.val} onRangeChange={handleRangeChange('val')} />
+      <Range label="Hue" initialRange={config.hue} onRangeChange={handleRangeChange('hue')} />
+      <Range label="Saturation" initialRange={config.sat} onRangeChange={handleRangeChange('sat')} />
+      <Range label="Value" initialRange={config.val} onRangeChange={handleRangeChange('val')} />
     </Paper>
   );
 };
