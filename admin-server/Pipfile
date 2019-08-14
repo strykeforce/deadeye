@@ -9,7 +9,8 @@ server = "python ./deadeye/server/main.py"
 [dev-packages]
 black = "==19.3b0"
 pylint = "*"
-neovim = "*"
+rope = "*"
+deadeye = {editable = true,path = "."}
 
 [packages]
 flask-socketio = "*"
