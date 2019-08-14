@@ -1,7 +1,7 @@
 # pylint: disable=global-statement
 import simplejson as json
 from networktables import NetworkTables, NetworkTablesInstance
-from app import app
+from flask import current_app
 
 NotifyFlags = NetworkTablesInstance.NotifyFlags
 
@@ -12,24 +12,22 @@ class Unit:
 
     units = {}
 
-    def __init__(self, unit, cameras):
+    def __init__(self, unit_id, cameras):
         self.cameras = {}
-        self.id = unit
+        self.id = unit_id
         for inum in cameras:
-            cam = Camera(unit, inum)
+            cam = Camera(unit_id, inum)
             self.cameras[inum] = cam
 
     @classmethod
     def init(cls):
         deadeye_table = NetworkTables.getTable("/Deadeye")
         units = {sub[-1:] for sub in deadeye_table.getSubTables()}
-        app.logger.debug("units = %s", units)
 
-        for unit in units:
-            control_table = NetworkTables.getTable(f"/Deadeye/Control{unit}")
-            app.logger.debug("control table = %s", control_table)
+        for unit_id in units:
+            control_table = NetworkTables.getTable(f"/Deadeye/Control{unit_id}")
             cameras = {sub[-1:] for sub in control_table.getSubTables()}
-            cls.units[unit] = Unit(unit, cameras)
+            cls.units[unit_id] = Unit(unit_id, cameras)
 
     def __repr__(self):
         return f"Unit({self.id})"
@@ -73,10 +71,7 @@ class Camera:
     def entry_listener(self, table, key, value, is_new):
         del is_new  # unused
 
-        app.logger.debug("%s: %s: %s", table, key, value)
-
         if not value:
-            app.logger.debug("%s set to False, skipping update", key)
             return
 
         last = key[-1:]
@@ -90,7 +85,7 @@ class Camera:
         elif last == "r":
             self.error = True
         else:
-            app.logger.error("unrecognized key: %s", key)
+            current_app.logger.error("unrecognized key: %s", key)
 
         global update_available
         update_available = True

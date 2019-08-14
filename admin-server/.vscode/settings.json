@@ -6,7 +6,8 @@
     "**/CVS": true,
     "**/.DS_Store": true,
     "**/*.pyc": true,
-    "**/__pycache__": true
+    "**/__pycache__": true,
+    "deadeye.egg-info": true,
   },
   "python.pythonPath": "/Users/jeff/.local/share/virtualenvs/admin-server-JnuXv_jv/bin/python"
 }
