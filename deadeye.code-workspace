@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"name": "Vision Daemon",
+			"path": "daemon"
+		},
+		{
+			"name": "Admin Server",
+			"path": "admin-server"
+		},
+		{
+			"name": "Admin Web",
+			"path": "admin-web"
+		}
+	],
+	"settings": {}
+}
