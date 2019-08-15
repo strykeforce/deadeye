@@ -1,87 +1,75 @@
-# pylint: disable=global-statement
+from flask_socketio import SocketIO
 from threading import Lock
 import simplejson as json
 from networktables import NetworkTables
-
-import models
-
-thread = None
-thread_lock = Lock()
-
-nt_connecting = False
-nt_connected = False
-
-socketio = None
-app = None
+from . import models
 
 
-def init(s, a):
-    global socketio, app
-    socketio, app = s, a
-    socketio.on_event("message", handle_message)
-    socketio.on_event("camera_control", handle_camera_control_event)
-    socketio.on_event("camera_config", handle_camera_config_event)
-    socketio.on_event("connect", handle_connect)
+class Api:
+    def __init__(self, app):
+        self.app = app
+        self.socketio = SocketIO(app=app, logger=app.logger)
+        self.thread = None
+        self.thread_lock = Lock()
+        self.nt_connecting = False
+        self.nt_connected = False
+        self.socketio.on_event("message", self.handle_message)
+        self.socketio.on_event("camera_control", self.handle_camera_control_event)
+        self.socketio.on_event("camera_config", self.handle_camera_config_event)
+        self.socketio.on_event("connect", self.handle_connect)
 
+    def handle_message(self, message):
+        self.app.logger.debug("received message: " + str(message))
 
-def handle_message(message):
-    app.logger.debug("received message: " + str(message))
-
-
-def handle_camera_control_event(j):
-    unit = models.Unit.units[j["unit"]]
-    camera = unit.cameras[str(j["inum"])]
-    enabled = j["enabled"]
-    camera.enable(enabled)
-    app.logger.debug("unit: %s, camera: %s, enabled: %s", unit.id, camera.id, enabled)
-
-
-def handle_camera_config_event(j):
-    unit = models.Unit.units[j["unit"]]
-    camera = unit.cameras[str(j["inum"])]
-    config = j["config"]
-    camera.set_config(config)
-    app.logger.debug(
-        "unit: %s, camera: %s, enabled: %s", unit.id, camera.id, camera.config
-    )
-
-
-def handle_connect():
-    app.logger.debug("client connected")
-    global nt_connected
-    global nt_connecting
-    if not nt_connected and not nt_connecting:
-        nt_connecting = True
-        app.logger.debug("connecting to NetworkTables...")
-        NetworkTables.initialize(server="127.0.0.1")
-        NetworkTables.addConnectionListener(
-            nt_connection_listener, immediateNotify=True
+    def handle_camera_control_event(self, j):
+        unit = models.Unit.units[j["unit"]]
+        camera = unit.cameras[str(j["inum"])]
+        enabled = j["enabled"]
+        camera.enable(enabled)
+        self.app.logger.debug(
+            "unit: %s, camera: %s, enabled: %s", unit.id, camera.id, enabled
         )
 
-    global thread
-    with thread_lock:
-        if thread is None:
-            thread = socketio.start_background_task(background_thread, app)
-            app.logger.debug("started model update thread")
+    def handle_camera_config_event(self, j):
+        unit = models.Unit.units[j["unit"]]
+        camera = unit.cameras[str(j["inum"])]
+        config = j["config"]
+        camera.set_config(config)
+        self.app.logger.debug(
+            "unit: %s, camera: %s, enabled: %s", unit.id, camera.id, camera.config
+        )
 
-    models.update_available = nt_connected
-
-
-def nt_connection_listener(is_connected, info):
-    global nt_connected
-    global nt_connecting
-    nt_connected = is_connected
-    nt_connecting = not is_connected
-    models.Unit.init()
-    app.logger.debug("Connected = %s, info = %s", is_connected, info)
-
-
-def background_thread(app):
-    while True:
-        if models.update_available:
-            app.logger.debug("refresh available")
-            socketio.emit(
-                "refresh", json.dumps(models.Unit.units, cls=models.UnitEncoder)
+    def handle_connect(self):
+        self.app.logger.debug("client connected")
+        if not self.nt_connected and not self.nt_connecting:
+            self.nt_connecting = True
+            self.app.logger.debug("connecting to NetworkTables...")
+            NetworkTables.initialize(server="127.0.0.1")
+            NetworkTables.addConnectionListener(
+                self.nt_connection_listener, immediateNotify=True
             )
-            models.update_available = False
-        socketio.sleep(0.250)
+
+        with self.thread_lock:
+            if self.thread is None:
+                self.thread = self.socketio.start_background_task(
+                    self.background_thread, self.app
+                )
+                self.app.logger.debug("started model update thread")
+
+        models.update_available = self.nt_connected
+
+    def nt_connection_listener(self, is_connected, info):
+        self.nt_connected = is_connected
+        self.nt_connecting = not is_connected
+        models.Unit.init()
+        self.app.logger.debug("Connected = %s, info = %s", is_connected, info)
+
+    def background_thread(self, app):
+        while True:
+            if models.update_available:
+                self.app.logger.debug("refresh available")
+                self.socketio.emit(
+                    "refresh", json.dumps(models.Unit.units, cls=models.UnitEncoder)
+                )
+                models.update_available = False
+            self.socketio.sleep(0.250)
