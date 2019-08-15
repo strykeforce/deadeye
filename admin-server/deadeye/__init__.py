@@ -1,7 +1,7 @@
 import os
+import json
 from flask import Flask, render_template
-import simplejson as json
-from . import models
+from .models import Unit
 
 
 def create_app():
@@ -24,6 +24,6 @@ def create_app():
 
     @app.route("/json")
     def json_dump():
-        return json.dumps(models.Unit.units, cls=models.UnitEncoder)
+        return json.dumps(Unit.units, default=lambda o: o.__dict__)
 
     return app

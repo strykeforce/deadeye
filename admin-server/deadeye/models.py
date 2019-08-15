@@ -1,16 +1,12 @@
-# pylint: disable=global-statement
-import simplejson as json
+import json
 from networktables import NetworkTables, NetworkTablesInstance
 from flask import current_app
-
-NotifyFlags = NetworkTablesInstance.NotifyFlags
-
-update_available = False
 
 
 class Unit:
 
     units = {}
+    api = None
 
     def __init__(self, unit_id, cameras):
         self.cameras = {}
@@ -20,7 +16,8 @@ class Unit:
             self.cameras[inum] = cam
 
     @classmethod
-    def init(cls):
+    def init(cls, api):
+        Unit.api = api
         deadeye_table = NetworkTables.getTable("/Deadeye")
         units = {sub[-1:] for sub in deadeye_table.getSubTables()}
 
@@ -44,7 +41,9 @@ class Camera:
         self.on = control_table.getBoolean("On", False)
         self.error = control_table.getBoolean("Error", False)
         self.streamUrl = control_table.getString("StreamUrl", "")
-        control_table.addEntryListenerEx(self.entry_listener, NotifyFlags.UPDATE)
+        control_table.addEntryListenerEx(
+            self.entry_listener, NetworkTablesInstance.NotifyFlags.UPDATE
+        )
 
         config_table = NetworkTables.getTable(f"/Deadeye/Config{unit_id}")
         self.config = json.loads(config_table.getString(f"Camera{inum}", "{}"))
@@ -56,8 +55,7 @@ class Camera:
         control_table.putBoolean("On", enabled)
         control_table.putBoolean("Off", not enabled)
         self.on = enabled
-        global update_available
-        update_available = True
+        Unit.api.refresh = True
 
     def set_config(self, config):
         config_entry = NetworkTables.getEntry(
@@ -65,8 +63,7 @@ class Camera:
         )
         config_entry.setString(json.dumps(config))
         self.config = config
-        global update_available
-        update_available = True
+        Unit.api.refresh = True
 
     def entry_listener(self, table, key, value, is_new):
         del is_new  # unused
@@ -87,8 +84,7 @@ class Camera:
         else:
             current_app.logger.error("unrecognized key: %s", key)
 
-        global update_available
-        update_available = True
+        Unit.api.refresh = True
 
     def __repr__(self):
         return f"Camera({self.unit}, {self.inum}"
@@ -97,8 +93,3 @@ class Camera:
         on = self.on
         error = self.error
         return f"Camera {self.unit}{self.inum}: on={on} error={error}"
-
-
-class UnitEncoder(json.JSONEncoder):
-    def default(self, o):  # pylint: disable=method-hidden
-        return o.__dict__
