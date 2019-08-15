@@ -31,7 +31,13 @@ const CameraList = (props: Props): JSX.Element => {
             <ListItemText primary={`Unit ${unit.id}`} />
           </ListItem>
           {Object.values(unit.cameras).map(camera => (
-            <ListItem button key={camera.id} selected={selectedId === camera.id} onClick={() => onClick(camera.id)}>
+            <ListItem
+              button
+              className={classes.camera}
+              key={camera.id}
+              selected={selectedId === camera.id}
+              onClick={() => onClick(camera.id)}
+            >
               <ListItemIcon>
                 {camera.on ? <LinkedCameraIcon /> : <CameraIcon className={classes.cameraIcon} />}
               </ListItemIcon>
@@ -48,5 +54,6 @@ const CameraList = (props: Props): JSX.Element => {
 export default CameraList;
 
 const useStyles = makeStyles({
+  camera: { marginLeft: '20px' },
   cameraIcon: { paddingTop: '2px' },
 });
