@@ -1,15 +1,16 @@
 from flask_socketio import SocketIO
 from threading import Lock
-import simplejson as json
+import json
 from networktables import NetworkTables
-from . import models
+from .models import Unit
 
 
 class Api:
     def __init__(self, app):
         self.app = app
         self.socketio = SocketIO(app=app, logger=app.logger)
-        self.thread = None
+        self.thread = None  # background thread for client model refresh
+        self.refresh = False  # background thread broadcasts changes when True
         self.thread_lock = Lock()
         self.nt_connecting = False
         self.nt_connected = False
@@ -22,7 +23,7 @@ class Api:
         self.app.logger.debug("received message: " + str(message))
 
     def handle_camera_control_event(self, j):
-        unit = models.Unit.units[j["unit"]]
+        unit = Unit.units[j["unit"]]
         camera = unit.cameras[str(j["inum"])]
         enabled = j["enabled"]
         camera.enable(enabled)
@@ -31,7 +32,7 @@ class Api:
         )
 
     def handle_camera_config_event(self, j):
-        unit = models.Unit.units[j["unit"]]
+        unit = Unit.units[j["unit"]]
         camera = unit.cameras[str(j["inum"])]
         config = j["config"]
         camera.set_config(config)
@@ -54,22 +55,22 @@ class Api:
                 self.thread = self.socketio.start_background_task(
                     self.background_thread, self.app
                 )
-                self.app.logger.debug("started model update thread")
+                self.app.logger.debug("started model refresh thread")
 
-        models.update_available = self.nt_connected
+        self.refresh = self.nt_connected
 
     def nt_connection_listener(self, is_connected, info):
         self.nt_connected = is_connected
         self.nt_connecting = not is_connected
-        models.Unit.init()
+        Unit.init(self)
         self.app.logger.debug("Connected = %s, info = %s", is_connected, info)
 
     def background_thread(self, app):
         while True:
-            if models.update_available:
-                self.app.logger.debug("refresh available")
+            if self.refresh:
+                self.app.logger.debug("model refresh available")
                 self.socketio.emit(
-                    "refresh", json.dumps(models.Unit.units, cls=models.UnitEncoder)
+                    "refresh", json.dumps(Unit.units, default=lambda o: o.__dict__)
                 )
-                models.update_available = False
+                self.refresh = False
             self.socketio.sleep(0.250)

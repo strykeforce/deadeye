@@ -16,7 +16,6 @@ deadeye = {editable = true,path = "."}
 flask-socketio = "*"
 pynetworktables = "*"
 eventlet = "*"
-simplejson = "*"
 flask = "*"
 
 [requires]
