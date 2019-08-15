@@ -1,4 +1,4 @@
-# Deadeye Admin Dashboard
+# Deadeye Vision System
 
 This is a work-in-progress vision system for FRC robots, designed to be run on a vision coprocessor. It consists of three parts:
 
