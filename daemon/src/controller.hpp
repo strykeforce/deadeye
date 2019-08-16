@@ -9,23 +9,24 @@
 #define DEADEYE_UNIT DE_STRINGIFY(DEADEYE_UNIT_ID)
 
 #define DE_DEADEYE_TABLE "/Deadeye"
-#define DE_CAMERA "/Camera"
+#define DE_CONFIG "/Config"
+#define DE_STREAM "/Stream"
 #define DE_LIGHTS "/Lights"
-#define DE_CONTROL_TABLE DE_DEADEYE_TABLE "/Control" DEADEYE_UNIT
-#define DE_CONFIG_TABLE DE_DEADEYE_TABLE "/Config" DEADEYE_UNIT
+#define DE_CONTROL_TABLE DE_DEADEYE_TABLE "/" DEADEYE_UNIT
+#define DE_CONFIG_TABLE DE_DEADEYE_TABLE "/" DEADEYE_UNIT
 
-#define DE_CAMERA_CONTROL_TABLE(inum) DE_CONTROL_TABLE DE_CAMERA inum
+#define DE_CAMERA_CONTROL_TABLE(inum) DE_CONTROL_TABLE "/" inum
 #define DE_LIGHTS_CONTROL_TABLE(inum) DE_CAMERA_CONTROL_TABLE(inum) DE_LIGHTS
-#define DE_CAMERA_CONFIG_ENTRY(inum) DE_CONFIG_TABLE DE_CAMERA inum
 
 #define DE_ERROR "Error"
 #define DE_ON "On"
 #define DE_OFF "Off"
 #define DE_BLINK "Blink"
-#define DE_STREAM_URL "StreamUrl"
 
 #define DE_CAMERA_CONTROL(inum, param) DE_CAMERA_CONTROL_TABLE(inum) "/" param
 #define DE_LIGHTS_CONTROL(inum, param) DE_LIGHTS_CONTROL_TABLE(inum) "/" param
+#define DE_CAMERA_CONFIG_ENTRY(inum) DE_CONFIG_TABLE "/" inum DE_CONFIG
+#define DE_STREAM_CONFIG_ENTRY(inum) DE_CONFIG_TABLE "/" inum DE_STREAM
 
 namespace deadeye {
 class Controller {

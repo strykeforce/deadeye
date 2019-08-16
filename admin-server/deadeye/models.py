@@ -8,10 +8,10 @@ class Unit:
     units = {}
     api = None
 
-    def __init__(self, unit_id, cameras):
+    def __init__(self, unit_id, camera_inums):
         self.cameras = {}
         self.id = unit_id
-        for inum in cameras:
+        for inum in camera_inums:
             cam = Camera(unit_id, inum)
             self.cameras[inum] = cam
 
@@ -19,12 +19,12 @@ class Unit:
     def init(cls, api):
         Unit.api = api
         deadeye_table = NetworkTables.getTable("/Deadeye")
-        units = {sub[-1:] for sub in deadeye_table.getSubTables()}
+        unit_ids = deadeye_table.getSubTables()
 
-        for unit_id in units:
-            control_table = NetworkTables.getTable(f"/Deadeye/Control{unit_id}")
-            cameras = {sub[-1:] for sub in control_table.getSubTables()}
-            cls.units[unit_id] = Unit(unit_id, cameras)
+        for unit_id in unit_ids:
+            unit_table = NetworkTables.getTable(f"/Deadeye/{unit_id}")
+            camera_inums = unit_table.getSubTables()
+            cls.units[unit_id] = Unit(unit_id, camera_inums)
 
     def __repr__(self):
         return f"Unit({self.id})"
@@ -35,35 +35,32 @@ class Camera:
         self.unit = unit_id
         self.inum = int(inum)
         self.id = f"{unit_id}{inum}"
-        control_table = NetworkTables.getTable(
-            f"/Deadeye/Control{unit_id}/Camera{inum}"
-        )
+        control_table = self.table()
         self.on = control_table.getBoolean("On", False)
         self.error = control_table.getBoolean("Error", False)
-        self.streamUrl = control_table.getString("StreamUrl", "")
+        self.stream = control_table.getString("Stream", "")
         control_table.addEntryListenerEx(
             self.entry_listener, NetworkTablesInstance.NotifyFlags.UPDATE
         )
 
-        config_table = NetworkTables.getTable(f"/Deadeye/Config{unit_id}")
-        self.config = json.loads(config_table.getString(f"Camera{inum}", "{}"))
+        config_table = self.table()
+        self.config = json.loads(config_table.getString(f"Config", "{}"))
 
     def enable(self, enabled):
-        control_table = NetworkTables.getTable(
-            f"/Deadeye/Control{self.unit}/Camera{self.inum}"
-        )
+        control_table = self.table()
         control_table.putBoolean("On", enabled)
         control_table.putBoolean("Off", not enabled)
         self.on = enabled
         Unit.api.refresh = True
 
     def set_config(self, config):
-        config_entry = NetworkTables.getEntry(
-            f"/Deadeye/Config{self.unit}/Camera{self.inum}"
-        )
+        config_entry = self.table().getEntry("Config")
         config_entry.setString(json.dumps(config))
         self.config = config
         Unit.api.refresh = True
+
+    def table(self):
+        return NetworkTables.getTable(f"/Deadeye/{self.unit}/{self.inum}")
 
     def entry_listener(self, table, key, value, is_new):
         del is_new  # unused
