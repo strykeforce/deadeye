@@ -16,25 +16,35 @@ class Api:
         self.nt_connected = False
         self.socketio.on_event("message", self.handle_message)
         self.socketio.on_event("camera_control", self.handle_camera_control_event)
+        self.socketio.on_event("light_control", self.handle_light_control_event)
         self.socketio.on_event("camera_config", self.handle_camera_config_event)
         self.socketio.on_event("connect", self.handle_connect)
 
     def handle_message(self, message):
         self.app.logger.debug("received message: " + str(message))
 
-    def handle_camera_control_event(self, j):
-        unit = Unit.units[j["unit"]]
-        camera = unit.cameras[str(j["inum"])]
-        enabled = j["enabled"]
+    def handle_camera_control_event(self, message):
+        unit = Unit.units[message["unit"]]
+        camera = unit.cameras[str(message["inum"])]
+        enabled = message["enabled"]
         camera.enable(enabled)
         self.app.logger.debug(
             "unit: %s, camera: %s, enabled: %s", unit.id, camera.id, enabled
         )
 
-    def handle_camera_config_event(self, j):
-        unit = Unit.units[j["unit"]]
-        camera = unit.cameras[str(j["inum"])]
-        config = j["config"]
+    def handle_light_control_event(self, message):
+        unit = Unit.units[message["unit"]]
+        camera = unit.cameras[str(message["inum"])]
+        enabled = message["enabled"]
+        camera.light.enable(enabled)
+        self.app.logger.debug(
+            "unit: %s, camera: %s, light enabled: %s", unit.id, camera.id, enabled
+        )
+
+    def handle_camera_config_event(self, message):
+        unit = Unit.units[message["unit"]]
+        camera = unit.cameras[str(message["inum"])]
+        config = message["config"]
         camera.set_config(config)
         self.app.logger.debug(
             "unit: %s, camera: %s, enabled: %s", unit.id, camera.id, camera.config

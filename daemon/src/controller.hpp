@@ -11,7 +11,7 @@
 #define DE_DEADEYE_TABLE "/Deadeye"
 #define DE_CONFIG "/Config"
 #define DE_STREAM "/Stream"
-#define DE_LIGHTS "/Lights"
+#define DE_LIGHTS "/Light"
 #define DE_CONTROL_TABLE DE_DEADEYE_TABLE "/" DEADEYE_UNIT
 #define DE_CONFIG_TABLE DE_DEADEYE_TABLE "/" DEADEYE_UNIT
 

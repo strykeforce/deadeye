@@ -17,6 +17,7 @@ export interface Camera {
   unit: string;
   on: boolean;
   error: boolean;
+  light: Light;
   stream: StreamConfig;
   config: CameraConfig;
 }
@@ -27,6 +28,11 @@ export interface CameraConfig {
   hue: number[];
   sat: number[];
   val: number[];
+}
+
+export interface Light {
+  on: boolean;
+  blink: boolean;
 }
 
 export interface StreamConfig {

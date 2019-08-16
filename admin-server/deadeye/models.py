@@ -35,6 +35,7 @@ class Camera:
         self.unit = unit_id
         self.inum = int(inum)
         self.id = f"{unit_id}{inum}"
+        self.light = Light(self)
         control_table = self.table()
         self.on = control_table.getBoolean("On", False)
         self.error = control_table.getBoolean("Error", False)
@@ -47,6 +48,8 @@ class Camera:
         self.config = json.loads(config_table.getString(f"Config", "{}"))
 
     def enable(self, enabled):
+        if self.on == enabled:
+            return
         control_table = self.table()
         control_table.putBoolean("On", enabled)
         control_table.putBoolean("Off", not enabled)
@@ -64,20 +67,17 @@ class Camera:
 
     def entry_listener(self, table, key, value, is_new):
         del is_new  # unused
-
         if not value:
             return
 
-        last = key[-1:]
-
-        if last == "n":
-            self.on = True
+        if key == "On":
+            self.on = value
             self.error = False
-        elif last == "f":
-            self.on = False
+        elif key == "Off":
+            self.on = not value
             self.error = False
-        elif last == "r":
-            self.error = True
+        elif key == "Error":
+            self.error = value
         else:
             current_app.logger.error("unrecognized key: %s", key)
 
@@ -90,3 +90,50 @@ class Camera:
         on = self.on
         error = self.error
         return f"Camera {self.unit}{self.inum}: on={on} error={error}"
+
+
+class Light:
+    # properties other than "camera" will be stored in "__dict__" and therefore serialized
+    __slots__ = ["camera", "__dict__"]
+
+    def __init__(self, camera):
+        control_table = camera.table().getSubTable("Light")
+        self.camera = camera
+        self.on = control_table.getBoolean("On", False)
+        self.blink = control_table.getBoolean("Blink", False)
+        control_table.addEntryListenerEx(
+            self.entry_listener, NetworkTablesInstance.NotifyFlags.UPDATE
+        )
+
+    def enable(self, enabled):
+        if self.on == enabled:
+            return
+        control_table = self.camera.table().getSubTable("Light")
+        control_table.putBoolean("On", enabled)
+        control_table.putBoolean("Off", not enabled)
+        self.on = enabled
+        Unit.api.refresh = True
+
+    def entry_listener(self, table, key, value, is_new):
+        del is_new  # unused
+        if not value:
+            return
+
+        if key == "On":
+            self.on = value
+            self.blink = False
+        elif key == "Off":
+            self.on = not value
+            self.blink = False
+        elif key == "Blink":
+            self.blink = value
+        else:
+            current_app.logger.error("unrecognized key: %s", key)
+
+        Unit.api.refresh = True
+
+    def __repr__(self):
+        return f"Light({self.on}, {self.blink}"
+
+    def __str__(self):
+        return f"Light: on={self.on} blink={self.blink}"

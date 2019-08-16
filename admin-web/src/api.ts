@@ -17,6 +17,11 @@ export const enableCamera = (unit: string, inum: number, enabled: boolean): void
   socket.emit('camera_control', message);
 };
 
+export const enableLight = (unit: string, inum: number, enabled: boolean): void => {
+  const message = { unit, inum, enabled };
+  socket.emit('light_control', message);
+};
+
 export const configCamera = (unit: string, inum: number, config: CameraConfig): void => {
   const message = { unit, inum, config };
   socket.emit('camera_config', message);

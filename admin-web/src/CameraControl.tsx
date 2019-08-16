@@ -6,7 +6,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Paper from '@material-ui/core/Paper';
 import Switch from '@material-ui/core/Switch';
-import { enableCamera } from './api';
+import { enableCamera, enableLight } from './api';
 import { Camera } from './models';
 
 interface Props {
@@ -15,10 +15,18 @@ interface Props {
 
 // TODO: Camera on/off and lights tied together
 const CameraControl = ({ camera }: Props): JSX.Element => {
+  const light = camera.light;
   const classes = useStyles();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    enableCamera(camera.unit, camera.inum, event.target.checked);
+    if (event.target.value === 'enabled') {
+      enableCamera(camera.unit, camera.inum, event.target.checked);
+      return;
+    }
+    if (event.target.value === 'light') {
+      enableLight(camera.unit, camera.inum, event.target.checked);
+      return;
+    }
   };
 
   return (
@@ -33,7 +41,7 @@ const CameraControl = ({ camera }: Props): JSX.Element => {
             label="Enabled"
           />
           <FormControlLabel
-            control={<Switch checked={camera.on} onChange={handleChange} value="lights" />}
+            control={<Switch checked={light.on} onChange={handleChange} value="light" />}
             label="Lights"
           />
         </FormGroup>
