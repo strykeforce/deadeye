@@ -14,7 +14,8 @@ type Props = { camera: Camera } & typeof defaultProps;
 const defaultProps = Object.freeze({ displayName: false });
 
 const CameraStream = (props: Props): JSX.Element => {
-  let { camera, displayName } = props;
+  const { camera, displayName } = props;
+  const stream = camera.stream;
 
   const classes = useStyles();
   const [source, setSource] = useState(standBy);
@@ -23,7 +24,7 @@ const CameraStream = (props: Props): JSX.Element => {
   useEffect(() => {
     if (camera.on) {
       console.log('starting camera timeout...');
-      setTimeout(() => setSource(camera.stream), 500);
+      setTimeout(() => setSource(stream.url), 500);
     } else {
       setSource(standBy);
     }

@@ -38,7 +38,7 @@ class Camera:
         control_table = self.table()
         self.on = control_table.getBoolean("On", False)
         self.error = control_table.getBoolean("Error", False)
-        self.stream = control_table.getString("Stream", "")
+        self.stream = json.loads(control_table.getString("Stream", ""))
         control_table.addEntryListenerEx(
             self.entry_listener, NetworkTablesInstance.NotifyFlags.UPDATE
         )

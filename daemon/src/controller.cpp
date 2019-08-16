@@ -8,6 +8,7 @@
 #include "controller.hpp"
 #include "lights.hpp"
 #include "pipeline.hpp"
+#include "stream_config.hpp"
 
 namespace {
 // static char const* kNTServerAddress = "titan.lan.j3ff.io";
@@ -237,34 +238,31 @@ void Controller::StartPoller() {
 }
 
 namespace {
-void SetCameraControlTableDefaults(std::shared_ptr<NetworkTable> table) {
-  table->SetDefaultBoolean(DE_ON, false);
-  table->SetDefaultBoolean(DE_OFF, false);
-  table->SetDefaultBoolean(DE_ERROR, false);
-  spdlog::debug("Setting default values for {}", table->GetPath().str());
+void SetCameraControlTableEntries(std::shared_ptr<NetworkTable> table) {
+  table->PutBoolean(DE_ON, false);
+  table->PutBoolean(DE_OFF, true);
+  table->PutBoolean(DE_ERROR, false);
 }
 
-void SetLightsControlTableDefaults(std::shared_ptr<NetworkTable> table) {
-  table->SetDefaultBoolean(DE_ON, false);
-  table->SetDefaultBoolean(DE_OFF, false);
-  table->SetDefaultBoolean(DE_BLINK, false);
-  spdlog::debug("Setting default values for {}", table->GetPath().str());
+void SetLightsControlTableEntries(std::shared_ptr<NetworkTable> table) {
+  table->PutBoolean(DE_ON, false);
+  table->PutBoolean(DE_OFF, true);
+  table->PutBoolean(DE_BLINK, false);
 }
 
 void SetCameraConfigEntryDefault(nt::NetworkTableEntry entry) {
-  PipelineConfig def{0, {0, 254}, {0, 254}, {0, 254}, 0.5};
-  json j = def;
+  PipelineConfig pc{0, {0, 254}, {0, 254}, {0, 254}, 0.5};
+  json j = pc;
   entry.SetDefaultString(j.dump());
   entry.SetPersistent();
 }
 
-void SetStreamConfigEntryDefault(nt::NetworkTableEntry entry, int inum) {
-  std::string url{"http://localhost:"};
-  url += std::to_string(5800 + inum);
-  url += "/stream.mjpg";
-  entry.SetDefaultString(url);
-  entry.SetPersistent();
-  spdlog::debug("Setting stream url for camera {}: {}", inum, url);
+void SetStreamConfigEntry(nt::NetworkTableEntry entry, int inum) {
+  std::stringstream url;
+  url << "http://localhost:" << std::to_string(5800 + inum) << "/stream.mjpg";
+  StreamConfig sc{0, url.str()};
+  json j = sc;
+  entry.SetString(j.dump());
 }
 }  // namespace
 
@@ -274,16 +272,16 @@ void SetStreamConfigEntryDefault(nt::NetworkTableEntry entry, int inum) {
 void Controller::SetNetworkTablesDefaults() {
   auto nti = nt::NetworkTableInstance(inst_);
 #ifdef DEADEYE_CAMERA0_PIPELINE
-  SetCameraControlTableDefaults(nti.GetTable(DE_CAMERA_CONTROL_TABLE("0")));
-  SetLightsControlTableDefaults(nti.GetTable(DE_LIGHTS_CONTROL_TABLE("0")));
+  SetCameraControlTableEntries(nti.GetTable(DE_CAMERA_CONTROL_TABLE("0")));
+  SetLightsControlTableEntries(nti.GetTable(DE_LIGHTS_CONTROL_TABLE("0")));
   SetCameraConfigEntryDefault(nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("0")));
-  SetStreamConfigEntryDefault(nti.GetEntry(DE_STREAM_CONFIG_ENTRY("0")), 0);
+  SetStreamConfigEntry(nti.GetEntry(DE_STREAM_CONFIG_ENTRY("0")), 0);
 #endif
 #ifdef DEADEYE_CAMERA1_PIPELINE
-  SetCameraControlTableDefaults(nti.GetTable(DE_CAMERA_CONTROL_TABLE("1")));
-  SetLightsControlTableDefaults(nti.GetTable(DE_LIGHTS_CONTROL_TABLE("1")));
+  SetCameraControlTableEntries(nti.GetTable(DE_CAMERA_CONTROL_TABLE("1")));
+  SetLightsControlTableEntries(nti.GetTable(DE_LIGHTS_CONTROL_TABLE("1")));
   SetCameraConfigEntryDefault(nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("1")));
-  SetStreamConfigEntryDefault(nti.GetEntry(DE_STREAM_CONFIG_ENTRY("1")), 1);
+  SetStreamConfigEntry(nti.GetEntry(DE_STREAM_CONFIG_ENTRY("1")), 1);
 #endif
 }
 
