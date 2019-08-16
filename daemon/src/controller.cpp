@@ -187,7 +187,7 @@ void Controller::ShutDown() {
  */
 void Controller::SetCameraStatus(int inum, char const* name, bool state) {
   std::stringstream path;
-  path << DE_CONTROL_TABLE << DE_CAMERA << inum << "/" << name;
+  path << DE_CONTROL_TABLE << "/" << inum << "/" << name;
 
   auto entry = nt::GetEntry(inst_, path.str().c_str());
   nt::SetEntryValue(entry, nt::Value::MakeBoolean(state));
@@ -198,7 +198,7 @@ void Controller::SetCameraStatus(int inum, char const* name, bool state) {
  */
 void Controller::SetLightsStatus(int inum, char const* name, bool state) {
   std::stringstream path;
-  path << DE_CONTROL_TABLE << DE_CAMERA << inum << DE_LIGHTS << "/" << name;
+  path << DE_CONTROL_TABLE << "/" << inum << DE_LIGHTS << "/" << name;
 
   auto entry = nt::GetEntry(inst_, path.str().c_str());
   nt::SetEntryValue(entry, nt::Value::MakeBoolean(state));
@@ -210,12 +210,11 @@ void Controller::SetLightsStatus(int inum, char const* name, bool state) {
 void Controller::StartNetworkTables() {
   inst_ = nt::GetDefaultInstance();
 
-  nt::AddLogger(
-      inst_,
-      [](const nt::LogMessage& msg) {
-        spdlog::log(Nt2spdlogLevel(msg), msg.message);
-      },
-      0, UINT_MAX);
+  nt::AddLogger(inst_,
+                [](const nt::LogMessage& msg) {
+                  spdlog::log(Nt2spdlogLevel(msg), msg.message);
+                },
+                0, UINT_MAX);
 
   if (std::getenv("DEADEYE_NT_SERVER")) {
     spdlog::info("Starting NetworkTables server");
@@ -259,11 +258,12 @@ void SetCameraConfigEntryDefault(nt::NetworkTableEntry entry) {
   entry.SetPersistent();
 }
 
-void SetCameraStreamInfo(int inum, std::shared_ptr<NetworkTable> table) {
+void SetStreamConfigEntryDefault(nt::NetworkTableEntry entry, int inum) {
   std::string url{"http://localhost:"};
   url += std::to_string(5800 + inum);
   url += "/stream.mjpg";
-  table->PutString(DE_STREAM_URL, url);
+  entry.SetDefaultString(url);
+  entry.SetPersistent();
   spdlog::debug("Setting stream url for camera {}: {}", inum, url);
 }
 }  // namespace
@@ -275,15 +275,15 @@ void Controller::SetNetworkTablesDefaults() {
   auto nti = nt::NetworkTableInstance(inst_);
 #ifdef DEADEYE_CAMERA0_PIPELINE
   SetCameraControlTableDefaults(nti.GetTable(DE_CAMERA_CONTROL_TABLE("0")));
-  SetCameraStreamInfo(0, nti.GetTable(DE_CAMERA_CONTROL_TABLE("0")));
   SetLightsControlTableDefaults(nti.GetTable(DE_LIGHTS_CONTROL_TABLE("0")));
   SetCameraConfigEntryDefault(nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("0")));
+  SetStreamConfigEntryDefault(nti.GetEntry(DE_STREAM_CONFIG_ENTRY("0")), 0);
 #endif
 #ifdef DEADEYE_CAMERA1_PIPELINE
   SetCameraControlTableDefaults(nti.GetTable(DE_CAMERA_CONTROL_TABLE("1")));
-  SetCameraStreamInfo(1, nti.GetTable(DE_CAMERA_CONTROL_TABLE("1")));
   SetLightsControlTableDefaults(nti.GetTable(DE_LIGHTS_CONTROL_TABLE("1")));
   SetCameraConfigEntryDefault(nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("1")));
+  SetStreamConfigEntryDefault(nti.GetEntry(DE_STREAM_CONFIG_ENTRY("1")), 1);
 #endif
 }
 

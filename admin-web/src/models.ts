@@ -17,7 +17,7 @@ export interface Camera {
   unit: string;
   on: boolean;
   error: boolean;
-  streamUrl: string;
+  stream: string;
   config: CameraConfig;
 }
 
