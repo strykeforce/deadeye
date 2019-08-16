@@ -52,7 +52,7 @@ Controller::Controller() {
 #endif
 
   StartNetworkTables();
-  SetNetworkTablesDefaults();
+  InitializeNetworkTableEntries();
   StartPoller();
 }
 
@@ -267,9 +267,9 @@ void SetStreamConfigEntry(nt::NetworkTableEntry entry, int inum) {
 }  // namespace
 
 /**
- * SetNetworkTablesDefaults sets up default values in network tables.
+ * InitializeNetworkTableEntries sets up default values in network tables.
  */
-void Controller::SetNetworkTablesDefaults() {
+void Controller::InitializeNetworkTableEntries() {
   auto nti = nt::NetworkTableInstance(inst_);
 #ifdef DEADEYE_CAMERA0_PIPELINE
   SetCameraControlTableEntries(nti.GetTable(DE_CAMERA_CONTROL_TABLE("0")));

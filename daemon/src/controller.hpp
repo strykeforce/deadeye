@@ -47,7 +47,7 @@ class Controller {
  private:
   Controller();
   void StartNetworkTables();
-  void SetNetworkTablesDefaults();
+  void InitializeNetworkTableEntries();
   void StartPoller();
   static spdlog::level::level_enum Nt2spdlogLevel(const nt::LogMessage& msg);
 
