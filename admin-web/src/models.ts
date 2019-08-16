@@ -17,14 +17,19 @@ export interface Camera {
   unit: string;
   on: boolean;
   error: boolean;
-  stream: string;
+  stream: StreamConfig;
   config: CameraConfig;
 }
 
 export interface CameraConfig {
+  sn: number;
   exposure: number;
   hue: number[];
   sat: number[];
-  sn: number;
   val: number[];
+}
+
+export interface StreamConfig {
+  sn: number;
+  url: string;
 }

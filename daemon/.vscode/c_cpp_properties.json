@@ -3,7 +3,9 @@
         {
             "name": "Mac",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "/usr/local/wpilib/include/ntcore",
+                "/usr/local/wpilib/include/wpiutil"
             ],
             "defines": [],
             "macFrameworkPath": [

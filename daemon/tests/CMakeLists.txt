@@ -2,6 +2,7 @@ add_executable(Deadeye_tests
   main.cpp
   json.cpp
   pipeline_config_test.cpp
+  stream_config_test.cpp
 )
 
 target_link_libraries(Deadeye_tests

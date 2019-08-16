@@ -3,6 +3,7 @@ add_library(Deadeye_library
     controller.cpp
     camera.cpp
     lights.cpp
+    stream_config.cpp
 )
 add_subdirectory(pipeline)
 add_library(Deadeye::library ALIAS Deadeye_library)

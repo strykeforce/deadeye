@@ -8,6 +8,7 @@
 #include "controller.hpp"
 #include "lights.hpp"
 #include "pipeline.hpp"
+#include "stream_config.hpp"
 
 namespace {
 // static char const* kNTServerAddress = "titan.lan.j3ff.io";
@@ -252,19 +253,19 @@ void SetLightsControlTableDefaults(std::shared_ptr<NetworkTable> table) {
 }
 
 void SetCameraConfigEntryDefault(nt::NetworkTableEntry entry) {
-  PipelineConfig def{0, {0, 254}, {0, 254}, {0, 254}, 0.5};
-  json j = def;
+  PipelineConfig pc{0, {0, 254}, {0, 254}, {0, 254}, 0.5};
+  json j = pc;
   entry.SetDefaultString(j.dump());
   entry.SetPersistent();
 }
 
 void SetStreamConfigEntryDefault(nt::NetworkTableEntry entry, int inum) {
-  std::string url{"http://localhost:"};
-  url += std::to_string(5800 + inum);
-  url += "/stream.mjpg";
-  entry.SetDefaultString(url);
+  std::stringstream url;
+  url << "http://localhost:" << std::to_string(5800 + inum) << "/stream.mjpg";
+  StreamConfig sc{0, url.str()};
+  json j = sc;
+  entry.SetDefaultString(j.dump());
   entry.SetPersistent();
-  spdlog::debug("Setting stream url for camera {}: {}", inum, url);
 }
 }  // namespace
 

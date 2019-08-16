@@ -2,7 +2,6 @@
 #include <networktables/NetworkTableValue.h>
 #include <iostream>
 #include <nlohmann/json.hpp>
-#include <opencv2/core/types.hpp>
 #include <string>
 
 using json = nlohmann::json;
