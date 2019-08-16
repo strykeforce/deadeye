@@ -7,29 +7,31 @@ import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import { Camera } from './models';
 import standBy from './deadeye.png';
+import { StreamConfig } from './models';
 
-type Props = { camera: Camera } & typeof defaultProps;
-const defaultProps = Object.freeze({ displayName: false });
+interface Props {
+  enable: boolean;
+  stream: StreamConfig;
+  label?: string;
+}
 
 const CameraStream = (props: Props): JSX.Element => {
-  const { camera, displayName } = props;
-  const stream = camera.stream;
+  const { enable, stream, label } = props;
 
   const classes = useStyles();
   const [source, setSource] = useState(standBy);
   const [, setValue] = React.useState('original');
 
   useEffect(() => {
-    if (camera.on) {
+    if (enable) {
       console.log('starting camera timeout...');
       let timeoutId = setTimeout(() => setSource(stream.url), 500);
       return () => clearTimeout(timeoutId);
     }
     // else
     setSource(standBy);
-  }, [camera.on, stream.url]);
+  }, [enable, stream]);
 
   const handleChange = (event: React.ChangeEvent<{}>, value: string): void => {
     event.preventDefault();
@@ -39,7 +41,7 @@ const CameraStream = (props: Props): JSX.Element => {
 
   return (
     <Paper className={classes.root}>
-      {displayName && <Typography variant="body1">Camera {camera.id}</Typography>}
+      {label && <Typography variant="body1">{label}</Typography>}
       <img src={source} width={width} className={classes.stream} alt="Stream" />
       <div className={classes.root}>
         <FormControl component="fieldset" className={classes.formControl}>
@@ -62,8 +64,6 @@ const CameraStream = (props: Props): JSX.Element => {
     </Paper>
   );
 };
-
-CameraStream.defaultProps = defaultProps;
 
 export default CameraStream;
 
