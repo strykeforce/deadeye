@@ -24,11 +24,12 @@ const CameraStream = (props: Props): JSX.Element => {
   useEffect(() => {
     if (camera.on) {
       console.log('starting camera timeout...');
-      setTimeout(() => setSource(stream.url), 500);
-    } else {
-      setSource(standBy);
+      let timeoutId = setTimeout(() => setSource(stream.url), 500);
+      return () => clearTimeout(timeoutId);
     }
-  }, [camera.on, camera.stream]);
+    // else
+    setSource(standBy);
+  }, [camera.on, stream.url]);
 
   const handleChange = (event: React.ChangeEvent<{}>, value: string): void => {
     event.preventDefault();
