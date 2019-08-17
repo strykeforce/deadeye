@@ -26,7 +26,7 @@ const CameraStream = (props: Props): JSX.Element => {
   useEffect(() => {
     if (enable) {
       console.log('starting camera timeout...');
-      let timeoutId = setTimeout(() => {
+      const timeoutId = window.setTimeout(() => {
         if (imgRef.current) {
           imgRef.current.src = stream.url;
         } else {
