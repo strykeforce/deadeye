@@ -1,0 +1,5 @@
+---
+- hosts: deadeye
+  roles:
+    - role: deadeye
+      tags: deadeye
