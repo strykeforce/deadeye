@@ -65,7 +65,11 @@
       - -DCMAKE_BUILD_TYPE=Debug
       - -DCMAKE_INSTALL_PREFIX=/usr/local
       - -DDEADEYE_UNIT_ID={{ deadeye_unit }}
-      - -DDEADEYE_CAMERA0_PIPELINE=TestPatternPipeline
+      - -DDEADEYE_CAMERA0_PIPELINE={{ camera_0_pipeline }}
+      - -DDEADEYE_CAMERA1_PIPELINE={{ camera_1_pipeline }}
+      - -DDEADEYE_CAMERA2_PIPELINE={{ camera_2_pipeline }}
+      - -DDEADEYE_CAMERA3_PIPELINE={{ camera_3_pipeline }}
+      - -DDEADEYE_CAMERA4_PIPELINE={{ camera_4_pipeline }}
       - ../daemon
   environment:
     LDFLAGS: -latomic
