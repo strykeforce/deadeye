@@ -8,7 +8,7 @@
 
 - name: Set jhh authorized keys
   authorized_key:
-    user: pi
+    user: "{{ build_user }}"
     state: present
     key: https://github.com/jhh.keys
 
@@ -16,24 +16,24 @@
   copy:
     src: id_deadeye
     dest: "{{ deadeye_home }}/.ssh/"
-    owner: pi
-    group: pi
+    owner: "{{ build_user }}"
+    group: "{{ build_user }}"
     mode: 0600
 
 - name: Copy public deploy key
   copy:
     src: id_deadeye.pub
     dest: "{{ deadeye_home }}/.ssh/"
-    owner: pi
-    group: pi
+    owner: "{{ build_user }}"
+    group: "{{ build_user }}"
     mode: 0664
 
 - name: Configure ssh to use deploy key
   blockinfile:
     path: "{{ deadeye_home }}/.ssh/config"
     create: true
-    owner: pi
-    group: pi
+    owner: "{{ build_user }}"
+    group: "{{ build_user }}"
     mode: 0600
     block: |
       Host lithium
@@ -45,22 +45,28 @@
     dest: "{{ deadeye_home }}/deadeye"
     accept_hostkey: true
     key_file: "{{ deadeye_home }}/.ssh/id_deadeye"
+  tags:
+    - build
 
 - name: Create build directory
   file:
     path: "{{ deadeye_home }}/deadeye/build"
     state: directory
+  tags:
+    - build
+    - cmake
 
 - name: Run cmake
   command:
     chdir: "{{ deadeye_home }}/deadeye/build"
     argv:
       - /usr/bin/cmake
+      - -GNinja
       - -DCMAKE_BUILD_TYPE=Debug
       - -DCMAKE_INSTALL_PREFIX=/usr/local
-      - -DDEADEYE_UNIT=C
+      - -DDEADEYE_UNIT_ID={{ deadeye_unit }}
       - -DDEADEYE_CAMERA0_PIPELINE=TestPatternPipeline
-      - ..
+      - ../daemon
   environment:
     LDFLAGS: -latomic
     CXXFLAGS: -Wno-psabi
@@ -71,6 +77,9 @@
 - name: Fix permissions
   file:
     path: "{{ deadeye_home }}/deadeye"
-    owner: pi
-    group: pi
+    owner: "{{ build_user }}"
+    group: "{{ build_user }}"
     recurse: true
+  tags:
+    - build
+    - cmake

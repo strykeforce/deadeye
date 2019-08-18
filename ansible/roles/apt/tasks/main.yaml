@@ -1,5 +1,0 @@
----
-- name: "Install aptitude, required by ansible"
-  command: apt-get install -y aptitude
-  args:
-    creates: /usr/bin/aptitude

@@ -1,0 +1,16 @@
+---
+- name: "Install aptitude, required by ansible"
+  command: apt-get install -y aptitude
+  args:
+    creates: /usr/bin/aptitude
+
+- name: Install build prereqs
+  apt:
+    update_cache: true
+    name:
+      - build-essential
+      - cmake
+      - ninja-build
+      - pkg-config
+  tags:
+    - common

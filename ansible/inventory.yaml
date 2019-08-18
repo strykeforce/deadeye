@@ -1,11 +1,22 @@
 ---
 deadeye:
   hosts:
+    deadeye-b:
+      ansible_host: deadeye-b.local
+      ansible_user: jeff
+      build_user: jeff
+      build_type: Debug
+      deadeye_unit: B
     deadeye-c:
       ansible_host: pi
       ansible_user: pi
-      ansible_become: true
-      ansible_python_interpreter: /usr/bin/python3
+      build_user: jeff
+      build_type: Debug
+      deadeye_unit: C
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    ansible_become: true
+
 bootstrap:
   hosts:
     raspberrypi:
