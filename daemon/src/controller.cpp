@@ -135,6 +135,13 @@ void Controller::Run() {
           Camera<0>::dispatch(event);
           break;
         }
+        case hash(DE_STREAM_CONFIG_ENTRY("0")): {
+          spdlog::debug("STREAM EVENT");
+          ConfigStream event;
+          event.config = StreamConfig::New(entry.value);
+          Camera<0>::dispatch(event);
+          break;
+        }
 #endif
 #ifdef DEADEYE_CAMERA1_PIPELINE
         //
@@ -161,6 +168,13 @@ void Controller::Run() {
           Camera<1>::dispatch(event);
           break;
         }
+        case hash(DE_STREAM_CONFIG_ENTRY("1")): {
+          ConfigStream event;
+          event.config = StreamConfig::New(entry.value);
+          Camera<1>::dispatch(event);
+          break;
+        }
+
 #endif
         default:
           spdlog::warn("Controller: {} event unrecognized in {}, line {}",
@@ -234,7 +248,6 @@ void Controller::StartPoller() {
   poller_ = nt::CreateEntryListenerPoller(inst_);
   entry_listener_ =
       nt::AddPolledEntryListener(poller_, DE_CONTROL_TABLE, NT_NOTIFY_UPDATE);
-  nt::AddPolledEntryListener(poller_, DE_CONFIG_TABLE, NT_NOTIFY_UPDATE);
 }
 
 namespace {

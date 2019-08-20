@@ -28,6 +28,9 @@ class BasePipeline : public Pipeline {
     config_ = config;
     update_sn_++;
   }
+  void UpdateStream(StreamConfig config) override {
+    spdlog::debug("camera({}) stream sn: {}", inum_, config.sn);
+  }
 
   // implemented in concrete pipeline classes
   //
@@ -46,6 +49,7 @@ class BasePipeline : public Pipeline {
   std::atomic<int> update_sn_{1};
   std::mutex update_mutex_;
   PipelineConfig config_;
+  StreamConfig stream_;
   cv::Mat cvt_color_output_;
   std::vector<std::vector<cv::Point>> find_contours_input_;
   std::vector<std::vector<cv::Point>> find_contours_output_;
@@ -121,7 +125,8 @@ void BasePipeline<T>::Run() {
       std::lock_guard<std::mutex> lock{update_mutex_};
       config = config_;
       config.sn = update_sn;
-      spdlog::debug("Pipeline<{}>: config sn = {}", inum_, config.sn);
+      spdlog::debug("Pipeline<{}>: config_ sn = {} config sn = {} ", inum_,
+                    config_.sn, config.sn);
     }
 
     // Get new frame and process it.

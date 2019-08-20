@@ -8,23 +8,23 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import standBy from './deadeye.png';
-import { StreamConfig } from './models';
+import { Camera } from './models';
+import { configStream } from './api';
 
 interface Props {
-  enable: boolean;
-  stream: StreamConfig;
+  camera: Camera;
   label?: string;
 }
 
 const CameraStream = (props: Props): JSX.Element => {
-  const { enable, stream, label } = props;
+  const { camera, label } = props;
+  const stream = camera.stream;
 
   const classes = useStyles();
-  const [, setValue] = React.useState('original');
   const imgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
-    if (enable) {
+    if (camera.on && stream.view !== 'none') {
       console.log('starting camera timeout...');
       const timeoutId = window.setTimeout(() => {
         if (imgRef.current) {
@@ -35,12 +35,12 @@ const CameraStream = (props: Props): JSX.Element => {
       }, 500);
       return () => clearTimeout(timeoutId);
     }
-  }, [enable, stream]);
+  }, [camera.on, stream]);
 
-  const handleChange = (event: React.ChangeEvent<{}>, value: string): void => {
+  const handleChange = (name: string) => (event: React.ChangeEvent<{}>, value: string): void => {
     event.preventDefault();
-    setValue(value);
-    console.log(`radio value = ${value}`);
+    const newStream = Object.assign(stream, { [name]: value });
+    configStream(camera.unit, camera.inum, newStream);
   };
 
   return (
@@ -50,7 +50,7 @@ const CameraStream = (props: Props): JSX.Element => {
       <div className={classes.root}>
         <FormControl component="fieldset" className={classes.formControl}>
           <FormLabel component="legend">View</FormLabel>
-          <RadioGroup name="view" className={classes.group} value="original" onChange={handleChange}>
+          <RadioGroup name="view" className={classes.group} value={stream.view} onChange={handleChange('view')}>
             <FormControlLabel value="none" control={<Radio />} label="None" />
             <FormControlLabel value="original" control={<Radio />} label="Original" />
             <FormControlLabel value="mask" control={<Radio />} label="Mask" />
@@ -58,7 +58,12 @@ const CameraStream = (props: Props): JSX.Element => {
         </FormControl>
         <FormControl component="fieldset" className={classes.formControl}>
           <FormLabel component="legend">Contours</FormLabel>
-          <RadioGroup name="view" className={classes.group} value="none" onChange={handleChange}>
+          <RadioGroup
+            name="contour"
+            className={classes.group}
+            value={stream.contour}
+            onChange={handleChange('contour')}
+          >
             <FormControlLabel value="none" control={<Radio />} label="None" />
             <FormControlLabel value="filter" control={<Radio />} label="Filtered" />
             <FormControlLabel value="all" control={<Radio />} label="All" />
