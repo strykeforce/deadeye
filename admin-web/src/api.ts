@@ -1,7 +1,7 @@
 import io from 'socket.io-client';
 import { CameraConfig } from './models';
 
-var socket: SocketIOClient.Socket;
+let socket: SocketIOClient.Socket;
 
 export const subscribe = (handleUnitsChange: (units: string) => void): void => {
   socket = io('http://' + document.domain + ':' + window.location.port);
