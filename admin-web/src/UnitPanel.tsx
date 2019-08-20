@@ -19,7 +19,7 @@ const UnitPanel: React.FC<{ units: Units; selectedId: string }> = ({ units, sele
       <Grid container spacing={3}>
         {Object.values(cameras).map(camera => (
           <Grid key={camera.id} item xs={'auto'}>
-            <CameraStream enable={camera.on} stream={camera.stream} label={'Camera ' + camera.id} />
+            <CameraStream camera={camera} label={'Camera ' + camera.id} />
           </Grid>
         ))}
       </Grid>

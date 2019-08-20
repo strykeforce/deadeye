@@ -38,4 +38,6 @@ export interface Light {
 export interface StreamConfig {
   sn: number;
   url: string;
+  view: 'none' | 'original' | 'mask';
+  contour: 'none' | 'filter' | 'all';
 }

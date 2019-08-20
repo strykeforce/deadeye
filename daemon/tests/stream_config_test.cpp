@@ -17,10 +17,14 @@ TEST_CASE("StreamConfig from JSON", "[pipeline]") {
   json j;
   j[StreamConfig::kSerialKey] = 2767;
   j[StreamConfig::kUrlKey] = "http://strykeforce.org";
+  j[StreamConfig::kViewKey] = "original";
+  j[StreamConfig::kContourKey] = "all";
 
   auto sc = j.get<StreamConfig>();
   REQUIRE(sc.sn == 2767);
   REQUIRE(sc.url == j[StreamConfig::kUrlKey]);
+  REQUIRE(sc.view == StreamConfig::View::ORIGINAL);
+  REQUIRE(sc.contour == StreamConfig::Contour::ALL);
 }
 
 TEST_CASE("StreamConfig to JSON", "[pipeline]") {
@@ -29,7 +33,8 @@ TEST_CASE("StreamConfig to JSON", "[pipeline]") {
   json expected;
   expected[StreamConfig::kSerialKey] = 2767;
   expected[StreamConfig::kUrlKey] = "http://example.com";
-
+  expected[StreamConfig::kViewKey] = "none";
+  expected[StreamConfig::kContourKey] = "none";
   REQUIRE(j == expected);
 }
 

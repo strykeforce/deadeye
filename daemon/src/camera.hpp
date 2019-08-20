@@ -7,6 +7,7 @@
 #include <tinyfsm.hpp>
 
 #include "pipeline/pipeline.hpp"
+#include "stream_config.hpp"
 
 namespace deadeye {
 
@@ -17,6 +18,9 @@ struct CameraOn : tinyfsm::Event {};
 struct CameraOff : tinyfsm::Event {};
 struct CameraConfig : tinyfsm::Event {
   PipelineConfig config;
+};
+struct ConfigStream : tinyfsm::Event {
+  StreamConfig config;
 };
 
 // ---------------------------------------------------------------------------
@@ -39,6 +43,9 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
   virtual void react(CameraOff const &) {}
   virtual void react(CameraConfig const &c) {
     Camera<inum>::pipeline_->UpdateConfig(c.config);
+  }
+  virtual void react(ConfigStream const &s) {
+    Camera<inum>::pipeline_->UpdateStream(s.config);
   }
 
   virtual void entry() = 0;

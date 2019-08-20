@@ -61,6 +61,12 @@ class Camera:
         self.config = config
         Unit.api.refresh = True
 
+    def set_stream(self, config):
+        stream_entry = self.table().getEntry("Stream")
+        stream_entry.setString(json.dumps(config))
+        self.stream = config
+        Unit.api.refresh = True
+
     def table(self):
         return NetworkTables.getTable(f"/Deadeye/{self.unit}/{self.inum}")
 

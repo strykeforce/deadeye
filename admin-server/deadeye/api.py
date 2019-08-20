@@ -18,6 +18,7 @@ class Api:
         self.socketio.on_event("camera_control", self.handle_camera_control_event)
         self.socketio.on_event("light_control", self.handle_light_control_event)
         self.socketio.on_event("camera_config", self.handle_camera_config_event)
+        self.socketio.on_event("stream_config", self.handle_stream_config_event)
         self.socketio.on_event("connect", self.handle_connect)
 
     def handle_message(self, message):
@@ -47,7 +48,16 @@ class Api:
         config = message["config"]
         camera.set_config(config)
         self.app.logger.debug(
-            "unit: %s, camera: %s, enabled: %s", unit.id, camera.id, camera.config
+            "unit: %s, camera: %s, config: %s", unit.id, camera.id, camera.config
+        )
+
+    def handle_stream_config_event(self, message):
+        unit = Unit.units[message["unit"]]
+        camera = unit.cameras[str(message["inum"])]
+        config = message["config"]
+        camera.set_stream(config)
+        self.app.logger.debug(
+            "unit: %s, camera: %s, stream: %s", unit.id, camera.id, camera.stream
         )
 
     def handle_connect(self):

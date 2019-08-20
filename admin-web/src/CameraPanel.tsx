@@ -26,7 +26,7 @@ const CameraPanel: React.FC<{ units: Units; selectedId: string }> = ({ units, se
         <CameraThreshold camera={camera} />
       </div>
       <div style={{ gridColumn: '2/3', gridRow: '1/4' }}>
-        <CameraStream enable={camera.on} stream={camera.stream} />
+        <CameraStream camera={camera} />
       </div>
     </div>
   );

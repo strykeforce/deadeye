@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-import { CameraConfig } from './models';
+import { CameraConfig, StreamConfig } from './models';
 
 let socket: SocketIOClient.Socket;
 
@@ -23,7 +23,15 @@ export const enableLight = (unit: string, inum: number, enabled: boolean): void 
 };
 
 export const configCamera = (unit: string, inum: number, config: CameraConfig): void => {
+  config.sn++;
   const message = { unit, inum, config };
   socket.emit('camera_config', message);
   // console.log(`configCamera: ${JSON.stringify(message)}`);
+};
+
+export const configStream = (unit: string, inum: number, config: StreamConfig): void => {
+  config.sn++;
+  const message = { unit, inum, config };
+  socket.emit('stream_config', message);
+  // console.log(`configStream: ${JSON.stringify(message)}`);
 };

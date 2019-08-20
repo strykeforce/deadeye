@@ -9,11 +9,18 @@ using json = nlohmann::json;
 namespace deadeye {
 
 struct StreamConfig {
+  enum class View { NONE, ORIGINAL, MASK };
+  enum class Contour { NONE, FILTER, ALL };
+
   static char const* kSerialKey;
   static char const* kUrlKey;
+  static char const* kViewKey;
+  static char const* kContourKey;
 
   int sn = 0;
   std::string url;
+  View view = View::NONE;
+  Contour contour = Contour::NONE;
 
   /**
    * New is factory method to create a StreamConfig from a NT value.
@@ -31,6 +38,20 @@ inline bool operator==(StreamConfig const& lhs, StreamConfig const& rhs) {
 inline bool operator!=(StreamConfig const& lhs, StreamConfig const& rhs) {
   return !(lhs == rhs);
 }
+
+NLOHMANN_JSON_SERIALIZE_ENUM(StreamConfig::View,
+                             {
+                                 {StreamConfig::View::NONE, "none"},
+                                 {StreamConfig::View::ORIGINAL, "original"},
+                                 {StreamConfig::View::MASK, "mask"},
+                             })
+
+NLOHMANN_JSON_SERIALIZE_ENUM(StreamConfig::Contour,
+                             {
+                                 {StreamConfig::Contour::NONE, "none"},
+                                 {StreamConfig::Contour::FILTER, "filter"},
+                                 {StreamConfig::Contour::ALL, "all"},
+                             })
 
 }  // namespace deadeye
 
