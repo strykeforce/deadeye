@@ -1,3 +1,4 @@
+# pylint: disable=no-member
 import json
 from networktables import NetworkTables, NetworkTablesInstance
 from flask import current_app
@@ -40,12 +41,10 @@ class Camera:
         self.on = control_table.getBoolean("On", False)
         self.error = control_table.getBoolean("Error", False)
         self.stream = json.loads(control_table.getString("Stream", ""))
+        self.config = json.loads(control_table.getString("Config", ""))
         control_table.addEntryListenerEx(
             self.entry_listener, NetworkTablesInstance.NotifyFlags.UPDATE
         )
-
-        config_table = self.table()
-        self.config = json.loads(config_table.getString(f"Config", "{}"))
 
     def enable(self, enabled):
         if self.on == enabled:
