@@ -1,4 +1,5 @@
 #pragma once
+#include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 #include <wpi/Logger.h>
 #include <atomic>
@@ -26,7 +27,7 @@ class BasePipeline : public Pipeline {
   void UpdateConfig(PipelineConfig config) override {
     std::lock_guard<std::mutex> lock{update_mutex_};
     config_ = config;
-    update_sn_++;
+    update_config_ = true;
   }
   void UpdateStream(StreamConfig config) override {
     spdlog::debug("camera({}) stream sn: {}", inum_, config.sn);
@@ -46,7 +47,7 @@ class BasePipeline : public Pipeline {
 
  private:
   std::atomic<bool> cancel_{false};
-  std::atomic<int> update_sn_{1};
+  bool update_config_{false};
   std::mutex update_mutex_;
   PipelineConfig config_;
   StreamConfig stream_;
@@ -58,8 +59,8 @@ class BasePipeline : public Pipeline {
 /**
  * constructor configures cscore logging.
  */
-template <typename t>
-BasePipeline<t>::BasePipeline(int inum) : Pipeline{inum} {
+template <typename T>
+BasePipeline<T>::BasePipeline(int inum) : Pipeline{inum} {
   using namespace wpi;
   using namespace spdlog;
   static std::map<unsigned int, level::level_enum> levels{
@@ -88,8 +89,8 @@ void BasePipeline<T>::Run() {
 
   int port = 5800 + inum_;
   cs::CvSource cvsource{"cvsource", cs::VideoMode::kMJPEG, 320, 240, 30};
-  cs::MjpegServer cvMjpegServer{"cvhttpserver", port};
-  cvMjpegServer.SetSource(cvsource);
+  cs::MjpegServer mjpegServer{"cvhttpserver", port};
+  mjpegServer.SetSource(cvsource);
   spdlog::info("Pipeline<{}> listening on port {}", inum_, port);
 
   cv::Mat frame;
@@ -117,16 +118,12 @@ void BasePipeline<T>::Run() {
       return;
     }
 
-    // Check for new pipeline config. Atomic int is incremented in
-    // UpdateConfig() above and compared here with last update. If updated
-    // again during this, catch new update next time around.
-    int update_sn = update_sn_.load();
-    if (update_sn > config.sn) {
+    // Check for new pipeline config.
+    if (update_config_) {
       std::lock_guard<std::mutex> lock{update_mutex_};
+      update_config_ = false;
       config = config_;
-      config.sn = update_sn;
-      spdlog::debug("Pipeline<{}>: config_ sn = {} config sn = {} ", inum_,
-                    config_.sn, config.sn);
+      spdlog::debug("Pipeline<{}>: config = {}", inum_, config);
     }
 
     // Get new frame and process it.

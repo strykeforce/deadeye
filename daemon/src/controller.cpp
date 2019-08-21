@@ -53,6 +53,7 @@ Controller::Controller() {
 
   StartNetworkTables();
   InitializeNetworkTableEntries();
+  InitializeCameraConfig();
   StartPoller();
 }
 
@@ -136,7 +137,6 @@ void Controller::Run() {
           break;
         }
         case hash(DE_STREAM_CONFIG_ENTRY("0")): {
-          spdlog::debug("STREAM EVENT");
           ConfigStream event;
           event.config = StreamConfig::New(entry.value);
           Camera<0>::dispatch(event);
@@ -277,6 +277,7 @@ void SetStreamConfigEntry(nt::NetworkTableEntry entry, int inum) {
   json j = sc;
   entry.SetString(j.dump());
 }
+
 }  // namespace
 
 /**
@@ -295,6 +296,24 @@ void Controller::InitializeNetworkTableEntries() {
   SetLightsControlTableEntries(nti.GetTable(DE_LIGHTS_CONTROL_TABLE("1")));
   SetCameraConfigEntryDefault(nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("1")));
   SetStreamConfigEntry(nti.GetEntry(DE_STREAM_CONFIG_ENTRY("1")), 1);
+#endif
+}
+
+/**
+ * InitializeCameraConfig loads config into active pipelines.
+ */
+void Controller::InitializeCameraConfig() {
+  auto nti = nt::NetworkTableInstance(inst_);
+  std::shared_ptr<nt::Value> value;
+#ifdef DEADEYE_CAMERA0_PIPELINE
+  value = nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("0")).GetValue();
+  assert(value);
+  Camera<0>::SetConfig(PipelineConfig::New(value));
+#endif
+#ifdef DEADEYE_CAMERA1_PIPELINE
+  value = nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("1")).GetValue();
+  assert(value);
+  Camera<1>::SetConfig(PipelineConfig::New(value));
 #endif
 }
 

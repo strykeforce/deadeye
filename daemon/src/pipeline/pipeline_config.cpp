@@ -32,19 +32,3 @@ void deadeye::from_json(const json& j, PipelineConfig& p) {
   j.at(PipelineConfig::kHsvValKey).get_to(p.val);
   j.at(PipelineConfig::kExposureKey).get_to(p.exposure);
 }
-
-// ---------------------------------------------------------------------------
-// iostream support
-//
-namespace {
-std::ostream& operator<<(std::ostream& os, std::array<int, 2> const& s) {
-  os << "[" << s[0] << "," << s[1] << "]";
-  return os;
-}
-}  // namespace
-
-std::ostream& operator<<(std::ostream& os, PipelineConfig const& pc) {
-  os << "PipelineConfig{" << pc.sn << ", " << pc.hue << ", " << pc.sat << ", "
-     << pc.val << ", " << pc.exposure << "}";
-  return os;
-}
