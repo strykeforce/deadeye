@@ -48,6 +48,7 @@ class Controller {
   Controller();
   void StartNetworkTables();
   void InitializeNetworkTableEntries();
+  void InitializeCameraConfig();
   void StartPoller();
   static spdlog::level::level_enum Nt2spdlogLevel(const nt::LogMessage& msg);
 

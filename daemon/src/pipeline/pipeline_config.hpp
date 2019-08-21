@@ -1,5 +1,6 @@
 #pragma once
 #include <networktables/NetworkTableValue.h>
+#include <spdlog/fmt/ostr.h>
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <string>
@@ -25,6 +26,16 @@ struct PipelineConfig {
    * New is factory method to create a PipelineConfig from a NT value.
    */
   static PipelineConfig New(std::shared_ptr<nt::Value> value);
+
+  template <typename OStream>
+  friend OStream& operator<<(OStream& os, PipelineConfig const& pc) {
+    os << "PipelineConfig{sn=" << pc.sn << ", hue=[" << pc.hue[0] << ","
+       << pc.hue[1] << "], "
+       << "sat=[" << pc.sat[0] << "," << pc.sat[1] << "], "
+       << "val=[" << pc.val[0] << "," << pc.val[1]
+       << "], exposure=" << pc.exposure << "}";
+    return os;
+  }
 };
 
 void to_json(json& j, const PipelineConfig& p);
@@ -40,5 +51,3 @@ inline bool operator!=(PipelineConfig const& lhs, PipelineConfig const& rhs) {
 }
 
 }  // namespace deadeye
-
-std::ostream& operator<<(std::ostream& os, deadeye::PipelineConfig const& pc);
