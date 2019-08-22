@@ -17,7 +17,7 @@ namespace deadeye {
 struct CameraOn : tinyfsm::Event {};
 struct CameraOff : tinyfsm::Event {};
 struct CameraConfig : tinyfsm::Event {
-  PipelineConfig config;
+  PipelineConfig *config;
 };
 struct ConfigStream : tinyfsm::Event {
   StreamConfig config;
@@ -35,7 +35,7 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
   static void SetPipeline(std::unique_ptr<Pipeline> pipeline) {
     pipeline_ = std::move(pipeline);
   }
-  static void SetConfig(PipelineConfig config) {
+  static void SetConfig(PipelineConfig *config) {
     pipeline_->UpdateConfig(config);
   }
   static void SetStream(StreamConfig config) {
