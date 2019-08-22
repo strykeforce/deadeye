@@ -83,6 +83,10 @@ class Camera:
             self.error = False
         elif key == "Error":
             self.error = value
+        elif key == "Stream":
+            self.stream = json.loads(value)
+        elif key == "Config":
+            self.config = json.loads(value)
         else:
             current_app.logger.error("unrecognized key: %s", key)
 

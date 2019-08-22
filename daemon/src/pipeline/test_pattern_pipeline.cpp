@@ -1,5 +1,5 @@
-#include <spdlog/spdlog.h>
 #include "test_pattern_pipeline.hpp"
+#include <spdlog/spdlog.h>
 
 using namespace deadeye;
 
@@ -14,7 +14,7 @@ cv::VideoCapture TestPatternPipeline::GetVideoCapture() {
   return cap;
 }
 
-void TestPatternPipeline::FindContours(
+void TestPatternPipeline::FilterContours(
     std::vector<std::vector<cv::Point>> const &src,
     std::vector<std::vector<cv::Point>> &dest) {
   // throw PipelineException("Test Exception");

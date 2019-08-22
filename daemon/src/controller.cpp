@@ -309,11 +309,20 @@ void Controller::InitializeCameraConfig() {
   value = nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("0")).GetValue();
   assert(value);
   Camera<0>::SetConfig(PipelineConfig::New(value));
+
+  value = nti.GetEntry(DE_STREAM_CONFIG_ENTRY("0")).GetValue();
+  assert(value);
+  Camera<0>::SetStream(StreamConfig::New(value));
 #endif
+
 #ifdef DEADEYE_CAMERA1_PIPELINE
   value = nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("1")).GetValue();
   assert(value);
   Camera<1>::SetConfig(PipelineConfig::New(value));
+
+  value = nti.GetEntry(DE_STREAM_CONFIG_ENTRY("1")).GetValue();
+  assert(value);
+  Camera<1>::SetStream(StreamConfig::New(value));
 #endif
 }
 

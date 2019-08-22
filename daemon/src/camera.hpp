@@ -38,6 +38,9 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
   static void SetConfig(PipelineConfig config) {
     pipeline_->UpdateConfig(config);
   }
+  static void SetStream(StreamConfig config) {
+    pipeline_->UpdateStream(config);
+  }
 
  private:
   void react(tinyfsm::Event const &) {}  // default

@@ -8,8 +8,8 @@ class DefaultPipeline : public BasePipeline<DefaultPipeline> {
 
   cv::Mat PreProcessFrame(cv::Mat const &frame);
 
-  void FindContours(std::vector<std::vector<cv::Point>> const &src,
-                    std::vector<std::vector<cv::Point>> &dest);
+  void FilterContours(std::vector<std::vector<cv::Point>> const &src,
+                        std::vector<std::vector<cv::Point>> &dest);
 
  protected:
   cv::VideoCapture GetVideoCapture() override;

@@ -29,7 +29,8 @@ class BasePipeline : public Pipeline {
     update_config_ = true;
   }
   void UpdateStream(StreamConfig config) override {
-    spdlog::debug("camera({}) stream sn: {}", inum_, config.sn);
+    std::lock_guard<std::mutex> lock{update_mutex_};
+    stream_ = config;
   }
 
   // implemented in concrete pipeline classes
@@ -46,10 +47,10 @@ class BasePipeline : public Pipeline {
 
  private:
   std::atomic<bool> cancel_{false};
-  bool update_config_{false};
   std::mutex update_mutex_;
   PipelineConfig config_;
   StreamConfig stream_;
+  bool update_config_{false};
   cv::Mat cvt_color_output_;
   std::vector<std::vector<cv::Point>> find_contours_input_;
   std::vector<std::vector<cv::Point>> find_contours_output_;
@@ -117,6 +118,7 @@ void BasePipeline<T>::Run() {
       return;
     }
 
+    // TODO: move to ProcessFrame?
     // Check for new pipeline config.
     if (update_config_) {
       std::lock_guard<std::mutex> lock{update_mutex_};
@@ -128,7 +130,11 @@ void BasePipeline<T>::Run() {
     // Get new frame and process it.
     cap >> frame;
     auto preview = ProcessFrame(frame);
-    cvsource.PutFrame(preview);
+
+    if (stream_.view != StreamConfig::View::NONE) {
+      cvsource.PutFrame(preview);
+    }
+
     tm.stop();
   }
 }
@@ -146,7 +152,7 @@ cv::Mat BasePipeline<T>::ProcessFrame(cv::Mat const &frame) {
   cv::Mat result;
 
   cv::resize(pre, result, cv::Size(320, 240), 0, 0, cv::INTER_AREA);
-  impl.FindContours(find_contours_input_, find_contours_output_);
+  impl.FilterContours(find_contours_input_, find_contours_output_);
   return result;
 }
 }  // namespace deadeye

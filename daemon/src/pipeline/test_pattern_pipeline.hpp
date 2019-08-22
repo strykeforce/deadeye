@@ -8,8 +8,8 @@ class TestPatternPipeline : public BasePipeline<TestPatternPipeline> {
 
   cv::Mat PreProcessFrame(cv::Mat const &frame) { return frame; }
 
-  void FindContours(std::vector<std::vector<cv::Point>> const &src,
-                    std::vector<std::vector<cv::Point>> &dest);
+  void FilterContours(std::vector<std::vector<cv::Point>> const &src,
+                        std::vector<std::vector<cv::Point>> &dest);
 
  protected:
   cv::VideoCapture GetVideoCapture() override;

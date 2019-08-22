@@ -1,9 +1,9 @@
-#include <spdlog/spdlog.h>
 #include "default_pipeline.hpp"
+#include <spdlog/spdlog.h>
 
 using namespace deadeye;
 
-void DefaultPipeline::FindContours(
+void DefaultPipeline::FilterContours(
     std::vector<std::vector<cv::Point>> const &src,
     std::vector<std::vector<cv::Point>> &dest) {
   // throw PipelineException("Test Exception");

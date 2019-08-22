@@ -1,5 +1,6 @@
 #pragma once
 #include <networktables/NetworkTableValue.h>
+#include <spdlog/fmt/ostr.h>
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <string>
@@ -26,6 +27,38 @@ struct StreamConfig {
    * New is factory method to create a StreamConfig from a NT value.
    */
   static StreamConfig New(std::shared_ptr<nt::Value> value);
+
+  template <typename OStream>
+  friend OStream& operator<<(OStream& os, StreamConfig const& sc) {
+    std::string view;
+    switch (sc.view) {
+      case View::NONE:
+        view = "NONE";
+        break;
+      case View::ORIGINAL:
+        view = "ORIGINAL";
+        break;
+      case View::MASK:
+        view = "MASK";
+        break;
+    }
+
+    std::string contour;
+    switch (sc.contour) {
+      case Contour::NONE:
+        contour = "NONE";
+        break;
+      case Contour::FILTER:
+        contour = "FILTER";
+        break;
+      case Contour::ALL:
+        contour = "ALL";
+        break;
+    }
+    os << "StreamConfig{sn=" << sc.sn << ", url=\"" << sc.url
+       << "\", view=" << view << ", contour=" << contour << "}";
+    return os;
+  }
 };
 
 void to_json(json& j, const StreamConfig& p);
