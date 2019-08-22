@@ -1,5 +1,4 @@
 #pragma once
-#include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 #include <wpi/Logger.h>
 #include <atomic>
@@ -114,7 +113,7 @@ void BasePipeline<T>::Run() {
       spdlog::info("Pipeline<{}>: stopping", inum_);
       double avg = tm.getTimeSec() / tm.getCounter();
       double fps = 1.0 / avg;
-      spdlog::debug("Pipeline<{}>: avg. time = {}, FPS = {}", inum_, avg, fps);
+      spdlog::info("Pipeline<{}>: avg. time = {}, FPS = {}", inum_, avg, fps);
       return;
     }
 
@@ -143,7 +142,7 @@ cv::Mat BasePipeline<T>::ProcessFrame(cv::Mat const &frame) {
   // CRTP cast to concrete pipeline implementation.
   T &impl = static_cast<T &>(*this);
 
-  auto pre = impl.PreProcessFrame(frame);
+  cv::Mat pre = impl.PreProcessFrame(frame);
   cv::Mat result;
 
   cv::resize(pre, result, cv::Size(320, 240), 0, 0, cv::INTER_AREA);
