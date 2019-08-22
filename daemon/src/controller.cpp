@@ -133,14 +133,15 @@ void Controller::Run() {
         case hash(DE_CAMERA_CONFIG_ENTRY("0")): {
           spdlog::debug("Controller: new Pipeline<0> config event");
           CameraConfig event;
-          // Pointer created here have ownership passed to Pipeline
+          // Pointer created here has ownership passed to Pipeline
           event.config = new PipelineConfig(entry.value);
           Camera<0>::dispatch(event);
           break;
         }
         case hash(DE_STREAM_CONFIG_ENTRY("0")): {
           ConfigStream event;
-          event.config = StreamConfig::New(entry.value);
+          // Pointer created here has ownership passed to Pipeline
+          event.config = new StreamConfig(entry.value);
           Camera<0>::dispatch(event);
           break;
         }
@@ -167,14 +168,15 @@ void Controller::Run() {
         case hash(DE_CAMERA_CONFIG_ENTRY("1")): {
           spdlog::debug("controller: new Pipeline<1> config event");
           CameraConfig event;
-          // Pointer created here have ownership passed to Pipeline
+          // Pointer created here has ownership passed to Pipeline
           event.config = new PipelineConfig(entry.value);
           Camera<1>::dispatch(event);
           break;
         }
         case hash(DE_STREAM_CONFIG_ENTRY("1")): {
           ConfigStream event;
-          event.config = StreamConfig::New(entry.value);
+          // Pointer created here has ownership passed to Pipeline
+          event.config = new StreamConfig(entry.value);
           Camera<1>::dispatch(event);
           break;
         }
@@ -277,7 +279,8 @@ void SetCameraConfigEntryDefault(nt::NetworkTableEntry entry) {
 void SetStreamConfigEntry(nt::NetworkTableEntry entry, int inum) {
   std::stringstream url;
   url << "http://localhost:" << std::to_string(5800 + inum) << "/stream.mjpg";
-  StreamConfig sc{0, url.str()};
+  StreamConfig sc{0, url.str(), StreamConfig::View::NONE,
+                  StreamConfig::Contour::NONE};
   json j = sc;
   entry.SetString(j.dump());
 }
@@ -312,23 +315,23 @@ void Controller::InitializeCameraConfig() {
 #ifdef DEADEYE_CAMERA0_PIPELINE
   value = nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("0")).GetValue();
   assert(value);
-  // Pointer created here have ownership passed to Pipeline
+  // Pointer created here has ownership passed to Pipeline
   Camera<0>::SetConfig(new PipelineConfig(value));
 
   value = nti.GetEntry(DE_STREAM_CONFIG_ENTRY("0")).GetValue();
   assert(value);
-  Camera<0>::SetStream(StreamConfig::New(value));
+  Camera<0>::SetStream(new StreamConfig(value));
 #endif
 
 #ifdef DEADEYE_CAMERA1_PIPELINE
   value = nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("1")).GetValue();
   assert(value);
-  // Pointer created here have ownership passed to Pipeline
+  // Pointer created here has ownership passed to Pipeline
   Camera<1>::SetConfig(new PipelineConfig(value));
 
   value = nti.GetEntry(DE_STREAM_CONFIG_ENTRY("1")).GetValue();
   assert(value);
-  Camera<1>::SetStream(StreamConfig::New(value));
+  Camera<1>::SetStream(new StreamConfig(value));
 #endif
 }
 

@@ -5,11 +5,14 @@
 using namespace deadeye;
 
 TEST_CASE("StreamConfig equality", "[pipeline]") {
-  StreamConfig sc1{0, "http://example.com"};
-  StreamConfig sc2{0, "http://example.com"};
+  StreamConfig sc1{0, "http://example.com", StreamConfig::View::NONE,
+                   StreamConfig::Contour::NONE};
+  StreamConfig sc2{0, "http://example.com", StreamConfig::View::NONE,
+                   StreamConfig::Contour::NONE};
   REQUIRE(sc1 == sc2);
 
-  StreamConfig sc3{0, "foo"};
+  StreamConfig sc3{0, "foo", StreamConfig::View::NONE,
+                   StreamConfig::Contour::NONE};
   REQUIRE(sc1 != sc3);
 }
 
@@ -28,7 +31,8 @@ TEST_CASE("StreamConfig from JSON", "[pipeline]") {
 }
 
 TEST_CASE("StreamConfig to JSON", "[pipeline]") {
-  StreamConfig sc{2767, "http://example.com"};
+  StreamConfig sc{2767, "http://example.com", StreamConfig::View::NONE,
+                  StreamConfig::Contour::NONE};
   json j = sc;
   json expected;
   expected[StreamConfig::kSerialKey] = 2767;
@@ -39,7 +43,8 @@ TEST_CASE("StreamConfig to JSON", "[pipeline]") {
 }
 
 TEST_CASE("StreamConfig New", "[pipeline]") {
-  StreamConfig expected{2767, "http://example.com"};
+  StreamConfig expected{2767, "http://example.com", StreamConfig::View::NONE,
+                        StreamConfig::Contour::NONE};
   json j = expected;
   auto val = nt::Value::MakeString(j.dump());
   auto sc = StreamConfig::New(val);

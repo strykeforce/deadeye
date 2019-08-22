@@ -8,6 +8,19 @@ char const* StreamConfig::kUrlKey{"url"};
 char const* StreamConfig::kViewKey{"view"};
 char const* StreamConfig::kContourKey{"contour"};
 
+StreamConfig::StreamConfig(){};
+
+StreamConfig::StreamConfig(int sn, std::string url, View view, Contour contour)
+    : sn(sn), url(url), view(view), contour(contour) {}
+
+StreamConfig::StreamConfig(std::shared_ptr<nt::Value> value) {
+  auto j = json::parse(value->GetString().str());
+  j.at(kSerialKey).get_to(sn);
+  j.at(kUrlKey).get_to(url);
+  j.at(kViewKey).get_to(view);
+  j.at(kContourKey).get_to(contour);
+}
+
 StreamConfig StreamConfig::New(std::shared_ptr<nt::Value> value) {
   auto j = json::parse(value->GetString().str());
   return j.get<StreamConfig>();

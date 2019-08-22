@@ -20,7 +20,7 @@ struct CameraConfig : tinyfsm::Event {
   PipelineConfig *config;
 };
 struct ConfigStream : tinyfsm::Event {
-  StreamConfig config;
+  StreamConfig *config;
 };
 
 // ---------------------------------------------------------------------------
@@ -38,7 +38,7 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
   static void SetConfig(PipelineConfig *config) {
     pipeline_->UpdateConfig(config);
   }
-  static void SetStream(StreamConfig config) {
+  static void SetStream(StreamConfig *config) {
     pipeline_->UpdateStream(config);
   }
 

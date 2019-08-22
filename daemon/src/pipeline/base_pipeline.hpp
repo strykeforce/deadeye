@@ -53,7 +53,20 @@ class BasePipeline : public Pipeline {
   /**
    * UpdateStream handles changes to video streaming.
    */
-  void UpdateStream(StreamConfig config) override { stream_ = config; }
+  void UpdateStream(StreamConfig *config) override {
+    if (prev_stream_config_ != nullptr)
+      spdlog::debug("Pipeline<{}> deleting previous stream config: {}", inum_,
+                    *prev_stream_config_);
+
+    delete prev_stream_config_;
+    prev_stream_config_ = stream_config_.load();
+    stream_config_.store(config);
+    spdlog::debug("Pipeline<{}> new config: {}", inum_,
+                  *(stream_config_.load()));
+    if (prev_stream_config_ != nullptr)
+      spdlog::debug("Pipeline<{}> previous stream config: {}", inum_,
+                    *prev_stream_config_);
+  }
 
   // implemented in concrete pipeline classes
   //
@@ -69,10 +82,10 @@ class BasePipeline : public Pipeline {
 
  private:
   std::atomic<bool> cancel_{false};
-  StreamConfig stream_;
+  std::atomic<StreamConfig *> stream_config_{nullptr};
+  StreamConfig *prev_stream_config_{nullptr};
   std::atomic<PipelineConfig *> pipeline_config_{nullptr};
   PipelineConfig *prev_pipeline_config_{nullptr};
-  bool update_config_{false};
   cv::Mat cvt_color_output_;
   std::vector<std::vector<cv::Point>> find_contours_input_;
   std::vector<std::vector<cv::Point>> find_contours_output_;
@@ -143,7 +156,8 @@ void BasePipeline<T>::Run() {
     cap >> frame;
     auto preview = ProcessFrame(frame);
 
-    if (stream_.view != StreamConfig::View::NONE) {
+    StreamConfig *stream = stream_config_.load();
+    if (stream->view != StreamConfig::View::NONE) {
       cvsource.PutFrame(preview);
     }
 

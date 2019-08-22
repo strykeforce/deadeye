@@ -19,7 +19,7 @@ class Pipeline {
   virtual void Run() = 0;
   virtual void CancelTask() = 0;
   virtual void UpdateConfig(PipelineConfig *config) = 0;
-  virtual void UpdateStream(StreamConfig config) = 0;
+  virtual void UpdateStream(StreamConfig *config) = 0;
 
  protected:
   int inum_;
