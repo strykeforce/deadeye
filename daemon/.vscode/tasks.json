@@ -18,8 +18,9 @@
       "panel": "new",
       "focus": true
     },
-    "problemMatcher": [
-      "$gcc"
-    ]
+    "problemMatcher": {
+      "base": "$gcc",
+      "fileLocation": ["relative", "${workspaceRoot}/build"],
+    }
   }]
 }

@@ -24,6 +24,21 @@ struct StreamConfig {
   Contour contour = Contour::NONE;
 
   /**
+   * Default constructor.
+   */
+  StreamConfig();
+
+  /**
+   * Constructor from member values.
+   */
+  StreamConfig(int sn, std::string url, View view, Contour contour);
+
+  /**
+   * Constructor from NetworkTables.
+   */
+  StreamConfig(std::shared_ptr<nt::Value> value);
+
+  /**
    * New is factory method to create a StreamConfig from a NT value.
    */
   static StreamConfig New(std::shared_ptr<nt::Value> value);

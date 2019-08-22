@@ -16,11 +16,28 @@ struct PipelineConfig {
   static char const* kHsvValKey;
   static char const* kExposureKey;
 
+  using hsv_t = std::array<int, 2>;
+
   int sn = 0;
-  std::array<int, 2> hue;
-  std::array<int, 2> sat;
-  std::array<int, 2> val;
+  hsv_t hue;
+  hsv_t sat;
+  hsv_t val;
   double exposure;
+
+  /**
+   * Default constructor.
+   */
+  PipelineConfig();
+
+  /**
+   * Constructor from member values.
+   */
+  PipelineConfig(int sn, hsv_t hue, hsv_t sat, hsv_t val, double exposure);
+
+  /**
+   * Constructor from NetworkTables.
+   */
+  PipelineConfig(std::shared_ptr<nt::Value> value);
 
   /**
    * New is factory method to create a PipelineConfig from a NT value.

@@ -23,14 +23,49 @@ class BasePipeline : public Pipeline {
   virtual ~BasePipeline() {}
   void Run() override;
   void CancelTask() override { cancel_ = true; }
-  void UpdateConfig(PipelineConfig config) override {
-    std::lock_guard<std::mutex> lock{update_mutex_};
-    config_ = config;
-    update_config_ = true;
+
+  /**
+   * UpdateConfig handles user changes to camera config.
+   */
+  void UpdateConfig(PipelineConfig *config) override {
+    // The config is read for every frame but updated very infrequently.
+    // ProcessFrame accesses the current config throught the atomic pointer
+    // pipeline_config_. To prevent deleting the config ProcessFrame is using
+    // during this update, the previous config is retained and pointed to by
+    // prev_pipeline_config_. It is then deleted and replaced the next time the
+    // config is updated. This assumes that ProcessFrame will finish using the
+    // config before this update is called again, a safe assumption since
+    // updates are user initiated via the web admin UI.
+    if (prev_pipeline_config_ != nullptr)
+      spdlog::debug("Pipeline<{}> deleting previous config: {}", inum_,
+                    *prev_pipeline_config_);
+
+    delete prev_pipeline_config_;
+    prev_pipeline_config_ = pipeline_config_.load();
+    pipeline_config_.store(config);
+    spdlog::debug("Pipeline<{}> new config: {}", inum_,
+                  *(pipeline_config_.load()));
+    if (prev_pipeline_config_ != nullptr)
+      spdlog::debug("Pipeline<{}> previous config: {}", inum_,
+                    *prev_pipeline_config_);
   }
-  void UpdateStream(StreamConfig config) override {
-    std::lock_guard<std::mutex> lock{update_mutex_};
-    stream_ = config;
+
+  /**
+   * UpdateStream handles changes to video streaming.
+   */
+  void UpdateStream(StreamConfig *config) override {
+    if (prev_stream_config_ != nullptr)
+      spdlog::debug("Pipeline<{}> deleting previous stream config: {}", inum_,
+                    *prev_stream_config_);
+
+    delete prev_stream_config_;
+    prev_stream_config_ = stream_config_.load();
+    stream_config_.store(config);
+    spdlog::debug("Pipeline<{}> new config: {}", inum_,
+                  *(stream_config_.load()));
+    if (prev_stream_config_ != nullptr)
+      spdlog::debug("Pipeline<{}> previous stream config: {}", inum_,
+                    *prev_stream_config_);
   }
 
   // implemented in concrete pipeline classes
@@ -47,10 +82,10 @@ class BasePipeline : public Pipeline {
 
  private:
   std::atomic<bool> cancel_{false};
-  std::mutex update_mutex_;
-  PipelineConfig config_;
-  StreamConfig stream_;
-  bool update_config_{false};
+  std::atomic<StreamConfig *> stream_config_{nullptr};
+  StreamConfig *prev_stream_config_{nullptr};
+  std::atomic<PipelineConfig *> pipeline_config_{nullptr};
+  PipelineConfig *prev_pipeline_config_{nullptr};
   cv::Mat cvt_color_output_;
   std::vector<std::vector<cv::Point>> find_contours_input_;
   std::vector<std::vector<cv::Point>> find_contours_output_;
@@ -102,7 +137,6 @@ void BasePipeline<T>::Run() {
     throw PipelineException("unable to open camera");
   }
 
-  PipelineConfig config;
   cv::TickMeter tm;
 
   // Loop until task cancelled.
@@ -118,20 +152,12 @@ void BasePipeline<T>::Run() {
       return;
     }
 
-    // TODO: move to ProcessFrame?
-    // Check for new pipeline config.
-    if (update_config_) {
-      std::lock_guard<std::mutex> lock{update_mutex_};
-      update_config_ = false;
-      config = config_;
-      spdlog::debug("Pipeline<{}>: config = {}", inum_, config);
-    }
-
     // Get new frame and process it.
     cap >> frame;
     auto preview = ProcessFrame(frame);
 
-    if (stream_.view != StreamConfig::View::NONE) {
+    StreamConfig *stream = stream_config_.load();
+    if (stream->view != StreamConfig::View::NONE) {
       cvsource.PutFrame(preview);
     }
 
@@ -147,6 +173,8 @@ template <typename T>
 cv::Mat BasePipeline<T>::ProcessFrame(cv::Mat const &frame) {
   // CRTP cast to concrete pipeline implementation.
   T &impl = static_cast<T &>(*this);
+
+  // PipelineConfig *config = pipeline_config_.load();
 
   cv::Mat pre = impl.PreProcessFrame(frame);
   cv::Mat result;
