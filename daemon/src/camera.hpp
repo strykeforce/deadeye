@@ -16,7 +16,7 @@ namespace deadeye {
 //
 struct CameraOn : tinyfsm::Event {};
 struct CameraOff : tinyfsm::Event {};
-struct CameraConfig : tinyfsm::Event {
+struct ConfigCamera : tinyfsm::Event {
   PipelineConfig *config;
 };
 struct ConfigStream : tinyfsm::Event {
@@ -47,7 +47,7 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
 
   virtual void react(CameraOn const &) {}
   virtual void react(CameraOff const &) {}
-  virtual void react(CameraConfig const &c) {
+  virtual void react(ConfigCamera const &c) {
     Camera<inum>::pipeline_->UpdateConfig(c.config);
   }
   virtual void react(ConfigStream const &s) {

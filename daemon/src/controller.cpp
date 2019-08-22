@@ -132,7 +132,7 @@ void Controller::Run() {
           break;
         case hash(DE_CAMERA_CONFIG_ENTRY("0")): {
           spdlog::debug("Controller: new Pipeline<0> config event");
-          CameraConfig event;
+          ConfigCamera event;
           // Pointer created here has ownership passed to Pipeline
           event.config = new PipelineConfig(entry.value);
           Camera<0>::dispatch(event);
@@ -167,7 +167,7 @@ void Controller::Run() {
           break;
         case hash(DE_CAMERA_CONFIG_ENTRY("1")): {
           spdlog::debug("controller: new Pipeline<1> config event");
-          CameraConfig event;
+          ConfigCamera event;
           // Pointer created here has ownership passed to Pipeline
           event.config = new PipelineConfig(entry.value);
           Camera<1>::dispatch(event);
