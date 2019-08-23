@@ -145,18 +145,33 @@ void BasePipeline<T>::Run() {
     // Get new frame and process it.
     cap >> frame;
 
+    PipelineConfig *config = pipeline_config_.load();
     T &impl = static_cast<T &>(*this);
-    // PipelineConfig *config = pipeline_config_.load();
     cv::Mat preprocess_output = impl.PreProcessFrame(frame);
+
+    cv::Mat hsv_threshold_output;
+    cv::cvtColor(preprocess_output, hsv_threshold_output, cv::COLOR_BGR2HSV);
+    cv::inRange(hsv_threshold_output,
+                cv::Scalar(config->hue[0], config->sat[0], config->val[0]),
+                cv::Scalar(config->hue[1], config->sat[1], config->val[1]),
+                hsv_threshold_output);
 
     // impl.FilterContours(find_contours_output_, filter_contours_output_);
 
-    cv::Mat preview;
-    cv::resize(preprocess_output, preview, cv::Size(320, 240), 0, 0,
-               cv::INTER_AREA);
-
     StreamConfig *stream = stream_config_.load();
     if (stream->view != StreamConfig::View::NONE) {
+      cv::Mat preview;
+      switch (stream->view) {
+        case StreamConfig::View::NONE:
+          break;
+        case StreamConfig::View::ORIGINAL:
+          preview = preprocess_output;
+          break;
+        case StreamConfig::View::MASK:
+          preview = hsv_threshold_output;
+          break;
+      }
+      cv::resize(preview, preview, cv::Size(320, 240), 0, 0, cv::INTER_AREA);
       cvsource.PutFrame(preview);
     }
 

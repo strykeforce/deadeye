@@ -23,19 +23,19 @@ const CameraStream = (props: Props): JSX.Element => {
   const classes = useStyles();
   const imgRef = useRef<HTMLImageElement>(null);
 
-  useEffect(() => {
-    if (camera.on && stream.view !== 'none') {
-      console.log('starting camera timeout...');
-      const timeoutId = window.setTimeout(() => {
-        if (imgRef.current) {
-          imgRef.current.src = stream.url;
-        } else {
-          throw new ReferenceError();
-        }
-      }, 500);
-      return () => clearTimeout(timeoutId);
-    }
-  }, [camera.on, stream]);
+  // useEffect(() => {
+  //   if (camera.on && stream.view !== 'none') {
+  //     console.log('starting camera timeout...');
+  //     const timeoutId = window.setTimeout(() => {
+  //       if (imgRef.current) {
+  //         imgRef.current.src = stream.url;
+  //       } else {
+  //         throw new ReferenceError();
+  //       }
+  //     }, 500);
+  //     return () => clearTimeout(timeoutId);
+  //   }
+  // }, [camera.on, stream]);
 
   const handleChange = (name: string) => (event: React.ChangeEvent<{}>, value: string): void => {
     event.preventDefault();
@@ -43,10 +43,14 @@ const CameraStream = (props: Props): JSX.Element => {
     configStream(camera.unit, camera.inum, newStream);
   };
 
+  let image;
+  if (camera.on && stream.view !== 'none') image = stream.url;
+  else image = standBy;
+
   return (
     <Paper className={classes.root}>
       {label && <Typography variant="body1">{label}</Typography>}
-      <img src={standBy} ref={imgRef} width={width} className={classes.stream} alt="Stream" />
+      <img src={image} ref={imgRef} width={width} className={classes.stream} alt="Stream" />
       <div className={classes.root}>
         <FormControl component="fieldset" className={classes.formControl}>
           <FormLabel component="legend">View</FormLabel>

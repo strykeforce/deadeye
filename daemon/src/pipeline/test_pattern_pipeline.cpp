@@ -9,7 +9,8 @@ cv::VideoCapture TestPatternPipeline::GetVideoCapture() {
   std::string s{
       "videotestsrc ! video/x-raw, width=640, "
       "height=480, "
-      "framerate=90/1 ! videoconvert ! appsink"};
+      "framerate=90/1 ! videoconvert ! video/x-raw, format=(string)BGR ! "
+      "appsink"};
   cap.open(s, cv::CAP_GSTREAMER);
   return cap;
 }
