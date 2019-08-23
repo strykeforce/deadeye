@@ -8,7 +8,6 @@
 #include "controller.hpp"
 #include "lights.hpp"
 #include "pipeline.hpp"
-#include "stream_config.hpp"
 
 namespace {
 // static char const* kNTServerAddress = "titan.lan.j3ff.io";
