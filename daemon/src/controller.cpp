@@ -133,15 +133,13 @@ void Controller::Run() {
         case hash(DE_CAMERA_CONFIG_ENTRY("0")): {
           spdlog::debug("Controller: new Pipeline<0> config event");
           ConfigCamera event;
-          // Pointer created here has ownership passed to Pipeline
-          event.config = new PipelineConfig(entry.value);
+          event.config = new PipelineConfig(entry.value);  // ownership passed
           Camera<0>::dispatch(event);
           break;
         }
         case hash(DE_STREAM_CONFIG_ENTRY("0")): {
           ConfigStream event;
-          // Pointer created here has ownership passed to Pipeline
-          event.config = new StreamConfig(entry.value);
+          event.config = new StreamConfig(entry.value);  // ownership passed
           Camera<0>::dispatch(event);
           break;
         }
@@ -166,17 +164,14 @@ void Controller::Run() {
           if (entry.value->GetBoolean()) Lights<1>::dispatch(LightsOff());
           break;
         case hash(DE_CAMERA_CONFIG_ENTRY("1")): {
-          spdlog::debug("controller: new Pipeline<1> config event");
           ConfigCamera event;
-          // Pointer created here has ownership passed to Pipeline
-          event.config = new PipelineConfig(entry.value);
+          event.config = new PipelineConfig(entry.value);  // ownership passed
           Camera<1>::dispatch(event);
           break;
         }
         case hash(DE_STREAM_CONFIG_ENTRY("1")): {
           ConfigStream event;
-          // Pointer created here has ownership passed to Pipeline
-          event.config = new StreamConfig(entry.value);
+          event.config = new StreamConfig(entry.value);  // ownership passed
           Camera<1>::dispatch(event);
           break;
         }
@@ -315,23 +310,21 @@ void Controller::InitializeCameraConfig() {
 #ifdef DEADEYE_CAMERA0_PIPELINE
   value = nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("0")).GetValue();
   assert(value);
-  // Pointer created here has ownership passed to Pipeline
-  Camera<0>::SetConfig(new PipelineConfig(value));
+  Camera<0>::SetConfig(new PipelineConfig(value));  // ownership passed
 
   value = nti.GetEntry(DE_STREAM_CONFIG_ENTRY("0")).GetValue();
   assert(value);
-  Camera<0>::SetStream(new StreamConfig(value));
+  Camera<0>::SetStream(new StreamConfig(value));  // ownership passed
 #endif
 
 #ifdef DEADEYE_CAMERA1_PIPELINE
   value = nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("1")).GetValue();
   assert(value);
-  // Pointer created here has ownership passed to Pipeline
-  Camera<1>::SetConfig(new PipelineConfig(value));
+  Camera<1>::SetConfig(new PipelineConfig(value));  // ownership passed
 
   value = nti.GetEntry(DE_STREAM_CONFIG_ENTRY("1")).GetValue();
   assert(value);
-  Camera<1>::SetStream(new StreamConfig(value));
+  Camera<1>::SetStream(new StreamConfig(value));  // ownership passed
 #endif
 }
 
