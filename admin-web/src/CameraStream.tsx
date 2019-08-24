@@ -32,7 +32,8 @@ const CameraStream = (props: Props): JSX.Element => {
     <Paper className={classes.root}>
       {label && <Typography variant="body1">{label}</Typography>}
       <img
-        src={camera.on && stream.view !== 'none' ? stream.url : standBy}
+        src={camera.on && (stream.view !== 'none' || stream.contour !== 'none') ? stream.url : standBy}
+        height={height}
         width={width}
         className={classes.stream}
         alt="Stream"
@@ -67,6 +68,7 @@ const CameraStream = (props: Props): JSX.Element => {
 export default CameraStream;
 
 const width = 322;
+const height = 242;
 
 const useStyles = makeStyles(theme => ({
   root: {

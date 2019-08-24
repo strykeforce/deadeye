@@ -156,21 +156,51 @@ void BasePipeline<T>::Run() {
                 cv::Scalar(config->hue[1], config->sat[1], config->val[1]),
                 hsv_threshold_output);
 
-    // impl.FilterContours(find_contours_output_, filter_contours_output_);
+    std::vector<std::vector<cv::Point>> find_contours_output;
+    cv::findContours(hsv_threshold_output, find_contours_output,
+                     cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+
+    // spdlog::debug("Contours found: {}", find_contours_output.size());
+
+    std::vector<std::vector<cv::Point>> filter_contours_output;
+    impl.FilterContours(find_contours_output, filter_contours_output);
 
     StreamConfig *stream = stream_config_.load();
-    if (stream->view != StreamConfig::View::NONE) {
+    if (stream->view != StreamConfig::View::NONE ||
+        stream->contour != StreamConfig::Contour::NONE) {
       cv::Mat preview;
       switch (stream->view) {
         case StreamConfig::View::NONE:
+          if (stream->contour != StreamConfig::Contour::NONE) {
+            preview = cv::Mat::zeros(preprocess_output.size(), CV_8UC3);
+          }
           break;
         case StreamConfig::View::ORIGINAL:
+          if (stream->contour != StreamConfig::Contour::NONE) {
+            cv::cvtColor(preprocess_output, preview, cv::COLOR_BGR2GRAY);
+            cv::cvtColor(preview, preview, cv::COLOR_GRAY2BGR);
+            break;
+          }
           preview = preprocess_output;
           break;
         case StreamConfig::View::MASK:
-          preview = hsv_threshold_output;
+          cv::cvtColor(hsv_threshold_output, preview, cv::COLOR_GRAY2BGR);
           break;
       }
+
+      switch (stream->contour) {
+        case StreamConfig::Contour::NONE:
+          break;
+        case StreamConfig::Contour::FILTER:
+          cv::drawContours(preview, filter_contours_output, -1,
+                           cv::Scalar(255, 0, 240), 2);
+          break;
+        case StreamConfig::Contour::ALL:
+          cv::drawContours(preview, find_contours_output, -1,
+                           cv::Scalar(255, 0, 240), 2);
+          break;
+      }
+
       cv::resize(preview, preview, cv::Size(320, 240), 0, 0, cv::INTER_AREA);
       cvsource.PutFrame(preview);
     }
