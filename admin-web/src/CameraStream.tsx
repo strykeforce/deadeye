@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -21,21 +21,6 @@ const CameraStream = (props: Props): JSX.Element => {
   const stream = camera.stream;
 
   const classes = useStyles();
-  const imgRef = useRef<HTMLImageElement>(null);
-
-  useEffect(() => {
-    if (camera.on && stream.view !== 'none') {
-      console.log('starting camera timeout...');
-      const timeoutId = window.setTimeout(() => {
-        if (imgRef.current) {
-          imgRef.current.src = stream.url;
-        } else {
-          throw new ReferenceError();
-        }
-      }, 500);
-      return () => clearTimeout(timeoutId);
-    }
-  }, [camera.on, stream]);
 
   const handleChange = (name: string) => (event: React.ChangeEvent<{}>, value: string): void => {
     event.preventDefault();
@@ -46,7 +31,13 @@ const CameraStream = (props: Props): JSX.Element => {
   return (
     <Paper className={classes.root}>
       {label && <Typography variant="body1">{label}</Typography>}
-      <img src={standBy} ref={imgRef} width={width} className={classes.stream} alt="Stream" />
+      <img
+        src={camera.on && (stream.view !== 'none' || stream.contour !== 'none') ? stream.url : standBy}
+        height={height}
+        width={width}
+        className={classes.stream}
+        alt="Stream"
+      />
       <div className={classes.root}>
         <FormControl component="fieldset" className={classes.formControl}>
           <FormLabel component="legend">View</FormLabel>
@@ -77,6 +68,7 @@ const CameraStream = (props: Props): JSX.Element => {
 export default CameraStream;
 
 const width = 322;
+const height = 242;
 
 const useStyles = makeStyles(theme => ({
   root: {

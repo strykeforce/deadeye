@@ -7,7 +7,7 @@
 #include <tinyfsm.hpp>
 
 #include "pipeline/pipeline.hpp"
-#include "stream_config.hpp"
+#include "pipeline/stream_config.hpp"
 
 namespace deadeye {
 

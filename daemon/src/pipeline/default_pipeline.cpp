@@ -6,6 +6,13 @@ using namespace deadeye;
 void DefaultPipeline::FilterContours(
     std::vector<std::vector<cv::Point>> const &src,
     std::vector<std::vector<cv::Point>> &dest) {
+  auto max_area_iter = std::max_element(
+      src.begin(), src.end(),
+      [](std::vector<cv::Point> const &a, std::vector<cv::Point> const &b) {
+        return cv::contourArea(a) < cv::contourArea(b);
+      });
+  dest.push_back(*max_area_iter);
+
   // throw PipelineException("Test Exception");
 }
 
