@@ -51,8 +51,8 @@ const Range = (props: Props): JSX.Element => {
       setInputs([inputs[0], String(debouncedRange[1])]);
     }
 
-    if (range[0] < 0) {
-      setRange([0, range[1]]);
+    if (Number(inputs[0]) < 0) {
+      setInputs(['0', inputs[1]]);
     }
     if (range[1] > 255) {
       setRange([range[0], 255]);
@@ -61,12 +61,19 @@ const Range = (props: Props): JSX.Element => {
 
   const handleKeyDown = (input: string) => (e: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
     if (e.key === 'Enter') {
-      console.log(e.key);
+      let newValue = Number((e.target as HTMLInputElement).value);
       if (input === 'lower') {
-        setRange([Number((e.target as HTMLInputElement).value), Number(inputs[1])]);
+        if (newValue < 0) {
+          newValue = 0;
+        }
+        setRange([newValue, Number(inputs[1])]);
         return;
       }
-      setRange([Number(inputs[0]), Number((e.target as HTMLInputElement).value)]);
+      // input === 'upper'
+      if (newValue > 255) {
+        newValue = 255;
+      }
+      setRange([Number(inputs[0]), newValue]);
     }
   };
 
@@ -104,7 +111,7 @@ const Range = (props: Props): JSX.Element => {
   );
 };
 
-export default React.memo(Range);
+export default Range;
 
 const useStyles = makeStyles(theme => ({
   root: {
