@@ -11,6 +11,9 @@
 #include "pipeline.hpp"
 #include "pipeline_config.hpp"
 
+#define PREVIEW_WIDTH 320
+#define PREVIEW_HEIGHT 240
+
 namespace deadeye {
 
 /**
@@ -115,12 +118,6 @@ void BasePipeline<T>::Run() {
   cancel_ = false;
   spdlog::info("Pipeline<{}>: starting", inum_);
 
-  int port = 5800 + inum_;
-  cs::CvSource cvsource{"cvsource", cs::VideoMode::kMJPEG, 320, 240, 30};
-  cs::MjpegServer mjpegServer{"cvhttpserver", port};
-  mjpegServer.SetSource(cvsource);
-  spdlog::info("Pipeline<{}> listening on port {}", inum_, port);
-
   cv::Mat frame;
   cv::VideoCapture cap = GetVideoCapture();
 
@@ -130,10 +127,18 @@ void BasePipeline<T>::Run() {
     throw PipelineException("unable to open camera");
   }
 
-  cv::TickMeter tm;
+  // Set up streaming. CScore streaming will hang on connection if too many
+  // connections are attempted, current workaround is for user to  disable and
+  // reenable the stream to reset.
+  cs::CvSource cvsource{"cvsource", cs::VideoMode::kMJPEG, PREVIEW_WIDTH,
+                        PREVIEW_HEIGHT, 30};
+  cs::MjpegServer mjpegServer{"cvhttpserver", 5800 + inum_};
+  mjpegServer.SetSource(cvsource);
+  spdlog::info("Pipeline<{}> streaming on port {}", inum_,
+               mjpegServer.GetPort());
 
   // Loop until task cancelled.
-  while (true) {
+  for (cv::TickMeter tm;;) {
     tm.start();
 
     // Check for cancellation of this task.
@@ -201,7 +206,8 @@ void BasePipeline<T>::Run() {
           break;
       }
 
-      cv::resize(preview, preview, cv::Size(320, 240), 0, 0, cv::INTER_AREA);
+      cv::resize(preview, preview, cv::Size(PREVIEW_WIDTH, PREVIEW_HEIGHT), 0,
+                 0, cv::INTER_AREA);
       cvsource.PutFrame(preview);
     }
 

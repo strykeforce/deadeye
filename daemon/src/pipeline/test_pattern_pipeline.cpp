@@ -23,7 +23,7 @@ void TestPatternPipeline::FilterContours(
       [](std::vector<cv::Point> const &a, std::vector<cv::Point> const &b) {
         return cv::contourArea(a) < cv::contourArea(b);
       });
-  dest.push_back(*max_area_iter);
+  if (max_area_iter != src.end()) dest.push_back(*max_area_iter);
 
   // throw PipelineException("Test Exception");
 }

@@ -7,8 +7,9 @@ import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import standBy from './deadeye.png';
+// import standBy from './deadeye.png';
 import { Camera } from './models';
+import Image from './Image';
 import { configStream } from './api';
 
 interface Props {
@@ -31,13 +32,7 @@ const CameraStream = (props: Props): JSX.Element => {
   return (
     <Paper className={classes.root}>
       {label && <Typography variant="body1">{label}</Typography>}
-      <img
-        src={camera.on && (stream.view !== 'none' || stream.contour !== 'none') ? stream.url : standBy}
-        height={height}
-        width={width}
-        className={classes.stream}
-        alt="Stream"
-      />
+      <Image enabled={camera.on && (stream.view !== 'none' || stream.contour !== 'none')} url={stream.url} />
       <div className={classes.root}>
         <FormControl component="fieldset" className={classes.formControl}>
           <FormLabel component="legend">View</FormLabel>
@@ -67,9 +62,6 @@ const CameraStream = (props: Props): JSX.Element => {
 
 export default CameraStream;
 
-const width = 322;
-const height = 242;
-
 const useStyles = makeStyles(theme => ({
   root: {
     padding: theme.spacing(2),
@@ -79,8 +71,5 @@ const useStyles = makeStyles(theme => ({
   },
   group: {
     margin: theme.spacing(1, 0),
-  },
-  stream: {
-    border: '1px solid black',
   },
 }));
