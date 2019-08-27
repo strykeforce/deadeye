@@ -33,13 +33,6 @@ const CameraStream = (props: Props): JSX.Element => {
     <Paper className={classes.root}>
       {label && <Typography variant="body1">{label}</Typography>}
       <Image enabled={camera.on && (stream.view !== 'none' || stream.contour !== 'none')} url={stream.url} />
-      {/* <img
-        src={camera.on && (stream.view !== 'none' || stream.contour !== 'none') ? stream.url : standBy}
-        height={height}
-        width={width}
-        className={classes.stream}
-        alt="Stream"
-      /> */}
       <div className={classes.root}>
         <FormControl component="fieldset" className={classes.formControl}>
           <FormLabel component="legend">View</FormLabel>
