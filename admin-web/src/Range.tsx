@@ -18,7 +18,7 @@ const Range = (props: Props): JSX.Element => {
   const [inputs, setInputs] = useState<string[]>(initialRange.map(String));
   const [range, setRange] = useState(initialRange);
 
-  const debouncedRange: number[] = useDebounce(range, 500) as number[];
+  const debouncedRange = useDebounce(range, 500);
   useEffect(() => {
     if (debouncedRange[0] !== initialRange[0] || debouncedRange[1] !== initialRange[1]) {
       onRangeChange(debouncedRange);

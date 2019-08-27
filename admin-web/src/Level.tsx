@@ -17,7 +17,7 @@ const Range = (props: Props): JSX.Element => {
   const classes = useStyles();
   const [level, setLevel] = useState(initialLevel);
 
-  const debouncedLevel = useDebounce(level, 500) as number;
+  const debouncedLevel = useDebounce(level, 500);
 
   useEffect(() => {
     if (debouncedLevel !== initialLevel) {
