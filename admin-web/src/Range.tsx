@@ -44,19 +44,7 @@ const Range = (props: Props): JSX.Element => {
   };
 
   const handleBlur = (): void => {
-    if (inputs[0] === '') {
-      setInputs([String(debouncedRange[0]), inputs[1]]);
-    }
-    if (inputs[1] === '') {
-      setInputs([inputs[0], String(debouncedRange[1])]);
-    }
-
-    if (Number(inputs[0]) < 0) {
-      setInputs(['0', inputs[1]]);
-    }
-    if (range[1] > 255) {
-      setRange([range[0], 255]);
-    }
+    setInputs([String(range[0]), String(range[1])]);
   };
 
   const handleKeyDown = (input: string) => (e: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
