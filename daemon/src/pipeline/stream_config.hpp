@@ -80,7 +80,8 @@ void to_json(json& j, const StreamConfig& p);
 void from_json(const json& j, StreamConfig& p);
 
 inline bool operator==(StreamConfig const& lhs, StreamConfig const& rhs) {
-  return lhs.url == rhs.url;
+  return lhs.view == rhs.view && lhs.contour == rhs.contour &&
+         lhs.url == rhs.url;
 }
 
 inline bool operator!=(StreamConfig const& lhs, StreamConfig const& rhs) {
