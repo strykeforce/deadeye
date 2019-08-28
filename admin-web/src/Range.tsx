@@ -25,21 +25,14 @@ const Range = (props: Props): JSX.Element => {
     }
   }, [debouncedRange, onRangeChange, initialRange]);
 
-  // Uncomment to allow input to apply on timeout
-  // const debouncedInputs: string[] = useDebounce(inputs, 1000) as string[];
-  // useEffect(() => {
-  //   setRange([Number(debouncedInputs[0]), Number(debouncedInputs[1])]);
-  // }, [debouncedInputs]);
-
-  const handleSliderChange = (event: React.ChangeEvent<{}>, newValue: number | number[]): void => {
-    setRange(newValue as number[]);
-  };
-
-  const handleLowerInputChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
-    setInputs([event.target.value, inputs[1]]);
-  };
-
-  const handleUpperInputChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
+  const handleInputChange = (input: string) => (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+  ): void => {
+    if (input === 'lower') {
+      setInputs([event.target.value, inputs[1]]);
+      return;
+    }
+    // input === 'upper'
     setInputs([inputs[0], event.target.value]);
   };
 
@@ -48,21 +41,22 @@ const Range = (props: Props): JSX.Element => {
   };
 
   const handleKeyDown = (input: string) => (e: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
-    if (e.key === 'Enter') {
-      let newValue = Number((e.target as HTMLInputElement).value);
-      if (input === 'lower') {
-        if (newValue < 0) {
-          newValue = 0;
-        }
-        setRange([newValue, Number(inputs[1])]);
-        return;
-      }
-      // input === 'upper'
-      if (newValue > 255) {
-        newValue = 255;
-      }
-      setRange([Number(inputs[0]), newValue]);
+    if (e.key !== 'Enter') {
+      return;
     }
+    let newValue = Number((e.target as HTMLInputElement).value);
+    if (input === 'lower') {
+      if (newValue < 0) {
+        newValue = 0;
+      }
+      setRange([newValue, Number(inputs[1])]);
+      return;
+    }
+    // input === 'upper'
+    if (newValue > 255) {
+      newValue = 255;
+    }
+    setRange([Number(inputs[0]), newValue]);
   };
 
   return (
@@ -76,20 +70,20 @@ const Range = (props: Props): JSX.Element => {
             className={classes.input}
             value={inputs[0]}
             margin="dense"
-            onChange={handleLowerInputChange}
+            onChange={handleInputChange('lower')}
             onBlur={handleBlur}
             onKeyDown={handleKeyDown('lower')}
           />
         </Grid>
         <Grid item xs>
-          <Slider value={range} min={0} max={255} onChange={handleSliderChange} />
+          <Slider value={range} min={0} max={255} onChange={(e, val) => setRange(val as number[])} />
         </Grid>
         <Grid item>
           <Input
             className={classes.input}
             value={inputs[1]}
             margin="dense"
-            onChange={handleUpperInputChange}
+            onChange={handleInputChange('upper')}
             onBlur={handleBlur}
             onKeyDown={handleKeyDown('upper')}
           />
