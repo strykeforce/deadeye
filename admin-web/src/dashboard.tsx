@@ -10,9 +10,9 @@ import IconButton from '@material-ui/core/IconButton';
 import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import CameraList from './CameraList';
-import CameraPanel from './CameraPanel';
-import UnitPanel from './UnitPanel';
+import CameraList from './camera-list';
+import CameraPanel from './camera-panel';
+import UnitPanel from './unit-panel';
 import { Units } from './models';
 
 // FIXME: FC

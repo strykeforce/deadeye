@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import { get } from './util';
-import CameraStream from './CameraStream';
+import CameraStream from './camera-stream';
 import { Units, Cameras } from './models';
 
 // FIXME: FC

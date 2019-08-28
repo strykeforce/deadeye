@@ -1,9 +1,9 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import CameraStream from './CameraStream';
-import CameraControl from './CameraControl';
-import CameraCapture from './CameraCapture';
-import CameraThreshold from './CameraThreshold';
+import CameraStream from './camera-stream';
+import CameraControl from './camera-control';
+import CameraCapture from './camera-capture';
+import CameraThreshold from './camera-threshold';
 import { get } from './util';
 import { Units } from './models';
 
