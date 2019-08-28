@@ -15,9 +15,10 @@ interface Props {
 const Range = (props: Props): JSX.Element => {
   const { label, initialLevel, onLevelChange } = props;
   const classes = useStyles();
+  const [input, setInput] = useState(String(initialLevel));
   const [level, setLevel] = useState(initialLevel);
 
-  const debouncedLevel = useDebounce(level, 500) as number;
+  const debouncedLevel = useDebounce(level, 500);
 
   useEffect(() => {
     if (debouncedLevel !== initialLevel) {
@@ -25,22 +26,18 @@ const Range = (props: Props): JSX.Element => {
     }
   }, [debouncedLevel, onLevelChange, initialLevel]);
 
-  const handleSliderChange = (event: React.ChangeEvent<{}>, newValue: number | number[]): void => {
-    setLevel(newValue as number);
-  };
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
-    const newValue = event.target.value === '' ? 0 : Number(event.target.value);
-    setLevel(newValue);
-  };
-
-  const handleBlur = (): void => {
-    if (level < 0) {
-      setLevel(0);
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
+    if (e.key !== 'Enter') {
+      return;
     }
-    if (level > 100) {
-      setLevel(100);
+    let newValue = Number((e.target as HTMLInputElement).value);
+    if (newValue < 0) {
+      newValue = 0;
     }
+    if (newValue > 100) {
+      newValue = 100;
+    }
+    setLevel(Number(newValue));
   };
 
   return (
@@ -50,21 +47,16 @@ const Range = (props: Props): JSX.Element => {
       </Typography>
       <Grid container spacing={2} alignItems="center">
         <Grid item xs>
-          <Slider value={level} min={0} max={100} onChange={handleSliderChange} />
+          <Slider value={level} min={0} max={100} onChange={(e, val) => setLevel(val as number)} />
         </Grid>
         <Grid item>
           <Input
             className={classes.input}
-            value={level}
+            value={input}
             margin="dense"
-            onChange={handleInputChange}
-            onBlur={handleBlur}
-            inputProps={{
-              step: 1,
-              min: 0,
-              max: 100,
-              type: 'number',
-            }}
+            onChange={e => setInput(e.target.value)}
+            onBlur={() => setInput(String(level))}
+            onKeyDown={handleKeyDown}
           />
         </Grid>
       </Grid>

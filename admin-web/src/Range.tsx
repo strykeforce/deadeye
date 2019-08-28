@@ -15,37 +15,48 @@ interface Props {
 const Range = (props: Props): JSX.Element => {
   const { label, initialRange, onRangeChange } = props;
   const classes = useStyles();
+  const [inputs, setInputs] = useState<string[]>(initialRange.map(String));
   const [range, setRange] = useState(initialRange);
 
-  const debouncedRange: number[] = useDebounce(range, 500) as number[];
-
+  const debouncedRange = useDebounce(range, 500);
   useEffect(() => {
     if (debouncedRange[0] !== initialRange[0] || debouncedRange[1] !== initialRange[1]) {
       onRangeChange(debouncedRange);
     }
   }, [debouncedRange, onRangeChange, initialRange]);
 
-  const handleSliderChange = (event: React.ChangeEvent<{}>, newValue: number | number[]): void => {
-    setRange(newValue as number[]);
-  };
-
-  const handleLowerInputChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
-    const newValue = event.target.value === '' ? 0 : Number(event.target.value);
-    setRange([newValue, range[1]]);
-  };
-
-  const handleUpperInputChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
-    const newValue = event.target.value === '' ? 0 : Number(event.target.value);
-    setRange([range[0], newValue]);
+  const handleInputChange = (input: string) => (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+  ): void => {
+    if (input === 'lower') {
+      setInputs([event.target.value, inputs[1]]);
+      return;
+    }
+    // input === 'upper'
+    setInputs([inputs[0], event.target.value]);
   };
 
   const handleBlur = (): void => {
-    if (range[0] < 0) {
-      setRange([0, range[1]]);
+    setInputs([String(range[0]), String(range[1])]);
+  };
+
+  const handleKeyDown = (input: string) => (e: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
+    if (e.key !== 'Enter') {
+      return;
     }
-    if (range[1] > 255) {
-      setRange([range[0], 255]);
+    let newValue = Number((e.target as HTMLInputElement).value);
+    if (input === 'lower') {
+      if (newValue < 0) {
+        newValue = 0;
+      }
+      setRange([newValue, Number(inputs[1])]);
+      return;
     }
+    // input === 'upper'
+    if (newValue > 255) {
+      newValue = 255;
+    }
+    setRange([Number(inputs[0]), newValue]);
   };
 
   return (
@@ -56,35 +67,25 @@ const Range = (props: Props): JSX.Element => {
       <Grid container spacing={2} alignItems="center">
         <Grid item>
           <Input
-            type="number"
             className={classes.input}
-            value={range[0]}
+            value={inputs[0]}
             margin="dense"
-            onChange={handleLowerInputChange}
+            onChange={handleInputChange('lower')}
             onBlur={handleBlur}
-            inputProps={{
-              step: 1,
-              min: 0,
-              max: 255,
-            }}
+            onKeyDown={handleKeyDown('lower')}
           />
         </Grid>
         <Grid item xs>
-          <Slider value={range} min={0} max={255} onChange={handleSliderChange} />
+          <Slider value={range} min={0} max={255} onChange={(e, val) => setRange(val as number[])} />
         </Grid>
         <Grid item>
           <Input
             className={classes.input}
-            value={range[1]}
+            value={inputs[1]}
             margin="dense"
-            onChange={handleUpperInputChange}
+            onChange={handleInputChange('upper')}
             onBlur={handleBlur}
-            inputProps={{
-              step: 1,
-              min: 0,
-              max: 255,
-              type: 'number',
-            }}
+            onKeyDown={handleKeyDown('upper')}
           />
         </Grid>
       </Grid>
