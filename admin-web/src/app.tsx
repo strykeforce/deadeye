@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Dashboard from './Dashboard';
+import Dashboard from './dashboard';
 import { subscribe, close } from './api';
 
 const App = (): JSX.Element => {

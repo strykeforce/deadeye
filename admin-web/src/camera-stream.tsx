@@ -9,7 +9,7 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 // import standBy from './deadeye.png';
 import { Camera } from './models';
-import Image from './Image';
+import Image from './image';
 import { configStream } from './api';
 
 interface Props {
