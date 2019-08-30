@@ -17,7 +17,6 @@ const CameraCapture = ({ camera }: Props): JSX.Element => {
   const handleLevelChange = (name: string) => (value: number) => {
     const newConfig = Object.assign(config, { [name]: value });
     configCamera(camera.unit, camera.inum, newConfig);
-    console.log(`handleSliderChange: ${name}: ${value}`);
   };
 
   return (
@@ -25,7 +24,12 @@ const CameraCapture = ({ camera }: Props): JSX.Element => {
       <Typography component="h2" variant="h6" color="inherit" noWrap>
         Capture Settings
       </Typography>
-      <Level label="Exposure" initialLevel={config.exposure} onLevelChange={handleLevelChange('exposure')} />
+      <Level
+        key={camera.id}
+        label="Exposure"
+        initialLevel={config.exposure}
+        onLevelChange={handleLevelChange('exposure')}
+      />
     </Paper>
   );
 };

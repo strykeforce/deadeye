@@ -83,7 +83,7 @@ const Dashboard = (props: Props): JSX.Element => {
 
 export default Dashboard;
 
-function MadeWithLove(): JSX.Element {
+const MadeWithLove = (): JSX.Element => {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       <Link color="inherit" href="https://www.strykeforce.org/">
@@ -92,7 +92,7 @@ function MadeWithLove(): JSX.Element {
       {' © 2019'}
     </Typography>
   );
-}
+};
 
 const drawerWidth = 240;
 

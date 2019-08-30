@@ -17,7 +17,6 @@ const Range = (props: Props): JSX.Element => {
   const classes = useStyles();
   const [input, setInput] = useState(String(initialLevel));
   const [level, setLevel] = useState(initialLevel);
-
   const debouncedLevel = useDebounce(level, 500);
 
   useEffect(() => {
@@ -25,6 +24,12 @@ const Range = (props: Props): JSX.Element => {
       onLevelChange(debouncedLevel);
     }
   }, [debouncedLevel, onLevelChange, initialLevel]);
+
+  const handleSliderChange = (event: React.ChangeEvent<{}>, value: number | number[]): void => {
+    const level = value as number;
+    setLevel(level);
+    setInput(String(level));
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
     if (e.key !== 'Enter') {
@@ -47,7 +52,7 @@ const Range = (props: Props): JSX.Element => {
       </Typography>
       <Grid container spacing={2} alignItems="center">
         <Grid item xs>
-          <Slider value={level} min={0} max={100} onChange={(e, val) => setLevel(val as number)} />
+          <Slider value={level} min={0} max={100} onChange={handleSliderChange} />
         </Grid>
         <Grid item>
           <Input
