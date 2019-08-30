@@ -4,15 +4,13 @@ import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import { get } from './util';
 import CameraStream from './camera-stream';
-import { Units, Cameras } from './models';
+import { PanelProps, Cameras } from './models';
 
-// FIXME: FC
-const UnitPanel: React.FC<{ units: Units; selectedId: string }> = ({ units, selectedId }) => {
+const UnitPanel = (props: PanelProps): JSX.Element => {
+  const { units, selectedId } = props;
   const classes = useStyles();
   const unitId = selectedId.charAt(0);
   const cameras: Cameras = get([unitId, 'cameras'])(units);
-  console.log(units);
-  console.log(cameras);
 
   return (
     <Container maxWidth="lg" className={classes.container}>

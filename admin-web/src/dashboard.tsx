@@ -12,32 +12,31 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import CameraList from './camera-list';
 import CameraPanel from './camera-panel';
+import CameraStream from './camera-stream';
 import UnitPanel from './unit-panel';
 import { Units } from './models';
+import { get } from './util';
 
-// FIXME: FC
-const Dashboard: React.FC<{ units: Units }> = ({ units }) => {
+interface Props {
+  units: Units;
+}
+
+const Dashboard = (props: Props): JSX.Element => {
+  const { units } = props;
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
 
-  function handleDrawerOpen(): void {
-    setOpen(true);
-  }
-  function handleDrawerClose(): void {
-    setOpen(false);
-  }
-
-  function handleCameraListClick(id: string): void {
-    setSelectedId(id);
-  }
-
-  function Content(): JSX.Element {
-    if (!selectedId) return <div>Please select a unit or camera from menu on left.</div>;
-    if (selectedId.length === 1) {
-      return <UnitPanel units={units} selectedId={selectedId} />;
-    }
-    return <CameraPanel units={units} selectedId={selectedId} />;
+  let content;
+  if (!selectedId) {
+    content = <div>Please select a unit or camera from menu on left.</div>;
+  } else if (selectedId.length === 1) {
+    content = <UnitPanel units={units} selectedId={selectedId} />;
+  } else {
+    const unitId = selectedId.charAt(0);
+    const cameraId = selectedId.charAt(1);
+    const camera = get([unitId, 'cameras', cameraId])(units);
+    content = <CameraPanel units={units} selectedId={selectedId} stream={<CameraStream camera={camera} />} />;
   }
 
   return (
@@ -48,7 +47,7 @@ const Dashboard: React.FC<{ units: Units }> = ({ units }) => {
             edge="start"
             color="inherit"
             aria-label="Open drawer"
-            onClick={handleDrawerOpen}
+            onClick={() => setOpen(true)}
             className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
           >
             <MenuIcon />
@@ -56,13 +55,6 @@ const Dashboard: React.FC<{ units: Units }> = ({ units }) => {
           <Typography component="h1" variant="h4" color="inherit" noWrap className={classes.title}>
             Deadeye
           </Typography>
-          {/*
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
-          */}
         </Toolbar>
       </AppBar>
       <Drawer
@@ -73,16 +65,16 @@ const Dashboard: React.FC<{ units: Units }> = ({ units }) => {
         open={open}
       >
         <div className={classes.toolbarIcon}>
-          <IconButton onClick={handleDrawerClose}>
+          <IconButton onClick={() => setOpen(false)}>
             <ChevronLeftIcon />
           </IconButton>
         </div>
         <Divider />
-        <CameraList units={units} selectedId={selectedId} onClick={handleCameraListClick} />
+        <CameraList units={units} selectedId={selectedId} onClick={id => setSelectedId(id)} />
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        <Content />
+        {content}
         <MadeWithLove />
       </main>
     </div>
