@@ -41,3 +41,8 @@ export interface StreamConfig {
   view: 'none' | 'original' | 'mask';
   contour: 'none' | 'filter' | 'all';
 }
+
+export interface PanelProps {
+  units: Units;
+  selectedId: string;
+}

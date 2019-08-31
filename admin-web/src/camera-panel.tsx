@@ -1,14 +1,15 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import CameraStream from './camera-stream';
 import CameraControl from './camera-control';
 import CameraCapture from './camera-capture';
 import CameraThreshold from './camera-threshold';
 import { get } from './util';
-import { Units } from './models';
+import { PanelProps } from './models';
 
-// FIXME: FC
-const CameraPanel: React.FC<{ units: Units; selectedId: string }> = ({ units, selectedId }) => {
+type Props = PanelProps & { stream: JSX.Element };
+
+const CameraPanel = (props: Props): JSX.Element => {
+  const { units, selectedId, stream } = props;
   const classes = useStyles();
   // const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const unitId = selectedId.charAt(0);
@@ -25,9 +26,7 @@ const CameraPanel: React.FC<{ units: Units; selectedId: string }> = ({ units, se
       <div style={{ gridColumn: '1/2', gridRow: '3/4' }}>
         <CameraThreshold camera={camera} />
       </div>
-      <div style={{ gridColumn: '2/3', gridRow: '1/4' }}>
-        <CameraStream camera={camera} />
-      </div>
+      <div style={{ gridColumn: '2/3', gridRow: '1/4' }}>{stream}</div>
     </div>
   );
 };

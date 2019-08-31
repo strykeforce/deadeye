@@ -36,6 +36,12 @@ const Range = (props: Props): JSX.Element => {
     setInputs([inputs[0], event.target.value]);
   };
 
+  const handleSliderChange = (event: React.ChangeEvent<{}>, value: number | number[]): void => {
+    const range = value as number[];
+    setRange(range);
+    setInputs(range.map(String));
+  };
+
   const handleBlur = (): void => {
     setInputs([String(range[0]), String(range[1])]);
   };
@@ -76,7 +82,7 @@ const Range = (props: Props): JSX.Element => {
           />
         </Grid>
         <Grid item xs>
-          <Slider value={range} min={0} max={255} onChange={(e, val) => setRange(val as number[])} />
+          <Slider value={range} min={0} max={255} onChange={handleSliderChange} />
         </Grid>
         <Grid item>
           <Input
