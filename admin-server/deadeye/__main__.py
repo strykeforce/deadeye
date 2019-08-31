@@ -6,8 +6,10 @@ import logging
 from deadeye import create_app
 from deadeye.api import Api
 
-LOG_LEVEL = logging.INFO if os.environ["FLASK_ENV"] == "production" else logging.DEBUG
-logging.basicConfig(level=LOG_LEVEL)
+logging.basicConfig(level=logging.WARN)
+logging.getLogger("deadeye").setLevel(
+    logging.INFO if os.environ["FLASK_ENV"] == "production" else logging.DEBUG
+)
 
 APP = create_app()
 API = Api(APP)

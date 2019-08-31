@@ -8,7 +8,7 @@ from .models import Unit
 class Api:
     def __init__(self, app):
         self.app = app
-        self.socketio = SocketIO(app=app, logger=app.logger)
+        self.socketio = SocketIO(app=app)
         self.thread = None  # background thread for client model refresh
         self.refresh = False  # background thread broadcasts changes when True
         self.thread_lock = Lock()
