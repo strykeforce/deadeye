@@ -220,6 +220,27 @@ void Controller::SetLightsStatus(int inum, char const* name, bool state) {
 }
 
 /**
+ * GetClientAddress returns the IP address of the client that receives target
+data.
+ */
+std::string Controller::GetClientAddress() {
+  auto nti = nt::NetworkTableInstance(inst_);
+  return nti.GetEntry(DE_CLIENT_ADDRESS_ENTRY).GetString(CLIENT_ADDRESS);
+}
+
+/**
+ * GetClientPort returns the IP port of the client that receives target
+data.
+ */
+int Controller::GetClientPort() {
+  auto nti = nt::NetworkTableInstance(inst_);
+  int port = static_cast<int>(
+      nti.GetEntry(DE_CLIENT_PORT_ENTRY).GetDouble(CLIENT_PORT));
+  spdlog::debug("{} = {}", DE_CLIENT_PORT_ENTRY, port);
+  return port;
+}
+
+/**
  * StartNetworkTables starts network tables in client or server mode.
  */
 void Controller::StartNetworkTables() {
@@ -263,6 +284,11 @@ void SetLightsControlTableEntries(std::shared_ptr<NetworkTable> table) {
   table->PutBoolean(DE_BLINK, false);
 }
 
+void SetClientEntries(std::shared_ptr<NetworkTable> table) {
+  table->SetDefaultString(DE_ADDRESS, CLIENT_ADDRESS);
+  table->SetDefaultNumber(DE_PORT, CLIENT_PORT);
+}
+
 void SetCameraConfigEntryDefault(nt::NetworkTableEntry entry) {
   PipelineConfig pc{0, {0, 254}, {0, 254}, {0, 254}, 0.5};
   json j = pc;
@@ -286,6 +312,7 @@ void SetStreamConfigEntry(nt::NetworkTableEntry entry, int inum) {
  */
 void Controller::InitializeNetworkTableEntries() {
   auto nti = nt::NetworkTableInstance(inst_);
+  SetClientEntries(nti.GetTable(DE_CLIENT_TABLE));
 #ifdef DEADEYE_CAMERA0_PIPELINE
   SetCameraControlTableEntries(nti.GetTable(DE_CAMERA_CONTROL_TABLE("0")));
   SetLightsControlTableEntries(nti.GetTable(DE_LIGHTS_CONTROL_TABLE("0")));

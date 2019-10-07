@@ -4,23 +4,28 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <nlohmann/json.hpp>
+#include "controller.hpp"
 
 using namespace deadeye;
 
 Link::Link(/* args */) {
+  const char* client_address =
+      Controller::GetInstance().GetClientAddress().c_str();
+  int client_port = Controller::GetInstance().GetClientPort();
+
   fd_ = socket(AF_INET, SOCK_DGRAM, 0);
   if (fd_ == -1)
     spdlog::critical("Link send socket error: {}", strerror(errno));
 
   sockaddr_in addr;
   addr.sin_family = AF_INET;
-  addr.sin_port = htons(CLIENT_PORT);
-  inet_pton(AF_INET, CLIENT_ADDRESS, &addr.sin_addr);
+  addr.sin_port = htons(client_port);
+  inet_pton(AF_INET, client_address, &addr.sin_addr);
 
   if (connect(fd_, (sockaddr*)&addr, sizeof(addr)) == -1)
     spdlog::critical("Link connect error: {}", strerror(errno));
 
-  spdlog::info("Link connected to {}:{}", CLIENT_ADDRESS, CLIENT_PORT);
+  spdlog::info("Link connected to {}:{}", client_address, client_port);
 }
 
 Link::~Link() {

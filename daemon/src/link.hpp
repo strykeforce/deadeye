@@ -17,9 +17,3 @@ class Link {
 };
 
 }  // namespace deadeye
-
-#define LINK_STRINGIFY(s) LINK_STR(s)
-#define LINK_STR(s) #s
-
-#define CLIENT_PORT DEADEYE_CLIENT_PORT
-#define CLIENT_ADDRESS LINK_STRINGIFY(DEADEYE_CLIENT_ADDRESS)
