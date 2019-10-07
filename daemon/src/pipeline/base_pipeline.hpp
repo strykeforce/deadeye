@@ -8,6 +8,7 @@
 #include <opencv2/opencv.hpp>
 #include <vector>
 #include "cscore.h"
+#include "link.hpp"
 #include "pipeline.hpp"
 #include "pipeline_config.hpp"
 
@@ -137,6 +138,8 @@ void BasePipeline<T>::Run() {
   spdlog::info("Pipeline<{}> streaming on port {}", inum_,
                mjpegServer.GetPort());
 
+  Link link;
+
   // Loop until task cancelled.
   for (cv::TickMeter tm;;) {
     tm.start();
@@ -210,6 +213,8 @@ void BasePipeline<T>::Run() {
                  0, cv::INTER_AREA);
       cvsource.PutFrame(preview);
     }
+
+    link.Send();
 
     tm.stop();
   }

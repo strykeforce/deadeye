@@ -3,6 +3,7 @@ add_library(Deadeye_library
     controller.cpp
     camera.cpp
     lights.cpp
+    link.cpp
 )
 add_subdirectory(pipeline)
 add_library(Deadeye::library ALIAS Deadeye_library)
@@ -19,6 +20,8 @@ target_compile_definitions(Deadeye_library
   $<$<BOOL:${DEADEYE_CAMERA2_PIPELINE}>:DEADEYE_CAMERA1_PIPELINE=${DEADEYE_CAMERA2_PIPELINE}>
   $<$<BOOL:${DEADEYE_CAMERA3_PIPELINE}>:DEADEYE_CAMERA1_PIPELINE=${DEADEYE_CAMERA3_PIPELINE}>
   $<$<BOOL:${DEADEYE_CAMERA4_PIPELINE}>:DEADEYE_CAMERA1_PIPELINE=${DEADEYE_CAMERA4_PIPELINE}>
+  DEADEYE_CLIENT_ADDRESS=${DEADEYE_CLIENT_ADDRESS}
+  DEADEYE_CLIENT_PORT=${DEADEYE_CLIENT_PORT}
 )
 
 
