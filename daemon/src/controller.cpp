@@ -132,13 +132,17 @@ void Controller::Run() {
         case hash(DE_CAMERA_CONFIG_ENTRY("0")): {
           spdlog::debug("Controller: new Pipeline<0> config event");
           ConfigCamera event;
-          event.config = new PipelineConfig(entry.value);  // ownership passed
+          event.config =
+              new PipelineConfig(entry.value);  // ownership passed, deleted in
+                                                // BasePipeline::UpdateConfig
           Camera<0>::dispatch(event);
           break;
         }
         case hash(DE_STREAM_CONFIG_ENTRY("0")): {
           ConfigStream event;
-          event.config = new StreamConfig(entry.value);  // ownership passed
+          event.config =
+              new StreamConfig(entry.value);  // ownership passed, deleted in
+                                              // BasePipeline::UpdateStream
           Camera<0>::dispatch(event);
           break;
         }
@@ -164,13 +168,17 @@ void Controller::Run() {
           break;
         case hash(DE_CAMERA_CONFIG_ENTRY("1")): {
           ConfigCamera event;
-          event.config = new PipelineConfig(entry.value);  // ownership passed
+          event.config =
+              new PipelineConfig(entry.value);  // ownership passed, deleted in
+                                                // BasePipeline::UpdateConfig
           Camera<1>::dispatch(event);
           break;
         }
         case hash(DE_STREAM_CONFIG_ENTRY("1")): {
           ConfigStream event;
-          event.config = new StreamConfig(entry.value);  // ownership passed
+          event.config =
+              new StreamConfig(entry.value);  // ownership passed, deleted in
+                                              // BasePipeline::UpdateStream
           Camera<1>::dispatch(event);
           break;
         }
