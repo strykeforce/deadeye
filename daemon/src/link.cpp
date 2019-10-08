@@ -5,13 +5,12 @@
 #include <unistd.h>
 #include <nlohmann/json.hpp>
 #include "controller.hpp"
+#include "link_config.hpp"
 
 using namespace deadeye;
 
 Link::Link(/* args */) {
-  const char* client_address =
-      Controller::GetInstance().GetClientAddress().c_str();
-  int client_port = Controller::GetInstance().GetClientPort();
+  LinkConfig link_config = Controller::GetInstance().GetLinkConfig();
 
   fd_ = socket(AF_INET, SOCK_DGRAM, 0);
   if (fd_ == -1)
@@ -19,13 +18,14 @@ Link::Link(/* args */) {
 
   sockaddr_in addr;
   addr.sin_family = AF_INET;
-  addr.sin_port = htons(client_port);
-  inet_pton(AF_INET, client_address, &addr.sin_addr);
+  addr.sin_port = htons(link_config.port);
+  inet_pton(AF_INET, link_config.address.c_str(), &addr.sin_addr);
 
   if (connect(fd_, (sockaddr*)&addr, sizeof(addr)) == -1)
     spdlog::critical("Link connect error: {}", strerror(errno));
 
-  spdlog::info("Link connected to {}:{}", client_address, client_port);
+  spdlog::info("Link connected to {}:{}", link_config.address,
+               link_config.port);
 }
 
 Link::~Link() {
