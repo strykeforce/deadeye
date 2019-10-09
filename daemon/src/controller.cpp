@@ -132,13 +132,17 @@ void Controller::Run() {
         case hash(DE_CAMERA_CONFIG_ENTRY("0")): {
           spdlog::debug("Controller: new Pipeline<0> config event");
           ConfigCamera event;
-          event.config = new PipelineConfig(entry.value);  // ownership passed
+          event.config =
+              new PipelineConfig(entry.value);  // ownership passed, deleted in
+                                                // BasePipeline::UpdateConfig
           Camera<0>::dispatch(event);
           break;
         }
         case hash(DE_STREAM_CONFIG_ENTRY("0")): {
           ConfigStream event;
-          event.config = new StreamConfig(entry.value);  // ownership passed
+          event.config =
+              new StreamConfig(entry.value);  // ownership passed, deleted in
+                                              // BasePipeline::UpdateStream
           Camera<0>::dispatch(event);
           break;
         }
@@ -164,13 +168,17 @@ void Controller::Run() {
           break;
         case hash(DE_CAMERA_CONFIG_ENTRY("1")): {
           ConfigCamera event;
-          event.config = new PipelineConfig(entry.value);  // ownership passed
+          event.config =
+              new PipelineConfig(entry.value);  // ownership passed, deleted in
+                                                // BasePipeline::UpdateConfig
           Camera<1>::dispatch(event);
           break;
         }
         case hash(DE_STREAM_CONFIG_ENTRY("1")): {
           ConfigStream event;
-          event.config = new StreamConfig(entry.value);  // ownership passed
+          event.config =
+              new StreamConfig(entry.value);  // ownership passed, deleted in
+                                              // BasePipeline::UpdateStream
           Camera<1>::dispatch(event);
           break;
         }
@@ -220,6 +228,15 @@ void Controller::SetLightsStatus(int inum, char const* name, bool state) {
 }
 
 /**
+ * GetLinkConfig returns the current Link configuration.
+data.
+ */
+LinkConfig Controller::GetLinkConfig() {
+  auto nti = nt::NetworkTableInstance(inst_);
+  return LinkConfig{nti.GetEntry(DE_LINK_CONFIG_ENTRY).GetValue()};
+}
+
+/**
  * StartNetworkTables starts network tables in client or server mode.
  */
 void Controller::StartNetworkTables() {
@@ -250,6 +267,9 @@ void Controller::StartPoller() {
       nt::AddPolledEntryListener(poller_, DE_CONTROL_TABLE, NT_NOTIFY_UPDATE);
 }
 
+//
+// Initialize NetworkTables defaults
+//
 namespace {
 void SetCameraControlTableEntries(std::shared_ptr<NetworkTable> table) {
   table->PutBoolean(DE_ON, false);
@@ -279,6 +299,12 @@ void SetStreamConfigEntry(nt::NetworkTableEntry entry, int inum) {
   entry.SetString(j.dump());
 }
 
+void SetLinkConfigEntry(nt::NetworkTableEntry entry) {
+  LinkConfig lc{CLIENT_ADDRESS, CLIENT_PORT};
+  json j = lc;
+  entry.SetString(j.dump());
+}
+
 }  // namespace
 
 /**
@@ -286,6 +312,7 @@ void SetStreamConfigEntry(nt::NetworkTableEntry entry, int inum) {
  */
 void Controller::InitializeNetworkTableEntries() {
   auto nti = nt::NetworkTableInstance(inst_);
+  SetLinkConfigEntry(nti.GetEntry(DE_LINK_CONFIG_ENTRY));
 #ifdef DEADEYE_CAMERA0_PIPELINE
   SetCameraControlTableEntries(nti.GetTable(DE_CAMERA_CONTROL_TABLE("0")));
   SetLightsControlTableEntries(nti.GetTable(DE_LIGHTS_CONTROL_TABLE("0")));
