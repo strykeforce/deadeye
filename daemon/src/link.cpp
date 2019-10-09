@@ -36,7 +36,7 @@ Link::~Link() {
 void Link::Send() {
   int n;
   nlohmann::json j;
-  j["id"] = "A1";
+  j["id"] = "A0";
   j["sn"] = sn_++;
   j["valid"] = false;
   j["x"] = sn_;

@@ -10,6 +10,8 @@ plugins {
 
   // Apply the application plugin to add support for building a CLI application.
   application
+
+  idea
 }
 
 repositories {
@@ -27,6 +29,7 @@ dependencies {
   implementation("edu.wpi.first.ntcore:ntcore-java:$wpiVersion")
   implementation("edu.wpi.first.ntcore:ntcore-jni:$wpiVersion:all")
   implementation("edu.wpi.first.wpiutil:wpiutil-java:$wpiVersion")
+  implementation("org.jline:jline-terminal:3.12.1")
   implementation("org.fusesource.jansi:jansi:1.18")
   implementation("com.github.ajalt:clikt:2.2.0")
 
@@ -46,4 +49,11 @@ dependencies {
 application {
   // Define the main class for the application
   mainClassName = "org.strykeforce.deadeye.cli.AppKt"
+}
+
+idea {
+  module {
+    isDownloadJavadoc = true
+    isDownloadSources = true
+  }
 }
