@@ -138,7 +138,7 @@ void BasePipeline<T>::Run() {
   spdlog::info("Pipeline<{}> streaming on port {}", inum_,
                mjpegServer.GetPort());
 
-  Link link;
+  Link link{inum_};
 
   // Loop until task cancelled.
   for (cv::TickMeter tm;;) {

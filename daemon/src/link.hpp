@@ -1,10 +1,11 @@
 #pragma once
+#include <string>
 
 namespace deadeye {
 
 class Link {
  public:
-  Link(/* args */);
+  Link(int inum);
   ~Link();
   Link(const Link&) = delete;
   Link& operator=(const Link&) = delete;
@@ -12,6 +13,7 @@ class Link {
   void Send();
 
  private:
+  std::string id_;
   int fd_;
   int sn_ = 0;
 };
