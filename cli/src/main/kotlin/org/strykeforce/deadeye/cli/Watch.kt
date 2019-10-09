@@ -1,6 +1,7 @@
 package org.strykeforce.deadeye.cli
 
 import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.parameters.arguments.argument
 import org.fusesource.jansi.Ansi.ansi
 import org.fusesource.jansi.AnsiConsole
 import org.jline.terminal.TerminalBuilder
@@ -12,6 +13,8 @@ private const val LINES = 4
 
 class Watch : CliktCommand(), TargetDataListener {
 
+  private val id by argument()
+
   override fun onTargetData(data: TargetData) {
     println(ansi().cursorUpLine(LINES).cursorToColumn(0).a("Serial: ${data.sn}"))
     println(ansi().cursorToColumn(0).a(" Valid: ${data.valid}"))
@@ -22,7 +25,7 @@ class Watch : CliktCommand(), TargetDataListener {
   override fun run() {
     AnsiConsole.systemInstall()
     repeat(LINES) { println() }
-    val camera = Deadeye.getCamera("A0").also {
+    val camera = Deadeye.getCamera(id).also {
       it.targetDataListener = this
       it.enabled = true
     }

@@ -8,8 +8,7 @@
 #include "link_config.hpp"
 
 using namespace deadeye;
-
-Link::Link(/* args */) {
+Link::Link(int inum) : id_(DEADEYE_UNIT + std::to_string(inum)) {
   LinkConfig link_config = Controller::GetInstance().GetLinkConfig();
 
   fd_ = socket(AF_INET, SOCK_DGRAM, 0);
@@ -24,7 +23,7 @@ Link::Link(/* args */) {
   if (connect(fd_, (sockaddr*)&addr, sizeof(addr)) == -1)
     spdlog::critical("Link connect error: {}", strerror(errno));
 
-  spdlog::info("Link connected to {}:{}", link_config.address,
+  spdlog::info("Link {} connected to {}:{}", id_, link_config.address,
                link_config.port);
 }
 
@@ -36,7 +35,7 @@ Link::~Link() {
 void Link::Send() {
   int n;
   nlohmann::json j;
-  j["id"] = "A0";
+  j["id"] = id_;
   j["sn"] = sn_++;
   j["valid"] = false;
   j["x"] = sn_;
