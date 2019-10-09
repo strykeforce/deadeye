@@ -44,7 +44,7 @@ void Link::Send() {
   j["x"] = sn_;
   j["y"] = sn_;
 
-  auto msg = j.dump().c_str();
-  if ((n = send(fd_, msg, strlen(msg), 0)) == -1)
+  std::string msg = j.dump();
+  if ((n = send(fd_, msg.data(), msg.size(), 0)) == -1)
     spdlog::error("Link send error: {}", strerror(errno));
 }
