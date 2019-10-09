@@ -1,10 +1,13 @@
 #include "link.hpp"
+
 #include <arpa/inet.h>
 #include <spdlog/spdlog.h>
 #include <sys/socket.h>
 #include <unistd.h>
 #include <nlohmann/json.hpp>
+
 #include "controller.hpp"
+#include "defs.hpp"
 #include "link_config.hpp"
 
 using namespace deadeye;

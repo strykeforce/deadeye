@@ -6,7 +6,7 @@ using json = nlohmann::json;
 char const* LinkConfig::kAddressKey{"address"};
 char const* LinkConfig::kPortKey{"port"};
 
-LinkConfig::LinkConfig(){};
+LinkConfig::LinkConfig() {}
 
 LinkConfig::LinkConfig(std::string address, int port)
     : address(address), port(port) {}

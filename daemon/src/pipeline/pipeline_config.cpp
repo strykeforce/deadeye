@@ -9,7 +9,7 @@ char const* PipelineConfig::kHsvSatKey{"sat"};
 char const* PipelineConfig::kHsvValKey{"val"};
 char const* PipelineConfig::kExposureKey{"exposure"};
 
-PipelineConfig::PipelineConfig(){};
+PipelineConfig::PipelineConfig() {}
 
 PipelineConfig::PipelineConfig(int sn, hsv_t hue, hsv_t sat, hsv_t val,
                                double exposure)

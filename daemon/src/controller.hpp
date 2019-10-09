@@ -1,11 +1,10 @@
 #pragma once
 
 #include <ntcore.h>
-#include <spdlog/spdlog.h>
-#include "defs.hpp"
-#include "link_config.hpp"
 
 namespace deadeye {
+struct LinkConfig;
+
 class Controller {
  public:
   static Controller& GetInstance() {
@@ -28,7 +27,6 @@ class Controller {
   void InitializeNetworkTableEntries();
   void InitializeCameraConfig();
   void StartPoller();
-  static spdlog::level::level_enum Nt2spdlogLevel(const nt::LogMessage& msg);
 
   NT_Inst inst_;
   NT_EntryListenerPoller poller_;

@@ -6,8 +6,13 @@
 
 #include "camera.hpp"
 #include "controller.hpp"
+#include "defs.hpp"
 #include "lights.hpp"
+#include "link_config.hpp"
 #include "pipeline.hpp"
+
+// forward declaration
+static spdlog::level::level_enum Nt2spdlogLevel(const nt::LogMessage& msg);
 
 namespace {
 // static char const* kNTServerAddress = "titan.lan.j3ff.io";
@@ -357,8 +362,7 @@ void Controller::InitializeCameraConfig() {
 /**
  * Nt2spdlogLevel converts logging levels.
  */
-spdlog::level::level_enum Controller::Nt2spdlogLevel(
-    const nt::LogMessage& msg) {
+spdlog::level::level_enum Nt2spdlogLevel(const nt::LogMessage& msg) {
   using namespace spdlog::level;
 
   switch (msg.level) {

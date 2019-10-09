@@ -8,7 +8,7 @@ char const* StreamConfig::kUrlKey{"url"};
 char const* StreamConfig::kViewKey{"view"};
 char const* StreamConfig::kContourKey{"contour"};
 
-StreamConfig::StreamConfig(){};
+StreamConfig::StreamConfig() {}
 
 StreamConfig::StreamConfig(int sn, std::string url, View view, Contour contour)
     : sn(sn), url(url), view(view), contour(contour) {}

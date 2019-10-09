@@ -1,9 +1,10 @@
+#include "camera.hpp"
+
 #include <future>
 
 #include "controller.hpp"
+#include "defs.hpp"
 #include "lights.hpp"
-
-#include "camera.hpp"
 
 using namespace std::chrono_literals;
 

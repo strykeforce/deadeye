@@ -1,8 +1,7 @@
 #include <spdlog/spdlog.h>
 
-#include "camera.hpp"
 #include "controller.hpp"
-#include "pipeline.hpp"
+#include "defs.hpp"
 
 using namespace deadeye;
 
