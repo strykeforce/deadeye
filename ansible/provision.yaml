@@ -1,5 +1,15 @@
 ---
 - hosts: deadeye
+  tasks:
+    - name: Stop demo USB service on Jetson
+      # these are linked from /opt/nvidia/l4t-usb-device-mode
+      file:
+        path: /etc/systemd/system/{{ item }}
+        state: absent
+      with_items:
+        - nv-l4t-usb-device-mode.service
+        - nv-l4t-usb-device-mode-runtime.service
+      tags: jetson
   roles:
     - role: wpilib
       tags: wpilib
@@ -9,5 +19,3 @@
       tags: [json, nlohmann_json]
     - role: catch
       tags: catch
-    - role: deadeye
-      tags: deadeye
