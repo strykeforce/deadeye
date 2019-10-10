@@ -53,6 +53,6 @@ TEST_CASE("PipelineConfig New", "[pipeline]") {
   PipelineConfig expected{2767, {1, 2}, {25, 24}, {250, 251}, 0.5};
   json j = expected;
   auto val = nt::Value::MakeString(j.dump());
-  auto pc = PipelineConfig::New(val);
+  auto pc = PipelineConfig{val};
   REQUIRE(pc == expected);
 }

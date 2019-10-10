@@ -39,11 +39,6 @@ struct PipelineConfig {
    */
   PipelineConfig(std::shared_ptr<nt::Value> value);
 
-  /**
-   * New is factory method to create a PipelineConfig from a NT value.
-   */
-  static PipelineConfig New(std::shared_ptr<nt::Value> value);
-
   template <typename OStream>
   friend OStream& operator<<(OStream& os, PipelineConfig const& pc) {
     os << "PipelineConfig{sn=" << pc.sn << ", hue=[" << pc.hue[0] << ","

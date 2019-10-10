@@ -47,6 +47,6 @@ TEST_CASE("StreamConfig New", "[pipeline]") {
                         StreamConfig::Contour::NONE};
   json j = expected;
   auto val = nt::Value::MakeString(j.dump());
-  auto sc = StreamConfig::New(val);
+  auto sc = StreamConfig{val};
   REQUIRE(sc == expected);
 }

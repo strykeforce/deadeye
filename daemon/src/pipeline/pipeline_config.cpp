@@ -24,11 +24,6 @@ PipelineConfig::PipelineConfig(std::shared_ptr<nt::Value> value) {
   j.at(kExposureKey).get_to(exposure);
 }
 
-PipelineConfig PipelineConfig::New(std::shared_ptr<nt::Value> value) {
-  auto j = json::parse(value->GetString().str());
-  return j.get<PipelineConfig>();
-}
-
 // ---------------------------------------------------------------------------
 // nlohmann_json support
 //

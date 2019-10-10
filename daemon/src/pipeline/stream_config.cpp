@@ -21,11 +21,6 @@ StreamConfig::StreamConfig(std::shared_ptr<nt::Value> value) {
   j.at(kContourKey).get_to(contour);
 }
 
-StreamConfig StreamConfig::New(std::shared_ptr<nt::Value> value) {
-  auto j = json::parse(value->GetString().str());
-  return j.get<StreamConfig>();
-}
-
 // ---------------------------------------------------------------------------
 // nlohmann_json support
 //

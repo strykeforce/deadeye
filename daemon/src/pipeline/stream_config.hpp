@@ -38,11 +38,6 @@ struct StreamConfig {
    */
   StreamConfig(std::shared_ptr<nt::Value> value);
 
-  /**
-   * New is factory method to create a StreamConfig from a NT value.
-   */
-  static StreamConfig New(std::shared_ptr<nt::Value> value);
-
   template <typename OStream>
   friend OStream& operator<<(OStream& os, StreamConfig const& sc) {
     std::string view;
