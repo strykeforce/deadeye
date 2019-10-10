@@ -6,10 +6,6 @@ import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import edu.wpi.first.networktables.NetworkTableInstance
-import org.fusesource.jansi.Ansi.Color.GREEN
-import org.fusesource.jansi.Ansi.Color.RED
-import org.fusesource.jansi.Ansi.ansi
-import org.fusesource.jansi.AnsiConsole
 import org.strykeforce.deadeye.Deadeye
 import java.util.concurrent.CountDownLatch
 
@@ -17,12 +13,14 @@ class App : CliktCommand() {
   private val verbose by option("--verbose", "-v").flag("--no-verbose")
   override fun run() {
     val connectedSignal = CountDownLatch(1)
+    var connectionListener = 0
     NetworkTableInstance.getDefault().apply {
       addLogger({ println("NetworkTables: ${it.message}") }, if (verbose) 20 else 30, 100)
       startClient("127.0.0.1")
-      addConnectionListener({ connectedSignal.countDown() }, true)
+      connectionListener = addConnectionListener({ connectedSignal.countDown() }, true)
     }
     connectedSignal.await()
+    NetworkTableInstance.getDefault().removeConnectionListener(connectionListener)
   }
 }
 
