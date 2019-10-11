@@ -103,5 +103,3 @@ NLOHMANN_JSON_SERIALIZE_ENUM(StreamConfig::Contour,
                              })
 
 }  // namespace deadeye
-
-std::ostream& operator<<(std::ostream& os, deadeye::StreamConfig const& pc);
