@@ -29,6 +29,11 @@ struct StreamConfig {
   StreamConfig();
 
   /**
+   * Construct with default values for camera inum.
+   */
+  StreamConfig(int inum);
+
+  /**
    * Constructor from member values.
    */
   StreamConfig(int sn, std::string url, View view, Contour contour);

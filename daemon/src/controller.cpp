@@ -1,5 +1,6 @@
 #include <networktables/NetworkTableInstance.h>
 #include <networktables/NetworkTableValue.h>
+#include <spdlog/spdlog.h>
 #include <atomic>
 #include <csignal>
 #include <tinyfsm.hpp>
@@ -296,10 +297,7 @@ void SetCameraConfigEntryDefault(nt::NetworkTableEntry entry) {
 }
 
 void SetStreamConfigEntry(nt::NetworkTableEntry entry, int inum) {
-  std::stringstream url;
-  url << "http://localhost:" << std::to_string(5800 + inum) << "/stream.mjpg";
-  StreamConfig sc{0, url.str(), StreamConfig::View::NONE,
-                  StreamConfig::Contour::NONE};
+  StreamConfig sc{inum};
   json j = sc;
   entry.SetString(j.dump());
 }
