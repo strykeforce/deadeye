@@ -303,7 +303,7 @@ void SetStreamConfigEntry(nt::NetworkTableEntry entry, int inum) {
 }
 
 void SetLinkConfigEntry(nt::NetworkTableEntry entry) {
-  LinkConfig lc{CLIENT_ADDRESS, CLIENT_PORT};
+  LinkConfig lc{CLIENT_ADDRESS, CLIENT_PORT, true};
   json j = lc;
   entry.SetDefaultString(j.dump());
   entry.SetPersistent();

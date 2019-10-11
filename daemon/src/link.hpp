@@ -13,6 +13,7 @@ class Link {
   void Send();
 
  private:
+  bool enabled_;
   std::string id_;
   int fd_;
   int sn_ = 0;

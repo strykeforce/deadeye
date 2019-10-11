@@ -13,6 +13,11 @@
 using namespace deadeye;
 Link::Link(int inum) : id_(DEADEYE_UNIT + std::to_string(inum)) {
   LinkConfig link_config = Controller::GetInstance().GetLinkConfig();
+  enabled_ = link_config.enabled;
+  if (!enabled_) {
+    spdlog::warn("Link is disabled");
+    return;
+  };
 
   fd_ = socket(AF_INET, SOCK_DGRAM, 0);
   if (fd_ == -1)
@@ -31,11 +36,13 @@ Link::Link(int inum) : id_(DEADEYE_UNIT + std::to_string(inum)) {
 }
 
 Link::~Link() {
+  if (!enabled_) return;
   if (close(fd_) == -1) spdlog::error("Link close error: {}", strerror(errno));
   spdlog::info("Link closed socket");
 }
 
 void Link::Send() {
+  if (!enabled_) return;
   int n;
   nlohmann::json j;
   j["id"] = id_;
