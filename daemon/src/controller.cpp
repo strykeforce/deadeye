@@ -1,8 +1,10 @@
 #include <networktables/NetworkTableInstance.h>
 #include <networktables/NetworkTableValue.h>
+#include <ntcore_cpp.h>
 #include <spdlog/spdlog.h>
 #include <atomic>
 #include <csignal>
+#include <future>
 #include <tinyfsm.hpp>
 
 #include "camera.hpp"
@@ -253,6 +255,11 @@ void Controller::StartNetworkTables() {
                 },
                 0, UINT_MAX);
 
+  std::promise<void> promise;
+  auto conn_listener = nt::AddConnectionListener(
+      inst_, [&](auto event) { promise.set_value(); }, true);
+
+  std::future<void> future = promise.get_future();
   if (std::getenv("DEADEYE_NT_SERVER")) {
     spdlog::info("Starting NetworkTables server");
     nt::StartServer(inst_, "persistent.ini", "", NT_DEFAULT_PORT);
@@ -260,6 +267,11 @@ void Controller::StartNetworkTables() {
     spdlog::info("Starting NetworkTables client connecting to {}", NT_SERVER);
     nt::StartClient(inst_, NT_SERVER, NT_DEFAULT_PORT);
   }
+
+  spdlog::debug("Waiting for connection...");
+  future.get();
+  spdlog::debug("...connected");
+  nt::RemoveConnectionListener(conn_listener);
 }
 
 /**
