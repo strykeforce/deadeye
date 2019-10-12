@@ -48,8 +48,8 @@ void Link::Send() {
   j["id"] = id_;
   j["sn"] = sn_++;
   j["valid"] = false;
-  j["x"] = sn_;
-  j["y"] = sn_;
+  j["x"] = sn_ % 2048;
+  j["y"] = sn_ % 1024;
 
   std::string msg = j.dump();
   if ((n = send(fd_, msg.data(), msg.size(), 0)) == -1)
