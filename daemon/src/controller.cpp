@@ -17,7 +17,6 @@ static spdlog::level::level_enum Nt2spdlogLevel(const nt::LogMessage& msg);
 
 namespace {
 // static char const* kNTServerAddress = "titan.lan.j3ff.io";
-static char const* kNTServerAddress = "127.0.0.1";
 static constexpr double kPollTimeout = 0.25;
 
 std::atomic<bool> quit{false};
@@ -258,9 +257,8 @@ void Controller::StartNetworkTables() {
     spdlog::info("Starting NetworkTables server");
     nt::StartServer(inst_, "persistent.ini", "", NT_DEFAULT_PORT);
   } else {
-    spdlog::info("Starting NetworkTables client connecting to {}",
-                 kNTServerAddress);
-    nt::StartClient(inst_, kNTServerAddress, NT_DEFAULT_PORT);
+    spdlog::info("Starting NetworkTables client connecting to {}", NT_SERVER);
+    nt::StartClient(inst_, NT_SERVER, NT_DEFAULT_PORT);
   }
 }
 
