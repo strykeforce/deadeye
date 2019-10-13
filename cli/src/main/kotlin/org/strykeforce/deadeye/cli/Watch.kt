@@ -5,9 +5,11 @@ import com.codahale.metrics.MetricRegistry
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.arguments.multiple
+import org.fusesource.jansi.Ansi.Attribute.INTENSITY_FAINT
 import org.fusesource.jansi.Ansi.ansi
 import org.fusesource.jansi.AnsiConsole
 import org.jline.terminal.TerminalBuilder
+import org.jline.utils.InfoCmp
 import org.strykeforce.deadeye.Camera
 import org.strykeforce.deadeye.Deadeye
 import org.strykeforce.deadeye.TargetData
@@ -28,18 +30,21 @@ class Watch : CliktCommand() {
     AnsiConsole.systemInstall()
     val prevLink = Deadeye.link
     Deadeye.link = Deadeye.getCamera(ids.first()).stream.toLink()
-    println("ID  serial  valid     X     Y   FPS  drop")
-    println("=========================================")
+    println()
+    println(ansi().fgBrightBlue().a("id  serial  tgt     x     y   fps  drop"))
+    println(ansi().a("=========================================").reset())
 
     val watchers = ids.map(Deadeye::getCamera).map(::Watcher)
-    watchers.forEach { _ -> println() }
+    repeat(watchers.size + 1) { println() }
 
     val timer = timer(period = 250) {
-      print(ansi().cursorUpLine(watchers.size))
+      print(ansi().cursorUpLine(watchers.size + 1))
       watchers.forEach(Watcher::output)
+      println()
     }
 
     val terminal = TerminalBuilder.builder().jansi(true).system(true).build()
+    terminal.puts(InfoCmp.Capability.cursor_invisible)
     terminal.enterRawMode()
     terminal.reader().read()
 
@@ -70,13 +75,16 @@ class Watcher(val camera: Camera) : TargetDataListener {
   }
 
   fun output() {
-    val sn = td.sn.toString().padStart(6)
-    val valid = td.valid.toString().padStart(6)
+    val id = ansi().fgBrightBlue().a(td.id).reset()
+    val sn = ansi().a(INTENSITY_FAINT).a(td.sn.toString().padStart(6)).reset()
+    val valid = if (td.valid) ansi().fgBrightGreen().a("Y").reset() else ansi().fgBrightRed().a("N").reset()
     val x = td.x.toInt().toString().padStart(5)
     val y = td.y.toInt().toString().padStart(5)
-    val fps = "%5.1f".format(fpsMeter.oneMinuteRate)
-    val d = dropped.toString().padStart(4)
-    println(ansi().a("${td.id}  $sn $valid $x $y $fps  $d"))
+    val fps = ansi().fgBrightYellow().a("%5.1f".format(fpsMeter.oneMinuteRate)).reset()
+    val d =
+      ansi().let { if (dropped == 0) it.a(INTENSITY_FAINT) else it.fgBrightRed() }.a(dropped.toString().padStart(4))
+        .reset()
+    println("$id  $sn   $valid  $x $y $fps  $d")
   }
 }
 
