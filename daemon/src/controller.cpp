@@ -18,7 +18,6 @@
 static spdlog::level::level_enum Nt2spdlogLevel(const nt::LogMessage& msg);
 
 namespace {
-// static char const* kNTServerAddress = "titan.lan.j3ff.io";
 static constexpr double kPollTimeout = 0.25;
 
 std::atomic<bool> quit{false};
@@ -39,6 +38,9 @@ using namespace deadeye;
  * Constructor for Controller.
  */
 Controller::Controller() {
+  StartNetworkTables();
+  InitializeNetworkTableEntries();
+
   std::signal(SIGINT, signal_handler);
   std::signal(SIGTERM, signal_handler);
 
@@ -57,8 +59,6 @@ Controller::Controller() {
   spdlog::info("Camera<1> pipeline: NA");
 #endif
 
-  StartNetworkTables();
-  InitializeNetworkTableEntries();
   InitializeCameraConfig();
   StartPoller();
 }
