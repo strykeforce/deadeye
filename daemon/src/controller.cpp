@@ -255,11 +255,12 @@ void Controller::StartNetworkTables() {
                 },
                 0, UINT_MAX);
 
-  std::promise<void> promise;
-  auto conn_listener = nt::AddConnectionListener(
-      inst_, [&](auto event) { promise.set_value(); }, true);
+  std::promise<void> barrier;
+  std::future<void> barrier_future = barrier.get_future();
 
-  std::future<void> future = promise.get_future();
+  auto conn_listener = nt::AddConnectionListener(
+      inst_, [&](auto event) mutable { barrier.set_value(); }, true);
+
   if (std::getenv("DEADEYE_NT_SERVER")) {
     spdlog::info("Starting NetworkTables server");
     nt::StartServer(inst_, "persistent.ini", "", NT_DEFAULT_PORT);
@@ -269,7 +270,7 @@ void Controller::StartNetworkTables() {
   }
 
   spdlog::debug("Waiting for connection...");
-  future.get();
+  barrier_future.wait();
   spdlog::debug("...connected");
   nt::RemoveConnectionListener(conn_listener);
 }
