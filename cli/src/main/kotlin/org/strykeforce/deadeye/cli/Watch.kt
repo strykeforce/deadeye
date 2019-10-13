@@ -28,8 +28,8 @@ class Watch : CliktCommand() {
     AnsiConsole.systemInstall()
     val prevLink = Deadeye.link
     Deadeye.link = Deadeye.getCamera(ids.first()).stream.toLink()
-    println("ID  serial  valid     X     Y   FPS")
-    println("===================================")
+    println("ID  serial  valid     X     Y   FPS  drop")
+    println("=========================================")
 
     val watchers = ids.map(Deadeye::getCamera).map(::Watcher)
     watchers.forEach { _ -> println() }
@@ -60,11 +60,11 @@ class Watcher(val camera: Camera) : TargetDataListener {
   }
 
   private var td = TargetData(camera.id)
-  private var msg = ""
+  private var dropped = 0
   private val fpsMeter: Meter by lazy { metrics.meter(camera.id) }
 
   override fun onTargetData(data: TargetData) {
-    msg = if (data.sn - td.sn > 1) "dropped ${data.sn - td.sn}" else msg
+    if (data.sn - td.sn > 1) dropped += data.sn - td.sn
     td = data
     fpsMeter.mark()
   }
@@ -75,7 +75,8 @@ class Watcher(val camera: Camera) : TargetDataListener {
     val x = td.x.toInt().toString().padStart(5)
     val y = td.y.toInt().toString().padStart(5)
     val fps = "%5.1f".format(fpsMeter.oneMinuteRate)
-    println(ansi().a("${td.id}  $sn $valid $x $y $fps  $msg"))
+    val d = dropped.toString().padStart(4)
+    println(ansi().a("${td.id}  $sn $valid $x $y $fps  $d"))
   }
 }
 
