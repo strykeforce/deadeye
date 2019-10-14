@@ -124,12 +124,10 @@ void DriverPipeline::Run() {
     cap >> frame;
 
     if (stream_enabled_.load()) {
-      cv::Mat preview;
-#ifdef __APPLE__
-      cv::resize(frame, preview, cv::Size(320, 180), 0, 0, cv::INTER_AREA);
-#else
-      preview = frame;
-#endif
+      cv::Mat preview = frame;
+      if (frame.cols > 320) {
+        cv::resize(frame, preview, cv::Size(320, 180));
+      }
       cv::copyMakeBorder(preview, preview, 30, 30, 0, 0, cv::BORDER_CONSTANT,
                          cv::Scalar(0, 0, 0));
 
