@@ -5,6 +5,7 @@
 
 #include "pipeline/base_pipeline.hpp"
 #include "pipeline/default_pipeline.hpp"
+#include "pipeline/driver_pipeline.hpp"
 #include "pipeline/pipeline.hpp"
 #include "pipeline/pipeline_config.hpp"
 #include "pipeline/stream_config.hpp"
