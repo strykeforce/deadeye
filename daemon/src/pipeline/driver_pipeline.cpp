@@ -6,9 +6,6 @@
 #include <map>
 #include <opencv2/core/mat.hpp>
 
-#define PREVIEW_WIDTH 320
-#define PREVIEW_HEIGHT 240
-
 using namespace deadeye;
 
 /**
@@ -126,11 +123,9 @@ void DriverPipeline::Run() {
     cap >> frame;
 
     cv::Mat preview;
-    cv::copyMakeBorder(frame, preview, 120, 120, 0, 0, cv::BORDER_CONSTANT,
+    cv::copyMakeBorder(frame, preview, 30, 30, 0, 0, cv::BORDER_CONSTANT,
                        cv::Scalar(0, 0, 0));
 
-    cv::resize(preview, preview, cv::Size(PREVIEW_WIDTH, PREVIEW_HEIGHT), 0, 0,
-               cv::INTER_AREA);
     cvsource.PutFrame(preview);
 
     tm.stop();
