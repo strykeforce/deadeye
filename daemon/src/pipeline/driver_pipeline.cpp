@@ -5,6 +5,7 @@
 #include <wpi/Logger.h>
 #include <map>
 #include <opencv2/core/mat.hpp>
+#include "link.hpp"
 
 using namespace deadeye;
 
@@ -109,6 +110,8 @@ void DriverPipeline::Run() {
   spdlog::info("DriverPipeline<{}> streaming on port {}", inum_,
                mjpegServer.GetPort());
 
+  Link link{inum_};
+
   // Loop until task cancelled.
   for (cv::TickMeter tm;;) {
     tm.start();
@@ -133,7 +136,7 @@ void DriverPipeline::Run() {
 
       cvsource.PutFrame(preview);
     }
-
+    link.Send();
     tm.stop();
   }
 }
