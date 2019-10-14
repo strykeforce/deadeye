@@ -1,6 +1,7 @@
 #pragma once
 
 #include <atomic>
+#include <opencv2/opencv.hpp>
 #include <vector>
 #include "pipeline.hpp"
 
@@ -18,6 +19,7 @@ class DriverPipeline : public Pipeline {
  private:
   std::atomic<bool> cancel_{false};
   PipelineConfig *pipeline_config_{nullptr};
+  cv::VideoCapture GetVideoCapture();
 };
 
 }  // namespace deadeye

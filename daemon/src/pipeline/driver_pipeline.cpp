@@ -5,7 +5,6 @@
 #include <wpi/Logger.h>
 #include <map>
 #include <opencv2/core/mat.hpp>
-#include <opencv2/opencv.hpp>
 
 #define PREVIEW_WIDTH 320
 #define PREVIEW_HEIGHT 240
@@ -70,30 +69,23 @@ std::string gstreamer_pipeline(int capture_width, int capture_height,
 }
 #endif
 
-cv::VideoCapture GetVideoCapture() {
+}  // namespace
+
+cv::VideoCapture DriverPipeline::GetVideoCapture() {
 #ifdef __APPLE__
   cv::VideoCapture cap{0, cv::CAP_AVFOUNDATION};
 #else
-  int capture_width = 1280;
-  int capture_height = 720;
-  int display_width = 1280;
-  int display_height = 720;
-  int framerate = 60;
-  int flip_method = 0;
-
-  GStreamerConfig gsc = *pipeline_config_;
+  GStreamerConfig gsc = pipeline_config_->gstreamer_config;
 
   std::string pipeline = gstreamer_pipeline(
       gsc.capture_width, gsc.capture_height, gsc.output_width,
-      gsc.output_height, gsc.frame_rate, gsc.flip_method);
+      gsc.output_height, gsc.frame_rate, gsc.flip_mode);
   spdlog::info("Using gstreamer pipeline: {}", pipeline);
 
   cv::VideoCapture cap(pipeline, cv::CAP_GSTREAMER);
 #endif
   return cap;
 }
-
-}  // namespace
 
 void DriverPipeline::Run() {
   cancel_ = false;
