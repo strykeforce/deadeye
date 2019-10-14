@@ -1,4 +1,4 @@
-#include "pipeline/stream_config.hpp"
+#include "config/stream_config.hpp"
 
 #include "catch2/catch.hpp"
 

@@ -8,10 +8,10 @@
 #include <tinyfsm.hpp>
 
 #include "camera.hpp"
+#include "config/link_config.hpp"
 #include "controller.hpp"
 #include "defs.hpp"
 #include "lights.hpp"
-#include "link_config.hpp"
 #include "pipeline.hpp"
 
 // forward declaration

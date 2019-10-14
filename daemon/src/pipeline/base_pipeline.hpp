@@ -7,10 +7,10 @@
 #include <opencv2/core/mat.hpp>
 #include <opencv2/opencv.hpp>
 #include <vector>
+#include "config/pipeline_config.hpp"
 #include "cscore.h"
 #include "link.hpp"
 #include "pipeline.hpp"
-#include "pipeline_config.hpp"
 
 #define PREVIEW_WIDTH 320
 #define PREVIEW_HEIGHT 240
