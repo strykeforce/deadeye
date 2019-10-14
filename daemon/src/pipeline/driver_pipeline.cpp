@@ -44,12 +44,14 @@ void DriverPipeline::UpdateConfig(PipelineConfig *config) {
 }
 
 void DriverPipeline::UpdateStream(StreamConfig *config) {
-  delete config;  // ownership is transferred here by Controller
-  spdlog::warn("StreamConfig updates ignored in DriverPipeline");
+  stream_enabled_ = config->view == StreamConfig::View::ORIGINAL;
+  spdlog::info("DriverPipeline<{}> stream enabled: {}", inum_,
+               stream_enabled_.load());
+  delete config;
 }
 
-namespace {
 #ifndef __APPLE__
+namespace {
 std::string gstreamer_pipeline(int capture_width, int capture_height,
                                int display_width, int display_height,
                                int framerate, int flip_method) {
@@ -64,9 +66,8 @@ std::string gstreamer_pipeline(int capture_width, int capture_height,
          ", format=(string)BGRx ! videoconvert ! video/x-raw, "
          "format=(string)BGR ! appsink";
 }
-#endif
-
 }  // namespace
+#endif
 
 cv::VideoCapture DriverPipeline::GetVideoCapture() {
 #ifdef __APPLE__
@@ -98,10 +99,11 @@ void DriverPipeline::Run() {
     throw PipelineException("unable to open camera");
   }
 
+  cs::CvSource cvsource;
   // Set up streaming. CScore streaming will hang on connection if too many
   // connections are attempted, current workaround is for user to  disable and
   // reenable the stream to reset.
-  cs::CvSource cvsource{"cvsource", cs::VideoMode::kMJPEG, 320, 240, 30};
+  cvsource = cs::CvSource{"cvsource", cs::VideoMode::kMJPEG, 320, 240, 30};
   cs::MjpegServer mjpegServer{"cvhttpserver", 5800 + inum_};
   mjpegServer.SetSource(cvsource);
   spdlog::info("DriverPipeline<{}> streaming on port {}", inum_,
@@ -121,11 +123,16 @@ void DriverPipeline::Run() {
 
     cap >> frame;
 
-    cv::Mat preview;
-    cv::copyMakeBorder(frame, preview, 30, 30, 0, 0, cv::BORDER_CONSTANT,
-                       cv::Scalar(0, 0, 0));
+    if (stream_enabled_.load()) {
+      cv::Mat preview;
+#ifdef __APPLE__
+      cv::resize(frame, preview, cv::Size(320, 180), 0, 0, cv::INTER_AREA);
+#endif
+      cv::copyMakeBorder(preview, preview, 30, 30, 0, 0, cv::BORDER_CONSTANT,
+                         cv::Scalar(0, 0, 0));
 
-    cvsource.PutFrame(preview);
+      cvsource.PutFrame(preview);
+    }
 
     tm.stop();
   }

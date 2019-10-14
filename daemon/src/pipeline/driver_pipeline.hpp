@@ -19,6 +19,7 @@ class DriverPipeline : public Pipeline {
  private:
   std::atomic<bool> cancel_{false};
   PipelineConfig *pipeline_config_{nullptr};
+  std::atomic<bool> stream_enabled_;
   cv::VideoCapture GetVideoCapture();
 };
 
