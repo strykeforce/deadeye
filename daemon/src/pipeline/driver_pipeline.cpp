@@ -6,9 +6,6 @@
 #include <map>
 #include <opencv2/core/mat.hpp>
 
-#define PREVIEW_WIDTH 320
-#define PREVIEW_HEIGHT 240
-
 using namespace deadeye;
 
 /**
@@ -104,8 +101,7 @@ void DriverPipeline::Run() {
   // Set up streaming. CScore streaming will hang on connection if too many
   // connections are attempted, current workaround is for user to  disable and
   // reenable the stream to reset.
-  cs::CvSource cvsource{"cvsource", cs::VideoMode::kMJPEG, PREVIEW_WIDTH,
-                        PREVIEW_HEIGHT, 30};
+  cs::CvSource cvsource{"cvsource", cs::VideoMode::kMJPEG, 320, 240, 30};
   cs::MjpegServer mjpegServer{"cvhttpserver", 5800 + inum_};
   mjpegServer.SetSource(cvsource);
   spdlog::info("DriverPipeline<{}> streaming on port {}", inum_,
@@ -126,11 +122,9 @@ void DriverPipeline::Run() {
     cap >> frame;
 
     cv::Mat preview;
-    cv::copyMakeBorder(frame, preview, 120, 120, 0, 0, cv::BORDER_CONSTANT,
+    cv::copyMakeBorder(frame, preview, 30, 30, 0, 0, cv::BORDER_CONSTANT,
                        cv::Scalar(0, 0, 0));
 
-    cv::resize(preview, preview, cv::Size(PREVIEW_WIDTH, PREVIEW_HEIGHT), 0, 0,
-               cv::INTER_AREA);
     cvsource.PutFrame(preview);
 
     tm.stop();
