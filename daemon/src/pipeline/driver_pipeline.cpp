@@ -34,11 +34,21 @@ DriverPipeline::DriverPipeline(int inum) : Pipeline{inum} {
       WPI_LOG_WARNING);
 }
 
+DriverPipeline::~DriverPipeline() {
+  if (pipeline_config_ != nullptr) delete pipeline_config_;
+}
+
 void DriverPipeline::UpdateConfig(PipelineConfig *config) {
-  spdlog::warn("PipelineConfig updates ignored in DriverPipeline");
+  if (pipeline_config_ == nullptr) {
+    pipeline_config_ = config;
+    spdlog::info("DriverPipeline<{}> new config: {}", inum_, *pipeline_config_);
+  } else {
+    spdlog::warn("PipelineConfig updates ignored in DriverPipeline");
+  }
 }
 
 void DriverPipeline::UpdateStream(StreamConfig *config) {
+  delete config;  // ownership is transferred here by Controller
   spdlog::warn("StreamConfig updates ignored in DriverPipeline");
 }
 
@@ -71,9 +81,11 @@ cv::VideoCapture GetVideoCapture() {
   int framerate = 60;
   int flip_method = 0;
 
-  std::string pipeline =
-      gstreamer_pipeline(capture_width, capture_height, display_width,
-                         display_height, framerate, flip_method);
+  GStreamerConfig gsc = *pipeline_config_;
+
+  std::string pipeline = gstreamer_pipeline(
+      gsc.capture_width, gsc.capture_height, gsc.output_width,
+      gsc.output_height, gsc.frame_rate, gsc.flip_method);
   spdlog::info("Using gstreamer pipeline: {}", pipeline);
 
   cv::VideoCapture cap(pipeline, cv::CAP_GSTREAMER);

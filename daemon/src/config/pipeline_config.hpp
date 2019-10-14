@@ -4,6 +4,7 @@
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <string>
+#include "gstreamer_config.hpp"
 
 using json = nlohmann::json;
 
@@ -15,6 +16,7 @@ struct PipelineConfig {
   static char const* kHsvSatKey;
   static char const* kHsvValKey;
   static char const* kExposureKey;
+  static char const* kGStreamerConfigKey;
 
   using hsv_t = std::array<int, 2>;
 
@@ -23,6 +25,7 @@ struct PipelineConfig {
   hsv_t sat;
   hsv_t val;
   double exposure;
+  GStreamerConfig gstreamer_config;
 
   /**
    * Default constructor.
@@ -32,7 +35,8 @@ struct PipelineConfig {
   /**
    * Constructor from member values.
    */
-  PipelineConfig(int sn, hsv_t hue, hsv_t sat, hsv_t val, double exposure);
+  PipelineConfig(int sn, hsv_t hue, hsv_t sat, hsv_t val, double exposure,
+                 GStreamerConfig gstreamer_config);
 
   /**
    * Constructor from NetworkTables.
@@ -45,7 +49,7 @@ struct PipelineConfig {
        << pc.hue[1] << "], "
        << "sat=[" << pc.sat[0] << "," << pc.sat[1] << "], "
        << "val=[" << pc.val[0] << "," << pc.val[1]
-       << "], exposure=" << pc.exposure << "}";
+       << "], exposure=" << pc.exposure << " ," << pc.gstreamer_config << "}";
     return os;
   }
 };
