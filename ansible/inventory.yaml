@@ -8,7 +8,7 @@ deadeye:
       build_type: Debug
       deadeye_unit: B
       camera_0_pipeline: TestPatternPipeline
-      camera_1_pipeline: TestPatternPipeline
+      camera_1_pipeline: DriverPipeline
     deadeye-c:
       ansible_host: pi
       ansible_user: pi
