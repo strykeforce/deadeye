@@ -5,7 +5,7 @@
 #include <wpi/Logger.h>
 #include <map>
 #include <opencv2/core/mat.hpp>
-#include "link.hpp"
+#include "link/link.hpp"
 
 using namespace deadeye;
 

@@ -9,7 +9,7 @@
 #include <vector>
 #include "config/pipeline_config.hpp"
 #include "cscore.h"
-#include "link.hpp"
+#include "link/link.hpp"
 #include "pipeline.hpp"
 
 #define PREVIEW_WIDTH 320
