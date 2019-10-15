@@ -1,6 +1,7 @@
 #include "link.hpp"
 
 #include <arpa/inet.h>
+#include <networktables/NetworkTableInstance.h>
 #include <spdlog/spdlog.h>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -12,7 +13,7 @@
 
 using namespace deadeye;
 Link::Link(int inum) : id_(DEADEYE_UNIT + std::to_string(inum)) {
-  LinkConfig link_config = Controller::GetInstance().GetLinkConfig();
+  LinkConfig link_config = GetConfig();
   enabled_ = link_config.enabled;
   if (!enabled_) {
     spdlog::warn("Link is disabled");
@@ -39,6 +40,11 @@ Link::~Link() {
   if (!enabled_) return;
   if (close(fd_) == -1) spdlog::error("Link close error: {}", strerror(errno));
   spdlog::info("Link closed socket");
+}
+
+LinkConfig Link::GetConfig() {
+  auto nti = nt::NetworkTableInstance(nt::GetDefaultInstance());
+  return LinkConfig{nti.GetEntry(DE_LINK_CONFIG_ENTRY).GetValue()};
 }
 
 void Link::Send() {

@@ -9,7 +9,7 @@
 #include <vector>
 #include "config/pipeline_config.hpp"
 #include "cscore.h"
-#include "link.hpp"
+#include "link/link.hpp"
 #include "pipeline.hpp"
 
 #define PREVIEW_WIDTH 320
@@ -43,8 +43,7 @@ class BasePipeline : public Pipeline {
     delete prev_pipeline_config_;
     prev_pipeline_config_ = pipeline_config_.load();
     pipeline_config_.store(config);
-    spdlog::debug("Pipeline<{}> new config: {}", inum_,
-                  *(pipeline_config_.load()));
+    spdlog::debug("{} new config: {}", *this, *(pipeline_config_.load()));
   }
 
   /**
@@ -55,8 +54,7 @@ class BasePipeline : public Pipeline {
     delete prev_stream_config_;
     prev_stream_config_ = stream_config_.load();
     stream_config_.store(config);
-    spdlog::debug("Pipeline<{}> new config: {}", inum_,
-                  *(stream_config_.load()));
+    spdlog::debug("{} new config: {}", *this, *(stream_config_.load()));
   }
 
   // implemented in concrete pipeline classes
@@ -135,8 +133,7 @@ void BasePipeline<T>::Run() {
                         PREVIEW_HEIGHT, 30};
   cs::MjpegServer mjpegServer{"cvhttpserver", 5800 + inum_};
   mjpegServer.SetSource(cvsource);
-  spdlog::info("Pipeline<{}> streaming on port {}", inum_,
-               mjpegServer.GetPort());
+  spdlog::info("{} streaming on port {}", *this, mjpegServer.GetPort());
 
   Link link{inum_};
 
@@ -222,10 +219,10 @@ void BasePipeline<T>::Run() {
 
 template <typename T>
 void BasePipeline<T>::LogTickMeter(cv::TickMeter tm) {
-  spdlog::info("Pipeline<{}>: stopping", inum_);
+  spdlog::info("{}: stopping", *this);
   double avg = tm.getTimeSec() / tm.getCounter();
   double fps = 1.0 / avg;
-  spdlog::info("Pipeline<{}>: avg. time = {}, FPS = {}", inum_, avg, fps);
+  spdlog::info("{}: avg. time = {}, FPS = {}", *this, avg, fps);
 }
 
 }  // namespace deadeye

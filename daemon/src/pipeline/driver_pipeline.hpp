@@ -16,6 +16,9 @@ class DriverPipeline : public Pipeline {
   void UpdateStream(StreamConfig *config) override;
   void Run() override;
 
+ protected:
+  virtual std::string ToString() const override;
+
  private:
   std::atomic<bool> cancel_{false};
   PipelineConfig *pipeline_config_{nullptr};

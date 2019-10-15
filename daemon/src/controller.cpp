@@ -7,15 +7,17 @@
 #include <future>
 #include <tinyfsm.hpp>
 
-#include "camera.hpp"
 #include "config/link_config.hpp"
 #include "controller.hpp"
 #include "defs.hpp"
-#include "lights.hpp"
+#include "fsm/camera.hpp"
+#include "fsm/lights.hpp"
 #include "pipeline.hpp"
 
 // forward declaration
 static spdlog::level::level_enum Nt2spdlogLevel(const nt::LogMessage& msg);
+
+using namespace deadeye;
 
 namespace {
 static constexpr double kPollTimeout = 0.25;
@@ -30,34 +32,49 @@ void signal_handler(int signal) { quit = true; }
 constexpr unsigned int hash(const char* str, int h = 0) {
   return !str[h] ? 5381 : (hash(str, h + 1) * 33) ^ str[h];
 }
-}  // namespace
 
-using namespace deadeye;
+std::array<std::unique_ptr<Pipeline>, 5> EMPTY = {
+    std::unique_ptr<Pipeline>{nullptr}, std::unique_ptr<Pipeline>{nullptr},
+    std::unique_ptr<Pipeline>{nullptr}, std::unique_ptr<Pipeline>{nullptr},
+    std::unique_ptr<Pipeline>{nullptr}};
+}  // namespace
 
 /**
  * Constructor for Controller.
  */
-Controller::Controller() {
+Controller::Controller(
+    std::array<std::unique_ptr<Pipeline>, 5>* const pipelines) {
+  if (pipelines == nullptr) {
+    spdlog::critical("Controller not initialized");
+    throw std::runtime_error{"critical error"};
+  }
+
+  for (size_t i = 0; i < pipelines->size(); i++) {
+    if (!(*pipelines)[i]) {
+      (*pipelines)[i].reset(new NullPipeline(i));
+      has_active_pipeline_[i] = false;
+    } else {
+      has_active_pipeline_[i] = true;
+    }
+    if ((*pipelines)[i]->GetInum() != static_cast<int>(i)) {
+      spdlog::critical("{} does not match position in initialization array: {}",
+                       *(*pipelines)[i], i);
+      throw std::runtime_error("critical error");
+    }
+    spdlog::debug("pipeline[{}] = {}", i, *(*pipelines)[i]);
+  }
+
   StartNetworkTables();
   InitializeNetworkTableEntries();
 
   std::signal(SIGINT, signal_handler);
   std::signal(SIGTERM, signal_handler);
 
-#ifdef DEADEYE_CAMERA0_PIPELINE
-  Camera<0>::SetPipeline(std::make_unique<DEADEYE_CAMERA0_PIPELINE>(0));
-  spdlog::info("Camera<0> pipeline: {}",
-               DE_STRINGIFY(DEADEYE_CAMERA0_PIPELINE));
-#else
-  spdlog::info("Camera<0> pipeline: NA");
-#endif
-#ifdef DEADEYE_CAMERA1_PIPELINE
-  Camera<1>::SetPipeline(std::make_unique<DEADEYE_CAMERA1_PIPELINE>(1));
-  spdlog::info("Camera<1> pipeline: {}",
-               DE_STRINGIFY(DEADEYE_CAMERA1_PIPELINE));
-#else
-  spdlog::info("Camera<1> pipeline: NA");
-#endif
+  Camera<0>::SetPipeline(std::move((*pipelines)[0]));
+  Camera<1>::SetPipeline(std::move((*pipelines)[1]));
+  Camera<2>::SetPipeline(std::move((*pipelines)[2]));
+  Camera<3>::SetPipeline(std::move((*pipelines)[3]));
+  Camera<4>::SetPipeline(std::move((*pipelines)[4]));
 
   InitializeCameraConfig();
   StartPoller();
@@ -80,14 +97,16 @@ Controller::~Controller() {
  * Run listens for commands and config changes.
  */
 void Controller::Run() {
-#ifdef DEADEYE_CAMERA0_PIPELINE
   Camera<0>::start();
   Lights<0>::start();
-#endif
-#ifdef DEADEYE_CAMERA1_PIPELINE
   Camera<1>::start();
   Lights<1>::start();
-#endif
+  Camera<2>::start();
+  Lights<2>::start();
+  Camera<3>::start();
+  Lights<3>::start();
+  Camera<4>::start();
+  Lights<4>::start();
 
   for (bool timed_out = false;;) {
     auto entries = nt::PollEntryListener(poller_, kPollTimeout, &timed_out);
@@ -107,17 +126,15 @@ void Controller::Run() {
     // issue FSM events for camera errors
     // The On state receiving CameraOff event will cancel pipeline task, catch
     // exception and transition to Error state.
-#ifdef DEADEYE_CAMERA0_PIPELINE
     if (Camera<0>::HasError()) Camera<0>::dispatch(CameraOff());
-#endif
-#ifdef DEADEYE_CAMERA1_PIPELINE
     if (Camera<1>::HasError()) Camera<1>::dispatch(CameraOff());
-#endif
+    if (Camera<2>::HasError()) Camera<2>::dispatch(CameraOff());
+    if (Camera<3>::HasError()) Camera<3>::dispatch(CameraOff());
+    if (Camera<4>::HasError()) Camera<4>::dispatch(CameraOff());
 
     // issue FSM events from network tables entry update notifications
     for (const auto& entry : entries) {
       switch (hash(entry.name.c_str())) {
-#ifdef DEADEYE_CAMERA0_PIPELINE
         //
         // Camera 0 events
         //
@@ -153,8 +170,6 @@ void Controller::Run() {
           Camera<0>::dispatch(event);
           break;
         }
-#endif
-#ifdef DEADEYE_CAMERA1_PIPELINE
         //
         // Camera 1 events
         //
@@ -190,7 +205,111 @@ void Controller::Run() {
           break;
         }
 
-#endif
+        //
+        // Camera 2 events
+        //
+        case hash(DE_CAMERA_CONTROL("2", DE_ON)):
+          if (entry.value->GetBoolean()) Camera<2>::dispatch(CameraOn());
+          break;
+        case hash(DE_CAMERA_CONTROL("2", DE_OFF)):
+          if (entry.value->GetBoolean()) Camera<2>::dispatch(CameraOff());
+          break;
+        case hash(DE_LIGHTS_CONTROL("2", DE_ON)):
+          if (entry.value->GetBoolean()) Lights<2>::dispatch(LightsOn());
+          break;
+        case hash(DE_LIGHTS_CONTROL("2", DE_BLINK)):
+          if (entry.value->GetBoolean()) Lights<2>::dispatch(LightsBlink());
+          break;
+        case hash(DE_LIGHTS_CONTROL("2", DE_OFF)):
+          if (entry.value->GetBoolean()) Lights<2>::dispatch(LightsOff());
+          break;
+        case hash(DE_CAMERA_CONFIG_ENTRY("2")): {
+          ConfigCamera event;
+          event.config =
+              new PipelineConfig(entry.value);  // ownership passed, deleted in
+                                                // BasePipeline::UpdateConfig
+          Camera<2>::dispatch(event);
+          break;
+        }
+        case hash(DE_STREAM_CONFIG_ENTRY("2")): {
+          ConfigStream event;
+          event.config =
+              new StreamConfig(entry.value);  // ownership passed, deleted in
+                                              // BasePipeline::UpdateStream
+          Camera<2>::dispatch(event);
+          break;
+        }
+
+        //
+        // Camera 3 events
+        //
+        case hash(DE_CAMERA_CONTROL("3", DE_ON)):
+          if (entry.value->GetBoolean()) Camera<3>::dispatch(CameraOn());
+          break;
+        case hash(DE_CAMERA_CONTROL("3", DE_OFF)):
+          if (entry.value->GetBoolean()) Camera<3>::dispatch(CameraOff());
+          break;
+        case hash(DE_LIGHTS_CONTROL("3", DE_ON)):
+          if (entry.value->GetBoolean()) Lights<3>::dispatch(LightsOn());
+          break;
+        case hash(DE_LIGHTS_CONTROL("3", DE_BLINK)):
+          if (entry.value->GetBoolean()) Lights<3>::dispatch(LightsBlink());
+          break;
+        case hash(DE_LIGHTS_CONTROL("3", DE_OFF)):
+          if (entry.value->GetBoolean()) Lights<3>::dispatch(LightsOff());
+          break;
+        case hash(DE_CAMERA_CONFIG_ENTRY("3")): {
+          ConfigCamera event;
+          event.config =
+              new PipelineConfig(entry.value);  // ownership passed, deleted in
+                                                // BasePipeline::UpdateConfig
+          Camera<3>::dispatch(event);
+          break;
+        }
+        case hash(DE_STREAM_CONFIG_ENTRY("3")): {
+          ConfigStream event;
+          event.config =
+              new StreamConfig(entry.value);  // ownership passed, deleted in
+                                              // BasePipeline::UpdateStream
+          Camera<3>::dispatch(event);
+          break;
+        }
+
+        //
+        // Camera 4 events
+        //
+        case hash(DE_CAMERA_CONTROL("4", DE_ON)):
+          if (entry.value->GetBoolean()) Camera<4>::dispatch(CameraOn());
+          break;
+        case hash(DE_CAMERA_CONTROL("4", DE_OFF)):
+          if (entry.value->GetBoolean()) Camera<4>::dispatch(CameraOff());
+          break;
+        case hash(DE_LIGHTS_CONTROL("4", DE_ON)):
+          if (entry.value->GetBoolean()) Lights<4>::dispatch(LightsOn());
+          break;
+        case hash(DE_LIGHTS_CONTROL("4", DE_BLINK)):
+          if (entry.value->GetBoolean()) Lights<4>::dispatch(LightsBlink());
+          break;
+        case hash(DE_LIGHTS_CONTROL("4", DE_OFF)):
+          if (entry.value->GetBoolean()) Lights<4>::dispatch(LightsOff());
+          break;
+        case hash(DE_CAMERA_CONFIG_ENTRY("4")): {
+          ConfigCamera event;
+          event.config =
+              new PipelineConfig(entry.value);  // ownership passed, deleted in
+                                                // BasePipeline::UpdateConfig
+          Camera<4>::dispatch(event);
+          break;
+        }
+        case hash(DE_STREAM_CONFIG_ENTRY("4")): {
+          ConfigStream event;
+          event.config =
+              new StreamConfig(entry.value);  // ownership passed, deleted in
+                                              // BasePipeline::UpdateStream
+          Camera<4>::dispatch(event);
+          break;
+        }
+
         default:
           spdlog::warn("Controller: {} event unrecognized in {}, line {}",
                        entry.name, __FILE__, __LINE__);
@@ -202,45 +321,16 @@ void Controller::Run() {
 
 void Controller::ShutDown() {
   // fsm dispatches to all instances
-#ifdef DEADEYE_CAMERA0_PIPELINE
   Camera<0>::dispatch(CameraOff());
   Lights<0>::dispatch(LightsOff());
-#endif
-#ifdef DEADEYE_CAMERA1_PIPELINE
   Camera<1>::dispatch(CameraOff());
   Lights<1>::dispatch(LightsOff());
-#endif
-}
-
-/**
- * SetCameraError updates network tables with camera error.
- */
-void Controller::SetCameraStatus(int inum, char const* name, bool state) {
-  std::stringstream path;
-  path << DE_CONTROL_TABLE << "/" << inum << "/" << name;
-
-  auto entry = nt::GetEntry(inst_, path.str().c_str());
-  nt::SetEntryValue(entry, nt::Value::MakeBoolean(state));
-}
-
-/**
- * SetLightsStatus updates network tables with current state of lights.
- */
-void Controller::SetLightsStatus(int inum, char const* name, bool state) {
-  std::stringstream path;
-  path << DE_CONTROL_TABLE << "/" << inum << DE_LIGHTS << "/" << name;
-
-  auto entry = nt::GetEntry(inst_, path.str().c_str());
-  nt::SetEntryValue(entry, nt::Value::MakeBoolean(state));
-}
-
-/**
- * GetLinkConfig returns the current Link configuration.
-data.
- */
-LinkConfig Controller::GetLinkConfig() {
-  auto nti = nt::NetworkTableInstance(inst_);
-  return LinkConfig{nti.GetEntry(DE_LINK_CONFIG_ENTRY).GetValue()};
+  Camera<2>::dispatch(CameraOff());
+  Lights<2>::dispatch(LightsOff());
+  Camera<3>::dispatch(CameraOff());
+  Lights<3>::dispatch(LightsOff());
+  Camera<4>::dispatch(CameraOff());
+  Lights<4>::dispatch(LightsOff());
 }
 
 /**
@@ -330,18 +420,40 @@ void SetLinkConfigEntry(nt::NetworkTableEntry entry) {
 void Controller::InitializeNetworkTableEntries() {
   auto nti = nt::NetworkTableInstance(inst_);
   SetLinkConfigEntry(nti.GetEntry(DE_LINK_CONFIG_ENTRY));
-#ifdef DEADEYE_CAMERA0_PIPELINE
-  SetCameraControlTableEntries(nti.GetTable(DE_CAMERA_CONTROL_TABLE("0")));
-  SetLightsControlTableEntries(nti.GetTable(DE_LIGHTS_CONTROL_TABLE("0")));
-  SetCameraConfigEntryDefault(nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("0")));
-  SetStreamConfigEntry(nti.GetEntry(DE_STREAM_CONFIG_ENTRY("0")), 0);
-#endif
-#ifdef DEADEYE_CAMERA1_PIPELINE
-  SetCameraControlTableEntries(nti.GetTable(DE_CAMERA_CONTROL_TABLE("1")));
-  SetLightsControlTableEntries(nti.GetTable(DE_LIGHTS_CONTROL_TABLE("1")));
-  SetCameraConfigEntryDefault(nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("1")));
-  SetStreamConfigEntry(nti.GetEntry(DE_STREAM_CONFIG_ENTRY("1")), 1);
-#endif
+  if (has_active_pipeline_[0]) {
+    SetCameraControlTableEntries(nti.GetTable(DE_CAMERA_CONTROL_TABLE("0")));
+    SetLightsControlTableEntries(nti.GetTable(DE_LIGHTS_CONTROL_TABLE("0")));
+    SetCameraConfigEntryDefault(nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("0")));
+    SetStreamConfigEntry(nti.GetEntry(DE_STREAM_CONFIG_ENTRY("0")), 0);
+  }
+
+  if (has_active_pipeline_[1]) {
+    SetCameraControlTableEntries(nti.GetTable(DE_CAMERA_CONTROL_TABLE("1")));
+    SetLightsControlTableEntries(nti.GetTable(DE_LIGHTS_CONTROL_TABLE("1")));
+    SetCameraConfigEntryDefault(nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("1")));
+    SetStreamConfigEntry(nti.GetEntry(DE_STREAM_CONFIG_ENTRY("1")), 1);
+  }
+
+  if (has_active_pipeline_[2]) {
+    SetCameraControlTableEntries(nti.GetTable(DE_CAMERA_CONTROL_TABLE("2")));
+    SetLightsControlTableEntries(nti.GetTable(DE_LIGHTS_CONTROL_TABLE("2")));
+    SetCameraConfigEntryDefault(nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("2")));
+    SetStreamConfigEntry(nti.GetEntry(DE_STREAM_CONFIG_ENTRY("2")), 2);
+  }
+
+  if (has_active_pipeline_[3]) {
+    SetCameraControlTableEntries(nti.GetTable(DE_CAMERA_CONTROL_TABLE("3")));
+    SetLightsControlTableEntries(nti.GetTable(DE_LIGHTS_CONTROL_TABLE("3")));
+    SetCameraConfigEntryDefault(nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("3")));
+    SetStreamConfigEntry(nti.GetEntry(DE_STREAM_CONFIG_ENTRY("3")), 3);
+  }
+
+  if (has_active_pipeline_[4]) {
+    SetCameraControlTableEntries(nti.GetTable(DE_CAMERA_CONTROL_TABLE("4")));
+    SetLightsControlTableEntries(nti.GetTable(DE_LIGHTS_CONTROL_TABLE("4")));
+    SetCameraConfigEntryDefault(nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("4")));
+    SetStreamConfigEntry(nti.GetEntry(DE_STREAM_CONFIG_ENTRY("4")), 4);
+  }
 }
 
 /**
@@ -350,25 +462,56 @@ void Controller::InitializeNetworkTableEntries() {
 void Controller::InitializeCameraConfig() {
   auto nti = nt::NetworkTableInstance(inst_);
   std::shared_ptr<nt::Value> value;
-#ifdef DEADEYE_CAMERA0_PIPELINE
-  value = nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("0")).GetValue();
-  assert(value);
-  Camera<0>::SetConfig(new PipelineConfig(value));  // ownership passed
 
-  value = nti.GetEntry(DE_STREAM_CONFIG_ENTRY("0")).GetValue();
-  assert(value);
-  Camera<0>::SetStream(new StreamConfig(value));  // ownership passed
-#endif
+  if (has_active_pipeline_[0]) {
+    value = nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("0")).GetValue();
+    assert(value);
+    Camera<0>::SetConfig(new PipelineConfig(value));  // ownership passed
 
-#ifdef DEADEYE_CAMERA1_PIPELINE
-  value = nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("1")).GetValue();
-  assert(value);
-  Camera<1>::SetConfig(new PipelineConfig(value));  // ownership passed
+    value = nti.GetEntry(DE_STREAM_CONFIG_ENTRY("0")).GetValue();
+    assert(value);
+    Camera<0>::SetStream(new StreamConfig(value));  // ownership passed
+  }
 
-  value = nti.GetEntry(DE_STREAM_CONFIG_ENTRY("1")).GetValue();
-  assert(value);
-  Camera<1>::SetStream(new StreamConfig(value));  // ownership passed
-#endif
+  if (has_active_pipeline_[1]) {
+    value = nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("1")).GetValue();
+    assert(value);
+    Camera<1>::SetConfig(new PipelineConfig(value));  // ownership passed
+
+    value = nti.GetEntry(DE_STREAM_CONFIG_ENTRY("1")).GetValue();
+    assert(value);
+    Camera<1>::SetStream(new StreamConfig(value));  // ownership passed
+  }
+
+  if (has_active_pipeline_[2]) {
+    value = nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("2")).GetValue();
+    assert(value);
+    Camera<2>::SetConfig(new PipelineConfig(value));  // ownership passed
+
+    value = nti.GetEntry(DE_STREAM_CONFIG_ENTRY("2")).GetValue();
+    assert(value);
+    Camera<2>::SetStream(new StreamConfig(value));  // ownership passed
+  }
+
+  if (has_active_pipeline_[3]) {
+    value = nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("3")).GetValue();
+    assert(value);
+    Camera<3>::SetConfig(new PipelineConfig(value));  // ownership passed
+
+    value = nti.GetEntry(DE_STREAM_CONFIG_ENTRY("3")).GetValue();
+    assert(value);
+    Camera<3>::SetStream(new StreamConfig(value));  // ownership passed
+  }
+
+  if (has_active_pipeline_[4]) {
+    value = nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("4")).GetValue();
+    assert(value);
+    Camera<4>::SetConfig(new PipelineConfig(value));  // ownership passed
+
+    value = nti.GetEntry(DE_STREAM_CONFIG_ENTRY("4")).GetValue();
+    assert(value);
+    Camera<4>::SetStream(new StreamConfig(value));  // ownership passed
+  }
 }
 
 /**

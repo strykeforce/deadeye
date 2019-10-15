@@ -15,5 +15,6 @@ class DefaultPipeline : public BasePipeline<DefaultPipeline> {
 
  protected:
   cv::VideoCapture GetVideoCapture() override;
+  virtual std::string ToString() const override;
 };
 }  // namespace deadeye

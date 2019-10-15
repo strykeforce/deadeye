@@ -12,11 +12,6 @@ set(BUILD_SHARED_LIBS NO)
 
 # Build options
 set(DEADEYE_UNIT_ID "A" CACHE STRING "Deadeye unique unit ID")
-set(DEADEYE_CAMERA0_PIPELINE "TestPatternPipeline" CACHE STRING "Camera 0 Pipeline class")
-set(DEADEYE_CAMERA1_PIPELINE "" CACHE STRING "Camera 1 Pipeline class")
-set(DEADEYE_CAMERA2_PIPELINE "" CACHE STRING "Camera 2 Pipeline class")
-set(DEADEYE_CAMERA3_PIPELINE "" CACHE STRING "Camera 3 Pipeline class")
-set(DEADEYE_CAMERA4_PIPELINE "" CACHE STRING "Camera 4 Pipeline class")
 set(DEADEYE_NT_SERVER "10.27.67.2" CACHE STRING "NetworkTables server address")
 set(DEADEYE_CLIENT_ADDRESS "10.27.67.2" CACHE STRING "Deadeye client address")
 set(DEADEYE_CLIENT_PORT "5800" CACHE STRING "Deadeye client port")

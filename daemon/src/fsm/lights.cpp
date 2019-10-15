@@ -25,22 +25,22 @@ class Blinking;
 
 template <int inum>
 class On : public Lights<inum> {
+  using base = Lights<inum>;
+
   void entry() override {
-    Controller::GetInstance().SetLightsStatus(inum, DE_ON, true);
+    base::SetStatus(DE_ON, true);
     spdlog::info("Lights<{}> on", inum);
   }
 
   void react(LightsBlink const &) override {
-    Lights<inum>::template transit<lights::Blinking<inum>>();
+    base::template transit<lights::Blinking<inum>>();
   }
 
   void react(LightsOff const &) override {
-    Lights<inum>::template transit<lights::Off<inum>>();
+    base::template transit<lights::Off<inum>>();
   }
 
-  void exit() override {
-    Controller::GetInstance().SetLightsStatus(inum, DE_ON, false);
-  }
+  void exit() override { base::SetStatus(DE_ON, false); }
 };
 
 template <int inum>
@@ -48,7 +48,7 @@ class Blinking : public Lights<inum> {
   using base = Lights<inum>;
 
   void entry() override {
-    Controller::GetInstance().SetLightsStatus(inum, DE_BLINK, true);
+    base::SetStatus(DE_BLINK, true);
 
     base::cancel_task_ = false;
     base::task_future_ = std::async(std::launch::async, [] {
@@ -79,17 +79,15 @@ class Blinking : public Lights<inum> {
 
   void react(LightsOn const &) override {
     CancelTask();
-    Lights<inum>::template transit<lights::On<inum>>();
+    base::template transit<lights::On<inum>>();
   }
 
   void react(LightsOff const &) override {
     CancelTask();
-    Lights<inum>::template transit<lights::Off<inum>>();
+    base::template transit<lights::Off<inum>>();
   }
 
-  void exit() override {
-    Controller::GetInstance().SetLightsStatus(inum, DE_BLINK, false);
-  }
+  void exit() override { base::SetStatus(DE_BLINK, false); }
 };
 
 template <int inum>
@@ -97,23 +95,24 @@ class Off : public Lights<inum> {
   using base = Lights<inum>;
 
   void entry() override {
-    Controller::GetInstance().SetLightsStatus(inum, DE_OFF, true);
+    base::SetStatus(DE_OFF, true);
     spdlog::info("Lights<{}> off", inum);
   }
 
   void react(LightsOn const &) override {
-    Lights<inum>::template transit<lights::On<inum>>();
+    base::template transit<lights::On<inum>>();
   }
 
   void react(LightsBlink const &) override {
-    Lights<inum>::template transit<lights::Blinking<inum>>();
+    base::template transit<lights::Blinking<inum>>();
   }
 
-  void exit() override {
-    Controller::GetInstance().SetLightsStatus(inum, DE_OFF, false);
-  }
+  void exit() override { base::SetStatus(DE_OFF, false); }
 };
 }  // namespace lights
 
 FSM_INITIAL_STATE(Lights<0>, lights::Off<0>)
 FSM_INITIAL_STATE(Lights<1>, lights::Off<1>)
+FSM_INITIAL_STATE(Lights<2>, lights::Off<2>)
+FSM_INITIAL_STATE(Lights<3>, lights::Off<3>)
+FSM_INITIAL_STATE(Lights<4>, lights::Off<4>)

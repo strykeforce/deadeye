@@ -5,7 +5,7 @@
 #include <wpi/Logger.h>
 #include <map>
 #include <opencv2/core/mat.hpp>
-#include "link.hpp"
+#include "link/link.hpp"
 
 using namespace deadeye;
 
@@ -79,7 +79,7 @@ cv::VideoCapture DriverPipeline::GetVideoCapture() {
   std::string pipeline = gstreamer_pipeline(
       gsc.capture_width, gsc.capture_height, gsc.output_width,
       gsc.output_height, gsc.frame_rate, gsc.flip_mode);
-  spdlog::info("Using gstreamer pipeline: {}", pipeline);
+  spdlog::info("{} using gstreamer pipeline: {}", *this, pipeline);
 
   cv::VideoCapture cap(pipeline, cv::CAP_GSTREAMER);
 #endif
@@ -107,8 +107,7 @@ void DriverPipeline::Run() {
   cvsource = cs::CvSource{"cvsource", cs::VideoMode::kMJPEG, 320, 240, 30};
   cs::MjpegServer mjpegServer{"cvhttpserver", 5800 + inum_};
   mjpegServer.SetSource(cvsource);
-  spdlog::info("DriverPipeline<{}> streaming on port {}", inum_,
-               mjpegServer.GetPort());
+  spdlog::info("{} streaming on port {}", *this, inum_, mjpegServer.GetPort());
 
   Link link{inum_};
 
@@ -117,10 +116,10 @@ void DriverPipeline::Run() {
     tm.start();
 
     if (cancel_.load()) {
-      spdlog::info("Pipeline<{}>: stopping", inum_);
+      spdlog::info("{}: stopping", *this, inum_);
       double avg = tm.getTimeSec() / tm.getCounter();
       double fps = 1.0 / avg;
-      spdlog::info("Pipeline<{}>: avg. time = {}, FPS = {}", inum_, avg, fps);
+      spdlog::info("{}: avg. time = {}, FPS = {}", *this, inum_, avg, fps);
       return;
     }
 
@@ -139,4 +138,8 @@ void DriverPipeline::Run() {
     link.Send();
     tm.stop();
   }
+}
+
+std::string DriverPipeline::ToString() const {
+  return "DriverPipeline<" + std::to_string(inum_) + ">";
 }
