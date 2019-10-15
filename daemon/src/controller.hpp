@@ -1,4 +1,5 @@
 #pragma once
+#include <array>
 
 #include <ntcore.h>
 
@@ -17,7 +18,7 @@ class Controller {
   ~Controller();
   void Run();
   void ShutDown();
-  void SetCameraStatus(int inum, char const* name, bool state);
+
   void SetLightsStatus(int inum, char const* name, bool state);
   LinkConfig GetLinkConfig();
 

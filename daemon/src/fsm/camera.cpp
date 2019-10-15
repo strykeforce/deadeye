@@ -3,7 +3,6 @@
 #include <future>
 
 #include "controller.hpp"
-#include "defs.hpp"
 #include "lights.hpp"
 
 using namespace std::chrono_literals;
@@ -25,7 +24,7 @@ class On : public Camera<inum> {
   using base = Camera<inum>;
 
   void entry() override {
-    Controller::GetInstance().SetCameraStatus(inum, DE_ON, true);
+    base::SetStatus(DE_ON, true);
     base::has_error_ = false;
 
     base::pipeline_future_ = std::async(std::launch::async, [] {
@@ -57,9 +56,7 @@ class On : public Camera<inum> {
     base::template transit<camera::Off<inum>>();
   }
 
-  void exit() override {
-    Controller::GetInstance().SetCameraStatus(inum, DE_ON, false);
-  }
+  void exit() override { base::SetStatus(DE_ON, false); }
 };
 
 // ---------------------------------------------------------------------------
@@ -70,7 +67,7 @@ class Off : public Camera<inum> {
   using base = Camera<inum>;
 
   void entry() override {
-    Controller::GetInstance().SetCameraStatus(inum, DE_OFF, true);
+    base::SetStatus(DE_OFF, true);
     spdlog::info("Camera<{}> off", inum);
   }
 
@@ -79,9 +76,7 @@ class Off : public Camera<inum> {
     base::template transit<camera::On<inum>>();
   }
 
-  void exit() override {
-    Controller::GetInstance().SetCameraStatus(inum, DE_OFF, false);
-  }
+  void exit() override { base::SetStatus(DE_OFF, false); }
 };
 
 // ---------------------------------------------------------------------------
@@ -92,26 +87,24 @@ class Error : public Camera<inum> {
   using base = Camera<inum>;
 
   void entry() override {
-    Controller::GetInstance().SetCameraStatus(inum, DE_ERROR, true);
+    base::SetStatus(DE_ERROR, true);
     Lights<inum>::dispatch(LightsBlink());
     spdlog::error("Camera<{}> error: {}", inum, base::error_);
   }
 
   void react(CameraOn const &) override {
-    Controller::GetInstance().SetCameraStatus(inum, DE_ON, false);
+    base::SetStatus(DE_ON, false);
     spdlog::warn("Camera<{}> attempting to turn on camera in error state: {}",
                  inum, base::error_);
   }
 
   void react(CameraOff const &) override {
-    Controller::GetInstance().SetCameraStatus(inum, DE_OFF, false);
+    base::SetStatus(DE_OFF, false);
     spdlog::warn("Camera<{}> attempting to turn off camera in error state: {}",
                  inum, base::error_);
   }
 
-  void exit() override {
-    Controller::GetInstance().SetCameraStatus(inum, DE_ERROR, false);
-  }
+  void exit() override { base::SetStatus(DE_ERROR, false); }
 };
 
 }  // namespace camera
