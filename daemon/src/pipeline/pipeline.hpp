@@ -1,7 +1,7 @@
 #pragma once
 #include <exception>
-#include "pipeline_config.hpp"
-#include "stream_config.hpp"
+#include "config/pipeline_config.hpp"
+#include "config/stream_config.hpp"
 
 namespace deadeye {
 class PipelineException : public std::exception {

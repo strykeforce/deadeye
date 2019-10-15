@@ -36,8 +36,10 @@
     group: "{{ build_user }}"
     mode: 0600
     block: |
-      Host lithium
+      Host github.com
+        User git
         IdentityFile "{{ deadeye_home }}/.ssh/id_deadeye"
+        IdentitiesOnly yes
 
 - name: Clone repo
   git:

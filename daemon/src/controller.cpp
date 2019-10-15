@@ -8,10 +8,10 @@
 #include <tinyfsm.hpp>
 
 #include "camera.hpp"
+#include "config/link_config.hpp"
 #include "controller.hpp"
 #include "defs.hpp"
 #include "lights.hpp"
-#include "link_config.hpp"
 #include "pipeline.hpp"
 
 // forward declaration
@@ -301,7 +301,9 @@ void SetLightsControlTableEntries(std::shared_ptr<NetworkTable> table) {
 }
 
 void SetCameraConfigEntryDefault(nt::NetworkTableEntry entry) {
-  PipelineConfig pc{0, {0, 254}, {0, 254}, {0, 254}, 0.5};
+  PipelineConfig pc{0,        {0, 254},
+                    {0, 254}, {0, 254},
+                    0.5,      GStreamerConfig{1280, 720, 320, 180, 60, 0}};
   json j = pc;
   entry.SetDefaultString(j.dump());
   entry.SetPersistent();

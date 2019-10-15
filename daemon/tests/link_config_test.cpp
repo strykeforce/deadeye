@@ -1,4 +1,4 @@
-#include "link_config.hpp"
+#include "config/link_config.hpp"
 
 #include <opencv2/core/mat.hpp>
 #include "catch2/catch.hpp"

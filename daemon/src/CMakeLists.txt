@@ -4,8 +4,8 @@ add_library(Deadeye_library
     camera.cpp
     lights.cpp
     link.cpp
-    link_config.cpp
 )
+add_subdirectory(config)
 add_subdirectory(pipeline)
 add_library(Deadeye::library ALIAS Deadeye_library)
 set_target_properties(Deadeye_library PROPERTIES
