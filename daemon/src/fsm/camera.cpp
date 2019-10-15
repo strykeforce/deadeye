@@ -110,9 +110,5 @@ class Error : public Camera<inum> {
 }  // namespace camera
 }  // namespace deadeye
 
-#ifdef DEADEYE_CAMERA0_PIPELINE
 FSM_INITIAL_STATE(deadeye::Camera<0>, deadeye::camera::Off<0>)
-#endif
-#ifdef DEADEYE_CAMERA1_PIPELINE
 FSM_INITIAL_STATE(deadeye::Camera<1>, deadeye::camera::Off<1>)
-#endif

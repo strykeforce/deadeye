@@ -1,5 +1,6 @@
 #pragma once
 #include <spdlog/fmt/ostr.h>
+#include <spdlog/spdlog.h>
 #include <exception>
 #include <iostream>
 
@@ -17,8 +18,9 @@ class PipelineException : public std::exception {
 
 class Pipeline {
  public:
-  Pipeline(int inum) : inum_{inum} {}
+  Pipeline(int inum) : inum_(inum) {}
   virtual ~Pipeline() {}
+  int GetInum() { return inum_; }
   virtual void Run() = 0;
   virtual void CancelTask() = 0;
   virtual void UpdateConfig(PipelineConfig *config) = 0;
@@ -35,6 +37,20 @@ class Pipeline {
 
   virtual std::string ToString() const {
     return "Pipeline<" + std::to_string(inum_) + ">";
+  }
+};
+
+class NullPipeline : public Pipeline {
+ public:
+  NullPipeline(int inum) : Pipeline{inum} {}
+  void CancelTask() override {}
+  void UpdateConfig(PipelineConfig *) override {}
+  void UpdateStream(StreamConfig *) override {}
+  void Run() override { spdlog::warn("{}: Run not implemented", *this); }
+
+ protected:
+  virtual std::string ToString() const override {
+    return "NullPipeline<" + std::to_string(inum_) + ">";
   }
 };
 }  // namespace deadeye
