@@ -22,6 +22,9 @@ int main(int argc, char** argv) {
     Controller::Initialize({
         std::make_unique<TestPatternPipeline>(0),
         std::make_unique<TestPatternPipeline>(1),
+        std::make_unique<TestPatternPipeline>(2),
+        std::make_unique<TestPatternPipeline>(3),
+        std::make_unique<TestPatternPipeline>(4),
     });
 
     Controller::GetInstance().Run();

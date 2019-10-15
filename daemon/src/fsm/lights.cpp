@@ -113,3 +113,6 @@ class Off : public Lights<inum> {
 
 FSM_INITIAL_STATE(Lights<0>, lights::Off<0>)
 FSM_INITIAL_STATE(Lights<1>, lights::Off<1>)
+FSM_INITIAL_STATE(Lights<2>, lights::Off<2>)
+FSM_INITIAL_STATE(Lights<3>, lights::Off<3>)
+FSM_INITIAL_STATE(Lights<4>, lights::Off<4>)

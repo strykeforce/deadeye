@@ -112,3 +112,6 @@ class Error : public Camera<inum> {
 
 FSM_INITIAL_STATE(deadeye::Camera<0>, deadeye::camera::Off<0>)
 FSM_INITIAL_STATE(deadeye::Camera<1>, deadeye::camera::Off<1>)
+FSM_INITIAL_STATE(deadeye::Camera<2>, deadeye::camera::Off<2>)
+FSM_INITIAL_STATE(deadeye::Camera<3>, deadeye::camera::Off<3>)
+FSM_INITIAL_STATE(deadeye::Camera<4>, deadeye::camera::Off<4>)
