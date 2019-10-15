@@ -1,11 +1,10 @@
 # Build library to facilitate testing
 add_library(Deadeye_library
     controller.cpp
-    camera.cpp
-    lights.cpp
     link.cpp
 )
 add_subdirectory(config)
+add_subdirectory(fsm)
 add_subdirectory(pipeline)
 add_library(Deadeye::library ALIAS Deadeye_library)
 set_target_properties(Deadeye_library PROPERTIES

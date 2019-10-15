@@ -7,11 +7,11 @@
 #include <future>
 #include <tinyfsm.hpp>
 
-#include "camera.hpp"
 #include "config/link_config.hpp"
 #include "controller.hpp"
 #include "defs.hpp"
-#include "lights.hpp"
+#include "fsm/camera.hpp"
+#include "fsm/lights.hpp"
 #include "pipeline.hpp"
 
 // forward declaration
