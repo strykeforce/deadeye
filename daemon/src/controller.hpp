@@ -1,10 +1,7 @@
 #pragma once
-#include <array>
-
 #include <ntcore.h>
 
 namespace deadeye {
-struct LinkConfig;
 
 class Controller {
  public:
@@ -18,8 +15,6 @@ class Controller {
   ~Controller();
   void Run();
   void ShutDown();
-
-  LinkConfig GetLinkConfig();
 
  private:
   Controller();

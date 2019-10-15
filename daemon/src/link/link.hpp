@@ -3,6 +3,8 @@
 
 namespace deadeye {
 
+struct LinkConfig;
+
 class Link {
  public:
   Link(int inum);
@@ -17,6 +19,7 @@ class Link {
   std::string id_;
   int fd_;
   int sn_ = 0;
+  LinkConfig GetConfig();
 };
 
 }  // namespace deadeye

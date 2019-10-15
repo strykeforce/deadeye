@@ -213,15 +213,6 @@ void Controller::ShutDown() {
 }
 
 /**
- * GetLinkConfig returns the current Link configuration.
-data.
- */
-LinkConfig Controller::GetLinkConfig() {
-  auto nti = nt::NetworkTableInstance(inst_);
-  return LinkConfig{nti.GetEntry(DE_LINK_CONFIG_ENTRY).GetValue()};
-}
-
-/**
  * StartNetworkTables starts network tables in client or server mode.
  */
 void Controller::StartNetworkTables() {
