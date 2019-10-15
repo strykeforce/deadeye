@@ -64,3 +64,7 @@ void DefaultPipeline::FilterContours(
 
   // throw PipelineException("Test Exception");
 }
+
+std::string DefaultPipeline::ToString() const {
+  return "DefaultPipeline<" + std::to_string(inum_) + ">";
+}

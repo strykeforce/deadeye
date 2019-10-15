@@ -1,5 +1,8 @@
 #pragma once
+#include <spdlog/fmt/ostr.h>
 #include <exception>
+#include <iostream>
+
 #include "config/pipeline_config.hpp"
 #include "config/stream_config.hpp"
 
@@ -21,7 +24,17 @@ class Pipeline {
   virtual void UpdateConfig(PipelineConfig *config) = 0;
   virtual void UpdateStream(StreamConfig *config) = 0;
 
+  template <typename OStream>
+  friend OStream &operator<<(OStream &os, Pipeline const &p) {
+    os << p.ToString();
+    return os;
+  }
+
  protected:
   int inum_;
+
+  virtual std::string ToString() const {
+    return "Pipeline<" + std::to_string(inum_) + ">";
+  }
 };
 }  // namespace deadeye

@@ -28,3 +28,7 @@ void TestPatternPipeline::FilterContours(
 
   // throw PipelineException("Test Exception");
 }
+
+std::string TestPatternPipeline::ToString() const {
+  return "TestPatternPipeline<" + std::to_string(inum_) + ">";
+}

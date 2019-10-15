@@ -140,3 +140,7 @@ void DriverPipeline::Run() {
     tm.stop();
   }
 }
+
+std::string DriverPipeline::ToString() const {
+  return "DriverPipeline<" + std::to_string(inum_) + ">";
+}

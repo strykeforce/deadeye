@@ -9,9 +9,10 @@ class TestPatternPipeline : public BasePipeline<TestPatternPipeline> {
   cv::Mat PreProcessFrame(cv::Mat const &frame) { return frame; }
 
   void FilterContours(std::vector<std::vector<cv::Point>> const &src,
-                        std::vector<std::vector<cv::Point>> &dest);
+                      std::vector<std::vector<cv::Point>> &dest);
 
  protected:
   cv::VideoCapture GetVideoCapture() override;
+  virtual std::string ToString() const override;
 };
 }  // namespace deadeye
