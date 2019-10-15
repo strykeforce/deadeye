@@ -6,7 +6,6 @@
 #include <atomic>
 #include <future>
 #include <memory>
-#include <sstream>
 #include <tinyfsm.hpp>
 
 #include "config/stream_config.hpp"

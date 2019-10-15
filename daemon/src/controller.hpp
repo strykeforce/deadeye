@@ -19,7 +19,6 @@ class Controller {
   void Run();
   void ShutDown();
 
-  void SetLightsStatus(int inum, char const* name, bool state);
   LinkConfig GetLinkConfig();
 
  private:

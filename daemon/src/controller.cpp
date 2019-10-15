@@ -213,17 +213,6 @@ void Controller::ShutDown() {
 }
 
 /**
- * SetLightsStatus updates network tables with current state of lights.
- */
-void Controller::SetLightsStatus(int inum, char const* name, bool state) {
-  std::stringstream path;
-  path << DE_CONTROL_TABLE << "/" << inum << DE_LIGHTS << "/" << name;
-
-  auto entry = nt::GetEntry(inst_, path.str().c_str());
-  nt::SetEntryValue(entry, nt::Value::MakeBoolean(state));
-}
-
-/**
  * GetLinkConfig returns the current Link configuration.
 data.
  */
