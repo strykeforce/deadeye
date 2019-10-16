@@ -75,7 +75,11 @@ Controller::Controller(
   Camera<3>::SetPipeline(std::move((*pipelines)[3]));
   Camera<4>::SetPipeline(std::move((*pipelines)[4]));
 
-  InitializeCameraConfig();
+  InitializeCamera<0>();
+  InitializeCamera<1>();
+  InitializeCamera<2>();
+  InitializeCamera<3>();
+  InitializeCamera<4>();
   StartPoller();
 }
 
@@ -420,46 +424,15 @@ void Controller::InitializeNetworkTableEntries() {
   }
 }
 
-/**
- * InitializeCameraConfig loads config into active pipelines.
- */
-void Controller::InitializeCameraConfig() {
+template <int N>
+void Controller::InitializeCamera() {
   auto nti = nt::NetworkTableInstance(inst_);
-  std::shared_ptr<nt::Value> value;
-
-  if (has_active_pipeline_[0]) {
-    value = nti.GetEntry(CameraConfigEntryPath(0)).GetValue();
-    Camera<0>::SetConfig(new PipelineConfig(value));  // ownership passed
-    value = nti.GetEntry(StreamConfigEntryPath(0)).GetValue();
-    Camera<0>::SetStream(new StreamConfig(value));  // ownership passed
-  }
-
-  if (has_active_pipeline_[1]) {
-    value = nti.GetEntry(CameraConfigEntryPath(1)).GetValue();
-    Camera<1>::SetConfig(new PipelineConfig(value));  // ownership passed
-    value = nti.GetEntry(StreamConfigEntryPath(1)).GetValue();
-    Camera<1>::SetStream(new StreamConfig(value));  // ownership passed
-  }
-
-  if (has_active_pipeline_[2]) {
-    value = nti.GetEntry(CameraConfigEntryPath(2)).GetValue();
-    Camera<2>::SetConfig(new PipelineConfig(value));  // ownership passed
-    value = nti.GetEntry(StreamConfigEntryPath(2)).GetValue();
-    Camera<2>::SetStream(new StreamConfig(value));  // ownership passed
-  }
-
-  if (has_active_pipeline_[3]) {
-    value = nti.GetEntry(CameraConfigEntryPath(3)).GetValue();
-    Camera<3>::SetConfig(new PipelineConfig(value));  // ownership passed
-    value = nti.GetEntry(StreamConfigEntryPath(3)).GetValue();
-    Camera<3>::SetStream(new StreamConfig(value));  // ownership passed
-  }
-
-  if (has_active_pipeline_[4]) {
-    value = nti.GetEntry(CameraConfigEntryPath(4)).GetValue();
-    Camera<4>::SetConfig(new PipelineConfig(value));  // ownership passed
-    value = nti.GetEntry(StreamConfigEntryPath(4)).GetValue();
-    Camera<4>::SetStream(new StreamConfig(value));  // ownership passed
+  if (has_active_pipeline_[N]) {
+    auto value = nti.GetEntry(CameraConfigEntryPath(N)).GetValue();
+    Camera<N>::SetConfig(new PipelineConfig(value));  // ownership passed
+    value = nti.GetEntry(StreamConfigEntryPath(N)).GetValue();
+    Camera<N>::SetStream(new StreamConfig(value));  // ownership passed
+    spdlog::info("Camera<{}> initialized", N);
   }
 }
 

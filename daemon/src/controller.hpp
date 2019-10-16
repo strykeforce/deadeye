@@ -27,9 +27,14 @@ class Controller {
     return instance;
   }
   Controller(std::array<std::unique_ptr<Pipeline>, 5>* const pipelines);
+
   void StartNetworkTables();
+
   void InitializeNetworkTableEntries();
-  void InitializeCameraConfig();
+
+  template <int N>
+  void InitializeCamera();
+
   void StartPoller();
 
   NT_Inst inst_;
