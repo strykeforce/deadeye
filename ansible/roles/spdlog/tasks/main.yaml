@@ -21,7 +21,7 @@
       - /usr/bin/cmake
       - -DCMAKE_BUILD_TYPE=Release
       - -DCMAKE_INSTALL_PREFIX=/usr/local
-      - -DSPDLOG_BUILD_EXAMPLES=OFF
+      - -DSPDLOG_BUILD_EXAMPLE=OFF
       - -DSPDLOG_BUILD_BENCH=OFF
       - -DSPDLOG_BUILD_TESTS=OFF
       - -GNinja
