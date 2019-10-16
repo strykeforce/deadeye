@@ -156,16 +156,14 @@ void Controller::Run() {
           spdlog::debug("Controller: new Pipeline<0> config event");
           ConfigCamera event;
           event.config =
-              new PipelineConfig(entry.value);  // ownership passed, deleted in
-                                                // BasePipeline::UpdateConfig
+              new PipelineConfig(entry.value);  // Pipeline takes ownership
           Camera<0>::dispatch(event);
           break;
         }
         case hash(DE_STREAM_CONFIG_ENTRY("0")): {
           ConfigStream event;
           event.config =
-              new StreamConfig(entry.value);  // ownership passed, deleted in
-                                              // BasePipeline::UpdateStream
+              new StreamConfig(entry.value);  // Pipeline takes ownership
           Camera<0>::dispatch(event);
           break;
         }
@@ -190,16 +188,14 @@ void Controller::Run() {
         case hash(DE_CAMERA_CONFIG_ENTRY("1")): {
           ConfigCamera event;
           event.config =
-              new PipelineConfig(entry.value);  // ownership passed, deleted in
-                                                // BasePipeline::UpdateConfig
+              new PipelineConfig(entry.value);  // Pipeline takes ownership
           Camera<1>::dispatch(event);
           break;
         }
         case hash(DE_STREAM_CONFIG_ENTRY("1")): {
           ConfigStream event;
           event.config =
-              new StreamConfig(entry.value);  // ownership passed, deleted in
-                                              // BasePipeline::UpdateStream
+              new StreamConfig(entry.value);  // Pipeline takes ownership
           Camera<1>::dispatch(event);
           break;
         }
@@ -225,16 +221,14 @@ void Controller::Run() {
         case hash(DE_CAMERA_CONFIG_ENTRY("2")): {
           ConfigCamera event;
           event.config =
-              new PipelineConfig(entry.value);  // ownership passed, deleted in
-                                                // BasePipeline::UpdateConfig
+              new PipelineConfig(entry.value);  // Pipeline takes ownership
           Camera<2>::dispatch(event);
           break;
         }
         case hash(DE_STREAM_CONFIG_ENTRY("2")): {
           ConfigStream event;
           event.config =
-              new StreamConfig(entry.value);  // ownership passed, deleted in
-                                              // BasePipeline::UpdateStream
+              new StreamConfig(entry.value);  // Pipeline takes ownership
           Camera<2>::dispatch(event);
           break;
         }
@@ -260,16 +254,14 @@ void Controller::Run() {
         case hash(DE_CAMERA_CONFIG_ENTRY("3")): {
           ConfigCamera event;
           event.config =
-              new PipelineConfig(entry.value);  // ownership passed, deleted in
-                                                // BasePipeline::UpdateConfig
+              new PipelineConfig(entry.value);  // Pipeline takes ownership
           Camera<3>::dispatch(event);
           break;
         }
         case hash(DE_STREAM_CONFIG_ENTRY("3")): {
           ConfigStream event;
           event.config =
-              new StreamConfig(entry.value);  // ownership passed, deleted in
-                                              // BasePipeline::UpdateStream
+              new StreamConfig(entry.value);  // Pipeline takes ownership
           Camera<3>::dispatch(event);
           break;
         }
@@ -295,16 +287,14 @@ void Controller::Run() {
         case hash(DE_CAMERA_CONFIG_ENTRY("4")): {
           ConfigCamera event;
           event.config =
-              new PipelineConfig(entry.value);  // ownership passed, deleted in
-                                                // BasePipeline::UpdateConfig
+              new PipelineConfig(entry.value);  // Pipeline takes ownership
           Camera<4>::dispatch(event);
           break;
         }
         case hash(DE_STREAM_CONFIG_ENTRY("4")): {
           ConfigStream event;
           event.config =
-              new StreamConfig(entry.value);  // ownership passed, deleted in
-                                              // BasePipeline::UpdateStream
+              new StreamConfig(entry.value);  // Pipeline takes ownership
           Camera<4>::dispatch(event);
           break;
         }
