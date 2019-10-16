@@ -429,51 +429,36 @@ void Controller::InitializeCameraConfig() {
 
   if (has_active_pipeline_[0]) {
     value = nti.GetEntry(CameraConfigEntryPath(0)).GetValue();
-    assert(value);
     Camera<0>::SetConfig(new PipelineConfig(value));  // ownership passed
-
     value = nti.GetEntry(StreamConfigEntryPath(0)).GetValue();
-    assert(value);
     Camera<0>::SetStream(new StreamConfig(value));  // ownership passed
   }
 
   if (has_active_pipeline_[1]) {
     value = nti.GetEntry(CameraConfigEntryPath(1)).GetValue();
-    assert(value);
     Camera<1>::SetConfig(new PipelineConfig(value));  // ownership passed
-
     value = nti.GetEntry(StreamConfigEntryPath(1)).GetValue();
-    assert(value);
     Camera<1>::SetStream(new StreamConfig(value));  // ownership passed
   }
 
   if (has_active_pipeline_[2]) {
     value = nti.GetEntry(CameraConfigEntryPath(2)).GetValue();
-    assert(value);
     Camera<2>::SetConfig(new PipelineConfig(value));  // ownership passed
-
     value = nti.GetEntry(StreamConfigEntryPath(2)).GetValue();
-    assert(value);
     Camera<2>::SetStream(new StreamConfig(value));  // ownership passed
   }
 
   if (has_active_pipeline_[3]) {
     value = nti.GetEntry(CameraConfigEntryPath(3)).GetValue();
-    assert(value);
     Camera<3>::SetConfig(new PipelineConfig(value));  // ownership passed
-
     value = nti.GetEntry(StreamConfigEntryPath(3)).GetValue();
-    assert(value);
     Camera<3>::SetStream(new StreamConfig(value));  // ownership passed
   }
 
   if (has_active_pipeline_[4]) {
     value = nti.GetEntry(CameraConfigEntryPath(4)).GetValue();
-    assert(value);
     Camera<4>::SetConfig(new PipelineConfig(value));  // ownership passed
-
     value = nti.GetEntry(StreamConfigEntryPath(4)).GetValue();
-    assert(value);
     Camera<4>::SetStream(new StreamConfig(value));  // ownership passed
   }
 }

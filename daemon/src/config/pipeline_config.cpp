@@ -23,6 +23,7 @@ PipelineConfig::PipelineConfig(int sn, hsv_t hue, hsv_t sat, hsv_t val,
       gstreamer_config(gstreamer_config) {}
 
 PipelineConfig::PipelineConfig(std::shared_ptr<nt::Value> value) {
+  assert(value);
   auto j = json::parse(value->GetString().str());
   j.at(kSerialKey).get_to(sn);
   j.at(kHsvHueKey).get_to(hue);
