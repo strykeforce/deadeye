@@ -4,7 +4,6 @@
 #include <tinyfsm.hpp>
 
 #include "controller.hpp"
-#include "defs.hpp"
 #include "lights.hpp"
 
 using namespace deadeye;

@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 #define DE_STRINGIFY(s) DE_STR(s)
 #define DE_STR(s) #s
@@ -31,3 +32,10 @@
 #define CLIENT_PORT DEADEYE_CLIENT_PORT
 #define CLIENT_ADDRESS DE_STRINGIFY(DEADEYE_CLIENT_ADDRESS)
 #define NT_SERVER DE_STRINGIFY(DEADEYE_NT_SERVER)
+
+namespace deadeye {
+std::string CameraControlTablePath(int inum);
+std::string LightsControlTablePath(int inum);
+std::string CameraConfigEntryPath(int inum);
+std::string StreamConfigEntryPath(int inum);
+}  // namespace deadeye

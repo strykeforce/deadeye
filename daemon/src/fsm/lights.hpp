@@ -6,6 +6,8 @@
 #include <future>
 #include <tinyfsm.hpp>
 
+#include "config/deadeye_config.hpp"
+
 namespace deadeye {
 // ---------------------------------------------------------------------------
 // Events

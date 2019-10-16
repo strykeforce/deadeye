@@ -1,8 +1,8 @@
 #include <spdlog/spdlog.h>
 #include <memory>
 
+#include "config/deadeye_config.hpp"
 #include "controller.hpp"
-#include "defs.hpp"
 #include "pipeline/test_pattern_pipeline.hpp"
 
 using namespace deadeye;

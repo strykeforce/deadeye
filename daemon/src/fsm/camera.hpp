@@ -8,8 +8,8 @@
 #include <memory>
 #include <tinyfsm.hpp>
 
+#include "config/deadeye_config.hpp"
 #include "config/stream_config.hpp"
-#include "defs.hpp"
 #include "pipeline/pipeline.hpp"
 
 namespace deadeye {

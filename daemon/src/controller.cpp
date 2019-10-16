@@ -7,9 +7,9 @@
 #include <future>
 #include <tinyfsm.hpp>
 
+#include "config/deadeye_config.hpp"
 #include "config/link_config.hpp"
 #include "controller.hpp"
-#include "defs.hpp"
 #include "fsm/camera.hpp"
 #include "fsm/lights.hpp"
 
@@ -48,14 +48,14 @@ Controller::Controller(
     throw std::runtime_error{"critical error"};
   }
 
-  for (size_t i = 0; i < pipelines->size(); i++) {
+  for (int i = 0; i < static_cast<int>(pipelines->size()); i++) {
     if (!(*pipelines)[i]) {
       (*pipelines)[i].reset(new NullPipeline(i));
       has_active_pipeline_[i] = false;
     } else {
       has_active_pipeline_[i] = true;
     }
-    if ((*pipelines)[i]->GetInum() != static_cast<int>(i)) {
+    if ((*pipelines)[i]->GetInum() != i) {
       spdlog::critical("{} does not match position in initialization array: {}",
                        *(*pipelines)[i], i);
       throw std::runtime_error("critical error");
@@ -409,39 +409,14 @@ void SetLinkConfigEntry(nt::NetworkTableEntry entry) {
 void Controller::InitializeNetworkTableEntries() {
   auto nti = nt::NetworkTableInstance(inst_);
   SetLinkConfigEntry(nti.GetEntry(DE_LINK_CONFIG_ENTRY));
-  if (has_active_pipeline_[0]) {
-    SetCameraControlTableEntries(nti.GetTable(DE_CAMERA_CONTROL_TABLE("0")));
-    SetLightsControlTableEntries(nti.GetTable(DE_LIGHTS_CONTROL_TABLE("0")));
-    SetCameraConfigEntryDefault(nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("0")));
-    SetStreamConfigEntry(nti.GetEntry(DE_STREAM_CONFIG_ENTRY("0")), 0);
-  }
 
-  if (has_active_pipeline_[1]) {
-    SetCameraControlTableEntries(nti.GetTable(DE_CAMERA_CONTROL_TABLE("1")));
-    SetLightsControlTableEntries(nti.GetTable(DE_LIGHTS_CONTROL_TABLE("1")));
-    SetCameraConfigEntryDefault(nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("1")));
-    SetStreamConfigEntry(nti.GetEntry(DE_STREAM_CONFIG_ENTRY("1")), 1);
-  }
-
-  if (has_active_pipeline_[2]) {
-    SetCameraControlTableEntries(nti.GetTable(DE_CAMERA_CONTROL_TABLE("2")));
-    SetLightsControlTableEntries(nti.GetTable(DE_LIGHTS_CONTROL_TABLE("2")));
-    SetCameraConfigEntryDefault(nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("2")));
-    SetStreamConfigEntry(nti.GetEntry(DE_STREAM_CONFIG_ENTRY("2")), 2);
-  }
-
-  if (has_active_pipeline_[3]) {
-    SetCameraControlTableEntries(nti.GetTable(DE_CAMERA_CONTROL_TABLE("3")));
-    SetLightsControlTableEntries(nti.GetTable(DE_LIGHTS_CONTROL_TABLE("3")));
-    SetCameraConfigEntryDefault(nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("3")));
-    SetStreamConfigEntry(nti.GetEntry(DE_STREAM_CONFIG_ENTRY("3")), 3);
-  }
-
-  if (has_active_pipeline_[4]) {
-    SetCameraControlTableEntries(nti.GetTable(DE_CAMERA_CONTROL_TABLE("4")));
-    SetLightsControlTableEntries(nti.GetTable(DE_LIGHTS_CONTROL_TABLE("4")));
-    SetCameraConfigEntryDefault(nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("4")));
-    SetStreamConfigEntry(nti.GetEntry(DE_STREAM_CONFIG_ENTRY("4")), 4);
+  for (int i = 0; i < static_cast<int>(has_active_pipeline_.size()); i++) {
+    if (has_active_pipeline_[i]) {
+      SetCameraControlTableEntries(nti.GetTable(CameraControlTablePath(i)));
+      SetLightsControlTableEntries(nti.GetTable(LightsControlTablePath(i)));
+      SetCameraConfigEntryDefault(nti.GetEntry(CameraConfigEntryPath(i)));
+      SetStreamConfigEntry(nti.GetEntry(StreamConfigEntryPath(i)), 0);
+    }
   }
 }
 
@@ -453,51 +428,51 @@ void Controller::InitializeCameraConfig() {
   std::shared_ptr<nt::Value> value;
 
   if (has_active_pipeline_[0]) {
-    value = nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("0")).GetValue();
+    value = nti.GetEntry(CameraConfigEntryPath(0)).GetValue();
     assert(value);
     Camera<0>::SetConfig(new PipelineConfig(value));  // ownership passed
 
-    value = nti.GetEntry(DE_STREAM_CONFIG_ENTRY("0")).GetValue();
+    value = nti.GetEntry(StreamConfigEntryPath(0)).GetValue();
     assert(value);
     Camera<0>::SetStream(new StreamConfig(value));  // ownership passed
   }
 
   if (has_active_pipeline_[1]) {
-    value = nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("1")).GetValue();
+    value = nti.GetEntry(CameraConfigEntryPath(1)).GetValue();
     assert(value);
     Camera<1>::SetConfig(new PipelineConfig(value));  // ownership passed
 
-    value = nti.GetEntry(DE_STREAM_CONFIG_ENTRY("1")).GetValue();
+    value = nti.GetEntry(StreamConfigEntryPath(1)).GetValue();
     assert(value);
     Camera<1>::SetStream(new StreamConfig(value));  // ownership passed
   }
 
   if (has_active_pipeline_[2]) {
-    value = nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("2")).GetValue();
+    value = nti.GetEntry(CameraConfigEntryPath(2)).GetValue();
     assert(value);
     Camera<2>::SetConfig(new PipelineConfig(value));  // ownership passed
 
-    value = nti.GetEntry(DE_STREAM_CONFIG_ENTRY("2")).GetValue();
+    value = nti.GetEntry(StreamConfigEntryPath(2)).GetValue();
     assert(value);
     Camera<2>::SetStream(new StreamConfig(value));  // ownership passed
   }
 
   if (has_active_pipeline_[3]) {
-    value = nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("3")).GetValue();
+    value = nti.GetEntry(CameraConfigEntryPath(3)).GetValue();
     assert(value);
     Camera<3>::SetConfig(new PipelineConfig(value));  // ownership passed
 
-    value = nti.GetEntry(DE_STREAM_CONFIG_ENTRY("3")).GetValue();
+    value = nti.GetEntry(StreamConfigEntryPath(3)).GetValue();
     assert(value);
     Camera<3>::SetStream(new StreamConfig(value));  // ownership passed
   }
 
   if (has_active_pipeline_[4]) {
-    value = nti.GetEntry(DE_CAMERA_CONFIG_ENTRY("4")).GetValue();
+    value = nti.GetEntry(CameraConfigEntryPath(4)).GetValue();
     assert(value);
     Camera<4>::SetConfig(new PipelineConfig(value));  // ownership passed
 
-    value = nti.GetEntry(DE_STREAM_CONFIG_ENTRY("4")).GetValue();
+    value = nti.GetEntry(StreamConfigEntryPath(4)).GetValue();
     assert(value);
     Camera<4>::SetStream(new StreamConfig(value));  // ownership passed
   }

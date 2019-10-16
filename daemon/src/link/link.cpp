@@ -7,9 +7,9 @@
 #include <unistd.h>
 #include <nlohmann/json.hpp>
 
+#include "config/deadeye_config.hpp"
 #include "config/link_config.hpp"
 #include "controller.hpp"
-#include "defs.hpp"
 
 using namespace deadeye;
 Link::Link(int inum) : id_(DEADEYE_UNIT + std::to_string(inum)) {
