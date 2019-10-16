@@ -26,17 +26,12 @@ cv::VideoCapture DefaultPipeline::GetVideoCapture() {
 #ifdef __APPLE__
   cv::VideoCapture cap{0, cv::CAP_AVFOUNDATION};
 #else
-  int capture_width = 1280;
-  int capture_height = 720;
-  int display_width = 1280;
-  int display_height = 720;
-  int framerate = 60;
-  int flip_method = 0;
+  GStreamerConfig gsc = pipeline_config_->gstreamer_config;
 
-  std::string pipeline =
-      gstreamer_pipeline(capture_width, capture_height, display_width,
-                         display_height, framerate, flip_method);
-  spdlog::info("Using gstreamer pipeline: {}", pipeline);
+  std::string pipeline = gstreamer_pipeline(
+      gsc.capture_width, gsc.capture_height, gsc.output_width,
+      gsc.output_height, gsc.frame_rate, gsc.flip_mode);
+  spdlog::info("{} using gstreamer pipeline: {}", *this, pipeline);
 
   cv::VideoCapture cap(pipeline, cv::CAP_GSTREAMER);
 #endif
@@ -44,9 +39,9 @@ cv::VideoCapture DefaultPipeline::GetVideoCapture() {
 }
 
 cv::Mat DefaultPipeline::PreProcessFrame(cv::Mat const &frame) {
-  // need 1280 x 960
+  // input 320 x 180
   cv::Mat result;
-  cv::copyMakeBorder(frame, result, 120, 120, 0, 0, cv::BORDER_CONSTANT,
+  cv::copyMakeBorder(frame, result, 30, 30, 0, 0, cv::BORDER_CONSTANT,
                      cv::Scalar(0, 0, 0));
   return result;
 }
