@@ -12,7 +12,6 @@
 #include "defs.hpp"
 #include "fsm/camera.hpp"
 #include "fsm/lights.hpp"
-#include "pipeline.hpp"
 
 // forward declaration
 static spdlog::level::level_enum Nt2spdlogLevel(const nt::LogMessage& msg);

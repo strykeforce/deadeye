@@ -3,7 +3,7 @@
 
 #include "controller.hpp"
 #include "defs.hpp"
-#include "pipeline.hpp"
+#include "pipeline/test_pattern_pipeline.hpp"
 
 using namespace deadeye;
 
