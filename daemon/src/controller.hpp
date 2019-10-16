@@ -30,9 +30,9 @@ class Controller {
 
   void StartNetworkTables();
 
-  void InitializeNetworkTableEntries();
+  void InitializeNetworkTables();
 
-  template <int N>
+  template <int inum>
   void InitializeCamera();
 
   void StartPoller();

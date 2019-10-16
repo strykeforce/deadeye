@@ -60,11 +60,11 @@ Controller::Controller(
                        *(*pipelines)[i], i);
       throw std::runtime_error("critical error");
     }
-    spdlog::debug("pipeline[{}] = {}", i, *(*pipelines)[i]);
+    spdlog::info("Camera<{}>: {}", i, *(*pipelines)[i]);
   }
 
   StartNetworkTables();
-  InitializeNetworkTableEntries();
+  InitializeNetworkTables();
 
   std::signal(SIGINT, signal_handler);
   std::signal(SIGTERM, signal_handler);
@@ -367,72 +367,55 @@ void Controller::StartPoller() {
       nt::AddPolledEntryListener(poller_, DE_CONTROL_TABLE, NT_NOTIFY_UPDATE);
 }
 
-//
-// Initialize NetworkTables defaults
-//
-namespace {
-void SetCameraControlTableEntries(std::shared_ptr<NetworkTable> table) {
-  table->PutBoolean(DE_ON, false);
-  table->PutBoolean(DE_OFF, true);
-  table->PutBoolean(DE_ERROR, false);
-}
+/**
+ * InitializeNetworkTables sets up default values in network tables.
+ */
+void Controller::InitializeNetworkTables() {
+  auto nti = nt::NetworkTableInstance(inst_);
 
-void SetLightsControlTableEntries(std::shared_ptr<NetworkTable> table) {
-  table->PutBoolean(DE_ON, false);
-  table->PutBoolean(DE_OFF, true);
-  table->PutBoolean(DE_BLINK, false);
-}
+  for (int i = 0; i < static_cast<int>(has_active_pipeline_.size()); i++) {
+    if (has_active_pipeline_[i]) {
+      auto table = nti.GetTable(CameraControlTablePath(i));
+      table->PutBoolean(DE_ON, false);
+      table->PutBoolean(DE_OFF, true);
+      table->PutBoolean(DE_ERROR, false);
 
-void SetCameraConfigEntryDefault(nt::NetworkTableEntry entry) {
-  PipelineConfig pc{0,        {0, 254},
-                    {0, 254}, {0, 254},
-                    0.5,      GStreamerConfig{1280, 720, 320, 180, 60, 0}};
-  json j = pc;
-  entry.SetDefaultString(j.dump());
-  entry.SetPersistent();
-}
+      table = nti.GetTable(LightsControlTablePath(i));
+      table->PutBoolean(DE_ON, false);
+      table->PutBoolean(DE_OFF, true);
+      table->PutBoolean(DE_BLINK, false);
 
-void SetStreamConfigEntry(nt::NetworkTableEntry entry, int inum) {
-  StreamConfig sc{inum};
-  json j = sc;
-  entry.SetString(j.dump());
-}
+      auto entry = nti.GetEntry(CameraConfigEntryPath(i));
+      PipelineConfig pc{0,        {0, 255},
+                        {0, 255}, {0, 255},
+                        0.5,      GStreamerConfig{1280, 720, 320, 180, 60, 0}};
+      json j = pc;
+      entry.SetDefaultString(j.dump());
+      entry.SetPersistent();
 
-void SetLinkConfigEntry(nt::NetworkTableEntry entry) {
+      entry = nti.GetEntry(StreamConfigEntryPath(i));
+      StreamConfig sc{i};
+      j = sc;
+      entry.SetString(j.dump());
+    }
+  }
+
+  auto entry = nti.GetEntry(DE_LINK_CONFIG_ENTRY);
   LinkConfig lc{CLIENT_ADDRESS, CLIENT_PORT, true};
   json j = lc;
   entry.SetDefaultString(j.dump());
   entry.SetPersistent();
 }
 
-}  // namespace
-
-/**
- * InitializeNetworkTableEntries sets up default values in network tables.
- */
-void Controller::InitializeNetworkTableEntries() {
-  auto nti = nt::NetworkTableInstance(inst_);
-  SetLinkConfigEntry(nti.GetEntry(DE_LINK_CONFIG_ENTRY));
-
-  for (int i = 0; i < static_cast<int>(has_active_pipeline_.size()); i++) {
-    if (has_active_pipeline_[i]) {
-      SetCameraControlTableEntries(nti.GetTable(CameraControlTablePath(i)));
-      SetLightsControlTableEntries(nti.GetTable(LightsControlTablePath(i)));
-      SetCameraConfigEntryDefault(nti.GetEntry(CameraConfigEntryPath(i)));
-      SetStreamConfigEntry(nti.GetEntry(StreamConfigEntryPath(i)), 0);
-    }
-  }
-}
-
-template <int N>
+template <int inum>
 void Controller::InitializeCamera() {
   auto nti = nt::NetworkTableInstance(inst_);
-  if (has_active_pipeline_[N]) {
-    auto value = nti.GetEntry(CameraConfigEntryPath(N)).GetValue();
-    Camera<N>::SetConfig(new PipelineConfig(value));  // ownership passed
-    value = nti.GetEntry(StreamConfigEntryPath(N)).GetValue();
-    Camera<N>::SetStream(new StreamConfig(value));  // ownership passed
-    spdlog::info("Camera<{}> initialized", N);
+  if (has_active_pipeline_[inum]) {
+    auto value = nti.GetEntry(CameraConfigEntryPath(inum)).GetValue();
+    Camera<inum>::SetConfig(new PipelineConfig(value));  // ownership passed
+    value = nti.GetEntry(StreamConfigEntryPath(inum)).GetValue();
+    Camera<inum>::SetStream(new StreamConfig(value));  // ownership passed
+    spdlog::info("Camera<{}> initialized", inum);
   }
 }
 
