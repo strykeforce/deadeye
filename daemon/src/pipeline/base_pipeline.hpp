@@ -66,15 +66,15 @@ class BasePipeline : public Pipeline {
   //
  protected:
   virtual cv::VideoCapture GetVideoCapture() = 0;
-
   void ProcessFrame(cv::Mat const &frame);
+
+  std::atomic<PipelineConfig *> pipeline_config_{nullptr};
+  std::atomic<StreamConfig *> stream_config_{nullptr};
 
  private:
   // config variables
   std::atomic<bool> cancel_{false};
-  std::atomic<StreamConfig *> stream_config_{nullptr};
   StreamConfig *prev_stream_config_{nullptr};
-  std::atomic<PipelineConfig *> pipeline_config_{nullptr};
   PipelineConfig *prev_pipeline_config_{nullptr};
   void LogTickMeter(cv::TickMeter tm);
 

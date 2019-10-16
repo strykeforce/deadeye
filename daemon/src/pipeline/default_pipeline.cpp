@@ -26,7 +26,8 @@ cv::VideoCapture DefaultPipeline::GetVideoCapture() {
 #ifdef __APPLE__
   cv::VideoCapture cap{0, cv::CAP_AVFOUNDATION};
 #else
-  GStreamerConfig gsc = pipeline_config_->gstreamer_config;
+  PipelineConfig *pipeline_config = pipeline_config_.load();
+  GStreamerConfig gsc = pipeline_config->gstreamer_config;
 
   std::string pipeline = gstreamer_pipeline(
       gsc.capture_width, gsc.capture_height, gsc.output_width,
@@ -39,10 +40,16 @@ cv::VideoCapture DefaultPipeline::GetVideoCapture() {
 }
 
 cv::Mat DefaultPipeline::PreProcessFrame(cv::Mat const &frame) {
-  // input 320 x 180
   cv::Mat result;
+#ifdef __APPLE__
+  // 1280 x 720
+  cv::copyMakeBorder(frame, result, 120, 120, 0, 0, cv::BORDER_CONSTANT,
+                     cv::Scalar(0, 0, 0));
+#else
+  // 320 x 180
   cv::copyMakeBorder(frame, result, 30, 30, 0, 0, cv::BORDER_CONSTANT,
                      cv::Scalar(0, 0, 0));
+#endif
   return result;
 }
 
