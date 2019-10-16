@@ -43,7 +43,7 @@ class BasePipeline : public Pipeline {
     delete prev_pipeline_config_;
     prev_pipeline_config_ = pipeline_config_.load();
     pipeline_config_.store(config);
-    spdlog::debug("{} new config: {}", *this, *(pipeline_config_.load()));
+    spdlog::debug("{}: {}", *this, *(pipeline_config_.load()));
   }
 
   /**
@@ -54,7 +54,7 @@ class BasePipeline : public Pipeline {
     delete prev_stream_config_;
     prev_stream_config_ = stream_config_.load();
     stream_config_.store(config);
-    spdlog::debug("{} new config: {}", *this, *(stream_config_.load()));
+    spdlog::debug("{}: {}", *this, *(stream_config_.load()));
   }
 
   // implemented in concrete pipeline classes
