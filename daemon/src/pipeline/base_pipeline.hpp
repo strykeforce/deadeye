@@ -223,7 +223,8 @@ void BasePipeline<T>::LogTickMeter(cv::TickMeter tm) {
   spdlog::info("{}: stopping", *this);
   double avg = tm.getTimeSec() / tm.getCounter();
   double fps = 1.0 / avg;
-  spdlog::info("{}: avg. time = {}, FPS = {}", *this, avg, fps);
+  spdlog::info("{}: avg. time = {:6.3f} ms, FPS = {:5.2f}", *this, avg * 1000.0,
+               fps);
 }
 
 }  // namespace deadeye
