@@ -9,6 +9,8 @@
 
 #include "config/deadeye_config.hpp"
 #include "config/link_config.hpp"
+#include "config/pipeline_config.hpp"
+#include "config/stream_config.hpp"
 #include "controller.hpp"
 #include "fsm/camera.hpp"
 #include "fsm/lights.hpp"

@@ -5,6 +5,9 @@
 #include <wpi/Logger.h>
 #include <map>
 #include <opencv2/core/mat.hpp>
+
+#include "config/pipeline_config.hpp"
+#include "config/stream_config.hpp"
 #include "link/link.hpp"
 
 using namespace deadeye;
