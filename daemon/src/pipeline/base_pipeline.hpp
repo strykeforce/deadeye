@@ -8,6 +8,7 @@
 #include <opencv2/opencv.hpp>
 #include <vector>
 #include "config/pipeline_config.hpp"
+#include "config/stream_config.hpp"
 #include "cscore.h"
 #include "link/link.hpp"
 #include "pipeline.hpp"

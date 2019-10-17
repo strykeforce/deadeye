@@ -2,12 +2,11 @@
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 #include <exception>
-#include <iostream>
-
-#include "config/pipeline_config.hpp"
-#include "config/stream_config.hpp"
 
 namespace deadeye {
+struct PipelineConfig;
+struct StreamConfig;
+
 class PipelineException : public std::exception {
   char const *what_;
 
