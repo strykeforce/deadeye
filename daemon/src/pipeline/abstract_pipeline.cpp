@@ -24,13 +24,6 @@ AbstractPipeline::AbstractPipeline(int inum) : Pipeline{inum} {
 
 AbstractPipeline::~AbstractPipeline() {}
 
-void AbstractPipeline::LogTickMeter(cv::TickMeter tm) {
-  spdlog::info("{}: stopping", *this);
-  double avg = tm.getTimeSec() / tm.getCounter();
-  double fps = 1.0 / avg;
-  spdlog::info("{}: avg. time = {}, FPS = {}", *this, avg, fps);
-}
-
 void AbstractPipeline::UpdateConfig(PipelineConfig *config) {
   // The config is read for every frame but updated very infrequently.
   // ProcessFrame accesses the current config throught the atomic pointer
@@ -56,6 +49,8 @@ void AbstractPipeline::UpdateStream(StreamConfig *config) {
   stream_config_.store(config);
   spdlog::debug("{}: {}", *this, *(stream_config_.load()));
 }
+
+void AbstractPipeline::CancelTask() { cancel_ = true; }
 
 void AbstractPipeline::Run() {
   cancel_ = false;
@@ -160,7 +155,34 @@ void AbstractPipeline::Run() {
   }
 }
 
-void AbstractPipeline::CancelTask() { cancel_ = true; }
+/////////////////////////////////////////////////////////////////////////////
+// protected
+/////////////////////////////////////////////////////////////////////////////
+
+cv::VideoCapture AbstractPipeline::GetVideoCapture() {
+  return cv::VideoCapture{};
+}
+
+cv::Mat AbstractPipeline::PreProcessFrame(cv::Mat const &frame) {
+  return frame;
+}
+
+void AbstractPipeline::ProcessFrame(cv::Mat const &frame) {}
+
+void AbstractPipeline::FilterContours(
+    std::vector<std::vector<cv::Point>> const &src,
+    std::vector<std::vector<cv::Point>> &dest) {}
+
+/////////////////////////////////////////////////////////////////////////////
+// private
+/////////////////////////////////////////////////////////////////////////////
+
+void AbstractPipeline::LogTickMeter(cv::TickMeter tm) {
+  spdlog::info("{}: stopping", *this);
+  double avg = tm.getTimeSec() / tm.getCounter();
+  double fps = 1.0 / avg;
+  spdlog::info("{}: avg. time = {}, FPS = {}", *this, avg, fps);
+}
 
 namespace {
 void InitializeLogging() {
