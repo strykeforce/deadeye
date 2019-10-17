@@ -1,18 +1,21 @@
 #pragma once
-#include "base_pipeline.hpp"
+#include "abstract_pipeline.hpp"
 
 namespace deadeye {
-class TestPatternPipeline : public BasePipeline<TestPatternPipeline> {
+class TestPatternPipeline : public AbstractPipeline {
  public:
-  TestPatternPipeline(int inum) : BasePipeline<TestPatternPipeline>{inum} {}
+  TestPatternPipeline(int inum) : AbstractPipeline{inum} {}
 
-  cv::Mat PreProcessFrame(cv::Mat const &frame) { return frame; }
+  virtual cv::Mat PreProcessFrame(cv::Mat const &frame) override {
+    return frame;
+  }
 
-  void FilterContours(std::vector<std::vector<cv::Point>> const &src,
-                      std::vector<std::vector<cv::Point>> &dest);
+  virtual void FilterContours(
+      std::vector<std::vector<cv::Point>> const &src,
+      std::vector<std::vector<cv::Point>> &dest) override;
 
  protected:
-  cv::VideoCapture GetVideoCapture() override;
+  virtual cv::VideoCapture GetVideoCapture() override;
   virtual std::string ToString() const override;
 };
 }  // namespace deadeye
