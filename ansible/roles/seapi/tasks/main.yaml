@@ -1,0 +1,17 @@
+---
+- name: Clone repo
+  git:
+    repo: https://github.com/intel/IntelSEAPI.git
+    dest: /usr/local/src/IntelSEAPI
+    version: "{{ seapi_version }}"
+  register: seapi_clone
+  tags:
+    - seapi
+
+- name: Build and install
+  command: python buildall.py --install --force_bits=64 --no_java
+  args:
+    chdir: /usr/local/src/IntelSEAPI
+  when: seapi_clone is changed
+  tags:
+    - seapi
