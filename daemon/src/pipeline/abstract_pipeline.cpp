@@ -3,7 +3,6 @@
 #include <cscore.h>
 #include <spdlog/spdlog.h>
 #include <wpi/Logger.h>
-// #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc.hpp>
 
 #include "config/pipeline_config.hpp"

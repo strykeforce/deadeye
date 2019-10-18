@@ -3,7 +3,25 @@
 
 #include "config/deadeye_config.hpp"
 #include "controller.hpp"
+#include "pipeline/default_pipeline.hpp"
+#include "pipeline/driver_pipeline.hpp"
 #include "pipeline/test_pattern_pipeline.hpp"
+
+#ifndef DEADEYE_CAMERA0_PIPELINE
+#define DEADEYE_CAMERA0_PIPELINE NullPipeline
+#endif
+#ifndef DEADEYE_CAMERA1_PIPELINE
+#define DEADEYE_CAMERA1_PIPELINE NullPipeline
+#endif
+#ifndef DEADEYE_CAMERA2_PIPELINE
+#define DEADEYE_CAMERA2_PIPELINE NullPipeline
+#endif
+#ifndef DEADEYE_CAMERA3_PIPELINE
+#define DEADEYE_CAMERA3_PIPELINE NullPipeline
+#endif
+#ifndef DEADEYE_CAMERA4_PIPELINE
+#define DEADEYE_CAMERA4_PIPELINE NullPipeline
+#endif
 
 using namespace deadeye;
 
@@ -20,11 +38,11 @@ int main(int argc, char** argv) {
 
   try {
     Controller::Initialize({
-        std::make_unique<TestPatternPipeline>(0),
-        std::make_unique<TestPatternPipeline>(1),
-        std::make_unique<TestPatternPipeline>(2),
-        std::make_unique<TestPatternPipeline>(3),
-        std::make_unique<TestPatternPipeline>(4),
+        std::make_unique<DEADEYE_CAMERA0_PIPELINE>(0),
+        std::make_unique<DEADEYE_CAMERA1_PIPELINE>(1),
+        std::make_unique<DEADEYE_CAMERA2_PIPELINE>(2),
+        std::make_unique<DEADEYE_CAMERA3_PIPELINE>(3),
+        std::make_unique<DEADEYE_CAMERA4_PIPELINE>(4),
     });
 
     Controller::GetInstance().Run();
