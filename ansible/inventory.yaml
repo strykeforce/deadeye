@@ -10,19 +10,19 @@ deadeye:
       camera_0_pipeline: TestPatternPipeline
       camera_1_pipeline: DriverPipeline
     deadeye-c:
-      ansible_host: pi
+      ansible_host: deadeye-c.local
       ansible_user: pi
-      build_user: jeff
-      build_type: Debug
+      build_user: pi
+      build_type: Release
       deadeye_unit: C
   vars:
     ansible_python_interpreter: /usr/bin/python3
     ansible_become: true
     camera_0_pipeline: TestPatternPipeline
-    camera_1_pipeline:
-    camera_2_pipeline:
-    camera_3_pipeline:
-    camera_4_pipeline:
+    camera_1_pipeline: NullPipeline
+    camera_2_pipeline: NullPipeline
+    camera_3_pipeline: NullPipeline
+    camera_4_pipeline: NullPipeline
 
 bootstrap:
   hosts:
