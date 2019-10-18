@@ -1,6 +1,10 @@
 #include "default_pipeline.hpp"
+
 #include <spdlog/spdlog.h>
 #include <opencv2/imgproc.hpp>
+
+#include "config/pipeline_config.hpp"
+#include "config/stream_config.hpp"
 
 using namespace deadeye;
 
