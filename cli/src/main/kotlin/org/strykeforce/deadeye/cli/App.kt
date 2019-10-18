@@ -3,6 +3,7 @@ package org.strykeforce.deadeye.cli
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.subcommands
 import com.github.ajalt.clikt.parameters.arguments.argument
+import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import edu.wpi.first.networktables.NetworkTableInstance
@@ -11,12 +12,13 @@ import java.util.concurrent.CountDownLatch
 
 class App : CliktCommand() {
   private val verbose by option("--verbose", "-v").flag("--no-verbose")
+  private val nt by option("--nt-server", "-n").default("127.0.0.1")
   override fun run() {
     val connectedSignal = CountDownLatch(1)
     var connectionListener = 0
     NetworkTableInstance.getDefault().apply {
       addLogger({ println("NetworkTables: ${it.message}") }, if (verbose) 20 else 30, 100)
-      startClient("127.0.0.1")
+      startClient(nt)
       connectionListener = addConnectionListener({ connectedSignal.countDown() }, true)
     }
     connectedSignal.await()
