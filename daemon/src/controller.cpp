@@ -3,6 +3,7 @@
 #include <ntcore_cpp.h>
 #include <spdlog/spdlog.h>
 #include <atomic>
+#include <cassert>
 #include <csignal>
 #include <future>
 #include <tinyfsm.hpp>
@@ -102,16 +103,26 @@ Controller::~Controller() {
  * Run listens for commands and config changes.
  */
 void Controller::Run() {
-  Camera<0>::start();
-  Lights<0>::start();
-  Camera<1>::start();
-  Lights<1>::start();
-  Camera<2>::start();
-  Lights<2>::start();
-  Camera<3>::start();
-  Lights<3>::start();
-  Camera<4>::start();
-  Lights<4>::start();
+  if (has_active_pipeline_[0]) {
+    Camera<0>::start();
+    Lights<0>::start();
+  }
+  if (has_active_pipeline_[1]) {
+    Camera<1>::start();
+    Lights<1>::start();
+  }
+  if (has_active_pipeline_[2]) {
+    Camera<2>::start();
+    Lights<2>::start();
+  }
+  if (has_active_pipeline_[3]) {
+    Camera<3>::start();
+    Lights<3>::start();
+  }
+  if (has_active_pipeline_[4]) {
+    Camera<4>::start();
+    Lights<4>::start();
+  }
 
   for (bool timed_out = false;;) {
     auto entries = nt::PollEntryListener(poller_, kPollTimeout, &timed_out);
@@ -144,21 +155,27 @@ void Controller::Run() {
         // Camera 0 events
         //
         case hash(DE_CAMERA_CONTROL("0", DE_ON)):
+          assert(has_active_pipeline_[0]);
           if (entry.value->GetBoolean()) Camera<0>::dispatch(CameraOn());
           break;
         case hash(DE_CAMERA_CONTROL("0", DE_OFF)):
+          assert(has_active_pipeline_[0]);
           if (entry.value->GetBoolean()) Camera<0>::dispatch(CameraOff());
           break;
         case hash(DE_LIGHTS_CONTROL("0", DE_ON)):
+          assert(has_active_pipeline_[0]);
           if (entry.value->GetBoolean()) Lights<0>::dispatch(LightsOn());
           break;
         case hash(DE_LIGHTS_CONTROL("0", DE_BLINK)):
+          assert(has_active_pipeline_[0]);
           if (entry.value->GetBoolean()) Lights<0>::dispatch(LightsBlink());
           break;
         case hash(DE_LIGHTS_CONTROL("0", DE_OFF)):
+          assert(has_active_pipeline_[0]);
           if (entry.value->GetBoolean()) Lights<0>::dispatch(LightsOff());
           break;
         case hash(DE_CAMERA_CONFIG_ENTRY("0")): {
+          assert(has_active_pipeline_[0]);
           spdlog::debug("Controller: new Pipeline<0> config event");
           ConfigCamera event;
           event.config =
@@ -177,21 +194,27 @@ void Controller::Run() {
         // Camera 1 events
         //
         case hash(DE_CAMERA_CONTROL("1", DE_ON)):
+          assert(has_active_pipeline_[1]);
           if (entry.value->GetBoolean()) Camera<1>::dispatch(CameraOn());
           break;
         case hash(DE_CAMERA_CONTROL("1", DE_OFF)):
+          assert(has_active_pipeline_[1]);
           if (entry.value->GetBoolean()) Camera<1>::dispatch(CameraOff());
           break;
         case hash(DE_LIGHTS_CONTROL("1", DE_ON)):
+          assert(has_active_pipeline_[1]);
           if (entry.value->GetBoolean()) Lights<1>::dispatch(LightsOn());
           break;
         case hash(DE_LIGHTS_CONTROL("1", DE_BLINK)):
+          assert(has_active_pipeline_[1]);
           if (entry.value->GetBoolean()) Lights<1>::dispatch(LightsBlink());
           break;
         case hash(DE_LIGHTS_CONTROL("1", DE_OFF)):
+          assert(has_active_pipeline_[1]);
           if (entry.value->GetBoolean()) Lights<1>::dispatch(LightsOff());
           break;
         case hash(DE_CAMERA_CONFIG_ENTRY("1")): {
+          assert(has_active_pipeline_[1]);
           ConfigCamera event;
           event.config =
               new PipelineConfig(entry.value);  // Pipeline takes ownership
@@ -199,6 +222,7 @@ void Controller::Run() {
           break;
         }
         case hash(DE_STREAM_CONFIG_ENTRY("1")): {
+          assert(has_active_pipeline_[1]);
           ConfigStream event;
           event.config =
               new StreamConfig(entry.value);  // Pipeline takes ownership
@@ -210,21 +234,27 @@ void Controller::Run() {
         // Camera 2 events
         //
         case hash(DE_CAMERA_CONTROL("2", DE_ON)):
+          assert(has_active_pipeline_[2]);
           if (entry.value->GetBoolean()) Camera<2>::dispatch(CameraOn());
           break;
         case hash(DE_CAMERA_CONTROL("2", DE_OFF)):
+          assert(has_active_pipeline_[2]);
           if (entry.value->GetBoolean()) Camera<2>::dispatch(CameraOff());
           break;
         case hash(DE_LIGHTS_CONTROL("2", DE_ON)):
+          assert(has_active_pipeline_[2]);
           if (entry.value->GetBoolean()) Lights<2>::dispatch(LightsOn());
           break;
         case hash(DE_LIGHTS_CONTROL("2", DE_BLINK)):
+          assert(has_active_pipeline_[2]);
           if (entry.value->GetBoolean()) Lights<2>::dispatch(LightsBlink());
           break;
         case hash(DE_LIGHTS_CONTROL("2", DE_OFF)):
+          assert(has_active_pipeline_[2]);
           if (entry.value->GetBoolean()) Lights<2>::dispatch(LightsOff());
           break;
         case hash(DE_CAMERA_CONFIG_ENTRY("2")): {
+          assert(has_active_pipeline_[2]);
           ConfigCamera event;
           event.config =
               new PipelineConfig(entry.value);  // Pipeline takes ownership
@@ -232,6 +262,7 @@ void Controller::Run() {
           break;
         }
         case hash(DE_STREAM_CONFIG_ENTRY("2")): {
+          assert(has_active_pipeline_[2]);
           ConfigStream event;
           event.config =
               new StreamConfig(entry.value);  // Pipeline takes ownership
@@ -243,21 +274,27 @@ void Controller::Run() {
         // Camera 3 events
         //
         case hash(DE_CAMERA_CONTROL("3", DE_ON)):
+          assert(has_active_pipeline_[3]);
           if (entry.value->GetBoolean()) Camera<3>::dispatch(CameraOn());
           break;
         case hash(DE_CAMERA_CONTROL("3", DE_OFF)):
+          assert(has_active_pipeline_[3]);
           if (entry.value->GetBoolean()) Camera<3>::dispatch(CameraOff());
           break;
         case hash(DE_LIGHTS_CONTROL("3", DE_ON)):
+          assert(has_active_pipeline_[3]);
           if (entry.value->GetBoolean()) Lights<3>::dispatch(LightsOn());
           break;
         case hash(DE_LIGHTS_CONTROL("3", DE_BLINK)):
+          assert(has_active_pipeline_[3]);
           if (entry.value->GetBoolean()) Lights<3>::dispatch(LightsBlink());
           break;
         case hash(DE_LIGHTS_CONTROL("3", DE_OFF)):
+          assert(has_active_pipeline_[3]);
           if (entry.value->GetBoolean()) Lights<3>::dispatch(LightsOff());
           break;
         case hash(DE_CAMERA_CONFIG_ENTRY("3")): {
+          assert(has_active_pipeline_[3]);
           ConfigCamera event;
           event.config =
               new PipelineConfig(entry.value);  // Pipeline takes ownership
@@ -265,6 +302,7 @@ void Controller::Run() {
           break;
         }
         case hash(DE_STREAM_CONFIG_ENTRY("3")): {
+          assert(has_active_pipeline_[3]);
           ConfigStream event;
           event.config =
               new StreamConfig(entry.value);  // Pipeline takes ownership
@@ -276,21 +314,27 @@ void Controller::Run() {
         // Camera 4 events
         //
         case hash(DE_CAMERA_CONTROL("4", DE_ON)):
+          assert(has_active_pipeline_[4]);
           if (entry.value->GetBoolean()) Camera<4>::dispatch(CameraOn());
           break;
         case hash(DE_CAMERA_CONTROL("4", DE_OFF)):
+          assert(has_active_pipeline_[4]);
           if (entry.value->GetBoolean()) Camera<4>::dispatch(CameraOff());
           break;
         case hash(DE_LIGHTS_CONTROL("4", DE_ON)):
+          assert(has_active_pipeline_[4]);
           if (entry.value->GetBoolean()) Lights<4>::dispatch(LightsOn());
           break;
         case hash(DE_LIGHTS_CONTROL("4", DE_BLINK)):
+          assert(has_active_pipeline_[4]);
           if (entry.value->GetBoolean()) Lights<4>::dispatch(LightsBlink());
           break;
         case hash(DE_LIGHTS_CONTROL("4", DE_OFF)):
+          assert(has_active_pipeline_[4]);
           if (entry.value->GetBoolean()) Lights<4>::dispatch(LightsOff());
           break;
         case hash(DE_CAMERA_CONFIG_ENTRY("4")): {
+          assert(has_active_pipeline_[4]);
           ConfigCamera event;
           event.config =
               new PipelineConfig(entry.value);  // Pipeline takes ownership
@@ -298,6 +342,7 @@ void Controller::Run() {
           break;
         }
         case hash(DE_STREAM_CONFIG_ENTRY("4")): {
+          assert(has_active_pipeline_[4]);
           ConfigStream event;
           event.config =
               new StreamConfig(entry.value);  // Pipeline takes ownership
@@ -316,16 +361,26 @@ void Controller::Run() {
 
 void Controller::ShutDown() {
   // fsm dispatches to all instances
-  Camera<0>::dispatch(CameraOff());
-  Lights<0>::dispatch(LightsOff());
-  Camera<1>::dispatch(CameraOff());
-  Lights<1>::dispatch(LightsOff());
-  Camera<2>::dispatch(CameraOff());
-  Lights<2>::dispatch(LightsOff());
-  Camera<3>::dispatch(CameraOff());
-  Lights<3>::dispatch(LightsOff());
-  Camera<4>::dispatch(CameraOff());
-  Lights<4>::dispatch(LightsOff());
+  if (has_active_pipeline_[0]) {
+    Camera<0>::dispatch(CameraOff());
+    Lights<0>::dispatch(LightsOff());
+  }
+  if (has_active_pipeline_[1]) {
+    Camera<1>::dispatch(CameraOff());
+    Lights<1>::dispatch(LightsOff());
+  }
+  if (has_active_pipeline_[2]) {
+    Camera<2>::dispatch(CameraOff());
+    Lights<2>::dispatch(LightsOff());
+  }
+  if (has_active_pipeline_[3]) {
+    Camera<3>::dispatch(CameraOff());
+    Lights<3>::dispatch(LightsOff());
+  }
+  if (has_active_pipeline_[4]) {
+    Camera<4>::dispatch(CameraOff());
+    Lights<4>::dispatch(LightsOff());
+  }
 }
 
 /**
@@ -376,30 +431,30 @@ void Controller::InitializeNetworkTables() {
   auto nti = nt::NetworkTableInstance(inst_);
 
   for (int i = 0; i < static_cast<int>(has_active_pipeline_.size()); i++) {
-    if (has_active_pipeline_[i]) {
-      auto table = nti.GetTable(CameraControlTablePath(i));
-      table->PutBoolean(DE_ON, false);
-      table->PutBoolean(DE_OFF, true);
-      table->PutBoolean(DE_ERROR, false);
+    if (!has_active_pipeline_[i]) continue;
 
-      table = nti.GetTable(LightsControlTablePath(i));
-      table->PutBoolean(DE_ON, false);
-      table->PutBoolean(DE_OFF, true);
-      table->PutBoolean(DE_BLINK, false);
+    auto table = nti.GetTable(CameraControlTablePath(i));
+    table->PutBoolean(DE_ON, false);
+    table->PutBoolean(DE_OFF, true);
+    table->PutBoolean(DE_ERROR, false);
 
-      auto entry = nti.GetEntry(CameraConfigEntryPath(i));
-      PipelineConfig pc{0,        {0, 255},
-                        {0, 255}, {0, 255},
-                        0.5,      GStreamerConfig{1280, 720, 320, 180, 60, 0}};
-      json j = pc;
-      entry.SetDefaultString(j.dump());
-      entry.SetPersistent();
+    table = nti.GetTable(LightsControlTablePath(i));
+    table->PutBoolean(DE_ON, false);
+    table->PutBoolean(DE_OFF, true);
+    table->PutBoolean(DE_BLINK, false);
 
-      entry = nti.GetEntry(StreamConfigEntryPath(i));
-      StreamConfig sc{i};
-      j = sc;
-      entry.SetString(j.dump());
-    }
+    auto entry = nti.GetEntry(CameraConfigEntryPath(i));
+    PipelineConfig pc{0,        {0, 255},
+                      {0, 255}, {0, 255},
+                      0.5,      GStreamerConfig{1280, 720, 320, 180, 60, 0}};
+    json j = pc;
+    entry.SetDefaultString(j.dump());
+    entry.SetPersistent();
+
+    entry = nti.GetEntry(StreamConfigEntryPath(i));
+    StreamConfig sc{i};
+    j = sc;
+    entry.SetString(j.dump());
   }
 
   auto entry = nti.GetEntry(DE_LINK_CONFIG_ENTRY);
@@ -411,14 +466,14 @@ void Controller::InitializeNetworkTables() {
 
 template <int inum>
 void Controller::InitializeCamera() {
+  if (!has_active_pipeline_[inum]) return;
+
   auto nti = nt::NetworkTableInstance(inst_);
-  if (has_active_pipeline_[inum]) {
-    auto value = nti.GetEntry(CameraConfigEntryPath(inum)).GetValue();
-    Camera<inum>::SetConfig(new PipelineConfig(value));  // ownership passed
-    value = nti.GetEntry(StreamConfigEntryPath(inum)).GetValue();
-    Camera<inum>::SetStream(new StreamConfig(value));  // ownership passed
-    spdlog::info("Camera<{}> initialized", inum);
-  }
+  auto value = nti.GetEntry(CameraConfigEntryPath(inum)).GetValue();
+  Camera<inum>::SetConfig(new PipelineConfig(value));  // ownership passed
+  value = nti.GetEntry(StreamConfigEntryPath(inum)).GetValue();
+  Camera<inum>::SetStream(new StreamConfig(value));  // ownership passed
+  spdlog::info("Camera<{}> initialized", inum);
 }
 
 /**

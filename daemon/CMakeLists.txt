@@ -17,11 +17,11 @@ set(DEADEYE_CLIENT_ADDRESS "10.27.67.2" CACHE STRING "Deadeye client address")
 set(DEADEYE_CLIENT_PORT "5800" CACHE STRING "Deadeye client port")
 
 # Camera Pipelines
-set(DEADEYE_CAMERA0_PIPELINE "TestPatternPipeline" CACHE STRING "Camera 0 Pipeline class")
-set(DEADEYE_CAMERA1_PIPELINE "NullPipeline" CACHE STRING "Camera 1 Pipeline class")
-set(DEADEYE_CAMERA2_PIPELINE "NullPipeline" CACHE STRING "Camera 2 Pipeline class")
-set(DEADEYE_CAMERA3_PIPELINE "NullPipeline" CACHE STRING "Camera 3 Pipeline class")
-set(DEADEYE_CAMERA4_PIPELINE "NullPipeline" CACHE STRING "Camera 4 Pipeline class")
+set(DEADEYE_CAMERA0_PIPELINE "deadeye::TestPatternPipeline" CACHE STRING "Camera 0 Pipeline class")
+set(DEADEYE_CAMERA1_PIPELINE "deadeye::NullPipeline" CACHE STRING "Camera 1 Pipeline class")
+set(DEADEYE_CAMERA2_PIPELINE "deadeye::NullPipeline" CACHE STRING "Camera 2 Pipeline class")
+set(DEADEYE_CAMERA3_PIPELINE "deadeye::NullPipeline" CACHE STRING "Camera 3 Pipeline class")
+set(DEADEYE_CAMERA4_PIPELINE "deadeye::NullPipeline" CACHE STRING "Camera 4 Pipeline class")
 
 # Dependencies
 find_package(spdlog REQUIRED)
