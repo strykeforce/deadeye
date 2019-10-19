@@ -63,7 +63,8 @@ Controller::Controller(
                        *(*pipelines)[i], i);
       throw std::runtime_error("critical error");
     }
-    spdlog::info("Camera<{}>: {}", i, *(*pipelines)[i]);
+    spdlog::info("Camera<{}>: {} {}", i, *(*pipelines)[i],
+                 has_active_pipeline_[i] ? "active" : "");
   }
 
   StartNetworkTables();
