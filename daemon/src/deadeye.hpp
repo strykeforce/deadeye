@@ -31,7 +31,7 @@
 #endif
 
 #ifdef DEADEYE_CAMERA4_PIPELINE
-#define DE_P0 std::make_unique<DEADEYE_CAMERA4_PIPELINE>(4)
+#define DE_P4 std::make_unique<DEADEYE_CAMERA4_PIPELINE>(4)
 #else
 #define DE_P4 std::unique_ptr<Pipeline>(nullptr)
 #endif
