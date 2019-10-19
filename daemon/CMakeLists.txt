@@ -32,11 +32,15 @@ find_package(nlohmann_json REQUIRED)
 
 add_subdirectory(dependencies)
 
+get_directory_property(hasParent PARENT_DIRECTORY)
+if(NOT hasParent)
+set(enableBuildMain YES)
+find_package(Catch2 REQUIRED)
+add_subdirectory(tests)
+endif()
+
+
 # Main target
 add_subdirectory(src)
 
 # Only if top-level project
-if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
-find_package(Catch2 REQUIRED)
-add_subdirectory(tests)
-endif()

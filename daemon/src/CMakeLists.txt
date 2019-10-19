@@ -35,6 +35,8 @@ target_link_libraries(Deadeye_library
 )
 
 # Build main target
+if(enableBuildMain)
+
 add_executable(Deadeye_deadeyed
     main.cpp
 )
@@ -58,3 +60,4 @@ target_link_libraries(Deadeye_deadeyed
     PRIVATE
     Deadeye_library
 )
+endif(enableBuildMain)
