@@ -8,25 +8,6 @@
 
 using namespace deadeye;
 
-#ifndef __APPLE__
-namespace {
-std::string gstreamer_pipeline(int capture_width, int capture_height,
-                               int display_width, int display_height,
-                               int framerate, int flip_method) {
-  return "nvarguscamerasrc ! video/x-raw(memory:NVMM), width=(int)" +
-         std::to_string(capture_width) + ", height=(int)" +
-         std::to_string(capture_height) +
-         ", format=(string)NV12, framerate=(fraction)" +
-         std::to_string(framerate) +
-         "/1 ! nvvidconv flip-method=" + std::to_string(flip_method) +
-         " ! video/x-raw, width=(int)" + std::to_string(display_width) +
-         ", height=(int)" + std::to_string(display_height) +
-         ", format=(string)BGRx ! videoconvert ! video/x-raw, "
-         "format=(string)BGR ! appsink";
-}
-}  // namespace
-#endif
-
 cv::VideoCapture DefaultPipeline::GetVideoCapture() {
 #ifdef __APPLE__
   cv::VideoCapture cap{0, cv::CAP_AVFOUNDATION};
@@ -34,10 +15,8 @@ cv::VideoCapture DefaultPipeline::GetVideoCapture() {
   PipelineConfig *pipeline_config = pipeline_config_.load();
   GStreamerConfig gsc = pipeline_config->gstreamer_config;
 
-  std::string pipeline = gstreamer_pipeline(
-      gsc.capture_width, gsc.capture_height, gsc.output_width,
-      gsc.output_height, gsc.frame_rate, gsc.flip_mode);
-  spdlog::info("{} using gstreamer pipeline: {}", *this, pipeline);
+  std::string pipeline = gsc.GetJetsonCSI();
+  spdlog::debug("{}: {}", *this, pipeline);
 
   cv::VideoCapture cap(pipeline, cv::CAP_GSTREAMER);
 #endif

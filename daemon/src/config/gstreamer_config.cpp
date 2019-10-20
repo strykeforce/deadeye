@@ -22,6 +22,27 @@ GStreamerConfig::GStreamerConfig(int capture_width, int capture_height,
       frame_rate(frame_rate),
       flip_mode(flip_mode) {}
 
+std::string GStreamerConfig::GetJetsonCSI() {
+  std::stringstream pipeline;
+  pipeline << "nvarguscamerasrc awblock=true aelock=true";
+  pipeline << " wbmode=" << kWhiteBalanceMode;
+  pipeline << " ispdigitalgainrange=\"" << kIspDigitalGainRange << "\"";
+  pipeline << " gainrange=\"" << kGainRange << "\"";
+  pipeline << " exposuretimerange="
+           << "\"" << exposure[0] << " " << exposure[1] << "\"";
+  pipeline << " ! video/x-raw(memory:NVMM), width=(int)" << capture_width;
+  pipeline << ", height=(int)" << capture_height;
+  pipeline << ", format=(string)NV12, framerate=(fraction)" << frame_rate
+           << "/1";
+  pipeline << " ! nvvidconv flip-method=" << flip_mode;
+  pipeline << " ! video/x-raw, width=(int)" << output_width;
+  pipeline << ", height=(int)" << output_height;
+  pipeline << ", format=(string)BGRx";
+  pipeline << " ! videoconvert ! video/x-raw, format=(string)BGR ! appsink";
+
+  return pipeline.str();
+}
+
 // ---------------------------------------------------------------------------
 // nlohmann_json support
 //

@@ -2,11 +2,17 @@
 #include <spdlog/fmt/ostr.h>
 #include <iostream>
 #include <nlohmann/json.hpp>
-#include <string>
+#include <sstream>
 
 using json = nlohmann::json;
 
 namespace deadeye {
+
+namespace {
+static const int kWhiteBalanceMode = 0;
+static const std::string kIspDigitalGainRange = "1 1";
+static const std::string kGainRange = "1 2";
+}  // namespace
 
 struct GStreamerConfig {
   static char const* kCaptureWidthKey;
@@ -22,6 +28,7 @@ struct GStreamerConfig {
   int output_height = 0;
   int frame_rate = 0;
   int flip_mode = 0;
+  std::array<int, 2> exposure{13000, 683709000};
 
   /**
    * Default constructor.
@@ -33,6 +40,11 @@ struct GStreamerConfig {
    */
   GStreamerConfig(int capture_width, int capture_height, int output_width,
                   int output_height, int frame_rate, int flip_mode);
+
+  /*
+   * Get Jetson CSI Camera pipeline.
+   */
+  std::string GetJetsonCSI();
 
   template <typename OStream>
   friend OStream& operator<<(OStream& os, GStreamerConfig const& gsc) {
