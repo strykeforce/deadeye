@@ -1,5 +1,6 @@
 #pragma once
 
+#include <fmt/core.h>
 #include <networktables/NetworkTableInstance.h>
 #include <networktables/NetworkTableValue.h>
 #include <atomic>
@@ -37,10 +38,9 @@ class Lights : public tinyfsm::Fsm<Lights<inum>> {
  protected:
   static std::future<void> task_future_;
   static std::atomic<bool> cancel_task_;
-  static std::string nt_path_;
 
   void SetStatus(std::string name, bool state) {
-    std::string path = nt_path_ + name;
+    std::string path = fmt::format("{}/{}", LightsControlTablePath(inum), name);
     auto entry = nt::GetEntry(nt::GetDefaultInstance(), path);
     nt::SetEntryValue(entry, nt::Value::MakeBoolean(state));
   }
@@ -52,10 +52,5 @@ std::future<void> Lights<inum>::task_future_;
 
 template <int inum>
 std::atomic<bool> Lights<inum>::cancel_task_{false};
-
-template <int inum>
-std::string Lights<inum>::nt_path_ =
-    std::string(DE_CONTROL_TABLE) + std::string("/") + std::to_string(inum) +
-    std::string(DE_LIGHTS) + std::string("/");
 
 }  // namespace deadeye

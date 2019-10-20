@@ -1,4 +1,5 @@
 #pragma once
+#include <fmt/core.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 #include <exception>
@@ -32,11 +33,8 @@ class Pipeline {
   }
 
  protected:
+  virtual std::string ToString() const = 0;
   int inum_;
-
-  virtual std::string ToString() const {
-    return "Pipeline<" + std::to_string(inum_) + ">";
-  }
 };
 
 class NullPipeline : public Pipeline {
@@ -49,7 +47,7 @@ class NullPipeline : public Pipeline {
 
  protected:
   virtual std::string ToString() const override {
-    return "NullPipeline<" + std::to_string(inum_) + ">";
+    return fmt::format("NullPipeline<{}>", inum_);
   }
 };
 }  // namespace deadeye

@@ -8,12 +8,6 @@ using json = nlohmann::json;
 
 namespace deadeye {
 
-namespace {
-static const int kWhiteBalanceMode = 0;
-static const std::string kIspDigitalGainRange = "1 1";
-static const std::string kGainRange = "1 2";
-}  // namespace
-
 struct GStreamerConfig {
   static char const* kCaptureWidthKey;
   static char const* kCaptureHeightKey;

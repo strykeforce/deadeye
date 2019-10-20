@@ -1,5 +1,6 @@
 #include "default_pipeline.hpp"
 
+#include <fmt/core.h>
 #include <spdlog/spdlog.h>
 #include <opencv2/imgproc.hpp>
 
@@ -52,5 +53,5 @@ void DefaultPipeline::FilterContours(
 }
 
 std::string DefaultPipeline::ToString() const {
-  return "DefaultPipeline<" + std::to_string(inum_) + ">";
+  return fmt::format("DefaultPipeline<{}>", inum_);
 }

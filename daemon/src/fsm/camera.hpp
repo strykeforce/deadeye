@@ -1,5 +1,6 @@
 #pragma once
 
+#include <fmt/core.h>
 #include <networktables/NetworkTableInstance.h>
 #include <networktables/NetworkTableValue.h>
 #include <spdlog/spdlog.h>
@@ -65,10 +66,9 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
   static std::future<void> pipeline_future_;
   static std::atomic<bool> has_error_;
   static std::string error_;
-  static std::string nt_path_;
 
   void SetStatus(std::string name, bool state) {
-    std::string path = nt_path_ + name;
+    std::string path = fmt::format("{}/{}", CameraControlTablePath(inum), name);
     auto entry = nt::GetEntry(nt::GetDefaultInstance(), path);
     nt::SetEntryValue(entry, nt::Value::MakeBoolean(state));
   }
@@ -86,10 +86,5 @@ std::atomic<bool> Camera<inum>::has_error_{false};
 
 template <int inum>
 std::string Camera<inum>::error_;
-
-template <int inum>
-std::string Camera<inum>::nt_path_ =
-    std::string(DE_CONTROL_TABLE) + std::string("/") + std::to_string(inum) +
-    std::string("/");
 
 }  // namespace deadeye

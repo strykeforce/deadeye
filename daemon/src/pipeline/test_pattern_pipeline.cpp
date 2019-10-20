@@ -1,4 +1,6 @@
 #include "test_pattern_pipeline.hpp"
+
+#include <fmt/core.h>
 #include <spdlog/spdlog.h>
 #include <opencv2/imgproc.hpp>
 
@@ -31,5 +33,5 @@ void TestPatternPipeline::FilterContours(
 }
 
 std::string TestPatternPipeline::ToString() const {
-  return "TestPatternPipeline<" + std::to_string(inum_) + ">";
+  return fmt::format("TestPatternPipeline<{}>", inum_);
 }

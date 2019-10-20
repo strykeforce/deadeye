@@ -1,6 +1,7 @@
 #include "driver_pipeline.hpp"
 
 #include <cscore.h>
+#include <fmt/core.h>
 #include <spdlog/spdlog.h>
 #include <wpi/Logger.h>
 #include <map>
@@ -144,5 +145,5 @@ void DriverPipeline::Run() {
 }
 
 std::string DriverPipeline::ToString() const {
-  return "DriverPipeline<" + std::to_string(inum_) + ">";
+  return fmt::format("DriverPipeline<{}>", inum_);
 }

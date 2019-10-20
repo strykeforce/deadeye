@@ -1,7 +1,15 @@
 #include "gstreamer_config.hpp"
 
+#include <fmt/core.h>
+
 using namespace deadeye;
 using json = nlohmann::json;
+
+namespace {
+static const int kWhiteBalanceMode = 0;
+static const std::string kIspDigitalGainRange = "1 1";
+static const std::string kGainRange = "1 2";
+}  // namespace
 
 char const* GStreamerConfig::kCaptureWidthKey{"cw"};
 char const* GStreamerConfig::kCaptureHeightKey{"ch"};
@@ -23,24 +31,16 @@ GStreamerConfig::GStreamerConfig(int capture_width, int capture_height,
       flip_mode(flip_mode) {}
 
 std::string GStreamerConfig::GetJetsonCSI() {
-  std::stringstream pipeline;
-  pipeline << "nvarguscamerasrc awblock=true aelock=true";
-  pipeline << " wbmode=" << kWhiteBalanceMode;
-  pipeline << " ispdigitalgainrange=\"" << kIspDigitalGainRange << "\"";
-  pipeline << " gainrange=\"" << kGainRange << "\"";
-  pipeline << " exposuretimerange="
-           << "\"" << exposure[0] << " " << exposure[1] << "\"";
-  pipeline << " ! video/x-raw(memory:NVMM), width=(int)" << capture_width;
-  pipeline << ", height=(int)" << capture_height;
-  pipeline << ", format=(string)NV12, framerate=(fraction)" << frame_rate
-           << "/1";
-  pipeline << " ! nvvidconv flip-method=" << flip_mode;
-  pipeline << " ! video/x-raw, width=(int)" << output_width;
-  pipeline << ", height=(int)" << output_height;
-  pipeline << ", format=(string)BGRx";
-  pipeline << " ! videoconvert ! video/x-raw, format=(string)BGR ! appsink";
-
-  return pipeline.str();
+  std::string tmplt =
+      R"(nvarguscamerasrc awblock=true aelock=true wbmode={})"
+      R"( ispdigitalgainrange="{}" gainrange="{}" exposuretimerange="{} {}" !)"
+      R"( video/x-raw(memory:NVMM), width=(int){}, height=(int){},)"
+      R"( format=(string)NV12, framerate=(fraction){}/1 ! nvvidconv)"
+      R"( flip-method={} ! video/x-raw, width=(int){}, height=(int){},)"
+      R"( format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink)";
+  return fmt::format(tmplt, kWhiteBalanceMode, kIspDigitalGainRange, kGainRange,
+                     exposure[0], exposure[1], capture_width, capture_height,
+                     frame_rate, flip_mode, output_width, output_height);
 }
 
 // ---------------------------------------------------------------------------
