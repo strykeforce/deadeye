@@ -25,7 +25,7 @@ TEST_CASE("PipelineConfig to JSON", "[pipeline]") {
   PipelineConfig pc{2767, {1, 2}, {25, 24}, {250, 251}, 0.5, GStreamerConfig{}};
   json j = pc;
   json expected = R"(
-{"exposure":0.5,"gstreamer":{"ch":0,"cw":0,"flip":0,"fps":0,"oh":0,"ow":0},
+{"exposure":0.5,"gstreamer":{"ch":0,"cw":0,"flip":0,"fps":0,"oh":0,"ow":0, "exp":1.0},
   "hue":[1,2],"sat":[25,24],"sn":2767,"val":[250,251]}
 )"_json;
 
@@ -55,7 +55,8 @@ TEST_CASE("PipelineConfig from JSON", "[pipeline]") {
       "ow": 3,
       "oh": 4,
       "fps": 5,
-      "flip": 6
+      "flip": 6,
+      "exp": 0.25
     }
   }
 )"_json;
@@ -76,4 +77,5 @@ TEST_CASE("PipelineConfig from JSON", "[pipeline]") {
   REQUIRE(pc.gstreamer_config.output_height == 4);
   REQUIRE(pc.gstreamer_config.frame_rate == 5);
   REQUIRE(pc.gstreamer_config.flip_mode == 6);
+  REQUIRE(pc.gstreamer_config.exposure == 0.25);
 }

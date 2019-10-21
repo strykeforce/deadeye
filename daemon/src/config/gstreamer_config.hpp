@@ -1,4 +1,5 @@
 #pragma once
+#include <fmt/core.h>
 #include <spdlog/fmt/ostr.h>
 #include <iostream>
 #include <nlohmann/json.hpp>
@@ -15,6 +16,7 @@ struct GStreamerConfig {
   static char const* kOutputHeightKey;
   static char const* kFrameRateKey;
   static char const* kFlipModeKey;
+  static char const* kExposureKey;
 
   int capture_width = 0;
   int capture_height = 0;
@@ -22,7 +24,7 @@ struct GStreamerConfig {
   int output_height = 0;
   int frame_rate = 0;
   int flip_mode = 0;
-  std::array<int, 2> exposure{13000, 683709000};
+  double exposure = 1.0;
 
   /**
    * Default constructor.
@@ -33,7 +35,8 @@ struct GStreamerConfig {
    * Constructor from member values.
    */
   GStreamerConfig(int capture_width, int capture_height, int output_width,
-                  int output_height, int frame_rate, int flip_mode);
+                  int output_height, int frame_rate, int flip_mode,
+                  double exposure);
 
   /*
    * Get Jetson CSI Camera pipeline.
@@ -42,10 +45,11 @@ struct GStreamerConfig {
 
   template <typename OStream>
   friend OStream& operator<<(OStream& os, GStreamerConfig const& gsc) {
-    os << "GStreamerConfig{"
-       << "cw=" << gsc.capture_width << ", ch=" << gsc.capture_height
-       << +", ow=" << gsc.output_width << ", oh=" << gsc.output_height
-       << ", fps=" << gsc.frame_rate << ", flip=" << gsc.flip_mode << "}";
+    std::string output = fmt::format(
+        "GStreamerConfig<cw={}, ch={}, ow={}, oh={}, fps={}, flip={}, exp={}>",
+        gsc.capture_width, gsc.capture_height, gsc.output_width,
+        gsc.output_height, gsc.frame_rate, gsc.flip_mode, gsc.exposure);
+    os << output;
     return os;
   }
 };
@@ -58,7 +62,8 @@ inline bool operator==(GStreamerConfig const& lhs, GStreamerConfig const& rhs) {
          lhs.capture_height == rhs.capture_height &&
          lhs.output_width == rhs.output_width &&
          lhs.output_height == rhs.output_height &&
-         lhs.frame_rate == rhs.frame_rate && lhs.flip_mode == rhs.flip_mode;
+         lhs.frame_rate == rhs.frame_rate && lhs.flip_mode == rhs.flip_mode &&
+         lhs.exposure == rhs.exposure;
 }
 
 inline bool operator!=(GStreamerConfig const& lhs, GStreamerConfig const& rhs) {
