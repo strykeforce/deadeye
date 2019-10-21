@@ -6,7 +6,8 @@
                 "${workspaceFolder}/**",
                 "/usr/local/wpilib/include/ntcore",
                 "/usr/local/wpilib/include/wpiutil",
-                "/usr/local/wpilib/include/cscore"
+                "/usr/local/wpilib/include/cscore",
+                "/usr/local/Cellar/spdlog/1.4.2/include"
             ],
             "defines": [],
             "macFrameworkPath": [

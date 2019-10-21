@@ -12,15 +12,6 @@ TEST_CASE("PipelineConfig HSV bound as array", "[pipeline]") {
   REQUIRE(iary.isVector());
 }
 
-TEST_CASE("GStreamerConfig equality", "[pipeline]") {
-  GStreamerConfig gsc1{0, 1, 2, 3, 4, 5};
-  GStreamerConfig gsc2{0, 1, 2, 3, 4, 5};
-  REQUIRE(gsc1 == gsc2);
-
-  GStreamerConfig gsc3{1, 2, 3, 4, 5, 6};
-  REQUIRE(gsc1 != gsc3);
-}
-
 TEST_CASE("PipelineConfig equality", "[pipeline]") {
   PipelineConfig pc1{0, {1, 2}, {25, 24}, {250, 251}, 0.5, GStreamerConfig{}};
   PipelineConfig pc2{0, {1, 2}, {25, 24}, {250, 251}, 0.5, GStreamerConfig{}};
@@ -33,10 +24,10 @@ TEST_CASE("PipelineConfig equality", "[pipeline]") {
 TEST_CASE("PipelineConfig to JSON", "[pipeline]") {
   PipelineConfig pc{2767, {1, 2}, {25, 24}, {250, 251}, 0.5, GStreamerConfig{}};
   json j = pc;
-  json expected = R"golden(
-{"exposure":0.5,"gstreamer":{"ch":0,"cw":0,"flip":0,"fps":0,"oh":0,"ow":0},
+  json expected = R"(
+{"exposure":0.5,"gstreamer":{"ch":0,"cw":0,"flip":0,"fps":0,"oh":0,"ow":0, "exp":1.0},
   "hue":[1,2],"sat":[25,24],"sn":2767,"val":[250,251]}
-)golden"_json;
+)"_json;
 
   REQUIRE(j == expected);
 }
@@ -51,7 +42,7 @@ TEST_CASE("PipelineConfig New", "[pipeline]") {
 }
 
 TEST_CASE("PipelineConfig from JSON", "[pipeline]") {
-  auto expected = R"golden(
+  auto expected = R"(
 {
   "sn": 2767,
   "exposure": 0.75,
@@ -64,10 +55,11 @@ TEST_CASE("PipelineConfig from JSON", "[pipeline]") {
       "ow": 3,
       "oh": 4,
       "fps": 5,
-      "flip": 6
+      "flip": 6,
+      "exp": 0.25
     }
   }
-)golden"_json;
+)"_json;
 
   PipelineConfig pc = expected;
 
@@ -85,4 +77,5 @@ TEST_CASE("PipelineConfig from JSON", "[pipeline]") {
   REQUIRE(pc.gstreamer_config.output_height == 4);
   REQUIRE(pc.gstreamer_config.frame_rate == 5);
   REQUIRE(pc.gstreamer_config.flip_mode == 6);
+  REQUIRE(pc.gstreamer_config.exposure == 0.25);
 }

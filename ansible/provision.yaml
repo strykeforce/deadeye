@@ -19,5 +19,7 @@
       tags: [json, nlohmann_json]
     - role: catch
       tags: catch
+    - role: fmt
+      tags: fmt
     # - role: seapi
     #   tags: seapi

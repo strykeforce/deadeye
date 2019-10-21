@@ -1,6 +1,7 @@
 #include "stream_config.hpp"
 
 #include <arpa/inet.h>
+#include <fmt/core.h>
 #include <ifaddrs.h>
 #include <spdlog/spdlog.h>
 #include <stdio.h>
@@ -59,7 +60,7 @@ void deadeye::from_json(const json& j, StreamConfig& sc) {
 //
 
 std::ostream& operator<<(std::ostream& os, StreamConfig const& sc) {
-  os << "StreamConfig{" << sc.sn << ", " << sc.url << "}";
+  os << fmt::format("StreamConfig<{}, {}>", sc.sn, sc.url);
   return os;
 }
 
@@ -111,9 +112,7 @@ std::string first_rfc1918() {
 }
 
 std::string stream_url(int inum) {
-  std::string url = "http://" + first_rfc1918() + ":" +
-                    std::to_string(5800 + inum) + "/stream.mjpg";
-  return url;
+  return fmt::format("http://{}:{}/stream.mjpg", first_rfc1918(), 5800 + inum);
 }
 
 }  // namespace

@@ -1,43 +1,40 @@
 ---
 - name: Unarchive sources
   unarchive:
-    src: https://github.com/gabime/spdlog/archive/v{{ spdlog_version }}.tar.gz
+    src: https://github.com/fmtlib/fmt/archive/{{ fmt_version }}.tar.gz
     dest: /usr/local/src
     remote_src: true
   tags:
-    - spdlog
+    - fmt
 
 - name: Create build directory
   file:
-    path: /usr/local/src/spdlog-{{ spdlog_version }}/build
+    path: /usr/local/src/fmt-{{ fmt_version }}/build
     state: directory
   tags:
-    - spdlog
+    - fmt
 
 - name: Run cmake
   command:
-    chdir: /usr/local/src/spdlog-{{ spdlog_version }}/build
+    chdir: /usr/local/src/fmt-{{ fmt_version }}/build
     argv:
       - /usr/bin/cmake
       - -DCMAKE_BUILD_TYPE=Release
+      - -DBUILD_SHARED_LIBS=TRUE
       - -DCMAKE_INSTALL_PREFIX=/usr/local
-      - -DSPDLOG_BUILD_EXAMPLE=OFF
-      - -DSPDLOG_BUILD_BENCH=OFF
-      - -DSPDLOG_BUILD_TESTS=OFF
-      - -DSPDLOG_FMT_EXTERNAL=ON
       - -GNinja
       - ..
   tags:
-    - spdlog
+    - fmt
     - build
     - cmake
 
 - name: Build and install
   command:
-    chdir: /usr/local/src/spdlog-{{ spdlog_version }}/build
+    chdir: /usr/local/src/fmt-{{ fmt_version }}/build
     argv:
       - /usr/bin/ninja
       - install
   tags:
-    - spdlog
+    - fmt
     - build
