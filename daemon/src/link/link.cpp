@@ -1,6 +1,7 @@
 #include "link.hpp"
 
 #include <arpa/inet.h>
+#include <fmt/core.h>
 #include <networktables/NetworkTableInstance.h>
 #include <spdlog/spdlog.h>
 #include <sys/socket.h>
@@ -10,6 +11,7 @@
 #include "config/deadeye_config.hpp"
 #include "config/link_config.hpp"
 #include "controller.hpp"
+#include "link/center_target_data.hpp"
 
 using namespace deadeye;
 Link::Link(int inum) : id_(DEADEYE_UNIT + std::to_string(inum)) {
@@ -47,17 +49,10 @@ LinkConfig Link::GetConfig() {
   return LinkConfig{nti.GetEntry(DE_LINK_CONFIG_ENTRY).GetValue()};
 }
 
-void Link::Send() {
+void Link::Send(TargetData* const td) {
   if (!enabled_) return;
-  int n;
-  nlohmann::json j;
-  j["id"] = id_;
-  j["sn"] = sn_++;
-  j["valid"] = false;
-  j["x"] = sn_ % 2048;
-  j["y"] = sn_ % 1024;
 
-  std::string msg = j.dump();
-  if ((n = send(fd_, msg.data(), msg.size(), 0)) == -1)
+  std::string msg = id_ + td->Dump();
+  if (send(fd_, msg.data(), msg.size(), 0) == -1)
     spdlog::error("Link send error: {}", strerror(errno));
 }

@@ -5,11 +5,14 @@
 #include <opencv2/core/utility.hpp>
 #include <opencv2/videoio.hpp>
 
-#include "pipeline.hpp"
+#include "link/target_data.hpp"
+#include "pipeline/pipeline.hpp"
 
 namespace deadeye {
 struct SteamConfig;
 struct PipelineConfig;
+
+using Contours = std::vector<std::vector<cv::Point>>;
 
 class AbstractPipeline : public Pipeline {
  public:
@@ -24,9 +27,11 @@ class AbstractPipeline : public Pipeline {
   virtual cv::VideoCapture GetVideoCapture();
   virtual cv::Mat PreProcessFrame(cv::Mat const &frame);
   virtual void ProcessFrame(cv::Mat const &frame);
-  virtual void FilterContours(std::vector<std::vector<cv::Point>> const &src,
-                              std::vector<std::vector<cv::Point>> &dest);
+  virtual void FilterContours(Contours const &src, Contours &dest);
+  virtual std::unique_ptr<TargetData> ProcessTarget(
+      Contours const &contours) = 0;
 
+  std::string id_;
   std::atomic<PipelineConfig *> pipeline_config_{nullptr};
   std::atomic<StreamConfig *> stream_config_{nullptr};
   std::atomic<bool> cancel_{false};

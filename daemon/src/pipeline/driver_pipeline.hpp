@@ -20,6 +20,7 @@ class DriverPipeline : public Pipeline {
   virtual std::string ToString() const override;
 
  private:
+ std::string id_;
   std::atomic<bool> cancel_{false};
   PipelineConfig *pipeline_config_{nullptr};
   std::atomic<bool> stream_enabled_;

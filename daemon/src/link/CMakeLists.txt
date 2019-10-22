@@ -1,4 +1,6 @@
 target_sources(Deadeye_library
   PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}/link.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/target_data.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/center_target_data.cpp
 )

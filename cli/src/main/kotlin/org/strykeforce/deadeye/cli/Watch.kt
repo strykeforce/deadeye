@@ -5,20 +5,16 @@ import com.codahale.metrics.MetricRegistry
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.arguments.multiple
+import com.squareup.moshi.Moshi
 import org.fusesource.jansi.Ansi.Attribute.INTENSITY_FAINT
 import org.fusesource.jansi.Ansi.ansi
 import org.fusesource.jansi.AnsiConsole
 import org.jline.terminal.TerminalBuilder
 import org.jline.utils.InfoCmp
-import org.strykeforce.deadeye.Camera
-import org.strykeforce.deadeye.Deadeye
-import org.strykeforce.deadeye.TargetData
-import org.strykeforce.deadeye.TargetDataListener
+import org.strykeforce.deadeye.*
 import java.net.Socket
 import java.net.URL
 import kotlin.concurrent.timer
-
-private const val LINES = 5
 
 private val metrics = MetricRegistry()
 
@@ -29,12 +25,12 @@ class Watch : CliktCommand() {
   override fun run() {
     AnsiConsole.systemInstall()
     val prevLink = Deadeye.link
-    Deadeye.link = Deadeye.getCamera(ids.first()).stream.toLink()
+    Deadeye.link = Deadeye.getCamera<CenterTargetData>(ids.first()).stream.toLink()
     println()
     println(ansi().fgBrightBlue().a("id  serial  tgt     x     y   fps  drop"))
     println(ansi().a("=========================================").reset())
 
-    val watchers = ids.map(Deadeye::getCamera).map(::Watcher)
+    val watchers = ids.map { Deadeye.getCamera<CenterTargetData>(it) }.map(::Watcher)
     repeat(watchers.size + 1) { println() }
 
     val timer = timer(period = 250) {
@@ -57,20 +53,22 @@ class Watch : CliktCommand() {
   }
 }
 
-class Watcher(val camera: Camera) : TargetDataListener {
+class Watcher(val camera: Camera<CenterTargetData>) : TargetDataListener {
 
   init {
     camera.targetDataListener = this
     camera.enabled = true
+    camera.jsonAdapter = CenterTargetDataJsonAdapter(Moshi.Builder().build())
   }
 
-  private var td = TargetData(camera.id)
+  private var td = CenterTargetData()
   private var dropped = 0
   private val fpsMeter: Meter by lazy { metrics.meter(camera.id) }
 
+
   override fun onTargetData(data: TargetData) {
     if (data.sn - td.sn > 1) dropped += data.sn - td.sn
-    td = data
+    td = data as CenterTargetData
     fpsMeter.mark()
   }
 
@@ -80,6 +78,8 @@ class Watcher(val camera: Camera) : TargetDataListener {
     val valid = if (td.valid) ansi().fgBrightGreen().a("Y").reset() else ansi().fgBrightRed().a("N").reset()
     val x = td.x.toInt().toString().padStart(5)
     val y = td.y.toInt().toString().padStart(5)
+//    val x = 0.toString().padStart(5)
+//    val y = 0.toString().padStart(5)
     val fps = ansi().fgBrightYellow().a("%5.1f".format(fpsMeter.oneMinuteRate)).reset()
     val d =
       ansi().let { if (dropped == 0) it.a(INTENSITY_FAINT) else it.fgBrightRed() }.a(dropped.toString().padStart(4))

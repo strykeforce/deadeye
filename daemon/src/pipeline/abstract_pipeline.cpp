@@ -3,10 +3,13 @@
 #include <cscore.h>
 #include <spdlog/spdlog.h>
 #include <wpi/Logger.h>
+
 #include <opencv2/imgproc.hpp>
 
+#include "config/deadeye_config.hpp"
 #include "config/pipeline_config.hpp"
 #include "config/stream_config.hpp"
+#include "link/center_target_data.hpp"
 #include "link/link.hpp"
 
 using namespace deadeye;
@@ -17,7 +20,8 @@ static const int kPreviewHeight = 240;
 void InitializeLogging();
 }  // namespace
 
-AbstractPipeline::AbstractPipeline(int inum) : Pipeline{inum} {
+AbstractPipeline::AbstractPipeline(int inum)
+    : Pipeline{inum}, id_(DEADEYE_UNIT + std::to_string(inum)) {
   InitializeLogging();
 }
 
@@ -76,7 +80,8 @@ void AbstractPipeline::Run() {
   Link link{inum_};
 
   // Loop until task cancelled.
-  for (cv::TickMeter tm;;) {
+  cv::TickMeter tm;
+  for (int i = 0;; i++) {
     tm.start();
 
     // Check for cancellation of this task.
@@ -88,6 +93,7 @@ void AbstractPipeline::Run() {
     // Get new frame and process it.
     cap >> frame;
 
+    // TODO: extract and cache the hi/lo cv:Scalars perhaps
     PipelineConfig *config = pipeline_config_.load();
     cv::Mat preprocess_output = PreProcessFrame(frame);
 
@@ -98,14 +104,17 @@ void AbstractPipeline::Run() {
                 cv::Scalar(config->hue[1], config->sat[1], config->val[1]),
                 hsv_threshold_output);
 
-    std::vector<std::vector<cv::Point>> find_contours_output;
+    Contours find_contours_output;
     cv::findContours(hsv_threshold_output, find_contours_output,
                      cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
 
     // spdlog::debug("Contours found: {}", find_contours_output.size());
 
-    std::vector<std::vector<cv::Point>> filter_contours_output;
+    Contours filter_contours_output;
     FilterContours(find_contours_output, filter_contours_output);
+    std::unique_ptr<TargetData> td = ProcessTarget(filter_contours_output);
+    td->serial = i;
+    link.Send(td.get());
 
     StreamConfig *stream = stream_config_.load();
     if (stream->view != StreamConfig::View::NONE ||
@@ -136,7 +145,9 @@ void AbstractPipeline::Run() {
         case StreamConfig::Contour::FILTER:
           cv::drawContours(preview, filter_contours_output, -1,
                            cv::Scalar(255, 0, 240), 2);
+          td->DrawMarkers(preview);
           break;
+
         case StreamConfig::Contour::ALL:
           cv::drawContours(preview, find_contours_output, -1,
                            cv::Scalar(255, 0, 240), 2);
@@ -147,8 +158,6 @@ void AbstractPipeline::Run() {
                  0, cv::INTER_AREA);
       cvsource.PutFrame(preview);
     }
-
-    link.Send();
 
     tm.stop();
   }
@@ -168,9 +177,7 @@ cv::Mat AbstractPipeline::PreProcessFrame(cv::Mat const &frame) {
 
 void AbstractPipeline::ProcessFrame(cv::Mat const &frame) {}
 
-void AbstractPipeline::FilterContours(
-    std::vector<std::vector<cv::Point>> const &src,
-    std::vector<std::vector<cv::Point>> &dest) {}
+void AbstractPipeline::FilterContours(Contours const &src, Contours &dest) {}
 
 /////////////////////////////////////////////////////////////////////////////
 // private

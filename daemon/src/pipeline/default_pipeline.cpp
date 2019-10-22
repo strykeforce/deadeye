@@ -6,6 +6,7 @@
 
 #include "config/pipeline_config.hpp"
 #include "config/stream_config.hpp"
+#include "link/center_target_data.hpp"
 
 using namespace deadeye;
 
@@ -39,9 +40,7 @@ cv::Mat DefaultPipeline::PreProcessFrame(cv::Mat const &frame) {
 }
 
 // This filter returns the contour with the largest area.
-void DefaultPipeline::FilterContours(
-    std::vector<std::vector<cv::Point>> const &src,
-    std::vector<std::vector<cv::Point>> &dest) {
+void DefaultPipeline::FilterContours(Contours const &src, Contours &dest) {
   auto max_area_iter = std::max_element(
       src.begin(), src.end(),
       [](std::vector<cv::Point> const &a, std::vector<cv::Point> const &b) {
@@ -50,6 +49,11 @@ void DefaultPipeline::FilterContours(
   if (max_area_iter != src.end()) dest.push_back(*max_area_iter);
 
   // throw PipelineException("Test Exception");
+}
+
+std::unique_ptr<TargetData> DefaultPipeline::ProcessTarget(
+    Contours const &contours) {
+  return std::make_unique<CenterTargetData>(id_, 0, false, 0, 0);
 }
 
 std::string DefaultPipeline::ToString() const {

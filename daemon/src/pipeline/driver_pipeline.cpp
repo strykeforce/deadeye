@@ -7,6 +7,7 @@
 #include <map>
 #include <opencv2/core/mat.hpp>
 
+#include "config/deadeye_config.hpp"
 #include "config/pipeline_config.hpp"
 #include "config/stream_config.hpp"
 #include "link/link.hpp"
@@ -16,7 +17,8 @@ using namespace deadeye;
 /**
  * constructor configures cscore logging.
  */
-DriverPipeline::DriverPipeline(int inum) : Pipeline{inum} {
+DriverPipeline::DriverPipeline(int inum)
+    : Pipeline{inum}, id_(DEADEYE_UNIT + std::to_string(inum)) {
   using namespace wpi;
   using namespace spdlog;
   static std::map<unsigned int, level::level_enum> levels{
@@ -59,10 +61,7 @@ cv::VideoCapture DriverPipeline::GetVideoCapture() {
 #ifdef __APPLE__
   std::string pipeline = "autovideosrc ! videoconvert ! appsink";
 #else
-  PipelineConfig *pipeline_config = pipeline_config_.load();
-  GStreamerConfig gsc = pipeline_config->gstreamer_config;
-
-  std::string pipeline = gsc.GetJetsonCSI();
+  std::string pipeline = pipeline_config_->gstreamer_config.GetJetsonCSI();
   spdlog::debug("{}: {}", *this, pipeline);
 
 #endif
@@ -96,7 +95,8 @@ void DriverPipeline::Run() {
   Link link{inum_};
 
   // Loop until task cancelled.
-  for (cv::TickMeter tm;;) {
+  cv::TickMeter tm;
+  for (int i = 0;; i++) {
     tm.start();
 
     if (cancel_.load()) {
@@ -120,7 +120,8 @@ void DriverPipeline::Run() {
 
       cvsource.PutFrame(preview);
     }
-    link.Send();
+
+    link.Send(std::make_unique<TargetData>(id_, i, false).get());
     tm.stop();
   }
 }

@@ -1,5 +1,6 @@
 #pragma once
-#include "abstract_pipeline.hpp"
+
+#include "pipeline/abstract_pipeline.hpp"
 
 namespace deadeye {
 class TestPatternPipeline : public AbstractPipeline {
@@ -10,9 +11,9 @@ class TestPatternPipeline : public AbstractPipeline {
     return frame;
   }
 
-  virtual void FilterContours(
-      std::vector<std::vector<cv::Point>> const &src,
-      std::vector<std::vector<cv::Point>> &dest) override;
+  virtual void FilterContours(Contours const &src, Contours &dest) override;
+  virtual std::unique_ptr<TargetData> ProcessTarget(
+      Contours const &contours) override;
 
  protected:
   virtual cv::VideoCapture GetVideoCapture() override;

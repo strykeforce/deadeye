@@ -4,6 +4,8 @@
 #include <spdlog/spdlog.h>
 #include <opencv2/imgproc.hpp>
 
+#include "link/center_target_data.hpp"
+
 using namespace deadeye;
 
 cv::VideoCapture TestPatternPipeline::GetVideoCapture() {
@@ -19,9 +21,7 @@ cv::VideoCapture TestPatternPipeline::GetVideoCapture() {
 }
 
 // This filter returns the contour with the largest area.
-void TestPatternPipeline::FilterContours(
-    std::vector<std::vector<cv::Point>> const &src,
-    std::vector<std::vector<cv::Point>> &dest) {
+void TestPatternPipeline::FilterContours(Contours const &src, Contours &dest) {
   auto max_area_iter = std::max_element(
       src.begin(), src.end(),
       [](std::vector<cv::Point> const &a, std::vector<cv::Point> const &b) {
@@ -30,6 +30,18 @@ void TestPatternPipeline::FilterContours(
   if (max_area_iter != src.end()) dest.push_back(*max_area_iter);
 
   // throw PipelineException("Test Exception");
+}
+
+std::unique_ptr<TargetData> TestPatternPipeline::ProcessTarget(
+    Contours const &contours) {
+  if (contours.size() == 0)
+    return std::make_unique<CenterTargetData>(id_, 0, false, 0, 0);
+  auto contour = contours[0];
+  auto rect = cv::boundingRect(contour);
+  int x = rect.x + (rect.width / 2);
+  int y = rect.y + (rect.height / 2);
+
+  return std::make_unique<CenterTargetData>(id_, 0, true, x, y);
 }
 
 std::string TestPatternPipeline::ToString() const {
