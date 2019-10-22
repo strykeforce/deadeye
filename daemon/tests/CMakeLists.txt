@@ -5,6 +5,7 @@ add_executable(Deadeye_tests
   pipeline_config_test.cpp
   stream_config_test.cpp
   gstreamer_config_test.cpp
+  target_data_test.cpp
 )
 
 target_link_libraries(Deadeye_tests

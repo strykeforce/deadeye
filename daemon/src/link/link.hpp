@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 
+#include "link/target_data.hpp"
+
 namespace deadeye {
 
 struct LinkConfig;
@@ -12,13 +14,12 @@ class Link {
   Link(const Link&) = delete;
   Link& operator=(const Link&) = delete;
 
-  void Send();
+  void Send(TargetData* const td);  // Caller retains ownership
 
  private:
   bool enabled_;
   std::string id_;
   int fd_;
-  int sn_ = 0;
   LinkConfig GetConfig();
 };
 

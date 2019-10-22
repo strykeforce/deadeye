@@ -6,6 +6,7 @@
 
 #include "config/pipeline_config.hpp"
 #include "config/stream_config.hpp"
+#include "link/center_target_data.hpp"
 
 using namespace deadeye;
 
@@ -48,6 +49,11 @@ void DefaultPipeline::FilterContours(Contours const &src, Contours &dest) {
   if (max_area_iter != src.end()) dest.push_back(*max_area_iter);
 
   // throw PipelineException("Test Exception");
+}
+
+std::unique_ptr<TargetData> DefaultPipeline::ProcessTarget(
+    Contours const &contours) {
+  return std::make_unique<CenterTargetData>(id_, 0, false, 0, 0);
 }
 
 std::string DefaultPipeline::ToString() const {

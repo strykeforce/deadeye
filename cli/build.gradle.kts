@@ -32,6 +32,8 @@ dependencies {
   implementation("org.jline:jline-terminal:3.12.1")
   implementation("org.fusesource.jansi:jansi:1.18")
   implementation("com.github.ajalt:clikt:2.2.0")
+  implementation ("com.squareup.moshi:moshi:1.8.0")
+
 
   // Align versions of all Kotlin components
   implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
