@@ -8,9 +8,7 @@ class DefaultPipeline : public AbstractPipeline {
 
   virtual cv::Mat PreProcessFrame(cv::Mat const &frame) override;
 
-  virtual void FilterContours(
-      std::vector<std::vector<cv::Point>> const &src,
-      std::vector<std::vector<cv::Point>> &dest) override;
+  virtual void FilterContours(Contours const &src, Contours &dest) override;
 
  protected:
   virtual cv::VideoCapture GetVideoCapture() override;

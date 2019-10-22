@@ -3,6 +3,7 @@
 #include <cscore.h>
 #include <spdlog/spdlog.h>
 #include <wpi/Logger.h>
+
 #include <opencv2/imgproc.hpp>
 
 #include "config/pipeline_config.hpp"
@@ -98,13 +99,13 @@ void AbstractPipeline::Run() {
                 cv::Scalar(config->hue[1], config->sat[1], config->val[1]),
                 hsv_threshold_output);
 
-    std::vector<std::vector<cv::Point>> find_contours_output;
+    Contours find_contours_output;
     cv::findContours(hsv_threshold_output, find_contours_output,
                      cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
 
     // spdlog::debug("Contours found: {}", find_contours_output.size());
 
-    std::vector<std::vector<cv::Point>> filter_contours_output;
+    Contours filter_contours_output;
     FilterContours(find_contours_output, filter_contours_output);
 
     StreamConfig *stream = stream_config_.load();
@@ -168,9 +169,9 @@ cv::Mat AbstractPipeline::PreProcessFrame(cv::Mat const &frame) {
 
 void AbstractPipeline::ProcessFrame(cv::Mat const &frame) {}
 
-void AbstractPipeline::FilterContours(
-    std::vector<std::vector<cv::Point>> const &src,
-    std::vector<std::vector<cv::Point>> &dest) {}
+void AbstractPipeline::FilterContours(Contours const &src, Contours &dest) {}
+
+void AbstractPipeline::ProcessTarget(Contours const &contours) {}
 
 /////////////////////////////////////////////////////////////////////////////
 // private

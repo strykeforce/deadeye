@@ -19,9 +19,7 @@ cv::VideoCapture TestPatternPipeline::GetVideoCapture() {
 }
 
 // This filter returns the contour with the largest area.
-void TestPatternPipeline::FilterContours(
-    std::vector<std::vector<cv::Point>> const &src,
-    std::vector<std::vector<cv::Point>> &dest) {
+void TestPatternPipeline::FilterContours(Contours const &src, Contours &dest) {
   auto max_area_iter = std::max_element(
       src.begin(), src.end(),
       [](std::vector<cv::Point> const &a, std::vector<cv::Point> const &b) {

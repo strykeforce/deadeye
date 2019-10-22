@@ -39,9 +39,7 @@ cv::Mat DefaultPipeline::PreProcessFrame(cv::Mat const &frame) {
 }
 
 // This filter returns the contour with the largest area.
-void DefaultPipeline::FilterContours(
-    std::vector<std::vector<cv::Point>> const &src,
-    std::vector<std::vector<cv::Point>> &dest) {
+void DefaultPipeline::FilterContours(Contours const &src, Contours &dest) {
   auto max_area_iter = std::max_element(
       src.begin(), src.end(),
       [](std::vector<cv::Point> const &a, std::vector<cv::Point> const &b) {
