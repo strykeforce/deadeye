@@ -12,8 +12,6 @@ namespace deadeye {
 struct SteamConfig;
 struct PipelineConfig;
 
-using Contours = std::vector<std::vector<cv::Point>>;
-
 class AbstractPipeline : public Pipeline {
  public:
   AbstractPipeline(int inum);
@@ -24,12 +22,12 @@ class AbstractPipeline : public Pipeline {
   virtual void Run() override;
 
  protected:
-  virtual cv::VideoCapture GetVideoCapture();
-  virtual cv::Mat PreProcessFrame(cv::Mat const &frame);
+  virtual bool StartCapture() = 0;
+  virtual void StopCapture() = 0;
+  virtual bool GrabFrame(cv::Mat &frame) = 0;
   virtual void ProcessFrame(cv::Mat const &frame);
   virtual void FilterContours(Contours const &src, Contours &dest);
-  virtual std::unique_ptr<TargetData> ProcessTarget(
-      Contours const &contours) = 0;
+  virtual TargetDataPtr ProcessTarget(Contours const &contours) = 0;
 
   std::string id_;
   std::atomic<PipelineConfig *> pipeline_config_{nullptr};

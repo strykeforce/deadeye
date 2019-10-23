@@ -3,10 +3,15 @@
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 #include <exception>
+#include <opencv2/core/types.hpp>
 
 namespace deadeye {
 struct PipelineConfig;
 struct StreamConfig;
+struct TargetData;
+
+using Contours = std::vector<std::vector<cv::Point>>;
+using TargetDataPtr = std::unique_ptr<TargetData>;
 
 class PipelineException : public std::exception {
   char const *what_;

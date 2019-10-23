@@ -10,9 +10,12 @@
 
 using namespace deadeye;
 
-cv::VideoCapture DefaultPipeline::GetVideoCapture() {
+DefaultPipeline::DefaultPipeline(int inum) : AbstractPipeline{inum} {}
+
+bool DefaultPipeline::StartCapture() {
+  if (cap_.isOpened()) return true;
 #ifdef __APPLE__
-  cv::VideoCapture cap{0, cv::CAP_AVFOUNDATION};
+  return cap_.open(0, cv::CAP_AVFOUNDATION);
 #else
   PipelineConfig *pipeline_config = pipeline_config_.load();
   GStreamerConfig gsc = pipeline_config->gstreamer_config;
@@ -20,23 +23,19 @@ cv::VideoCapture DefaultPipeline::GetVideoCapture() {
   std::string pipeline = gsc.GetJetsonCSI();
   spdlog::debug("{}: {}", *this, pipeline);
 
-  cv::VideoCapture cap(pipeline, cv::CAP_GSTREAMER);
+  return cap_.open(pipeline, cv::CAP_GSTREAMER);
 #endif
-  return cap;
 }
 
-cv::Mat DefaultPipeline::PreProcessFrame(cv::Mat const &frame) {
-  cv::Mat result;
-#ifdef __APPLE__
-  // 1280 x 720
-  cv::copyMakeBorder(frame, result, 120, 120, 0, 0, cv::BORDER_CONSTANT,
+void DefaultPipeline::StopCapture() { cap_.release(); }
+
+bool DefaultPipeline::GrabFrame(cv::Mat &frame) {
+  if (!cap_.read(frame)) return false;  // TODO: check for empty?
+  // change aspect ration
+  int border = frame.rows / 6;
+  cv::copyMakeBorder(frame, frame, border, border, 0, 0, cv::BORDER_CONSTANT,
                      cv::Scalar(0, 0, 0));
-#else
-  // 320 x 180
-  cv::copyMakeBorder(frame, result, 30, 30, 0, 0, cv::BORDER_CONSTANT,
-                     cv::Scalar(0, 0, 0));
-#endif
-  return result;
+  return true;
 }
 
 // This filter returns the contour with the largest area.
@@ -51,8 +50,7 @@ void DefaultPipeline::FilterContours(Contours const &src, Contours &dest) {
   // throw PipelineException("Test Exception");
 }
 
-std::unique_ptr<TargetData> DefaultPipeline::ProcessTarget(
-    Contours const &contours) {
+TargetDataPtr DefaultPipeline::ProcessTarget(Contours const &contours) {
   return std::make_unique<CenterTargetData>(id_, 0, false, 0, 0);
 }
 

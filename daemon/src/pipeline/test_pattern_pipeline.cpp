@@ -8,16 +8,23 @@
 
 using namespace deadeye;
 
-cv::VideoCapture TestPatternPipeline::GetVideoCapture() {
-  spdlog::debug("{}", __PRETTY_FUNCTION__);
-  cv::VideoCapture cap;
-  std::string s{
+TestPatternPipeline::TestPatternPipeline(int inum) : AbstractPipeline{inum} {}
+
+bool TestPatternPipeline::StartCapture() {
+  if (cap_.isOpened()) return true;
+  std::string pipeline{
       "videotestsrc ! video/x-raw, width=640, "
       "height=480, "
       "framerate=90/1 ! videoconvert ! video/x-raw, format=(string)BGR ! "
       "appsink"};
-  cap.open(s, cv::CAP_GSTREAMER);
-  return cap;
+  return cap_.open(pipeline, cv::CAP_GSTREAMER);
+}
+
+void TestPatternPipeline::StopCapture() { cap_.release(); }
+
+bool TestPatternPipeline::GrabFrame(cv::Mat &frame) {
+  if (!cap_.read(frame)) return false;  // TODO: check for empty?
+  return true;
 }
 
 // This filter returns the contour with the largest area.
@@ -32,8 +39,7 @@ void TestPatternPipeline::FilterContours(Contours const &src, Contours &dest) {
   // throw PipelineException("Test Exception");
 }
 
-std::unique_ptr<TargetData> TestPatternPipeline::ProcessTarget(
-    Contours const &contours) {
+TargetDataPtr TestPatternPipeline::ProcessTarget(Contours const &contours) {
   if (contours.size() == 0)
     return std::make_unique<CenterTargetData>(id_, 0, false, 0, 0);
   auto contour = contours[0];
