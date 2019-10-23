@@ -59,15 +59,6 @@ void AbstractPipeline::Run() {
   cancel_ = false;
   spdlog::info("Pipeline<{}>: starting", inum_);
 
-  cv::Mat frame;
-  cv::VideoCapture cap = GetVideoCapture();
-
-  if (!cap.isOpened()) {
-    spdlog::critical("Pipeline<{}>: unable to open camera({}) in {}, line {}",
-                     inum_, inum_, __FILE__, __LINE__);
-    throw PipelineException("unable to open camera");
-  }
-
   // Set up streaming. CScore streaming will hang on connection if too many
   // connections are attempted, current workaround is for user to  disable and
   // reenable the stream to reset.
@@ -77,7 +68,14 @@ void AbstractPipeline::Run() {
   mjpegServer.SetSource(cvsource);
   spdlog::info("{} streaming on port {}", *this, mjpegServer.GetPort());
 
+  cv::Mat frame;
   Link link{inum_};
+
+  if (!StartCapture()) {
+    spdlog::critical("{} failed to start video capture", *this);
+    StopCapture();
+    return;
+  }
 
   // Loop until task cancelled.
   cv::TickMeter tm;
@@ -86,19 +84,21 @@ void AbstractPipeline::Run() {
 
     // Check for cancellation of this task.
     if (cancel_.load()) {
+      StopCapture();
       LogTickMeter(tm);
       return;
     }
 
     // Get new frame and process it.
-    cap >> frame;
+    if (!GrabFrame(frame)) {
+      spdlog::critical("{} failed to grab frame", *this);
+    }
 
     // TODO: extract and cache the hi/lo cv:Scalars perhaps
     PipelineConfig *config = pipeline_config_.load();
-    cv::Mat preprocess_output = PreProcessFrame(frame);
 
     cv::Mat hsv_threshold_output;
-    cv::cvtColor(preprocess_output, hsv_threshold_output, cv::COLOR_BGR2HSV);
+    cv::cvtColor(frame, hsv_threshold_output, cv::COLOR_BGR2HSV);
     cv::inRange(hsv_threshold_output,
                 cv::Scalar(config->hue[0], config->sat[0], config->val[0]),
                 cv::Scalar(config->hue[1], config->sat[1], config->val[1]),
@@ -112,7 +112,7 @@ void AbstractPipeline::Run() {
 
     Contours filter_contours_output;
     FilterContours(find_contours_output, filter_contours_output);
-    std::unique_ptr<TargetData> td = ProcessTarget(filter_contours_output);
+    TargetDataPtr td = ProcessTarget(filter_contours_output);
     td->serial = i;
     link.Send(td.get());
 
@@ -123,16 +123,16 @@ void AbstractPipeline::Run() {
       switch (stream->view) {
         case StreamConfig::View::NONE:
           if (stream->contour != StreamConfig::Contour::NONE) {
-            preview = cv::Mat::zeros(preprocess_output.size(), CV_8UC3);
+            preview = cv::Mat::zeros(frame.size(), CV_8UC3);
           }
           break;
         case StreamConfig::View::ORIGINAL:
           if (stream->contour != StreamConfig::Contour::NONE) {
-            cv::cvtColor(preprocess_output, preview, cv::COLOR_BGR2GRAY);
+            cv::cvtColor(frame, preview, cv::COLOR_BGR2GRAY);
             cv::cvtColor(preview, preview, cv::COLOR_GRAY2BGR);
             break;
           }
-          preview = preprocess_output;
+          preview = frame;
           break;
         case StreamConfig::View::MASK:
           cv::cvtColor(hsv_threshold_output, preview, cv::COLOR_GRAY2BGR);
@@ -166,14 +166,6 @@ void AbstractPipeline::Run() {
 /////////////////////////////////////////////////////////////////////////////
 // protected
 /////////////////////////////////////////////////////////////////////////////
-
-cv::VideoCapture AbstractPipeline::GetVideoCapture() {
-  return cv::VideoCapture{};
-}
-
-cv::Mat AbstractPipeline::PreProcessFrame(cv::Mat const &frame) {
-  return frame;
-}
 
 void AbstractPipeline::ProcessFrame(cv::Mat const &frame) {}
 

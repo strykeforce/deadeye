@@ -5,18 +5,17 @@
 namespace deadeye {
 class TestPatternPipeline : public AbstractPipeline {
  public:
-  TestPatternPipeline(int inum) : AbstractPipeline{inum} {}
-
-  virtual cv::Mat PreProcessFrame(cv::Mat const &frame) override {
-    return frame;
-  }
-
+  TestPatternPipeline(int inum);
+  virtual ~TestPatternPipeline() = default;
   virtual void FilterContours(Contours const &src, Contours &dest) override;
-  virtual std::unique_ptr<TargetData> ProcessTarget(
-      Contours const &contours) override;
+  virtual TargetDataPtr ProcessTarget(Contours const &contours) override;
 
  protected:
-  virtual cv::VideoCapture GetVideoCapture() override;
+  virtual bool StartCapture() override;
+  virtual void StopCapture() override;
+  virtual bool GrabFrame(cv::Mat &frame) override;
   virtual std::string ToString() const override;
+
+  cv::VideoCapture cap_;
 };
 }  // namespace deadeye
