@@ -32,6 +32,7 @@ target_link_libraries(Deadeye_library
     spdlog::spdlog
     tinyfsm
     nlohmann_json::nlohmann_json
+    safe
 )
 
 # Build main target

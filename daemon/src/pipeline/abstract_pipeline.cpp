@@ -7,8 +7,6 @@
 #include <opencv2/imgproc.hpp>
 
 #include "config/deadeye_config.hpp"
-#include "config/pipeline_config.hpp"
-#include "config/stream_config.hpp"
 #include "link/center_target_data.hpp"
 #include "link/link.hpp"
 
@@ -21,36 +19,34 @@ void InitializeLogging();
 }  // namespace
 
 AbstractPipeline::AbstractPipeline(int inum)
-    : Pipeline{inum}, id_(DEADEYE_UNIT + std::to_string(inum)) {
+    : Pipeline{inum},
+      id_(DEADEYE_UNIT + std::to_string(inum)),
+      stream_config_ready_(false) {
   InitializeLogging();
 }
 
 AbstractPipeline::~AbstractPipeline() {}
 
+/**
+ * UpdateConfig handles changes to pipeline config.
+ */
 void AbstractPipeline::UpdateConfig(PipelineConfig *config) {
-  // The config is read for every frame but updated very infrequently.
-  // ProcessFrame accesses the current config throught the atomic pointer
-  // pipeline_config_. To prevent deleting the config ProcessFrame is using
-  // during this update, the previous config is retained and pointed to by
-  // prev_pipeline_config_. It is then deleted and replaced the next time the
-  // config is updated. This assumes that ProcessFrame will finish using the
-  // config before this update is called again, a safe assumption since
-  // updates are user initiated via the web admin UI.
-  delete prev_pipeline_config_;
-  prev_pipeline_config_ = pipeline_config_.load();
-  pipeline_config_.store(config);
-  spdlog::debug("{}: {}", *this, *(pipeline_config_.load()));
+  safe::WriteAccess<LockablePipelineConfig> value{pipeline_config_};
+  *value = *config;
+  delete config;
+  spdlog::info("{}:{}", *this, *value);
+  pipeline_config_ready_ = true;
 }
 
 /**
  * UpdateStream handles changes to video streaming.
  */
 void AbstractPipeline::UpdateStream(StreamConfig *config) {
-  // Same algorithm as UpdateConfig above.
-  delete prev_stream_config_;
-  prev_stream_config_ = stream_config_.load();
-  stream_config_.store(config);
-  spdlog::debug("{}: {}", *this, *(stream_config_.load()));
+  safe::WriteAccess<LockableStreamConfig> value{stream_config_};
+  *value = *config;
+  delete config;
+  spdlog::info("{}:{}", *this, *value);
+  stream_config_ready_ = true;
 }
 
 void AbstractPipeline::CancelTask() { cancel_ = true; }
@@ -70,6 +66,8 @@ void AbstractPipeline::Run() {
 
   cv::Mat frame;
   Link link{inum_};
+  StreamConfig stream;
+  PipelineConfig config;
 
   if (!StartCapture()) {
     spdlog::critical("{} failed to start video capture", *this);
@@ -95,13 +93,17 @@ void AbstractPipeline::Run() {
     }
 
     // TODO: extract and cache the hi/lo cv:Scalars perhaps
-    PipelineConfig *config = pipeline_config_.load();
+    if (pipeline_config_ready_.load()) {
+      safe::ReadAccess<LockablePipelineConfig> value{pipeline_config_};
+      config = *value;
+      pipeline_config_ready_ = false;
+    }
 
     cv::Mat hsv_threshold_output;
     cv::cvtColor(frame, hsv_threshold_output, cv::COLOR_BGR2HSV);
     cv::inRange(hsv_threshold_output,
-                cv::Scalar(config->hue[0], config->sat[0], config->val[0]),
-                cv::Scalar(config->hue[1], config->sat[1], config->val[1]),
+                cv::Scalar(config.hue[0], config.sat[0], config.val[0]),
+                cv::Scalar(config.hue[1], config.sat[1], config.val[1]),
                 hsv_threshold_output);
 
     Contours find_contours_output;
@@ -116,18 +118,23 @@ void AbstractPipeline::Run() {
     td->serial = i;
     link.Send(td.get());
 
-    StreamConfig *stream = stream_config_.load();
-    if (stream->view != StreamConfig::View::NONE ||
-        stream->contour != StreamConfig::Contour::NONE) {
+    if (stream_config_ready_.load()) {
+      safe::ReadAccess<LockableStreamConfig> value{stream_config_};
+      stream = *value;
+      stream_config_ready_ = false;
+    }
+
+    if (stream.view != StreamConfig::View::NONE ||
+        stream.contour != StreamConfig::Contour::NONE) {
       cv::Mat preview;
-      switch (stream->view) {
+      switch (stream.view) {
         case StreamConfig::View::NONE:
-          if (stream->contour != StreamConfig::Contour::NONE) {
+          if (stream.contour != StreamConfig::Contour::NONE) {
             preview = cv::Mat::zeros(frame.size(), CV_8UC3);
           }
           break;
         case StreamConfig::View::ORIGINAL:
-          if (stream->contour != StreamConfig::Contour::NONE) {
+          if (stream.contour != StreamConfig::Contour::NONE) {
             cv::cvtColor(frame, preview, cv::COLOR_BGR2GRAY);
             cv::cvtColor(preview, preview, cv::COLOR_GRAY2BGR);
             break;
@@ -139,7 +146,7 @@ void AbstractPipeline::Run() {
           break;
       }
 
-      switch (stream->contour) {
+      switch (stream.contour) {
         case StreamConfig::Contour::NONE:
           break;
         case StreamConfig::Contour::FILTER:

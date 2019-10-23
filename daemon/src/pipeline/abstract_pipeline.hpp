@@ -1,16 +1,19 @@
 #pragma once
 
+#include <safe/lockable.h>
 #include <atomic>
 #include <opencv2/core/mat.hpp>
 #include <opencv2/core/utility.hpp>
 #include <opencv2/videoio.hpp>
 
+#include "config/pipeline_config.hpp"
+#include "config/stream_config.hpp"
 #include "link/target_data.hpp"
 #include "pipeline/pipeline.hpp"
 
 namespace deadeye {
-struct SteamConfig;
-struct PipelineConfig;
+using LockableStreamConfig = safe::Lockable<StreamConfig>;
+using LockablePipelineConfig = safe::Lockable<PipelineConfig>;
 
 class AbstractPipeline : public Pipeline {
  public:
@@ -30,15 +33,15 @@ class AbstractPipeline : public Pipeline {
   virtual TargetDataPtr ProcessTarget(Contours const &contours) = 0;
 
   std::string id_;
-  std::atomic<PipelineConfig *> pipeline_config_{nullptr};
-  std::atomic<StreamConfig *> stream_config_{nullptr};
   std::atomic<bool> cancel_{false};
+
+  LockableStreamConfig stream_config_;
+  std::atomic<bool> stream_config_ready_;
+  LockablePipelineConfig pipeline_config_;
+  std::atomic<bool> pipeline_config_ready_;
 
  private:
   void LogTickMeter(cv::TickMeter tm);
-
-  StreamConfig *prev_stream_config_{nullptr};
-  PipelineConfig *prev_pipeline_config_{nullptr};
 };
 
 }  // namespace deadeye
