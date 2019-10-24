@@ -15,16 +15,21 @@
 
 namespace deadeye {
 
+template <class T>
+using owner = T;
+
 // ---------------------------------------------------------------------------
 // Events
 //
 struct CameraOn : tinyfsm::Event {};
 struct CameraOff : tinyfsm::Event {};
 struct ConfigCamera : tinyfsm::Event {
-  PipelineConfig *config;
+  owner<PipelineConfig *> config;
+  ~ConfigCamera() { delete config; }
 };
 struct ConfigStream : tinyfsm::Event {
-  StreamConfig *config;
+  owner<StreamConfig *> config;
+  ~ConfigStream() { delete config; }
 };
 
 // ---------------------------------------------------------------------------

@@ -33,7 +33,6 @@ AbstractPipeline::~AbstractPipeline() {}
 void AbstractPipeline::UpdateConfig(PipelineConfig *config) {
   safe::WriteAccess<LockablePipelineConfig> value{pipeline_config_};
   *value = *config;
-  delete config;
   spdlog::info("{}:{}", *this, *value);
   pipeline_config_ready_ = true;
 }
@@ -44,7 +43,6 @@ void AbstractPipeline::UpdateConfig(PipelineConfig *config) {
 void AbstractPipeline::UpdateStream(StreamConfig *config) {
   safe::WriteAccess<LockableStreamConfig> value{stream_config_};
   *value = *config;
-  delete config;
   spdlog::info("{}:{}", *this, *value);
   stream_config_ready_ = true;
 }
@@ -53,6 +51,9 @@ void AbstractPipeline::CancelTask() { cancel_ = true; }
 
 void AbstractPipeline::Run() {
   cancel_ = false;
+  pipeline_config_ready_ = true;
+  stream_config_ready_ = true;
+
   spdlog::info("Pipeline<{}>: starting", inum_);
 
   // Set up streaming. CScore streaming will hang on connection if too many
@@ -97,6 +98,7 @@ void AbstractPipeline::Run() {
       safe::ReadAccess<LockablePipelineConfig> value{pipeline_config_};
       config = *value;
       pipeline_config_ready_ = false;
+      spdlog::debug("{}:{}", *this, *value);
     }
 
     cv::Mat hsv_threshold_output;
@@ -122,6 +124,7 @@ void AbstractPipeline::Run() {
       safe::ReadAccess<LockableStreamConfig> value{stream_config_};
       stream = *value;
       stream_config_ready_ = false;
+      spdlog::debug("{}:{}", *this, *value);
     }
 
     if (stream.view != StreamConfig::View::NONE ||

@@ -54,7 +54,6 @@ void DriverPipeline::UpdateStream(StreamConfig *config) {
   stream_enabled_ = config->view == StreamConfig::View::ORIGINAL;
   spdlog::info("DriverPipeline<{}> stream enabled: {}", inum_,
                stream_enabled_.load());
-  delete config;
 }
 
 cv::VideoCapture DriverPipeline::GetVideoCapture() {
