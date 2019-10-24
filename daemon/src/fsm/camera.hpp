@@ -10,6 +10,7 @@
 #include <tinyfsm.hpp>
 
 #include "config/deadeye_config.hpp"
+#include "config/pipeline_config.hpp"
 #include "config/stream_config.hpp"
 #include "pipeline/pipeline.hpp"
 
@@ -24,12 +25,10 @@ using owner = T;
 struct CameraOn : tinyfsm::Event {};
 struct CameraOff : tinyfsm::Event {};
 struct ConfigCamera : tinyfsm::Event {
-  owner<PipelineConfig *> config;
-  ~ConfigCamera() { delete config; }
+  PipelineConfig config;
 };
 struct ConfigStream : tinyfsm::Event {
-  owner<StreamConfig *> config;
-  ~ConfigStream() { delete config; }
+  StreamConfig config;
 };
 
 // ---------------------------------------------------------------------------
@@ -44,10 +43,10 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
   static void SetPipeline(std::unique_ptr<Pipeline> pipeline) {
     pipeline_ = std::move(pipeline);
   }
-  static void SetConfig(PipelineConfig *config) {
+  static void SetConfig(PipelineConfig const &config) {
     pipeline_->UpdateConfig(config);
   }
-  static void SetStream(StreamConfig *config) {
+  static void SetStream(StreamConfig const &config) {
     pipeline_->UpdateStream(config);
   }
 

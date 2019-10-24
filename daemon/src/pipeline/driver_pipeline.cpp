@@ -37,21 +37,13 @@ DriverPipeline::DriverPipeline(int inum)
       WPI_LOG_WARNING);
 }
 
-DriverPipeline::~DriverPipeline() {
-  if (pipeline_config_ != nullptr) delete pipeline_config_;
+void DriverPipeline::UpdateConfig(PipelineConfig const &config) {
+  pipeline_config_ = config;
+  spdlog::info("DriverPipeline<{}> new config: {}", inum_, pipeline_config_);
 }
 
-void DriverPipeline::UpdateConfig(PipelineConfig *config) {
-  if (pipeline_config_ == nullptr) {
-    pipeline_config_ = config;
-    spdlog::info("DriverPipeline<{}> new config: {}", inum_, *pipeline_config_);
-  } else {
-    spdlog::warn("PipelineConfig updates ignored in DriverPipeline");
-  }
-}
-
-void DriverPipeline::UpdateStream(StreamConfig *config) {
-  stream_enabled_ = config->view == StreamConfig::View::ORIGINAL;
+void DriverPipeline::UpdateStream(StreamConfig const &config) {
+  stream_enabled_ = config.view == StreamConfig::View::ORIGINAL;
   spdlog::info("DriverPipeline<{}> stream enabled: {}", inum_,
                stream_enabled_.load());
 }
@@ -60,7 +52,7 @@ cv::VideoCapture DriverPipeline::GetVideoCapture() {
 #ifdef __APPLE__
   std::string pipeline = "autovideosrc ! videoconvert ! appsink";
 #else
-  std::string pipeline = pipeline_config_->gstreamer_config.GetJetsonCSI();
+  std::string pipeline{pipeline_config_.gstreamer_config.GetJetsonCSI()};
   spdlog::debug("{}: {}", *this, pipeline);
 
 #endif

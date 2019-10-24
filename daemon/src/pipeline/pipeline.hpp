@@ -5,9 +5,10 @@
 #include <exception>
 #include <opencv2/core/types.hpp>
 
+#include "config/pipeline_config.hpp"
+#include "config/stream_config.hpp"
+
 namespace deadeye {
-struct PipelineConfig;
-struct StreamConfig;
 struct TargetData;
 
 using Contours = std::vector<std::vector<cv::Point>>;
@@ -28,8 +29,8 @@ class Pipeline {
   int GetInum() { return inum_; }
   virtual void Run() = 0;
   virtual void CancelTask() = 0;
-  virtual void UpdateConfig(PipelineConfig *config) = 0;
-  virtual void UpdateStream(StreamConfig *config) = 0;
+  virtual void UpdateConfig(PipelineConfig const &config) = 0;
+  virtual void UpdateStream(StreamConfig const &config) = 0;
 
   template <typename OStream>
   friend OStream &operator<<(OStream &os, Pipeline const &p) {
@@ -46,8 +47,8 @@ class NullPipeline : public Pipeline {
  public:
   NullPipeline(int inum) : Pipeline{inum} {}
   void CancelTask() override {}
-  void UpdateConfig(PipelineConfig *) override {}
-  void UpdateStream(StreamConfig *) override {}
+  void UpdateConfig(PipelineConfig const &) override {}
+  void UpdateStream(StreamConfig const &) override {}
   void Run() override { spdlog::warn("{}: Run not implemented", *this); }
 
  protected:

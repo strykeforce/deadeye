@@ -30,9 +30,9 @@ AbstractPipeline::~AbstractPipeline() {}
 /**
  * UpdateConfig handles changes to pipeline config.
  */
-void AbstractPipeline::UpdateConfig(PipelineConfig *config) {
+void AbstractPipeline::UpdateConfig(PipelineConfig const &config) {
   safe::WriteAccess<LockablePipelineConfig> value{pipeline_config_};
-  *value = *config;
+  *value = config;
   spdlog::info("{}:{}", *this, *value);
   pipeline_config_ready_ = true;
 }
@@ -40,9 +40,9 @@ void AbstractPipeline::UpdateConfig(PipelineConfig *config) {
 /**
  * UpdateStream handles changes to video streaming.
  */
-void AbstractPipeline::UpdateStream(StreamConfig *config) {
+void AbstractPipeline::UpdateStream(StreamConfig const &config) {
   safe::WriteAccess<LockableStreamConfig> value{stream_config_};
-  *value = *config;
+  *value = config;
   spdlog::info("{}:{}", *this, *value);
   stream_config_ready_ = true;
 }

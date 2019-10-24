@@ -19,8 +19,8 @@ class AbstractPipeline : public Pipeline {
  public:
   AbstractPipeline(int inum);
   virtual ~AbstractPipeline();
-  void UpdateConfig(PipelineConfig *config) override;
-  void UpdateStream(StreamConfig *config) override;
+  void UpdateConfig(PipelineConfig const &config) override;
+  void UpdateStream(StreamConfig const &config) override;
   void CancelTask() override;
   virtual void Run() override;
 
