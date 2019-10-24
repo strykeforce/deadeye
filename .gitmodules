@@ -1,3 +1,6 @@
 [submodule "vendor/tinyfsm"]
 	path = daemon/dependencies/tinyfsm
 	url = https://github.com/digint/tinyfsm.git
+[submodule "daemon/dependencies/safe"]
+	path = daemon/dependencies/safe
+	url = https://github.com/LouisCharlesC/safe.git

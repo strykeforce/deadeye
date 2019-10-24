@@ -10,7 +10,13 @@ char const* PipelineConfig::kHsvValKey{"val"};
 char const* PipelineConfig::kExposureKey{"exposure"};
 char const* PipelineConfig::kGStreamerConfigKey{"gstreamer"};
 
-PipelineConfig::PipelineConfig() {}
+PipelineConfig::PipelineConfig()
+    : sn(-1),
+      hue({-1, -1}),
+      sat({-1, -1}),
+      val({-1, -1}),
+      exposure(-1.0),
+      gstreamer_config() {}
 
 PipelineConfig::PipelineConfig(int sn, hsv_t hue, hsv_t sat, hsv_t val,
                                double exposure,

@@ -179,15 +179,13 @@ void Controller::Run() {
           assert(has_active_pipeline_[0]);
           spdlog::debug("Controller: new Pipeline<0> config event");
           ConfigCamera event;
-          event.config =
-              new PipelineConfig(entry.value);  // Pipeline takes ownership
+          event.config = PipelineConfig{entry.value};
           Camera<0>::dispatch(event);
           break;
         }
         case hash(DE_STREAM_CONFIG_ENTRY("0")): {
           ConfigStream event;
-          event.config =
-              new StreamConfig(entry.value);  // Pipeline takes ownership
+          event.config = StreamConfig{entry.value};
           Camera<0>::dispatch(event);
           break;
         }
@@ -217,16 +215,14 @@ void Controller::Run() {
         case hash(DE_CAMERA_CONFIG_ENTRY("1")): {
           assert(has_active_pipeline_[1]);
           ConfigCamera event;
-          event.config =
-              new PipelineConfig(entry.value);  // Pipeline takes ownership
+          event.config = PipelineConfig{entry.value};
           Camera<1>::dispatch(event);
           break;
         }
         case hash(DE_STREAM_CONFIG_ENTRY("1")): {
           assert(has_active_pipeline_[1]);
           ConfigStream event;
-          event.config =
-              new StreamConfig(entry.value);  // Pipeline takes ownership
+          event.config = StreamConfig{entry.value};
           Camera<1>::dispatch(event);
           break;
         }
@@ -257,16 +253,14 @@ void Controller::Run() {
         case hash(DE_CAMERA_CONFIG_ENTRY("2")): {
           assert(has_active_pipeline_[2]);
           ConfigCamera event;
-          event.config =
-              new PipelineConfig(entry.value);  // Pipeline takes ownership
+          event.config = PipelineConfig{entry.value};
           Camera<2>::dispatch(event);
           break;
         }
         case hash(DE_STREAM_CONFIG_ENTRY("2")): {
           assert(has_active_pipeline_[2]);
           ConfigStream event;
-          event.config =
-              new StreamConfig(entry.value);  // Pipeline takes ownership
+          event.config = StreamConfig{entry.value};
           Camera<2>::dispatch(event);
           break;
         }
@@ -297,16 +291,14 @@ void Controller::Run() {
         case hash(DE_CAMERA_CONFIG_ENTRY("3")): {
           assert(has_active_pipeline_[3]);
           ConfigCamera event;
-          event.config =
-              new PipelineConfig(entry.value);  // Pipeline takes ownership
+          event.config = PipelineConfig{entry.value};
           Camera<3>::dispatch(event);
           break;
         }
         case hash(DE_STREAM_CONFIG_ENTRY("3")): {
           assert(has_active_pipeline_[3]);
           ConfigStream event;
-          event.config =
-              new StreamConfig(entry.value);  // Pipeline takes ownership
+          event.config = StreamConfig{entry.value};
           Camera<3>::dispatch(event);
           break;
         }
@@ -337,16 +329,14 @@ void Controller::Run() {
         case hash(DE_CAMERA_CONFIG_ENTRY("4")): {
           assert(has_active_pipeline_[4]);
           ConfigCamera event;
-          event.config =
-              new PipelineConfig(entry.value);  // Pipeline takes ownership
+          event.config = PipelineConfig{entry.value};
           Camera<4>::dispatch(event);
           break;
         }
         case hash(DE_STREAM_CONFIG_ENTRY("4")): {
           assert(has_active_pipeline_[4]);
           ConfigStream event;
-          event.config =
-              new StreamConfig(entry.value);  // Pipeline takes ownership
+          event.config = StreamConfig{entry.value};
           Camera<4>::dispatch(event);
           break;
         }
@@ -470,10 +460,15 @@ void Controller::InitializeCamera() {
   if (!has_active_pipeline_[inum]) return;
 
   auto nti = nt::NetworkTableInstance(inst_);
+
   auto value = nti.GetEntry(CameraConfigEntryPath(inum)).GetValue();
-  Camera<inum>::SetConfig(new PipelineConfig(value));  // ownership passed
+  PipelineConfig pc{value};
+  Camera<inum>::SetConfig(pc);
+
   value = nti.GetEntry(StreamConfigEntryPath(inum)).GetValue();
-  Camera<inum>::SetStream(new StreamConfig(value));  // ownership passed
+  StreamConfig sc{value};
+  Camera<inum>::SetStream(sc);
+
   spdlog::info("Camera<{}> initialized", inum);
 }
 

@@ -19,7 +19,8 @@ namespace {
 std::string stream_url(int inum);
 }
 
-StreamConfig::StreamConfig() {}
+StreamConfig::StreamConfig()
+    : sn(0), url(""), view(View::NONE), contour(Contour::NONE) {}
 
 StreamConfig::StreamConfig(int inum)
     : sn(0), url(stream_url(inum)), view(View::NONE), contour(Contour::NONE) {}

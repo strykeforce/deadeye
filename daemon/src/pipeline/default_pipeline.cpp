@@ -17,10 +17,10 @@ bool DefaultPipeline::StartCapture() {
 #ifdef __APPLE__
   return cap_.open(0, cv::CAP_AVFOUNDATION);
 #else
-  PipelineConfig *pipeline_config = pipeline_config_.load();
-  GStreamerConfig gsc = pipeline_config->gstreamer_config;
+  safe::ReadAccess<LockablePipelineConfig> pc{pipeline_config_};
+  GStreamerConfig gsc = pc->gstreamer_config;
 
-  std::string pipeline = gsc.GetJetsonCSI();
+  std::string pipeline{gsc.GetJetsonCSI()};
   spdlog::debug("{}: {}", *this, pipeline);
 
   return cap_.open(pipeline, cv::CAP_GSTREAMER);
