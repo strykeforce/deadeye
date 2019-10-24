@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cscore.h>
 #include <safe/lockable.h>
 #include <atomic>
 #include <opencv2/core/mat.hpp>
@@ -41,7 +42,22 @@ class AbstractPipeline : public Pipeline {
   std::atomic<bool> pipeline_config_ready_;
 
  private:
+  void StreamFrame();
   void LogTickMeter(cv::TickMeter tm);
+
+  inline bool StreamEnabled() {
+    return !(view_ == StreamConfig::View::NONE &&
+             contour_ == StreamConfig::Contour::NONE);
+  }
+
+  cv::Mat frame_;
+  cv::Mat hsv_threshold_output_;
+  Contours filter_contours_output_;
+  Contours find_contours_output_;
+  StreamConfig::View view_;
+  StreamConfig::Contour contour_;
+  cs::CvSource cvsource_;
+  TargetDataPtr target_data_;
 };
 
 }  // namespace deadeye

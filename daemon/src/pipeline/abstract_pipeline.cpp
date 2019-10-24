@@ -1,13 +1,11 @@
 #include "abstract_pipeline.hpp"
 
-#include <cscore.h>
 #include <spdlog/spdlog.h>
 #include <wpi/Logger.h>
 
 #include <opencv2/imgproc.hpp>
 
 #include "config/deadeye_config.hpp"
-#include "link/center_target_data.hpp"
 #include "link/link.hpp"
 
 using namespace deadeye;
@@ -59,16 +57,11 @@ void AbstractPipeline::Run() {
   // Set up streaming. CScore streaming will hang on connection if too many
   // connections are attempted, current workaround is for user to  disable and
   // reenable the stream to reset.
-  cs::CvSource cvsource{"cvsource", cs::VideoMode::kMJPEG, kPreviewWidth,
-                        kPreviewHeight, 30};
+  cvsource_ = cs::CvSource("cvsource", cs::VideoMode::kMJPEG, kPreviewWidth,
+                           kPreviewHeight, 30);
   cs::MjpegServer mjpegServer{"cvhttpserver", 5800 + inum_};
-  mjpegServer.SetSource(cvsource);
+  mjpegServer.SetSource(cvsource_);
   spdlog::info("{} streaming on port {}", *this, mjpegServer.GetPort());
-
-  cv::Mat frame;
-  Link link{inum_};
-  StreamConfig stream;
-  PipelineConfig config;
 
   if (!StartCapture()) {
     spdlog::critical("{} failed to start video capture", *this);
@@ -76,12 +69,14 @@ void AbstractPipeline::Run() {
     return;
   }
 
-  // Loop until task cancelled.
+  Link link{inum_};
+  cv::Scalar hsv_low, hsv_high;
   cv::TickMeter tm;
-  for (int i = 0;; i++) {
+
+  for (int i = 0;; i++) {  // Loop until task cancelled.
     tm.start();
 
-    // Check for cancellation of this task.
+    // Check for cancellation of this pipeline.
     if (cancel_.load()) {
       StopCapture();
       LogTickMeter(tm);
@@ -89,85 +84,42 @@ void AbstractPipeline::Run() {
     }
 
     // Get new frame and process it.
-    if (!GrabFrame(frame)) {
+    if (!GrabFrame(frame_)) {
       spdlog::critical("{} failed to grab frame", *this);
     }
 
     // TODO: extract and cache the hi/lo cv:Scalars perhaps
     if (pipeline_config_ready_.load()) {
-      safe::ReadAccess<LockablePipelineConfig> value{pipeline_config_};
-      config = *value;
+      safe::ReadAccess<LockablePipelineConfig> pc{pipeline_config_};
+      hsv_low = cv::Scalar(pc->hue[0], pc->sat[0], pc->val[0]);
+      hsv_high = cv::Scalar(pc->hue[1], pc->sat[1], pc->val[1]);
       pipeline_config_ready_ = false;
-      spdlog::debug("{}:{}", *this, *value);
+      spdlog::debug("{}:{}", *this, *pc);
     }
 
-    cv::Mat hsv_threshold_output;
-    cv::cvtColor(frame, hsv_threshold_output, cv::COLOR_BGR2HSV);
-    cv::inRange(hsv_threshold_output,
-                cv::Scalar(config.hue[0], config.sat[0], config.val[0]),
-                cv::Scalar(config.hue[1], config.sat[1], config.val[1]),
-                hsv_threshold_output);
+    cv::cvtColor(frame_, hsv_threshold_output_, cv::COLOR_BGR2HSV);
+    cv::inRange(hsv_threshold_output_, hsv_low, hsv_high,
+                hsv_threshold_output_);
 
-    Contours find_contours_output;
-    cv::findContours(hsv_threshold_output, find_contours_output,
+    cv::findContours(hsv_threshold_output_, find_contours_output_,
                      cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
 
-    // spdlog::debug("Contours found: {}", find_contours_output.size());
+    // spdlog::debug("Contours found: {}", find_contours_output_.size());
 
-    Contours filter_contours_output;
-    FilterContours(find_contours_output, filter_contours_output);
-    TargetDataPtr td = ProcessTarget(filter_contours_output);
-    td->serial = i;
-    link.Send(td.get());
+    FilterContours(find_contours_output_, filter_contours_output_);
+    target_data_ = ProcessTarget(filter_contours_output_);
+    target_data_->serial = i;
+    link.Send(target_data_.get());
 
     if (stream_config_ready_.load()) {
-      safe::ReadAccess<LockableStreamConfig> value{stream_config_};
-      stream = *value;
+      safe::ReadAccess<LockableStreamConfig> sc{stream_config_};
+      view_ = sc->view;
+      contour_ = sc->contour;
       stream_config_ready_ = false;
-      spdlog::debug("{}:{}", *this, *value);
+      spdlog::debug("{}:{}", *this, *sc);
     }
 
-    if (stream.view != StreamConfig::View::NONE ||
-        stream.contour != StreamConfig::Contour::NONE) {
-      cv::Mat preview;
-      switch (stream.view) {
-        case StreamConfig::View::NONE:
-          if (stream.contour != StreamConfig::Contour::NONE) {
-            preview = cv::Mat::zeros(frame.size(), CV_8UC3);
-          }
-          break;
-        case StreamConfig::View::ORIGINAL:
-          if (stream.contour != StreamConfig::Contour::NONE) {
-            cv::cvtColor(frame, preview, cv::COLOR_BGR2GRAY);
-            cv::cvtColor(preview, preview, cv::COLOR_GRAY2BGR);
-            break;
-          }
-          preview = frame;
-          break;
-        case StreamConfig::View::MASK:
-          cv::cvtColor(hsv_threshold_output, preview, cv::COLOR_GRAY2BGR);
-          break;
-      }
-
-      switch (stream.contour) {
-        case StreamConfig::Contour::NONE:
-          break;
-        case StreamConfig::Contour::FILTER:
-          cv::drawContours(preview, filter_contours_output, -1,
-                           cv::Scalar(255, 0, 240), 2);
-          td->DrawMarkers(preview);
-          break;
-
-        case StreamConfig::Contour::ALL:
-          cv::drawContours(preview, find_contours_output, -1,
-                           cv::Scalar(255, 0, 240), 2);
-          break;
-      }
-
-      cv::resize(preview, preview, cv::Size(kPreviewWidth, kPreviewHeight), 0,
-                 0, cv::INTER_AREA);
-      cvsource.PutFrame(preview);
-    }
+    if (StreamEnabled()) StreamFrame();
 
     tm.stop();
   }
@@ -184,6 +136,50 @@ void AbstractPipeline::FilterContours(Contours const &src, Contours &dest) {}
 /////////////////////////////////////////////////////////////////////////////
 // private
 /////////////////////////////////////////////////////////////////////////////
+
+void AbstractPipeline::StreamFrame() {
+  using View = StreamConfig::View;
+  using Contour = StreamConfig::Contour;
+
+  cv::Mat preview;
+  switch (view_) {
+    case View::NONE:
+      if (contour_ != Contour::NONE) {
+        preview = cv::Mat::zeros(frame_.size(), CV_8UC3);
+      }
+      break;
+    case View::ORIGINAL:
+      if (contour_ != Contour::NONE) {
+        cv::cvtColor(frame_, preview, cv::COLOR_BGR2GRAY);
+        cv::cvtColor(preview, preview, cv::COLOR_GRAY2BGR);
+        break;
+      }
+      preview = frame_;
+      break;
+    case View::MASK:
+      cv::cvtColor(hsv_threshold_output_, preview, cv::COLOR_GRAY2BGR);
+      break;
+  }
+
+  switch (contour_) {
+    case Contour::NONE:
+      break;
+    case Contour::FILTER:
+      cv::drawContours(preview, filter_contours_output_, -1,
+                       cv::Scalar(255, 0, 240), 2);
+      target_data_->DrawMarkers(preview);
+      break;
+
+    case Contour::ALL:
+      cv::drawContours(preview, find_contours_output_, -1,
+                       cv::Scalar(255, 0, 240), 2);
+      break;
+  }
+
+  cv::resize(preview, preview, cv::Size(kPreviewWidth, kPreviewHeight), 0, 0,
+             cv::INTER_AREA);
+  cvsource_.PutFrame(preview);
+}
 
 void AbstractPipeline::LogTickMeter(cv::TickMeter tm) {
   spdlog::info("{}: stopping", *this);
