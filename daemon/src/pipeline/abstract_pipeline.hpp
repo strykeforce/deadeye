@@ -46,8 +46,8 @@ class AbstractPipeline : public Pipeline {
   void LogTickMeter(cv::TickMeter tm);
 
   inline bool StreamEnabled() {
-    return !(view_ == StreamConfig::View::NONE &&
-             contour_ == StreamConfig::Contour::NONE);
+    return !(view_ == StreamConfig::View::none &&
+             contour_ == StreamConfig::Contour::none);
   }
 
   cv::Mat frame_;

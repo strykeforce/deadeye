@@ -143,34 +143,34 @@ void AbstractPipeline::StreamFrame() {
 
   cv::Mat preview;
   switch (view_) {
-    case View::NONE:
-      if (contour_ != Contour::NONE) {
+    case View::none:
+      if (contour_ != Contour::none) {
         preview = cv::Mat::zeros(frame_.size(), CV_8UC3);
       }
       break;
-    case View::ORIGINAL:
-      if (contour_ != Contour::NONE) {
+    case View::original:
+      if (contour_ != Contour::none) {
         cv::cvtColor(frame_, preview, cv::COLOR_BGR2GRAY);
         cv::cvtColor(preview, preview, cv::COLOR_GRAY2BGR);
         break;
       }
       preview = frame_;
       break;
-    case View::MASK:
+    case View::mask:
       cv::cvtColor(hsv_threshold_output_, preview, cv::COLOR_GRAY2BGR);
       break;
   }
 
   switch (contour_) {
-    case Contour::NONE:
+    case Contour::none:
       break;
-    case Contour::FILTER:
+    case Contour::filter:
       cv::drawContours(preview, filter_contours_output_, -1,
                        cv::Scalar(255, 0, 240), 2);
       target_data_->DrawMarkers(preview);
       break;
 
-    case Contour::ALL:
+    case Contour::all:
       cv::drawContours(preview, find_contours_output_, -1,
                        cv::Scalar(255, 0, 240), 2);
       break;

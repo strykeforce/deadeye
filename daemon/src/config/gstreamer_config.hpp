@@ -10,6 +10,8 @@ using json = nlohmann::json;
 namespace deadeye {
 
 struct GStreamerConfig {
+  enum class Type { jetson, osx, test };
+
   static char const* kCaptureWidthKey;
   static char const* kCaptureHeightKey;
   static char const* kOutputWidthKey;

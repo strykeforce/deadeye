@@ -20,10 +20,10 @@ std::string stream_url(int inum);
 }
 
 StreamConfig::StreamConfig()
-    : sn(0), url(""), view(View::NONE), contour(Contour::NONE) {}
+    : sn(0), url(""), view(View::none), contour(Contour::none) {}
 
 StreamConfig::StreamConfig(int inum)
-    : sn(0), url(stream_url(inum)), view(View::NONE), contour(Contour::NONE) {}
+    : sn(0), url(stream_url(inum)), view(View::none), contour(Contour::none) {}
 
 StreamConfig::StreamConfig(int sn, std::string url, View view, Contour contour)
     : sn(sn), url(url), view(view), contour(contour) {}

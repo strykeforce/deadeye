@@ -10,8 +10,8 @@ using json = nlohmann::json;
 namespace deadeye {
 
 struct StreamConfig {
-  enum class View { NONE, ORIGINAL, MASK };
-  enum class Contour { NONE, FILTER, ALL };
+  enum class View { none, original, mask };
+  enum class Contour { none, filter, all };
 
   static char const* kSerialKey;
   static char const* kUrlKey;
@@ -20,8 +20,8 @@ struct StreamConfig {
 
   int sn = 0;
   std::string url;
-  View view = View::NONE;
-  Contour contour = Contour::NONE;
+  View view;
+  Contour contour;
 
   /**
    * Default constructor.
@@ -47,26 +47,26 @@ struct StreamConfig {
   friend OStream& operator<<(OStream& os, StreamConfig const& sc) {
     std::string view;
     switch (sc.view) {
-      case View::NONE:
-        view = "NONE";
+      case View::none:
+        view = "none";
         break;
-      case View::ORIGINAL:
-        view = "ORIGINAL";
+      case View::original:
+        view = "original";
         break;
-      case View::MASK:
-        view = "MASK";
+      case View::mask:
+        view = "mask";
         break;
     }
 
     std::string contour;
     switch (sc.contour) {
-      case Contour::NONE:
-        contour = "NONE";
+      case Contour::none:
+        contour = "none";
         break;
-      case Contour::FILTER:
-        contour = "FILTER";
+      case Contour::filter:
+        contour = "filter";
         break;
-      case Contour::ALL:
+      case Contour::all:
         contour = "ALL";
         break;
     }
@@ -90,16 +90,16 @@ inline bool operator!=(StreamConfig const& lhs, StreamConfig const& rhs) {
 
 NLOHMANN_JSON_SERIALIZE_ENUM(StreamConfig::View,
                              {
-                                 {StreamConfig::View::NONE, "none"},
-                                 {StreamConfig::View::ORIGINAL, "original"},
-                                 {StreamConfig::View::MASK, "mask"},
+                                 {StreamConfig::View::none, "none"},
+                                 {StreamConfig::View::original, "original"},
+                                 {StreamConfig::View::mask, "mask"},
                              })
 
 NLOHMANN_JSON_SERIALIZE_ENUM(StreamConfig::Contour,
                              {
-                                 {StreamConfig::Contour::NONE, "none"},
-                                 {StreamConfig::Contour::FILTER, "filter"},
-                                 {StreamConfig::Contour::ALL, "all"},
+                                 {StreamConfig::Contour::none, "none"},
+                                 {StreamConfig::Contour::filter, "filter"},
+                                 {StreamConfig::Contour::all, "all"},
                              })
 
 }  // namespace deadeye

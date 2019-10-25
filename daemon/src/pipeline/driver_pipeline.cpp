@@ -43,7 +43,7 @@ void DriverPipeline::UpdateConfig(PipelineConfig const &config) {
 }
 
 void DriverPipeline::UpdateStream(StreamConfig const &config) {
-  stream_enabled_ = config.view == StreamConfig::View::ORIGINAL;
+  stream_enabled_ = config.view == StreamConfig::View::original;
   spdlog::info("DriverPipeline<{}> stream enabled: {}", inum_,
                stream_enabled_.load());
 }
