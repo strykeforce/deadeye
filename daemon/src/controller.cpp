@@ -435,9 +435,13 @@ void Controller::InitializeNetworkTables() {
     table->PutBoolean(DE_BLINK, false);
 
     auto entry = nti.GetEntry(CameraConfigEntryPath(i));
-    PipelineConfig pc{
-        0,        {0, 255}, {0, 255},
-        {0, 255}, 0.5,      GStreamerConfig{1280, 720, 320, 180, 60, 0, 0.5}};
+    PipelineConfig pc{0,
+                      {0, 255},
+                      {0, 255},
+                      {0, 255},
+                      0.5,
+                      GStreamerConfig{GStreamerConfig::Type::test, 0, 0, 320,
+                                      180, 60, 0, 0.0}};
     json j = pc;
     entry.SetDefaultString(j.dump());
     entry.SetPersistent();

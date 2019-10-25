@@ -14,23 +14,19 @@ DefaultPipeline::DefaultPipeline(int inum) : AbstractPipeline{inum} {}
 
 bool DefaultPipeline::StartCapture() {
   if (cap_.isOpened()) return true;
-#ifdef __APPLE__
-  return cap_.open(0, cv::CAP_AVFOUNDATION);
-#else
   safe::ReadAccess<LockablePipelineConfig> pc{pipeline_config_};
   GStreamerConfig gsc = pc->gstreamer_config;
-
-  std::string pipeline{gsc.GetJetsonCSI()};
+  auto pipeline = gsc.Pipeline();
   spdlog::debug("{}: {}", *this, pipeline);
-
   return cap_.open(pipeline, cv::CAP_GSTREAMER);
-#endif
 }
 
 void DefaultPipeline::StopCapture() { cap_.release(); }
 
 bool DefaultPipeline::GrabFrame(cv::Mat &frame) {
   if (!cap_.read(frame)) return false;  // TODO: check for empty?
+  if (frame.rows == 240) return true;
+
   // change aspect ration
   int border = frame.rows / 6;
   cv::copyMakeBorder(frame, frame, border, border, 0, 0, cv::BORDER_CONSTANT,
@@ -40,6 +36,7 @@ bool DefaultPipeline::GrabFrame(cv::Mat &frame) {
 
 // This filter returns the contour with the largest area.
 void DefaultPipeline::FilterContours(Contours const &src, Contours &dest) {
+  dest.clear();
   auto max_area_iter = std::max_element(
       src.begin(), src.end(),
       [](std::vector<cv::Point> const &a, std::vector<cv::Point> const &b) {
@@ -50,8 +47,16 @@ void DefaultPipeline::FilterContours(Contours const &src, Contours &dest) {
   // throw PipelineException("Test Exception");
 }
 
+// Target is center of contour bounding box.
 TargetDataPtr DefaultPipeline::ProcessTarget(Contours const &contours) {
-  return std::make_unique<CenterTargetData>(id_, 0, false, 0, 0);
+  if (contours.size() == 0)
+    return std::make_unique<CenterTargetData>(id_, 0, false, 0, 0);
+  auto contour = contours[0];
+  auto rect = cv::boundingRect(contour);
+  int x = rect.x + (rect.width / 2);
+  int y = rect.y + (rect.height / 2);
+
+  return std::make_unique<CenterTargetData>(id_, 0, true, x, y);
 }
 
 std::string DefaultPipeline::ToString() const {

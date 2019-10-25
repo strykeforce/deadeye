@@ -12,6 +12,7 @@ namespace deadeye {
 struct GStreamerConfig {
   enum class Type { jetson, osx, test };
 
+  static char const* kTypeKey;
   static char const* kCaptureWidthKey;
   static char const* kCaptureHeightKey;
   static char const* kOutputWidthKey;
@@ -20,36 +21,50 @@ struct GStreamerConfig {
   static char const* kFlipModeKey;
   static char const* kExposureKey;
 
+  Type type = Type::test;
   int capture_width = 0;
   int capture_height = 0;
   int output_width = 0;
   int output_height = 0;
   int frame_rate = 0;
   int flip_mode = 0;
-  double exposure = 1.0;
+  double exposure = 0.0;
 
   /**
    * Default constructor.
    */
-  GStreamerConfig();
+  GStreamerConfig() = default;
 
   /**
    * Constructor from member values.
    */
-  GStreamerConfig(int capture_width, int capture_height, int output_width,
-                  int output_height, int frame_rate, int flip_mode,
-                  double exposure);
+  GStreamerConfig(Type type, int capture_width, int capture_height,
+                  int output_width, int output_height, int frame_rate,
+                  int flip_mode, double exposure);
 
   /*
    * Get Jetson CSI Camera pipeline.
    */
-  std::string GetJetsonCSI();
+  std::string Pipeline();
 
   template <typename OStream>
   friend OStream& operator<<(OStream& os, GStreamerConfig const& gsc) {
+    std::string_view type;
+    switch (gsc.type) {
+      case Type::jetson:
+        type = "jetson";
+        break;
+      case Type::osx:
+        type = "osx";
+        break;
+      case Type::test:
+        type = "test";
+        break;
+    }
     std::string output = fmt::format(
-        "GStreamerConfig<cw={}, ch={}, ow={}, oh={}, fps={}, flip={}, exp={}>",
-        gsc.capture_width, gsc.capture_height, gsc.output_width,
+        "GStreamerConfig<type={}, cw={}, ch={}, ow={}, oh={}, fps={}, flip={}, "
+        "exp={}>",
+        type, gsc.capture_width, gsc.capture_height, gsc.output_width,
         gsc.output_height, gsc.frame_rate, gsc.flip_mode, gsc.exposure);
     os << output;
     return os;
@@ -71,5 +86,12 @@ inline bool operator==(GStreamerConfig const& lhs, GStreamerConfig const& rhs) {
 inline bool operator!=(GStreamerConfig const& lhs, GStreamerConfig const& rhs) {
   return !(lhs == rhs);
 }
+
+NLOHMANN_JSON_SERIALIZE_ENUM(GStreamerConfig::Type,
+                             {
+                                 {GStreamerConfig::Type::jetson, "jetson"},
+                                 {GStreamerConfig::Type::osx, "osx"},
+                                 {GStreamerConfig::Type::test, "test"},
+                             })
 
 }  // namespace deadeye

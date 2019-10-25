@@ -12,12 +12,9 @@ TestPatternPipeline::TestPatternPipeline(int inum) : AbstractPipeline{inum} {}
 
 bool TestPatternPipeline::StartCapture() {
   if (cap_.isOpened()) return true;
-  std::string pipeline{
-      "videotestsrc ! video/x-raw, width=640, "
-      "height=480, "
-      "framerate=90/1 ! videoconvert ! video/x-raw, format=(string)BGR ! "
-      "appsink"};
-  return cap_.open(pipeline, cv::CAP_GSTREAMER);
+  safe::ReadAccess<LockablePipelineConfig> pc{pipeline_config_};
+  GStreamerConfig gsc = pc->gstreamer_config;
+  return cap_.open(gsc.Pipeline(), cv::CAP_GSTREAMER);
 }
 
 void TestPatternPipeline::StopCapture() { cap_.release(); }
