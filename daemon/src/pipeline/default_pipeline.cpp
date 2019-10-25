@@ -60,5 +60,5 @@ TargetDataPtr DefaultPipeline::ProcessTarget(Contours const &contours) {
 }
 
 std::string DefaultPipeline::ToString() const {
-  return fmt::format("DefaultPipeline<{}>", inum_);
+  return fmt::format("DefaultPipeline<{}, {}>", inum_, pipeline_type_);
 }

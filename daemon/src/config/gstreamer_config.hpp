@@ -45,27 +45,18 @@ struct GStreamerConfig {
   /*
    * Get Jetson CSI Camera pipeline.
    */
-  std::string Pipeline();
+  std::string Pipeline() const;
+
+  std::string PipelineType() const;
 
   template <typename OStream>
   friend OStream& operator<<(OStream& os, GStreamerConfig const& gsc) {
-    std::string_view type;
-    switch (gsc.type) {
-      case Type::jetson:
-        type = "jetson";
-        break;
-      case Type::osx:
-        type = "osx";
-        break;
-      case Type::test:
-        type = "test";
-        break;
-    }
     std::string output = fmt::format(
         "GStreamerConfig<type={}, cw={}, ch={}, ow={}, oh={}, fps={}, flip={}, "
         "exp={}>",
-        type, gsc.capture_width, gsc.capture_height, gsc.output_width,
-        gsc.output_height, gsc.frame_rate, gsc.flip_mode, gsc.exposure);
+        gsc.PipelineType(), gsc.capture_width, gsc.capture_height,
+        gsc.output_width, gsc.output_height, gsc.frame_rate, gsc.flip_mode,
+        gsc.exposure);
     os << output;
     return os;
   }

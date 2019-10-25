@@ -4,7 +4,6 @@
 #include "controller.hpp"
 #include "pipeline/default_pipeline.hpp"
 #include "pipeline/driver_pipeline.hpp"
-#include "pipeline/test_pattern_pipeline.hpp"
 
 #ifdef DEADEYE_CAMERA0_PIPELINE
 #define DE_P0 std::make_unique<DEADEYE_CAMERA0_PIPELINE>(0)

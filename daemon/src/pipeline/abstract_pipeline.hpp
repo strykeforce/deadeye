@@ -40,6 +40,7 @@ class AbstractPipeline : public Pipeline {
   std::atomic<bool> stream_config_ready_;
   LockablePipelineConfig pipeline_config_;
   std::atomic<bool> pipeline_config_ready_;
+  std::string pipeline_type_{"unknown"};
 
  private:
   void StreamFrame();

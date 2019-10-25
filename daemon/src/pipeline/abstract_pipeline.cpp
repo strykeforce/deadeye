@@ -29,9 +29,11 @@ AbstractPipeline::~AbstractPipeline() {}
  * UpdateConfig handles changes to pipeline config.
  */
 void AbstractPipeline::UpdateConfig(PipelineConfig const &config) {
-  safe::WriteAccess<LockablePipelineConfig> value{pipeline_config_};
-  *value = config;
-  spdlog::info("{}:{}", *this, *value);
+  safe::WriteAccess<LockablePipelineConfig> pc{pipeline_config_};
+  *pc = config;
+  GStreamerConfig gsc = pc->gstreamer_config;
+  pipeline_type_ = gsc.PipelineType();
+  spdlog::info("{}:{}", *this, *pc);
   pipeline_config_ready_ = true;
 }
 

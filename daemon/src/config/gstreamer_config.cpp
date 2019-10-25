@@ -35,7 +35,7 @@ GStreamerConfig::GStreamerConfig(Type type, int capture_width,
       flip_mode(flip_mode),
       exposure(exposure) {}
 
-std::string GStreamerConfig::Pipeline() {
+std::string GStreamerConfig::Pipeline() const {
   switch (type) {
     case Type::jetson: {
       std::string jetson{
@@ -67,6 +67,18 @@ std::string GStreamerConfig::Pipeline() {
       return fmt::format(test, output_width, output_height, frame_rate);
   };
   return "GSTREAMER TYPE NOT FOUND";
+}
+
+std::string GStreamerConfig::PipelineType() const {
+  switch (type) {
+    case Type::jetson:
+      return "jetson";
+    case Type::osx:
+      return "osx";
+    case Type::test:
+      return "test";
+  }
+  return "";
 }
 
 // ---------------------------------------------------------------------------
