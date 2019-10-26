@@ -1,5 +1,5 @@
 #include "catch2/catch.hpp"
-#include "link/center_target_data.hpp"
+#include "link/center_target_data.h"
 
 using namespace deadeye;
 

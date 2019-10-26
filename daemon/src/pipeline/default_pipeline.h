@@ -1,5 +1,5 @@
 #pragma once
-#include "abstract_pipeline.hpp"
+#include "abstract_pipeline.h"
 
 namespace deadeye {
 class DefaultPipeline : public AbstractPipeline {

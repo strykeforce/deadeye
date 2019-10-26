@@ -1,12 +1,12 @@
-#include "abstract_pipeline.hpp"
+#include "abstract_pipeline.h"
 
 #include <spdlog/spdlog.h>
 #include <wpi/Logger.h>
 
 #include <opencv2/imgproc.hpp>
 
-#include "config/deadeye_config.hpp"
-#include "link/link.hpp"
+#include "config/deadeye_config.h"
+#include "link/link.h"
 
 using namespace deadeye;
 

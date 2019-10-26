@@ -3,8 +3,8 @@
 #include <thread>
 #include <tinyfsm.hpp>
 
-#include "controller.hpp"
-#include "lights.hpp"
+#include "controller.h"
+#include "lights.h"
 
 using namespace deadeye;
 

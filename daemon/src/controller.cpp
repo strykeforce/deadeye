@@ -8,13 +8,13 @@
 #include <future>
 #include <tinyfsm.hpp>
 
-#include "config/deadeye_config.hpp"
-#include "config/link_config.hpp"
-#include "config/pipeline_config.hpp"
-#include "config/stream_config.hpp"
-#include "controller.hpp"
-#include "fsm/camera.hpp"
-#include "fsm/lights.hpp"
+#include "config/deadeye_config.h"
+#include "config/link_config.h"
+#include "config/pipeline_config.h"
+#include "config/stream_config.h"
+#include "controller.h"
+#include "fsm/camera.h"
+#include "fsm/lights.h"
 
 // forward declaration
 static spdlog::level::level_enum Nt2spdlogLevel(const nt::LogMessage& msg);

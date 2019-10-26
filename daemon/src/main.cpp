@@ -1,7 +1,7 @@
 #include <spdlog/spdlog.h>
 #include <memory>
 
-#include "deadeye.hpp"
+#include "deadeye.h"
 
 using namespace deadeye;
 

@@ -4,7 +4,7 @@
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <string>
-#include "gstreamer_config.hpp"
+#include "gstreamer_config.h"
 
 using json = nlohmann::json;
 

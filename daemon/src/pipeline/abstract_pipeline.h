@@ -7,10 +7,10 @@
 #include <opencv2/core/utility.hpp>
 #include <opencv2/videoio.hpp>
 
-#include "config/pipeline_config.hpp"
-#include "config/stream_config.hpp"
-#include "link/target_data.hpp"
-#include "pipeline/pipeline.hpp"
+#include "config/pipeline_config.h"
+#include "config/stream_config.h"
+#include "link/target_data.h"
+#include "pipeline/pipeline.h"
 
 namespace deadeye {
 using LockableStreamConfig = safe::Lockable<StreamConfig>;

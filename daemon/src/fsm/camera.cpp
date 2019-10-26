@@ -1,9 +1,9 @@
-#include "camera.hpp"
+#include "camera.h"
 
 #include <future>
 
-#include "controller.hpp"
-#include "lights.hpp"
+#include "controller.h"
+#include "lights.h"
 
 using namespace std::chrono_literals;
 

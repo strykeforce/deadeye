@@ -7,7 +7,7 @@
 #include <future>
 #include <tinyfsm.hpp>
 
-#include "config/deadeye_config.hpp"
+#include "config/deadeye_config.h"
 
 namespace deadeye {
 // ---------------------------------------------------------------------------

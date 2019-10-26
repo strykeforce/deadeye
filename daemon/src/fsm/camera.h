@@ -9,10 +9,10 @@
 #include <memory>
 #include <tinyfsm.hpp>
 
-#include "config/deadeye_config.hpp"
-#include "config/pipeline_config.hpp"
-#include "config/stream_config.hpp"
-#include "pipeline/pipeline.hpp"
+#include "config/deadeye_config.h"
+#include "config/pipeline_config.h"
+#include "config/stream_config.h"
+#include "pipeline/pipeline.h"
 
 namespace deadeye {
 

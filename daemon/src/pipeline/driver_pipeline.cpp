@@ -1,4 +1,4 @@
-#include "driver_pipeline.hpp"
+#include "driver_pipeline.h"
 
 #include <cscore.h>
 #include <fmt/core.h>
@@ -7,10 +7,10 @@
 #include <map>
 #include <opencv2/core/mat.hpp>
 
-#include "config/deadeye_config.hpp"
-#include "config/pipeline_config.hpp"
-#include "config/stream_config.hpp"
-#include "link/link.hpp"
+#include "config/deadeye_config.h"
+#include "config/pipeline_config.h"
+#include "config/stream_config.h"
+#include "link/link.h"
 
 using namespace deadeye;
 

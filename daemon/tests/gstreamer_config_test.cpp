@@ -1,4 +1,4 @@
-#include "config/gstreamer_config.hpp"
+#include "config/gstreamer_config.h"
 // #include <iostream>
 #include "catch2/catch.hpp"
 

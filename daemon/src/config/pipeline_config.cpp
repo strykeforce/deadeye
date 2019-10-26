@@ -1,4 +1,4 @@
-#include "pipeline_config.hpp"
+#include "pipeline_config.h"
 
 using namespace deadeye;
 using json = nlohmann::json;

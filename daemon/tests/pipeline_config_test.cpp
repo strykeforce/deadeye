@@ -1,5 +1,5 @@
-#include "config/pipeline_config.hpp"
-#include "config/gstreamer_config.hpp"
+#include "config/pipeline_config.h"
+#include "config/gstreamer_config.h"
 
 #include <opencv2/core/mat.hpp>
 #include "catch2/catch.hpp"

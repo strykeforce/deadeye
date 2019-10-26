@@ -1,4 +1,4 @@
-#include "target_data.hpp"
+#include "target_data.h"
 
 using namespace deadeye;
 using json = nlohmann::json;

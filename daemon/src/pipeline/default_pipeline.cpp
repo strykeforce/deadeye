@@ -1,12 +1,12 @@
-#include "default_pipeline.hpp"
+#include "default_pipeline.h"
 
 #include <fmt/core.h>
 #include <spdlog/spdlog.h>
 #include <opencv2/imgproc.hpp>
 
-#include "config/pipeline_config.hpp"
-#include "config/stream_config.hpp"
-#include "link/center_target_data.hpp"
+#include "config/pipeline_config.h"
+#include "config/stream_config.h"
+#include "link/center_target_data.h"
 
 using namespace deadeye;
 

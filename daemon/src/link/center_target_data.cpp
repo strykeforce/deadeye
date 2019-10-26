@@ -1,4 +1,4 @@
-#include "center_target_data.hpp"
+#include "center_target_data.h"
 
 #include <opencv2/imgproc.hpp>
 

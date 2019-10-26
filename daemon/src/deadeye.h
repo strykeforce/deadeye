@@ -1,9 +1,9 @@
 #pragma once
 
-#include "config/deadeye_config.hpp"
-#include "controller.hpp"
-#include "pipeline/default_pipeline.hpp"
-#include "pipeline/driver_pipeline.hpp"
+#include "config/deadeye_config.h"
+#include "controller.h"
+#include "pipeline/default_pipeline.h"
+#include "pipeline/driver_pipeline.h"
 
 #ifdef DEADEYE_CAMERA0_PIPELINE
 #define DE_P0 std::make_unique<DEADEYE_CAMERA0_PIPELINE>(0)

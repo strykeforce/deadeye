@@ -1,4 +1,4 @@
-#include "stream_config.hpp"
+#include "stream_config.h"
 
 #include <arpa/inet.h>
 #include <fmt/core.h>

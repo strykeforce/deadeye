@@ -1,4 +1,4 @@
-#include "link_config.hpp"
+#include "link_config.h"
 
 using namespace deadeye;
 using json = nlohmann::json;

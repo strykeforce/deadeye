@@ -1,4 +1,4 @@
-#include "config/stream_config.hpp"
+#include "config/stream_config.h"
 
 #include "catch2/catch.hpp"
 

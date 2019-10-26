@@ -1,7 +1,7 @@
 #pragma once
 #include <nlohmann/json.hpp>
 
-#include "link/target_data.hpp"
+#include "link/target_data.h"
 
 using json = nlohmann::json;
 

@@ -5,8 +5,8 @@
 #include <exception>
 #include <opencv2/core/types.hpp>
 
-#include "config/pipeline_config.hpp"
-#include "config/stream_config.hpp"
+#include "config/pipeline_config.h"
+#include "config/stream_config.h"
 
 namespace deadeye {
 struct TargetData;

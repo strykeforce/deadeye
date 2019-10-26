@@ -1,4 +1,4 @@
-#include "link.hpp"
+#include "link.h"
 
 #include <arpa/inet.h>
 #include <fmt/core.h>
@@ -8,10 +8,10 @@
 #include <unistd.h>
 #include <nlohmann/json.hpp>
 
-#include "config/deadeye_config.hpp"
-#include "config/link_config.hpp"
-#include "controller.hpp"
-#include "link/center_target_data.hpp"
+#include "config/deadeye_config.h"
+#include "config/link_config.h"
+#include "controller.h"
+#include "link/center_target_data.h"
 
 using namespace deadeye;
 Link::Link(int inum) : id_(DEADEYE_UNIT + std::to_string(inum)) {

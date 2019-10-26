@@ -3,7 +3,7 @@
 #include <atomic>
 #include <opencv2/opencv.hpp>
 #include <vector>
-#include "pipeline.hpp"
+#include "pipeline.h"
 
 namespace deadeye {
 

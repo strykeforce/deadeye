@@ -1,4 +1,4 @@
-#include "gstreamer_config.hpp"
+#include "gstreamer_config.h"
 
 #include <fmt/core.h>
 

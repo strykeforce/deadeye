@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-#include "link/target_data.hpp"
+#include "link/target_data.h"
 
 namespace deadeye {
 
