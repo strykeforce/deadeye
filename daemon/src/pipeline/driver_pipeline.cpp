@@ -52,7 +52,7 @@ cv::VideoCapture DriverPipeline::GetVideoCapture() {
 #ifdef __APPLE__
   std::string pipeline = "autovideosrc ! videoconvert ! appsink";
 #else
-  std::string pipeline{pipeline_config_.gstreamer_config.Pipeline()};
+  std::string pipeline{pipeline_config_.capture_config.Pipeline()};
   spdlog::debug("{}: {}", *this, pipeline);
 
 #endif

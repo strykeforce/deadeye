@@ -31,7 +31,7 @@ AbstractPipeline::~AbstractPipeline() {}
 void AbstractPipeline::UpdateConfig(PipelineConfig const &config) {
   safe::WriteAccess<LockablePipelineConfig> pc{pipeline_config_};
   *pc = config;
-  GStreamerConfig gsc = pc->gstreamer_config;
+  CaptureConfig gsc = pc->capture_config;
   pipeline_type_ = gsc.PipelineType();
   spdlog::info("{}:{}", *this, *pc);
   pipeline_config_ready_ = true;

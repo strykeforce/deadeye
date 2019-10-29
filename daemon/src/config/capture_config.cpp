@@ -1,4 +1,4 @@
-#include "gstreamer_config.h"
+#include "config/capture_config.h"
 
 #include <fmt/core.h>
 
@@ -14,20 +14,20 @@ static const std::string kGainRange = "1 1";
 static const std::array<int, 2> kExposureRange{13000, 8333333};
 }  // namespace
 
-char const* GStreamerConfig::kTypeKey{"type"};
-char const* GStreamerConfig::kCaptureWidthKey{"cw"};
-char const* GStreamerConfig::kCaptureHeightKey{"ch"};
-char const* GStreamerConfig::kOutputWidthKey{"ow"};
-char const* GStreamerConfig::kOutputHeightKey{"oh"};
-char const* GStreamerConfig::kFrameRateKey{"fps"};
-char const* GStreamerConfig::kFlipModeKey{"flip"};
-char const* GStreamerConfig::kExposureKey{"exp"};
+char const* CaptureConfig::kTypeKey{"type"};
+char const* CaptureConfig::kCaptureWidthKey{"cw"};
+char const* CaptureConfig::kCaptureHeightKey{"ch"};
+char const* CaptureConfig::kOutputWidthKey{"ow"};
+char const* CaptureConfig::kOutputHeightKey{"oh"};
+char const* CaptureConfig::kFrameRateKey{"fps"};
+char const* CaptureConfig::kFlipModeKey{"flip"};
+char const* CaptureConfig::kExposureKey{"exp"};
 
-GStreamerConfig::GStreamerConfig(Type type, int capture_width,
-                                 int capture_height, int output_width,
-                                 int output_height, int frame_rate,
-                                 int flip_mode, double exposure)
-    : capture_width(capture_width),
+CaptureConfig::CaptureConfig(Type type, int capture_width, int capture_height,
+                             int output_width, int output_height,
+                             int frame_rate, int flip_mode, double exposure)
+    : type(type),
+      capture_width(capture_width),
       capture_height(capture_height),
       output_width(output_width),
       output_height(output_height),
@@ -35,7 +35,7 @@ GStreamerConfig::GStreamerConfig(Type type, int capture_width,
       flip_mode(flip_mode),
       exposure(exposure) {}
 
-std::string GStreamerConfig::Pipeline() const {
+std::string CaptureConfig::Pipeline() const {
   switch (type) {
     case Type::jetson: {
       std::string jetson{
@@ -69,7 +69,7 @@ std::string GStreamerConfig::Pipeline() const {
   return "GSTREAMER TYPE NOT FOUND";
 }
 
-std::string GStreamerConfig::PipelineType() const {
+std::string CaptureConfig::PipelineType() const {
   switch (type) {
     case Type::jetson:
       return "jetson";
@@ -84,24 +84,24 @@ std::string GStreamerConfig::PipelineType() const {
 // ---------------------------------------------------------------------------
 // nlohmann_json support
 //
-void deadeye::to_json(json& j, const GStreamerConfig& g) {
-  j = json{{GStreamerConfig::kTypeKey, g.type},
-           {GStreamerConfig::kCaptureWidthKey, g.capture_width},
-           {GStreamerConfig::kCaptureHeightKey, g.capture_height},
-           {GStreamerConfig::kOutputWidthKey, g.output_width},
-           {GStreamerConfig::kOutputHeightKey, g.output_height},
-           {GStreamerConfig::kFrameRateKey, g.frame_rate},
-           {GStreamerConfig::kFlipModeKey, g.flip_mode},
-           {GStreamerConfig::kExposureKey, g.exposure}};
+void deadeye::to_json(json& j, const CaptureConfig& cc) {
+  j = json{{CaptureConfig::kTypeKey, cc.type},
+           {CaptureConfig::kCaptureWidthKey, cc.capture_width},
+           {CaptureConfig::kCaptureHeightKey, cc.capture_height},
+           {CaptureConfig::kOutputWidthKey, cc.output_width},
+           {CaptureConfig::kOutputHeightKey, cc.output_height},
+           {CaptureConfig::kFrameRateKey, cc.frame_rate},
+           {CaptureConfig::kFlipModeKey, cc.flip_mode},
+           {CaptureConfig::kExposureKey, cc.exposure}};
 }
 
-void deadeye::from_json(const json& j, GStreamerConfig& g) {
-  j.at(GStreamerConfig::kTypeKey).get_to(g.type);
-  j.at(GStreamerConfig::kCaptureWidthKey).get_to(g.capture_width);
-  j.at(GStreamerConfig::kCaptureHeightKey).get_to(g.capture_height);
-  j.at(GStreamerConfig::kOutputWidthKey).get_to(g.output_width);
-  j.at(GStreamerConfig::kOutputHeightKey).get_to(g.output_height);
-  j.at(GStreamerConfig::kFrameRateKey).get_to(g.frame_rate);
-  j.at(GStreamerConfig::kFlipModeKey).get_to(g.flip_mode);
-  j.at(GStreamerConfig::kExposureKey).get_to(g.exposure);
+void deadeye::from_json(const json& j, CaptureConfig& cc) {
+  j.at(CaptureConfig::kTypeKey).get_to(cc.type);
+  j.at(CaptureConfig::kCaptureWidthKey).get_to(cc.capture_width);
+  j.at(CaptureConfig::kCaptureHeightKey).get_to(cc.capture_height);
+  j.at(CaptureConfig::kOutputWidthKey).get_to(cc.output_width);
+  j.at(CaptureConfig::kOutputHeightKey).get_to(cc.output_height);
+  j.at(CaptureConfig::kFrameRateKey).get_to(cc.frame_rate);
+  j.at(CaptureConfig::kFlipModeKey).get_to(cc.flip_mode);
+  j.at(CaptureConfig::kExposureKey).get_to(cc.exposure);
 }

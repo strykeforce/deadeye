@@ -15,7 +15,7 @@ DefaultPipeline::DefaultPipeline(int inum) : AbstractPipeline{inum} {}
 bool DefaultPipeline::StartCapture() {
   if (cap_.isOpened()) return true;
   safe::ReadAccess<LockablePipelineConfig> pc{pipeline_config_};
-  GStreamerConfig gsc = pc->gstreamer_config;
+  CaptureConfig gsc = pc->capture_config;
   auto pipeline = gsc.Pipeline();
   spdlog::debug("{}: {}", *this, pipeline);
   return cap_.open(pipeline, cv::CAP_GSTREAMER);
