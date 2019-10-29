@@ -41,7 +41,7 @@ class Camera:
         self.on = control_table.getBoolean("On", False)
         self.error = control_table.getBoolean("Error", False)
         self.stream = json.loads(control_table.getString("Stream", ""))
-        self.config = json.loads(control_table.getString("Config", ""))
+        self.pipeline = json.loads(control_table.getString("Pipeline", ""))
         control_table.addEntryListenerEx(
             self.entry_listener, NetworkTablesInstance.NotifyFlags.UPDATE
         )
@@ -55,16 +55,16 @@ class Camera:
         self.on = enabled
         Unit.api.refresh = True
 
-    def set_config(self, config):
-        config_entry = self.table().getEntry("Config")
-        config_entry.setString(json.dumps(config))
-        self.config = config
+    def set_pipeline(self, pipeline):
+        pipeline_entry = self.table().getEntry("Pipeline")
+        pipeline_entry.setString(json.dumps(pipeline))
+        self.pipeline = pipeline
         Unit.api.refresh = True
 
-    def set_stream(self, config):
+    def set_stream(self, stream):
         stream_entry = self.table().getEntry("Stream")
-        stream_entry.setString(json.dumps(config))
-        self.stream = config
+        stream_entry.setString(json.dumps(stream))
+        self.stream = stream
         Unit.api.refresh = True
 
     def table(self):
@@ -85,8 +85,8 @@ class Camera:
             self.error = value
         elif key == "Stream":
             self.stream = json.loads(value)
-        elif key == "Config":
-            self.config = json.loads(value)
+        elif key == "Pipeline":
+            self.pipeline = json.loads(value)
         else:
             current_app.logger.error("unrecognized key: %s", key)
 

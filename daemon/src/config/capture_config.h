@@ -1,15 +1,15 @@
 #pragma once
 #include <fmt/core.h>
+#include <networktables/NetworkTableValue.h>
 #include <spdlog/fmt/ostr.h>
 #include <iostream>
 #include <nlohmann/json.hpp>
-#include <sstream>
 
 using json = nlohmann::json;
 
 namespace deadeye {
 
-struct GStreamerConfig {
+struct CaptureConfig {
   enum class Type { jetson, osx, test };
 
   static char const* kTypeKey;
@@ -33,14 +33,19 @@ struct GStreamerConfig {
   /**
    * Default constructor.
    */
-  GStreamerConfig() = default;
+  CaptureConfig() = default;
 
   /**
    * Constructor from member values.
    */
-  GStreamerConfig(Type type, int capture_width, int capture_height,
-                  int output_width, int output_height, int frame_rate,
-                  int flip_mode, double exposure);
+  CaptureConfig(Type type, int capture_width, int capture_height,
+                int output_width, int output_height, int frame_rate,
+                int flip_mode, double exposure);
+
+  /**
+   * Constructor from NetworkTables.
+   */
+  CaptureConfig(std::shared_ptr<nt::Value> value);
 
   /*
    * Get Jetson CSI Camera pipeline.
@@ -50,22 +55,21 @@ struct GStreamerConfig {
   std::string PipelineType() const;
 
   template <typename OStream>
-  friend OStream& operator<<(OStream& os, GStreamerConfig const& gsc) {
+  friend OStream& operator<<(OStream& os, CaptureConfig const& cc) {
     std::string output = fmt::format(
-        "GStreamerConfig<type={}, cw={}, ch={}, ow={}, oh={}, fps={}, flip={}, "
+        "CaptureConfig<type={}, cw={}, ch={}, ow={}, oh={}, fps={}, flip={}, "
         "exp={}>",
-        gsc.PipelineType(), gsc.capture_width, gsc.capture_height,
-        gsc.output_width, gsc.output_height, gsc.frame_rate, gsc.flip_mode,
-        gsc.exposure);
+        cc.PipelineType(), cc.capture_width, cc.capture_height, cc.output_width,
+        cc.output_height, cc.frame_rate, cc.flip_mode, cc.exposure);
     os << output;
     return os;
   }
 };
 
-void to_json(json& j, const GStreamerConfig& l);
-void from_json(const json& j, GStreamerConfig& l);
+void to_json(json& j, const CaptureConfig& cc);
+void from_json(const json& j, CaptureConfig& cc);
 
-inline bool operator==(GStreamerConfig const& lhs, GStreamerConfig const& rhs) {
+inline bool operator==(CaptureConfig const& lhs, CaptureConfig const& rhs) {
   return lhs.capture_width == rhs.capture_width &&
          lhs.capture_height == rhs.capture_height &&
          lhs.output_width == rhs.output_width &&
@@ -74,15 +78,15 @@ inline bool operator==(GStreamerConfig const& lhs, GStreamerConfig const& rhs) {
          lhs.exposure == rhs.exposure;
 }
 
-inline bool operator!=(GStreamerConfig const& lhs, GStreamerConfig const& rhs) {
+inline bool operator!=(CaptureConfig const& lhs, CaptureConfig const& rhs) {
   return !(lhs == rhs);
 }
 
-NLOHMANN_JSON_SERIALIZE_ENUM(GStreamerConfig::Type,
+NLOHMANN_JSON_SERIALIZE_ENUM(CaptureConfig::Type,
                              {
-                                 {GStreamerConfig::Type::jetson, "jetson"},
-                                 {GStreamerConfig::Type::osx, "osx"},
-                                 {GStreamerConfig::Type::test, "test"},
+                                 {CaptureConfig::Type::jetson, "jetson"},
+                                 {CaptureConfig::Type::osx, "osx"},
+                                 {CaptureConfig::Type::test, "test"},
                              })
 
 }  // namespace deadeye

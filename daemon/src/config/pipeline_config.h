@@ -4,7 +4,7 @@
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <string>
-#include "gstreamer_config.h"
+#include "config/capture_config.h"
 
 using json = nlohmann::json;
 
@@ -16,27 +16,24 @@ struct PipelineConfig {
   static char const* kHsvSatKey;
   static char const* kHsvValKey;
   static char const* kExposureKey;
-  static char const* kGStreamerConfigKey;
 
   using hsv_t = std::array<int, 2>;
 
   int sn = 0;
-  hsv_t hue;
-  hsv_t sat;
-  hsv_t val;
-  double exposure;
-  GStreamerConfig gstreamer_config;
+  hsv_t hue{-1, -1};
+  hsv_t sat{-1, -1};
+  hsv_t val{-1, -1};
+  double exposure{-1.0};
 
   /**
    * Default constructor.
    */
-  PipelineConfig();
+  PipelineConfig() = default;
 
   /**
    * Constructor from member values.
    */
-  PipelineConfig(int sn, hsv_t hue, hsv_t sat, hsv_t val, double exposure,
-                 GStreamerConfig gstreamer_config);
+  PipelineConfig(int sn, hsv_t hue, hsv_t sat, hsv_t val, double exposure);
 
   /**
    * Constructor from NetworkTables.
@@ -45,11 +42,11 @@ struct PipelineConfig {
 
   template <typename OStream>
   friend OStream& operator<<(OStream& os, PipelineConfig const& pc) {
-    os << "PipelineConfig{sn=" << pc.sn << ", hue=[" << pc.hue[0] << ","
+    os << "PipelineConfig<sn=" << pc.sn << ", hue=[" << pc.hue[0] << ","
        << pc.hue[1] << "], "
        << "sat=[" << pc.sat[0] << "," << pc.sat[1] << "], "
        << "val=[" << pc.val[0] << "," << pc.val[1]
-       << "], exposure=" << pc.exposure << " ," << pc.gstreamer_config << "}";
+       << "], exposure=" << pc.exposure << ">";
     return os;
   }
 };

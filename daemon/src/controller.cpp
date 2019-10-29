@@ -44,12 +44,8 @@ std::array<std::unique_ptr<Pipeline>, 5> EMPTY = {
 /**
  * Constructor for Controller.
  */
-Controller::Controller(
-    std::array<std::unique_ptr<Pipeline>, 5>* const pipelines) {
-  if (pipelines == nullptr) {
-    spdlog::critical("Controller not initialized");
-    throw std::runtime_error{"critical error"};
-  }
+Controller::Controller(PipelinesPtr pipelines) {
+  assert(pipelines);
 
   for (int i = 0; i < static_cast<int>(pipelines->size()); i++) {
     if (!(*pipelines)[i]) {
@@ -67,9 +63,6 @@ Controller::Controller(
                  has_active_pipeline_[i] ? "active" : "");
   }
 
-  StartNetworkTables();
-  InitializeNetworkTables();
-
   std::signal(SIGINT, signal_handler);
   std::signal(SIGTERM, signal_handler);
 
@@ -78,6 +71,9 @@ Controller::Controller(
   Camera<2>::SetPipeline(std::move((*pipelines)[2]));
   Camera<3>::SetPipeline(std::move((*pipelines)[3]));
   Camera<4>::SetPipeline(std::move((*pipelines)[4]));
+
+  StartNetworkTables();
+  InitializeNetworkTables();
 
   InitializeCamera<0>();
   InitializeCamera<1>();
@@ -175,17 +171,26 @@ void Controller::Run() {
           assert(has_active_pipeline_[0]);
           if (entry.value->GetBoolean()) Lights<0>::dispatch(LightsOff());
           break;
-        case hash(DE_CAMERA_CONFIG_ENTRY("0")): {
+        case hash(DE_CAPTURE_CONFIG_ENTRY("0")): {
           assert(has_active_pipeline_[0]);
-          spdlog::debug("Controller: new Pipeline<0> config event");
-          ConfigCamera event;
+          ConfigCapture event;
+          event.config = CaptureConfig{entry.value};
+          spdlog::debug("Camera<0>: {}", event.config);
+          Camera<0>::dispatch(event);
+          break;
+        }
+        case hash(DE_PIPELINE_CONFIG_ENTRY("0")): {
+          assert(has_active_pipeline_[0]);
+          ConfigPipeline event;
           event.config = PipelineConfig{entry.value};
+          spdlog::debug("Camera<0>: {}", event.config);
           Camera<0>::dispatch(event);
           break;
         }
         case hash(DE_STREAM_CONFIG_ENTRY("0")): {
           ConfigStream event;
           event.config = StreamConfig{entry.value};
+          spdlog::debug("Camera<0>: {}", event.config);
           Camera<0>::dispatch(event);
           break;
         }
@@ -212,10 +217,19 @@ void Controller::Run() {
           assert(has_active_pipeline_[1]);
           if (entry.value->GetBoolean()) Lights<1>::dispatch(LightsOff());
           break;
-        case hash(DE_CAMERA_CONFIG_ENTRY("1")): {
+        case hash(DE_CAPTURE_CONFIG_ENTRY("1")): {
           assert(has_active_pipeline_[1]);
-          ConfigCamera event;
+          ConfigCapture event;
+          event.config = CaptureConfig{entry.value};
+          spdlog::debug("Camera<1>: {}", event.config);
+          Camera<1>::dispatch(event);
+          break;
+        }
+        case hash(DE_PIPELINE_CONFIG_ENTRY("1")): {
+          assert(has_active_pipeline_[1]);
+          ConfigPipeline event;
           event.config = PipelineConfig{entry.value};
+          spdlog::debug("Camera<1>: {}", event.config);
           Camera<1>::dispatch(event);
           break;
         }
@@ -223,6 +237,7 @@ void Controller::Run() {
           assert(has_active_pipeline_[1]);
           ConfigStream event;
           event.config = StreamConfig{entry.value};
+          spdlog::debug("Camera<1>: {}", event.config);
           Camera<1>::dispatch(event);
           break;
         }
@@ -250,10 +265,19 @@ void Controller::Run() {
           assert(has_active_pipeline_[2]);
           if (entry.value->GetBoolean()) Lights<2>::dispatch(LightsOff());
           break;
-        case hash(DE_CAMERA_CONFIG_ENTRY("2")): {
+        case hash(DE_CAPTURE_CONFIG_ENTRY("2")): {
           assert(has_active_pipeline_[2]);
-          ConfigCamera event;
+          ConfigCapture event;
+          event.config = CaptureConfig{entry.value};
+          spdlog::debug("Camera<2>: {}", event.config);
+          Camera<2>::dispatch(event);
+          break;
+        }
+        case hash(DE_PIPELINE_CONFIG_ENTRY("2")): {
+          assert(has_active_pipeline_[2]);
+          ConfigPipeline event;
           event.config = PipelineConfig{entry.value};
+          spdlog::debug("Camera<2>: {}", event.config);
           Camera<2>::dispatch(event);
           break;
         }
@@ -261,6 +285,7 @@ void Controller::Run() {
           assert(has_active_pipeline_[2]);
           ConfigStream event;
           event.config = StreamConfig{entry.value};
+          spdlog::debug("Camera<2>: {}", event.config);
           Camera<2>::dispatch(event);
           break;
         }
@@ -288,10 +313,19 @@ void Controller::Run() {
           assert(has_active_pipeline_[3]);
           if (entry.value->GetBoolean()) Lights<3>::dispatch(LightsOff());
           break;
-        case hash(DE_CAMERA_CONFIG_ENTRY("3")): {
+        case hash(DE_CAPTURE_CONFIG_ENTRY("3")): {
           assert(has_active_pipeline_[3]);
-          ConfigCamera event;
+          ConfigCapture event;
+          event.config = CaptureConfig{entry.value};
+          spdlog::debug("Camera<3>: {}", event.config);
+          Camera<3>::dispatch(event);
+          break;
+        }
+        case hash(DE_PIPELINE_CONFIG_ENTRY("3")): {
+          assert(has_active_pipeline_[3]);
+          ConfigPipeline event;
           event.config = PipelineConfig{entry.value};
+          spdlog::debug("Camera<3>: {}", event.config);
           Camera<3>::dispatch(event);
           break;
         }
@@ -299,6 +333,7 @@ void Controller::Run() {
           assert(has_active_pipeline_[3]);
           ConfigStream event;
           event.config = StreamConfig{entry.value};
+          spdlog::debug("Camera<3>: {}", event.config);
           Camera<3>::dispatch(event);
           break;
         }
@@ -326,10 +361,19 @@ void Controller::Run() {
           assert(has_active_pipeline_[4]);
           if (entry.value->GetBoolean()) Lights<4>::dispatch(LightsOff());
           break;
-        case hash(DE_CAMERA_CONFIG_ENTRY("4")): {
+        case hash(DE_CAPTURE_CONFIG_ENTRY("4")): {
           assert(has_active_pipeline_[4]);
-          ConfigCamera event;
+          ConfigCapture event;
+          event.config = CaptureConfig{entry.value};
+          spdlog::debug("Camera<4>: {}", event.config);
+          Camera<4>::dispatch(event);
+          break;
+        }
+        case hash(DE_PIPELINE_CONFIG_ENTRY("4")): {
+          assert(has_active_pipeline_[4]);
+          ConfigPipeline event;
           event.config = PipelineConfig{entry.value};
+          spdlog::debug("Camera<4>: {}", event.config);
           Camera<4>::dispatch(event);
           break;
         }
@@ -337,6 +381,7 @@ void Controller::Run() {
           assert(has_active_pipeline_[4]);
           ConfigStream event;
           event.config = StreamConfig{entry.value};
+          spdlog::debug("Camera<4>: {}", event.config);
           Camera<4>::dispatch(event);
           break;
         }
@@ -434,15 +479,15 @@ void Controller::InitializeNetworkTables() {
     table->PutBoolean(DE_OFF, true);
     table->PutBoolean(DE_BLINK, false);
 
-    auto entry = nti.GetEntry(CameraConfigEntryPath(i));
-    PipelineConfig pc{0,
-                      {0, 255},
-                      {0, 255},
-                      {0, 255},
-                      0.5,
-                      GStreamerConfig{GStreamerConfig::Type::test, 0, 0, 320,
-                                      180, 60, 0, 0.0}};
-    json j = pc;
+    auto entry = nti.GetEntry(CaptureConfigEntryPath(i));
+    CaptureConfig cc{CaptureConfig::Type::test, 0, 0, 320, 180, 60, 0, 0.0};
+    json j = cc;
+    entry.SetDefaultString(j.dump());
+    entry.SetPersistent();
+
+    entry = nti.GetEntry(PipelineConfigEntryPath(i));
+    PipelineConfig pc{0, {0, 255}, {0, 255}, {0, 255}, 0.5};
+    j = pc;
     entry.SetDefaultString(j.dump());
     entry.SetPersistent();
 
@@ -464,15 +509,10 @@ void Controller::InitializeCamera() {
   if (!has_active_pipeline_[inum]) return;
 
   auto nti = nt::NetworkTableInstance(inst_);
-
-  auto value = nti.GetEntry(CameraConfigEntryPath(inum)).GetValue();
-  PipelineConfig pc{value};
-  Camera<inum>::SetConfig(pc);
-
-  value = nti.GetEntry(StreamConfigEntryPath(inum)).GetValue();
-  StreamConfig sc{value};
-  Camera<inum>::SetStream(sc);
-
+  CaptureConfig cc{nti.GetEntry(CaptureConfigEntryPath(inum)).GetValue()};
+  PipelineConfig pc{nti.GetEntry(PipelineConfigEntryPath(inum)).GetValue()};
+  StreamConfig sc{nti.GetEntry(StreamConfigEntryPath(inum)).GetValue()};
+  Camera<inum>::Initialize(cc, pc, sc);
   spdlog::info("Camera<{}> initialized", inum);
 }
 

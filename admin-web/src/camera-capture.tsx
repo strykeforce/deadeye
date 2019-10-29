@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import { configCamera } from './api';
+import { configPipeline } from './api';
 import Level from './level';
 import { Camera } from './models';
 
@@ -12,11 +12,11 @@ interface Props {
 
 const CameraCapture = ({ camera }: Props): JSX.Element => {
   const classes = useStyles();
-  const config = camera.config;
+  const pipeline = camera.pipeline;
 
   const handleLevelChange = (name: string) => (value: number) => {
-    const newConfig = Object.assign(config, { [name]: value });
-    configCamera(camera.unit, camera.inum, newConfig);
+    const newPipeline = Object.assign(pipeline, { [name]: value });
+    configPipeline(camera.unit, camera.inum, newPipeline);
   };
 
   return (
@@ -27,7 +27,7 @@ const CameraCapture = ({ camera }: Props): JSX.Element => {
       <Level
         key={camera.id}
         label="Exposure"
-        initialLevel={config.exposure}
+        initialLevel={pipeline.exposure}
         onLevelChange={handleLevelChange('exposure')}
       />
     </Paper>

@@ -37,12 +37,12 @@ DriverPipeline::DriverPipeline(int inum)
       WPI_LOG_WARNING);
 }
 
-void DriverPipeline::UpdateConfig(PipelineConfig const &config) {
+void DriverPipeline::ConfigPipeline(PipelineConfig const &config) {
   pipeline_config_ = config;
   spdlog::info("DriverPipeline<{}> new config: {}", inum_, pipeline_config_);
 }
 
-void DriverPipeline::UpdateStream(StreamConfig const &config) {
+void DriverPipeline::ConfigStream(StreamConfig const &config) {
   stream_enabled_ = config.view == StreamConfig::View::original;
   spdlog::info("DriverPipeline<{}> stream enabled: {}", inum_,
                stream_enabled_.load());
@@ -52,7 +52,7 @@ cv::VideoCapture DriverPipeline::GetVideoCapture() {
 #ifdef __APPLE__
   std::string pipeline = "autovideosrc ! videoconvert ! appsink";
 #else
-  std::string pipeline{pipeline_config_.gstreamer_config.Pipeline()};
+  std::string pipeline{pipeline_config_.capture_config.Pipeline()};
   spdlog::debug("{}: {}", *this, pipeline);
 
 #endif

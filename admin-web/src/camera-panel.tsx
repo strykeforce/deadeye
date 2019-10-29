@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import CameraControl from './camera-control';
 import CameraCapture from './camera-capture';
-import CameraThreshold from './camera-threshold';
+import CameraPipeline from './camera-pipeline';
 import { get } from './util';
 import { PanelProps } from './models';
 
@@ -24,7 +24,7 @@ const CameraPanel = (props: Props): JSX.Element => {
         <CameraCapture camera={camera} />
       </div>
       <div style={{ gridColumn: '1/2', gridRow: '3/4' }}>
-        <CameraThreshold camera={camera} />
+        <CameraPipeline camera={camera} />
       </div>
       <div style={{ gridColumn: '2/3', gridRow: '1/4' }}>{stream}</div>
     </div>

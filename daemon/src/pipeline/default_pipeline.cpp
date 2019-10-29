@@ -13,10 +13,11 @@ using namespace deadeye;
 DefaultPipeline::DefaultPipeline(int inum) : AbstractPipeline{inum} {}
 
 bool DefaultPipeline::StartCapture() {
+  assert(capture_config_ready_.load());
   if (cap_.isOpened()) return true;
-  safe::ReadAccess<LockablePipelineConfig> pc{pipeline_config_};
-  GStreamerConfig gsc = pc->gstreamer_config;
-  auto pipeline = gsc.Pipeline();
+
+  safe::ReadAccess<LockableCaptureConfig> cc{capture_config_};
+  auto pipeline = cc->Pipeline();
   spdlog::debug("{}: {}", *this, pipeline);
   return cap_.open(pipeline, cv::CAP_GSTREAMER);
 }
@@ -60,5 +61,6 @@ TargetDataPtr DefaultPipeline::ProcessTarget(Contours const &contours) {
 }
 
 std::string DefaultPipeline::ToString() const {
+  assert(pipeline_type_ != "");
   return fmt::format("DefaultPipeline<{}, {}>", inum_, pipeline_type_);
 }

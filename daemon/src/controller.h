@@ -6,6 +6,7 @@
 namespace deadeye {
 
 class Pipeline;
+using PipelinesPtr = std::array<std::unique_ptr<Pipeline>, 5>* const;
 
 class Controller {
  public:
@@ -21,12 +22,11 @@ class Controller {
   void ShutDown();
 
  private:
-  static Controller& getInstanceImpl(
-      std::array<std::unique_ptr<Pipeline>, 5>* const pipelines = nullptr) {
+  static Controller& getInstanceImpl(PipelinesPtr pipelines = nullptr) {
     static Controller instance{pipelines};
     return instance;
   }
-  Controller(std::array<std::unique_ptr<Pipeline>, 5>* const pipelines);
+  Controller(PipelinesPtr pipelines);
 
   void StartNetworkTables();
 
