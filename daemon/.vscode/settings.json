@@ -4,6 +4,7 @@
         "Vagrantfile": "ruby",
         "*.js": "javascriptreact",
         "*.html": "html",
-        "array": "cpp"
+        "array": "cpp",
+        "iosfwd": "cpp"
     }
 }

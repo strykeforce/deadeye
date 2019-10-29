@@ -21,19 +21,19 @@ using LockableStreamConfig = safe::Lockable<StreamConfig>;
 class AbstractPipeline : public Pipeline {
  public:
   AbstractPipeline(int inum);
-  virtual ~AbstractPipeline() = default;
-  virtual void ConfigCapture(CaptureConfig const &config) override;
-  virtual void ConfigPipeline(PipelineConfig const &config) override;
-  virtual void ConfigStream(StreamConfig const &config) override;
-  virtual void CancelTask() override;
-  virtual void Run() override;
+
+  void ConfigCapture(CaptureConfig const &config) final;
+  void ConfigPipeline(PipelineConfig const &config) final;
+  void ConfigStream(StreamConfig const &config) final;
+  void CancelTask() final;
+  void Run() final;
 
  protected:
   virtual bool StartCapture() = 0;
   virtual void StopCapture() = 0;
   virtual bool GrabFrame(cv::Mat &frame) = 0;
-  virtual void ProcessFrame(cv::Mat const &frame);
-  virtual void FilterContours(Contours const &src, Contours &dest);
+  virtual void ProcessFrame(cv::Mat const &frame) {}
+  virtual void FilterContours(Contours const &src, Contours &dest) {}
   virtual TargetDataPtr ProcessTarget(Contours const &contours) = 0;
 
   std::string id_;

@@ -10,14 +10,14 @@ namespace deadeye {
 class DriverPipeline : public Pipeline {
  public:
   DriverPipeline(int inum);
-  virtual ~DriverPipeline() = default;
-  void CancelTask() override { cancel_ = true; }
-  void ConfigPipeline(PipelineConfig const &config) override;
-  void ConfigStream(StreamConfig const &config) override;
-  void Run() override;
+
+  void CancelTask() final;
+  void ConfigPipeline(PipelineConfig const &config) final;
+  void ConfigStream(StreamConfig const &config) final;
+  void Run() final;
 
  protected:
-  virtual std::string ToString() const override;
+  std::string ToString() const final;
 
  private:
   std::string id_;

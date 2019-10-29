@@ -5,16 +5,15 @@ namespace deadeye {
 class DefaultPipeline : public AbstractPipeline {
  public:
   DefaultPipeline(int inum);
-  virtual ~DefaultPipeline() = default;
 
-  virtual void FilterContours(Contours const &src, Contours &dest) override;
-  virtual TargetDataPtr ProcessTarget(Contours const &contours) override;
+  void FilterContours(Contours const &src, Contours &dest) final;
+  TargetDataPtr ProcessTarget(Contours const &contours) final;
 
  protected:
-  virtual bool StartCapture() override;
-  virtual void StopCapture() override;
-  virtual bool GrabFrame(cv::Mat &frame) override;
-  virtual std::string ToString() const override;
+  bool StartCapture() final;
+  void StopCapture() final;
+  bool GrabFrame(cv::Mat &frame) final;
+  std::string ToString() const final;
 
   cv::VideoCapture cap_;
 };

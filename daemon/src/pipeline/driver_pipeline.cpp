@@ -37,6 +37,8 @@ DriverPipeline::DriverPipeline(int inum)
       WPI_LOG_WARNING);
 }
 
+void DriverPipeline::CancelTask() { cancel_ = true; }
+
 void DriverPipeline::ConfigPipeline(PipelineConfig const &config) {
   pipeline_config_ = config;
   spdlog::info("DriverPipeline<{}> new config: {}", inum_, pipeline_config_);

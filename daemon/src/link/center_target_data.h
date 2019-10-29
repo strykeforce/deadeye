@@ -15,8 +15,8 @@ struct CenterTargetData : public TargetData {
 
   CenterTargetData(std::string id, int sn, bool valid, int x, int y);
 
-  virtual void DrawMarkers(cv::Mat& preview) override;
-  virtual std::string Dump() const override;
+  void DrawMarkers(cv::Mat& preview) override;
+  std::string Dump() const override;
 };
 
 void to_json(json& j, CenterTargetData const& td);
