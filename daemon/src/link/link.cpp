@@ -46,7 +46,7 @@ Link::~Link() {
 
 LinkConfig Link::GetConfig() {
   auto nti = nt::NetworkTableInstance(nt::GetDefaultInstance());
-  return LinkConfig{nti.GetEntry(DE_LINK_CONFIG_ENTRY).GetValue()};
+  return LinkConfig{nti.GetEntry(DE_CONFIG_ENTRY).GetValue()};
 }
 
 void Link::Send(TargetData* const td) {

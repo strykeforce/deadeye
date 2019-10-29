@@ -497,7 +497,7 @@ void Controller::InitializeNetworkTables() {
     entry.SetString(j.dump());
   }
 
-  auto entry = nti.GetEntry(DE_LINK_CONFIG_ENTRY);
+  auto entry = nti.GetEntry(DE_CONFIG_ENTRY);
   LinkConfig lc{CLIENT_ADDRESS, CLIENT_PORT, true};
   json j = lc;
   entry.SetDefaultString(j.dump());
