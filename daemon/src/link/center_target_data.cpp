@@ -8,7 +8,6 @@ using json = nlohmann::json;
 char const* CenterTargetData::kXKey{"x"};
 char const* CenterTargetData::kYKey{"y"};
 
-CenterTargetData::CenterTargetData() {}
 CenterTargetData::CenterTargetData(std::string id, int sn, bool valid, int x,
                                    int y)
     : TargetData{id, sn, valid}, x(x), y(y) {}

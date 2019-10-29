@@ -14,9 +14,13 @@ struct TargetData {
   int serial;
   bool valid;
 
-  TargetData();
+  TargetData() = default;
   virtual ~TargetData() = default;
   TargetData(std::string id, int serial, bool valid);
+
+  TargetData(TargetData const&) = delete;
+  TargetData& operator=(TargetData const&) = delete;
+
   virtual void DrawMarkers(cv::Mat& preview);
   virtual std::string Dump() const;
 };

@@ -13,8 +13,6 @@ struct CenterTargetData : public TargetData {
   int x;
   int y;
 
-  CenterTargetData();
-  virtual ~CenterTargetData() = default;
   CenterTargetData(std::string id, int sn, bool valid, int x, int y);
 
   virtual void DrawMarkers(cv::Mat& preview) override;

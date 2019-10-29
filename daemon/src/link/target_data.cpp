@@ -7,9 +7,6 @@ char const* TargetData::kIdKey{"id"};
 char const* TargetData::kSerialKey{"sn"};
 char const* TargetData::kValidKey{"valid"};
 
-// FIXME:
-// http://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#c67-a-polymorphic-class-should-suppress-copying
-TargetData::TargetData() {}
 TargetData::TargetData(std::string id, int serial, bool valid)
     : id(id), serial(serial), valid(valid) {}
 
