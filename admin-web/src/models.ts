@@ -19,10 +19,10 @@ export interface Camera {
   error: boolean;
   light: Light;
   stream: StreamConfig;
-  config: CameraConfig;
+  pipeline: PipelineConfig;
 }
 
-export interface CameraConfig {
+export interface PipelineConfig {
   sn: number;
   exposure: number;
   hue: number[];

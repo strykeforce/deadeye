@@ -10,8 +10,8 @@ std::string deadeye::LightsControlTablePath(int inum) {
   return fmt::format("{}{}", deadeye::CameraControlTablePath(inum), DE_LIGHTS);
 }
 
-std::string deadeye::CameraConfigEntryPath(int inum) {
-  return fmt::format("{}/{}{}", DE_CONFIG_TABLE, inum, DE_CONFIG);
+std::string deadeye::PipelineConfigEntryPath(int inum) {
+  return fmt::format("{}/{}{}", DE_CONFIG_TABLE, inum, DE_PIPELINE);
 }
 
 std::string deadeye::StreamConfigEntryPath(int inum) {

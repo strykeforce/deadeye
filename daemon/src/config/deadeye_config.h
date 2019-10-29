@@ -7,7 +7,7 @@
 #define DEADEYE_UNIT DE_STRINGIFY(DEADEYE_UNIT_ID)
 
 #define DE_DEADEYE_TABLE "/Deadeye"
-#define DE_CONFIG "/Config"
+#define DE_PIPELINE "/Pipeline"
 #define DE_STREAM "/Stream"
 #define DE_LIGHTS "/Light"
 #define DE_CONTROL_TABLE DE_DEADEYE_TABLE "/" DEADEYE_UNIT
@@ -25,7 +25,7 @@
 
 #define DE_CAMERA_CONTROL(inum, param) DE_CAMERA_CONTROL_TABLE(inum) "/" param
 #define DE_LIGHTS_CONTROL(inum, param) DE_LIGHTS_CONTROL_TABLE(inum) "/" param
-#define DE_CAMERA_CONFIG_ENTRY(inum) DE_CONFIG_TABLE "/" inum DE_CONFIG
+#define DE_PIPELINE_CONFIG_ENTRY(inum) DE_CONFIG_TABLE "/" inum DE_PIPELINE
 #define DE_STREAM_CONFIG_ENTRY(inum) DE_CONFIG_TABLE "/" inum DE_STREAM
 #define DE_LINK_CONFIG_ENTRY DE_DEADEYE_TABLE "/Link"
 
@@ -36,6 +36,6 @@
 namespace deadeye {
 std::string CameraControlTablePath(int inum);
 std::string LightsControlTablePath(int inum);
-std::string CameraConfigEntryPath(int inum);
+std::string PipelineConfigEntryPath(int inum);
 std::string StreamConfigEntryPath(int inum);
 }  // namespace deadeye

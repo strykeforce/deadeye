@@ -175,7 +175,7 @@ void Controller::Run() {
           assert(has_active_pipeline_[0]);
           if (entry.value->GetBoolean()) Lights<0>::dispatch(LightsOff());
           break;
-        case hash(DE_CAMERA_CONFIG_ENTRY("0")): {
+        case hash(DE_PIPELINE_CONFIG_ENTRY("0")): {
           assert(has_active_pipeline_[0]);
           spdlog::debug("Controller: new Pipeline<0> config event");
           ConfigCamera event;
@@ -212,7 +212,7 @@ void Controller::Run() {
           assert(has_active_pipeline_[1]);
           if (entry.value->GetBoolean()) Lights<1>::dispatch(LightsOff());
           break;
-        case hash(DE_CAMERA_CONFIG_ENTRY("1")): {
+        case hash(DE_PIPELINE_CONFIG_ENTRY("1")): {
           assert(has_active_pipeline_[1]);
           ConfigCamera event;
           event.config = PipelineConfig{entry.value};
@@ -250,7 +250,7 @@ void Controller::Run() {
           assert(has_active_pipeline_[2]);
           if (entry.value->GetBoolean()) Lights<2>::dispatch(LightsOff());
           break;
-        case hash(DE_CAMERA_CONFIG_ENTRY("2")): {
+        case hash(DE_PIPELINE_CONFIG_ENTRY("2")): {
           assert(has_active_pipeline_[2]);
           ConfigCamera event;
           event.config = PipelineConfig{entry.value};
@@ -288,7 +288,7 @@ void Controller::Run() {
           assert(has_active_pipeline_[3]);
           if (entry.value->GetBoolean()) Lights<3>::dispatch(LightsOff());
           break;
-        case hash(DE_CAMERA_CONFIG_ENTRY("3")): {
+        case hash(DE_PIPELINE_CONFIG_ENTRY("3")): {
           assert(has_active_pipeline_[3]);
           ConfigCamera event;
           event.config = PipelineConfig{entry.value};
@@ -326,7 +326,7 @@ void Controller::Run() {
           assert(has_active_pipeline_[4]);
           if (entry.value->GetBoolean()) Lights<4>::dispatch(LightsOff());
           break;
-        case hash(DE_CAMERA_CONFIG_ENTRY("4")): {
+        case hash(DE_PIPELINE_CONFIG_ENTRY("4")): {
           assert(has_active_pipeline_[4]);
           ConfigCamera event;
           event.config = PipelineConfig{entry.value};
@@ -434,7 +434,7 @@ void Controller::InitializeNetworkTables() {
     table->PutBoolean(DE_OFF, true);
     table->PutBoolean(DE_BLINK, false);
 
-    auto entry = nti.GetEntry(CameraConfigEntryPath(i));
+    auto entry = nti.GetEntry(PipelineConfigEntryPath(i));
     PipelineConfig pc{0,
                       {0, 255},
                       {0, 255},
@@ -465,7 +465,7 @@ void Controller::InitializeCamera() {
 
   auto nti = nt::NetworkTableInstance(inst_);
 
-  auto value = nti.GetEntry(CameraConfigEntryPath(inum)).GetValue();
+  auto value = nti.GetEntry(PipelineConfigEntryPath(inum)).GetValue();
   PipelineConfig pc{value};
   Camera<inum>::SetConfig(pc);
 

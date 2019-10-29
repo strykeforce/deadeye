@@ -17,7 +17,7 @@ class Api:
         self.socketio.on_event("message", self.handle_message)
         self.socketio.on_event("camera_control", self.handle_camera_control_event)
         self.socketio.on_event("light_control", self.handle_light_control_event)
-        self.socketio.on_event("camera_config", self.handle_camera_config_event)
+        self.socketio.on_event("pipeline_config", self.handle_pipeline_config_event)
         self.socketio.on_event("stream_config", self.handle_stream_config_event)
         self.socketio.on_event("connect", self.handle_connect)
 
@@ -42,20 +42,20 @@ class Api:
             "unit: %s, camera: %s, light enabled: %s", unit.id, camera.id, enabled
         )
 
-    def handle_camera_config_event(self, message):
+    def handle_pipeline_config_event(self, message):
         unit = Unit.units[message["unit"]]
         camera = unit.cameras[str(message["inum"])]
-        config = message["config"]
-        camera.set_config(config)
+        pipeline = message["pipeline"]
+        camera.set_pipeline(pipeline)
         self.app.logger.debug(
-            "unit: %s, camera: %s, config: %s", unit.id, camera.id, camera.config
+            "unit: %s, camera: %s, pipeline: %s", unit.id, camera.id, camera.pipeline
         )
 
     def handle_stream_config_event(self, message):
         unit = Unit.units[message["unit"]]
         camera = unit.cameras[str(message["inum"])]
-        config = message["config"]
-        camera.set_stream(config)
+        stream = message["stream"]
+        camera.set_stream(stream)
         self.app.logger.debug(
             "unit: %s, camera: %s, stream: %s", unit.id, camera.id, camera.stream
         )
