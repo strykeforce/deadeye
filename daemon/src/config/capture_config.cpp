@@ -35,6 +35,19 @@ CaptureConfig::CaptureConfig(Type type, int capture_width, int capture_height,
       flip_mode(flip_mode),
       exposure(exposure) {}
 
+CaptureConfig::CaptureConfig(std::shared_ptr<nt::Value> value) {
+  assert(value);
+  auto j = json::parse(value->GetString().str());
+  j.at(kTypeKey).get_to(type);
+  j.at(kCaptureWidthKey).get_to(capture_width);
+  j.at(kCaptureHeightKey).get_to(capture_height);
+  j.at(kOutputWidthKey).get_to(output_width);
+  j.at(kOutputHeightKey).get_to(output_height);
+  j.at(kFrameRateKey).get_to(frame_rate);
+  j.at(kFlipModeKey).get_to(flip_mode);
+  j.at(kExposureKey).get_to(exposure);
+}
+
 std::string CaptureConfig::Pipeline() const {
   switch (type) {
     case Type::jetson: {

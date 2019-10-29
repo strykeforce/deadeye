@@ -7,22 +7,25 @@
 #include <opencv2/core/utility.hpp>
 #include <opencv2/videoio.hpp>
 
+#include "config/capture_config.h"
 #include "config/pipeline_config.h"
 #include "config/stream_config.h"
 #include "link/target_data.h"
 #include "pipeline/pipeline.h"
 
 namespace deadeye {
-using LockableStreamConfig = safe::Lockable<StreamConfig>;
+using LockableCaptureConfig = safe::Lockable<CaptureConfig>;
 using LockablePipelineConfig = safe::Lockable<PipelineConfig>;
+using LockableStreamConfig = safe::Lockable<StreamConfig>;
 
 class AbstractPipeline : public Pipeline {
  public:
   AbstractPipeline(int inum);
   virtual ~AbstractPipeline() = default;
-  void ConfigPipeline(PipelineConfig const &config) override;
-  void ConfigStream(StreamConfig const &config) override;
-  void CancelTask() override;
+  virtual void ConfigCapture(CaptureConfig const &config) override;
+  virtual void ConfigPipeline(PipelineConfig const &config) override;
+  virtual void ConfigStream(StreamConfig const &config) override;
+  virtual void CancelTask() override;
   virtual void Run() override;
 
  protected:
@@ -36,11 +39,13 @@ class AbstractPipeline : public Pipeline {
   std::string id_;
   std::atomic<bool> cancel_{false};
 
+  LockableCaptureConfig capture_config_;
+  std::atomic<bool> capture_config_ready_{false};
   LockableStreamConfig stream_config_;
-  std::atomic<bool> stream_config_ready_;
+  std::atomic<bool> stream_config_ready_{false};
   LockablePipelineConfig pipeline_config_;
-  std::atomic<bool> pipeline_config_ready_;
-  std::string pipeline_type_{"unknown"};
+  std::atomic<bool> pipeline_config_ready_{false};
+  std::string pipeline_type_{"haha"};
 
  private:
   void StreamFrame();

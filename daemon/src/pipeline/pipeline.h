@@ -5,6 +5,7 @@
 #include <exception>
 #include <opencv2/core/types.hpp>
 
+#include "config/capture_config.h"
 #include "config/pipeline_config.h"
 #include "config/stream_config.h"
 
@@ -29,6 +30,7 @@ class Pipeline {
   int GetInum() { return inum_; }
   virtual void Run() = 0;
   virtual void CancelTask() = 0;
+  virtual void ConfigCapture(CaptureConfig const &config) {}
   virtual void ConfigPipeline(PipelineConfig const &config) {}
   virtual void ConfigStream(StreamConfig const &config) {}
 

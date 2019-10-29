@@ -9,6 +9,7 @@
 #include <memory>
 #include <tinyfsm.hpp>
 
+#include "config/capture_config.h"
 #include "config/deadeye_config.h"
 #include "config/pipeline_config.h"
 #include "config/stream_config.h"
@@ -24,7 +25,10 @@ using owner = T;
 //
 struct CameraOn : tinyfsm::Event {};
 struct CameraOff : tinyfsm::Event {};
-struct ConfigCamera : tinyfsm::Event {
+struct ConfigCapture : tinyfsm::Event {
+  CaptureConfig config;
+};
+struct ConfigPipeline : tinyfsm::Event {
   PipelineConfig config;
 };
 struct ConfigStream : tinyfsm::Event {
@@ -43,11 +47,11 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
   static void SetPipeline(std::unique_ptr<Pipeline> pipeline) {
     pipeline_ = std::move(pipeline);
   }
-  static void SetPipelineConfig(PipelineConfig const &config) {
-    pipeline_->ConfigPipeline(config);
-  }
-  static void SetStreamConfig(StreamConfig const &config) {
-    pipeline_->ConfigStream(config);
+  static void Initialize(CaptureConfig const &cc, PipelineConfig const &pc,
+                         StreamConfig const &sc) {
+    pipeline_->ConfigCapture(cc);
+    pipeline_->ConfigPipeline(pc);
+    pipeline_->ConfigStream(sc);
   }
 
  private:
@@ -55,7 +59,10 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
 
   virtual void react(CameraOn const &) {}
   virtual void react(CameraOff const &) {}
-  virtual void react(ConfigCamera const &c) {
+  virtual void react(ConfigCapture const &c) {
+    Camera<inum>::pipeline_->ConfigCapture(c.config);
+  }
+  virtual void react(ConfigPipeline const &c) {
     Camera<inum>::pipeline_->ConfigPipeline(c.config);
   }
   virtual void react(ConfigStream const &s) {

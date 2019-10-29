@@ -17,10 +17,20 @@ void InitializeLogging();
 }  // namespace
 
 AbstractPipeline::AbstractPipeline(int inum)
-    : Pipeline{inum},
-      id_(DEADEYE_UNIT + std::to_string(inum)),
-      stream_config_ready_(false) {
+    : Pipeline{inum}, id_(DEADEYE_UNIT + std::to_string(inum)) {
   InitializeLogging();
+}
+
+/**
+ * ConfigCapture handles changes to capture settings and only takes effect
+ * after pipeline restart.
+ */
+void AbstractPipeline::ConfigCapture(CaptureConfig const &config) {
+  safe::WriteAccess<LockableCaptureConfig> cc{capture_config_};
+  *cc = config;
+  pipeline_type_ = config.PipelineType();
+  spdlog::info("{}:{}", *this, *cc);
+  capture_config_ready_ = true;
 }
 
 /**
@@ -29,8 +39,6 @@ AbstractPipeline::AbstractPipeline(int inum)
 void AbstractPipeline::ConfigPipeline(PipelineConfig const &config) {
   safe::WriteAccess<LockablePipelineConfig> pc{pipeline_config_};
   *pc = config;
-  CaptureConfig gsc = pc->capture_config;
-  pipeline_type_ = gsc.PipelineType();
   spdlog::info("{}:{}", *this, *pc);
   pipeline_config_ready_ = true;
 }
@@ -39,9 +47,9 @@ void AbstractPipeline::ConfigPipeline(PipelineConfig const &config) {
  * ConfigStream handles changes to video streaming.
  */
 void AbstractPipeline::ConfigStream(StreamConfig const &config) {
-  safe::WriteAccess<LockableStreamConfig> value{stream_config_};
-  *value = config;
-  spdlog::info("{}:{}", *this, *value);
+  safe::WriteAccess<LockableStreamConfig> sc{stream_config_};
+  *sc = config;
+  spdlog::info("{}:{}", *this, *sc);
   stream_config_ready_ = true;
 }
 
@@ -49,6 +57,7 @@ void AbstractPipeline::CancelTask() { cancel_ = true; }
 
 void AbstractPipeline::Run() {
   cancel_ = false;
+  capture_config_ready_ = true;
   pipeline_config_ready_ = true;
   stream_config_ready_ = true;
 

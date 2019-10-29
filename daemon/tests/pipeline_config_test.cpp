@@ -13,16 +13,16 @@ TEST_CASE("PipelineConfig HSV bound as array", "[pipeline]") {
 }
 
 TEST_CASE("PipelineConfig equality", "[pipeline]") {
-  PipelineConfig pc1{0, {1, 2}, {25, 24}, {250, 251}, 0.5, CaptureConfig{}};
-  PipelineConfig pc2{0, {1, 2}, {25, 24}, {250, 251}, 0.5, CaptureConfig{}};
+  PipelineConfig pc1{0, {1, 2}, {25, 24}, {250, 251}, 0.5};
+  PipelineConfig pc2{0, {1, 2}, {25, 24}, {250, 251}, 0.5};
   REQUIRE(pc1 == pc2);
 
-  PipelineConfig pc3{0, {0, 1}, {253, 255}, {23, 45}, 0.5, CaptureConfig{}};
+  PipelineConfig pc3{0, {0, 1}, {253, 255}, {23, 45}, 0.5};
   REQUIRE(pc1 != pc3);
 }
 
 TEST_CASE("PipelineConfig to JSON", "[pipeline]") {
-  PipelineConfig pc{2767, {1, 2}, {25, 24}, {250, 251}, 0.5, CaptureConfig{}};
+  PipelineConfig pc{2767, {1, 2}, {25, 24}, {250, 251}, 0.5};
   json j = pc;
   json expected = R"(
 {"exposure":0.5,"hue":[1,2],"sat":[25,24],"sn":2767,"val":[250,251],
@@ -33,8 +33,7 @@ TEST_CASE("PipelineConfig to JSON", "[pipeline]") {
 }
 
 TEST_CASE("PipelineConfig New", "[pipeline]") {
-  PipelineConfig expected{2767,       {1, 2}, {25, 24},
-                          {250, 251}, 0.5,    CaptureConfig{}};
+  PipelineConfig expected{2767, {1, 2}, {25, 24}, {250, 251}, 0.5};
   json j = expected;
   auto val = nt::Value::MakeString(j.dump());
   auto pc = PipelineConfig{val};
@@ -72,11 +71,4 @@ TEST_CASE("PipelineConfig from JSON", "[pipeline]") {
   REQUIRE(pc.sat[1] == 6);
   REQUIRE(pc.val[0] == 8);
   REQUIRE(pc.val[1] == 10);
-  REQUIRE(pc.capture_config.capture_width == 1);
-  REQUIRE(pc.capture_config.capture_height == 2);
-  REQUIRE(pc.capture_config.output_width == 3);
-  REQUIRE(pc.capture_config.output_height == 4);
-  REQUIRE(pc.capture_config.frame_rate == 5);
-  REQUIRE(pc.capture_config.flip_mode == 6);
-  REQUIRE(pc.capture_config.exposure == 0.25);
 }

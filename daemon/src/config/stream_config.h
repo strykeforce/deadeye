@@ -70,8 +70,8 @@ struct StreamConfig {
         contour = "ALL";
         break;
     }
-    os << "StreamConfig{sn=" << sc.sn << ", url=\"" << sc.url
-       << "\", view=" << view << ", contour=" << contour << "}";
+    os << "StreamConfig<sn=" << sc.sn << ", url=\"" << sc.url
+       << "\", view=" << view << ", contour=" << contour << ">";
     return os;
   }
 };

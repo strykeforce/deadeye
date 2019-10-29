@@ -1,9 +1,9 @@
 #pragma once
 #include <fmt/core.h>
+#include <networktables/NetworkTableValue.h>
 #include <spdlog/fmt/ostr.h>
 #include <iostream>
 #include <nlohmann/json.hpp>
-#include <sstream>
 
 using json = nlohmann::json;
 
@@ -41,6 +41,11 @@ struct CaptureConfig {
   CaptureConfig(Type type, int capture_width, int capture_height,
                 int output_width, int output_height, int frame_rate,
                 int flip_mode, double exposure);
+
+  /**
+   * Constructor from NetworkTables.
+   */
+  CaptureConfig(std::shared_ptr<nt::Value> value);
 
   /*
    * Get Jetson CSI Camera pipeline.
