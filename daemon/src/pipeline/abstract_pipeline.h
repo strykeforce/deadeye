@@ -19,9 +19,9 @@ using LockablePipelineConfig = safe::Lockable<PipelineConfig>;
 class AbstractPipeline : public Pipeline {
  public:
   AbstractPipeline(int inum);
-  virtual ~AbstractPipeline();
-  void UpdateConfig(PipelineConfig const &config) override;
-  void UpdateStream(StreamConfig const &config) override;
+  virtual ~AbstractPipeline() = default;
+  void ConfigPipeline(PipelineConfig const &config) override;
+  void ConfigStream(StreamConfig const &config) override;
   void CancelTask() override;
   virtual void Run() override;
 

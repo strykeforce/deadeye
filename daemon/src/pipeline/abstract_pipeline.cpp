@@ -23,12 +23,10 @@ AbstractPipeline::AbstractPipeline(int inum)
   InitializeLogging();
 }
 
-AbstractPipeline::~AbstractPipeline() {}
-
 /**
- * UpdateConfig handles changes to pipeline config.
+ * ConfigPipeline handles changes to pipeline config.
  */
-void AbstractPipeline::UpdateConfig(PipelineConfig const &config) {
+void AbstractPipeline::ConfigPipeline(PipelineConfig const &config) {
   safe::WriteAccess<LockablePipelineConfig> pc{pipeline_config_};
   *pc = config;
   CaptureConfig gsc = pc->capture_config;
@@ -38,9 +36,9 @@ void AbstractPipeline::UpdateConfig(PipelineConfig const &config) {
 }
 
 /**
- * UpdateStream handles changes to video streaming.
+ * ConfigStream handles changes to video streaming.
  */
-void AbstractPipeline::UpdateStream(StreamConfig const &config) {
+void AbstractPipeline::ConfigStream(StreamConfig const &config) {
   safe::WriteAccess<LockableStreamConfig> value{stream_config_};
   *value = config;
   spdlog::info("{}:{}", *this, *value);

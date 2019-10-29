@@ -25,12 +25,12 @@ class PipelineException : public std::exception {
 class Pipeline {
  public:
   Pipeline(int inum) : inum_(inum) {}
-  virtual ~Pipeline() {}
+  virtual ~Pipeline() = default;
   int GetInum() { return inum_; }
   virtual void Run() = 0;
   virtual void CancelTask() = 0;
-  virtual void UpdateConfig(PipelineConfig const &config) = 0;
-  virtual void UpdateStream(StreamConfig const &config) = 0;
+  virtual void ConfigPipeline(PipelineConfig const &config) {}
+  virtual void ConfigStream(StreamConfig const &config) {}
 
   template <typename OStream>
   friend OStream &operator<<(OStream &os, Pipeline const &p) {
@@ -47,8 +47,6 @@ class NullPipeline : public Pipeline {
  public:
   NullPipeline(int inum) : Pipeline{inum} {}
   void CancelTask() override {}
-  void UpdateConfig(PipelineConfig const &) override {}
-  void UpdateStream(StreamConfig const &) override {}
   void Run() override { spdlog::warn("{}: Run not implemented", *this); }
 
  protected:

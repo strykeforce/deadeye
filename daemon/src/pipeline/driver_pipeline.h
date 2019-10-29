@@ -12,8 +12,8 @@ class DriverPipeline : public Pipeline {
   DriverPipeline(int inum);
   virtual ~DriverPipeline() = default;
   void CancelTask() override { cancel_ = true; }
-  void UpdateConfig(PipelineConfig const &config) override;
-  void UpdateStream(StreamConfig const &config) override;
+  void ConfigPipeline(PipelineConfig const &config) override;
+  void ConfigStream(StreamConfig const &config) override;
   void Run() override;
 
  protected:

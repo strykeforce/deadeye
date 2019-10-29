@@ -43,11 +43,11 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
   static void SetPipeline(std::unique_ptr<Pipeline> pipeline) {
     pipeline_ = std::move(pipeline);
   }
-  static void SetConfig(PipelineConfig const &config) {
-    pipeline_->UpdateConfig(config);
+  static void SetPipelineConfig(PipelineConfig const &config) {
+    pipeline_->ConfigPipeline(config);
   }
-  static void SetStream(StreamConfig const &config) {
-    pipeline_->UpdateStream(config);
+  static void SetStreamConfig(StreamConfig const &config) {
+    pipeline_->ConfigStream(config);
   }
 
  private:
@@ -56,10 +56,10 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
   virtual void react(CameraOn const &) {}
   virtual void react(CameraOff const &) {}
   virtual void react(ConfigCamera const &c) {
-    Camera<inum>::pipeline_->UpdateConfig(c.config);
+    Camera<inum>::pipeline_->ConfigPipeline(c.config);
   }
   virtual void react(ConfigStream const &s) {
-    Camera<inum>::pipeline_->UpdateStream(s.config);
+    Camera<inum>::pipeline_->ConfigStream(s.config);
   }
 
   virtual void entry() = 0;

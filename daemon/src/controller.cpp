@@ -467,11 +467,11 @@ void Controller::InitializeCamera() {
 
   auto value = nti.GetEntry(PipelineConfigEntryPath(inum)).GetValue();
   PipelineConfig pc{value};
-  Camera<inum>::SetConfig(pc);
+  Camera<inum>::SetPipelineConfig(pc);
 
   value = nti.GetEntry(StreamConfigEntryPath(inum)).GetValue();
   StreamConfig sc{value};
-  Camera<inum>::SetStream(sc);
+  Camera<inum>::SetStreamConfig(sc);
 
   spdlog::info("Camera<{}> initialized", inum);
 }
