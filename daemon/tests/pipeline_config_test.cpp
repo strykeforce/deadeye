@@ -25,8 +25,7 @@ TEST_CASE("PipelineConfig to JSON", "[pipeline]") {
   PipelineConfig pc{2767, {1, 2}, {25, 24}, {250, 251}, 0.5};
   json j = pc;
   json expected = R"(
-{"exposure":0.5,"hue":[1,2],"sat":[25,24],"sn":2767,"val":[250,251],
-"gstreamer":{"ch":0,"cw":0,"flip":0,"fps":0,"oh":0,"ow":0, "exp":0.0,"type":"test"}}
+{"exposure":0.5,"hue":[1,2],"sat":[25,24],"sn":2767,"val":[250,251]}
 )"_json;
 
   REQUIRE(j == expected);
