@@ -27,6 +27,9 @@ class Pipeline {
  public:
   Pipeline(int inum) : inum_(inum) {}
   virtual ~Pipeline() = default;
+  Pipeline(Pipeline const &) = delete;
+  Pipeline &operator=(Pipeline const &) = delete;
+
   int GetInum() { return inum_; }
   virtual void Run() = 0;
   virtual void CancelTask() = 0;
