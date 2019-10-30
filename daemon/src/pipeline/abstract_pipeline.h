@@ -49,12 +49,15 @@ class AbstractPipeline : public Pipeline {
 
  private:
   void StreamFrame();
+  void LogFrame();
   void LogTickMeter(cv::TickMeter tm);
 
   inline bool StreamEnabled() {
     return !(view_ == StreamConfig::View::none &&
              contour_ == StreamConfig::Contour::none);
   }
+
+  inline bool LogEnabled() { return true; }
 
   cv::Mat frame_;
   cv::Mat hsv_threshold_output_;

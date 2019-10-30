@@ -4,6 +4,7 @@
             "name": "Mac",
             "includePath": [
                 "${workspaceFolder}/**",
+                "${workspaceFolder}/dependencies/readerwriterqueue",
                 "/usr/local/wpilib/include/ntcore",
                 "/usr/local/wpilib/include/wpiutil",
                 "/usr/local/wpilib/include/cscore",

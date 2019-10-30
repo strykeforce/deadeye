@@ -28,7 +28,7 @@ class On : public Lights<inum> {
 
   void entry() override {
     base::SetStatus(DE_ON, true);
-    spdlog::info("Lights<{}> on", inum);
+    spdlog::info("Lights<{}{}> on", DEADEYE_UNIT, inum);
   }
 
   void react(LightsBlink const &) override {
@@ -52,16 +52,16 @@ class Blinking : public Lights<inum> {
     base::cancel_task_ = false;
     base::task_future_ = std::async(std::launch::async, [] {
       while (true) {
-        // spdlog::debug("Lights<{}> on", inum);
+        spdlog::trace("Lights<{}{}> on", DEADEYE_UNIT, inum);
         std::this_thread::sleep_for(kBlinkPeriod);
         if (base::cancel_task_.load()) break;
 
-        // spdlog::debug("Lights<{}> off", inum);
+        spdlog::trace("Lights<{}{}> off", DEADEYE_UNIT, inum);
         std::this_thread::sleep_for(kBlinkPeriod);
         if (base::cancel_task_.load()) break;
       }
     });
-    spdlog::info("Lights<{}> blink", inum);
+    spdlog::info("Lights<{}{}> blink", DEADEYE_UNIT, inum);
   }
 
   void CancelTask() {
@@ -70,8 +70,8 @@ class Blinking : public Lights<inum> {
       try {
         base::task_future_.get();
       } catch (std::exception const &e) {
-        spdlog::error("Lights<{}> error while cancelling blink: {}", inum,
-                      e.what());
+        spdlog::error("Lights<{}{}> error while cancelling blink: {}",
+                      DEADEYE_UNIT, inum, e.what());
       }
     }
   }
@@ -95,7 +95,7 @@ class Off : public Lights<inum> {
 
   void entry() override {
     base::SetStatus(DE_OFF, true);
-    spdlog::info("Lights<{}> off", inum);
+    spdlog::info("Lights<{}{}> off", DEADEYE_UNIT, inum);
   }
 
   void react(LightsOn const &) override {

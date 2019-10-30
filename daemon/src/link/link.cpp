@@ -18,13 +18,13 @@ Link::Link(int inum) : id_(DEADEYE_UNIT + std::to_string(inum)) {
   LinkConfig link_config = GetConfig();
   enabled_ = link_config.enabled;
   if (!enabled_) {
-    spdlog::warn("Link is disabled");
+    spdlog::warn("Link<{}> is disabled", id_);
     return;
   };
 
   fd_ = socket(AF_INET, SOCK_DGRAM, 0);
   if (fd_ == -1)
-    spdlog::critical("Link send socket error: {}", strerror(errno));
+    spdlog::critical("Link<{}> send socket error: {}", id_, strerror(errno));
 
   sockaddr_in addr;
   addr.sin_family = AF_INET;
@@ -32,16 +32,16 @@ Link::Link(int inum) : id_(DEADEYE_UNIT + std::to_string(inum)) {
   inet_pton(AF_INET, link_config.address.c_str(), &addr.sin_addr);
 
   if (connect(fd_, (sockaddr*)&addr, sizeof(addr)) == -1)
-    spdlog::critical("Link connect error: {}", strerror(errno));
+    spdlog::critical("Link<{}> connect error: {}", id_, strerror(errno));
 
-  spdlog::info("Link {} connected to {}:{}", id_, link_config.address,
+  spdlog::info("Link<{}> connected to {}:{}", id_, link_config.address,
                link_config.port);
 }
 
 Link::~Link() {
   if (!enabled_) return;
   if (close(fd_) == -1) spdlog::error("Link close error: {}", strerror(errno));
-  spdlog::info("Link closed socket");
+  spdlog::info("Link<{}> closed socket", id_);
 }
 
 LinkConfig Link::GetConfig() {
@@ -54,5 +54,5 @@ void Link::Send(TargetData* const td) {
 
   std::string msg = id_ + td->Dump();
   if (send(fd_, msg.data(), msg.size(), 0) == -1)
-    spdlog::error("Link send error: {}", strerror(errno));
+    spdlog::error("Link<{}> send error: {}", id_, strerror(errno));
 }

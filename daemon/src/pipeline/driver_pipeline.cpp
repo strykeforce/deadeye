@@ -41,22 +41,22 @@ void DriverPipeline::CancelTask() { cancel_ = true; }
 
 void DriverPipeline::ConfigPipeline(PipelineConfig const &config) {
   pipeline_config_ = config;
-  spdlog::info("DriverPipeline<{}> new config: {}", inum_, pipeline_config_);
+  spdlog::debug("DriverPipeline<{}>: {}", inum_, pipeline_config_);
 }
 
 void DriverPipeline::ConfigStream(StreamConfig const &config) {
   stream_enabled_ = config.view == StreamConfig::View::original;
-  spdlog::info("DriverPipeline<{}> stream enabled: {}", inum_,
-               stream_enabled_.load());
+  spdlog::debug("DriverPipeline<{}> stream enabled: {}", inum_,
+                stream_enabled_.load());
 }
 
 cv::VideoCapture DriverPipeline::GetVideoCapture() {
 #ifdef __APPLE__
   std::string pipeline = "autovideosrc ! videoconvert ! appsink";
 #else
-  std::string pipeline{pipeline_config_.capture_config.Pipeline()};
-  spdlog::debug("{}: {}", *this, pipeline);
-
+  // std::string pipeline{pipeline_config_.capture_config.Pipeline()};
+  // spdlog::debug("{}: {}", *this, pipeline);
+  std::string pipeline{""};
 #endif
   cv::VideoCapture cap(pipeline, cv::CAP_GSTREAMER);
   return cap;

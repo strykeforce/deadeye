@@ -33,6 +33,7 @@ target_link_libraries(Deadeye_library
     tinyfsm
     nlohmann_json::nlohmann_json
     safe
+    readerwriterqueue
 )
 
 # Build main target

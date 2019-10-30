@@ -24,8 +24,8 @@ class Watch : CliktCommand() {
 
   override fun run() {
     AnsiConsole.systemInstall()
-    val prevLink = Deadeye.link
-    Deadeye.link = Deadeye.getCamera<CenterTargetData>(ids.first()).stream.toLink()
+    val prevLink = Deadeye.config
+    Deadeye.config = Deadeye.getCamera<CenterTargetData>(ids.first()).stream.toLink()
     println()
     println(ansi().fgBrightBlue().a("id  serial  tgt     x     y   fps  drop"))
     println(ansi().a("=========================================").reset())
@@ -47,7 +47,7 @@ class Watch : CliktCommand() {
     watchers.forEach { it.camera.enabled = false }
     timer.cancel()
 
-    Deadeye.link = prevLink
+    Deadeye.config = prevLink
     terminal.close()
     AnsiConsole.systemUninstall()
   }
@@ -88,6 +88,6 @@ class Watcher(val camera: Camera<CenterTargetData>) : TargetDataListener {
   }
 }
 
-fun Camera.Stream.toLink(): Deadeye.Link = Socket(URL(this.url).host, 22).use {
-  Deadeye.Link(it.localAddress.hostAddress, 5800, true)
+fun Camera.Stream.toLink(): Deadeye.Config = Socket(URL(this.url).host, 22).use {
+  Deadeye.Config(it.localAddress.hostAddress, 5800, true)
 }

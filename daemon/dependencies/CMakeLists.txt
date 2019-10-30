@@ -11,3 +11,10 @@ target_include_directories(safe
     INTERFACE
     ${CMAKE_CURRENT_LIST_DIR}/safe/include/
 )
+
+# Add readerwriterqueue dependency
+add_library(readerwriterqueue INTERFACE)
+target_include_directories(readerwriterqueue
+    INTERFACE
+    ${CMAKE_CURRENT_LIST_DIR}/readerwriterqueue/
+)

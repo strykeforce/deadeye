@@ -4,3 +4,6 @@
 [submodule "daemon/dependencies/safe"]
 	path = daemon/dependencies/safe
 	url = https://github.com/LouisCharlesC/safe.git
+[submodule "daemon/dependencies/readerwriterqueue"]
+	path = daemon/dependencies/readerwriterqueue
+	url = https://github.com/cameron314/readerwriterqueue.git
