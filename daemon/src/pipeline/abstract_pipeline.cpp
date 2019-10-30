@@ -1,12 +1,14 @@
 #include "abstract_pipeline.h"
 
+#include <readerwriterqueue.h>
 #include <spdlog/spdlog.h>
 #include <wpi/Logger.h>
-
+#include <future>
 #include <opencv2/imgproc.hpp>
 
 #include "config/deadeye_config.h"
 #include "link/link.h"
+#include "pipeline/pipeline_logger.h"
 
 using namespace deadeye;
 
@@ -29,7 +31,7 @@ void AbstractPipeline::ConfigCapture(CaptureConfig const &config) {
   safe::WriteAccess<LockableCaptureConfig> cc{capture_config_};
   *cc = config;
   pipeline_type_ = config.PipelineType();
-  spdlog::info("{}:{}", *this, *cc);
+  spdlog::debug("{}:{}", *this, *cc);
   capture_config_ready_ = true;
 }
 
@@ -39,7 +41,7 @@ void AbstractPipeline::ConfigCapture(CaptureConfig const &config) {
 void AbstractPipeline::ConfigPipeline(PipelineConfig const &config) {
   safe::WriteAccess<LockablePipelineConfig> pc{pipeline_config_};
   *pc = config;
-  spdlog::info("{}:{}", *this, *pc);
+  spdlog::debug("{}:{}", *this, *pc);
   pipeline_config_ready_ = true;
 }
 
@@ -49,7 +51,7 @@ void AbstractPipeline::ConfigPipeline(PipelineConfig const &config) {
 void AbstractPipeline::ConfigStream(StreamConfig const &config) {
   safe::WriteAccess<LockableStreamConfig> sc{stream_config_};
   *sc = config;
-  spdlog::info("{}:{}", *this, *sc);
+  spdlog::debug("{}:{}", *this, *sc);
   stream_config_ready_ = true;
 }
 
@@ -61,7 +63,7 @@ void AbstractPipeline::Run() {
   pipeline_config_ready_ = true;
   stream_config_ready_ = true;
 
-  spdlog::info("Pipeline<{}>: starting", inum_);
+  spdlog::info("{}: starting", *this);
 
   // Set up streaming. CScore streaming will hang on connection if too many
   // connections are attempted, current workaround is for user to  disable and
@@ -72,15 +74,21 @@ void AbstractPipeline::Run() {
   mjpegServer.SetSource(cvsource_);
   spdlog::info("{} streaming on port {}", *this, mjpegServer.GetPort());
 
+  Link link{inum_};
+  cv::Scalar hsv_low, hsv_high;
+  cv::TickMeter tm;
+  PipelineLoggerQueue log_queue;
+  int log_counter = 60;
+
+  // Start frame logging thread
+  auto lfuture =
+      std::async(std::launch::async, PipelineLogger(id_, log_queue, cancel_));
+
   if (!StartCapture()) {
     spdlog::critical("{} failed to start video capture", *this);
     StopCapture();
     return;
   }
-
-  Link link{inum_};
-  cv::Scalar hsv_low, hsv_high;
-  cv::TickMeter tm;
 
   for (int i = 0;; i++) {  // Loop until task cancelled.
     tm.start();
@@ -97,7 +105,6 @@ void AbstractPipeline::Run() {
       spdlog::critical("{} failed to grab frame", *this);
     }
 
-    // TODO: extract and cache the hi/lo cv:Scalars perhaps
     if (pipeline_config_ready_.load()) {
       safe::ReadAccess<LockablePipelineConfig> pc{pipeline_config_};
       hsv_low = cv::Scalar(pc->hue[0], pc->sat[0], pc->val[0]);
@@ -110,6 +117,7 @@ void AbstractPipeline::Run() {
     cv::inRange(hsv_threshold_output_, hsv_low, hsv_high,
                 hsv_threshold_output_);
 
+    find_contours_output_.clear();
     cv::findContours(hsv_threshold_output_, find_contours_output_,
                      cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
 
@@ -129,6 +137,13 @@ void AbstractPipeline::Run() {
     }
 
     if (StreamEnabled()) StreamFrame();
+
+    if (LogEnabled() && --log_counter == 0) {
+      log_queue.enqueue(
+          PipelineLogEntry(frame_, hsv_threshold_output_, find_contours_output_,
+                           filter_contours_output_, std::move(target_data_)));
+      log_counter = 60;
+    }
 
     tm.stop();
   }
@@ -181,6 +196,8 @@ void AbstractPipeline::StreamFrame() {
              cv::INTER_AREA);
   cvsource_.PutFrame(preview);
 }
+
+void AbstractPipeline::LogFrame() {}
 
 void AbstractPipeline::LogTickMeter(cv::TickMeter tm) {
   spdlog::info("{}: stopping", *this);

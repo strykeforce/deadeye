@@ -59,7 +59,7 @@ Controller::Controller(PipelinesPtr pipelines) {
                        *(*pipelines)[i], i);
       throw std::runtime_error("critical error");
     }
-    spdlog::info("Camera<{}>: {} {}", i, *(*pipelines)[i],
+    spdlog::info("Camera<{}{}>: {} {}", DEADEYE_UNIT, i, *(*pipelines)[i],
                  has_active_pipeline_[i] ? "active" : "");
   }
 
@@ -513,7 +513,7 @@ void Controller::InitializeCamera() {
   PipelineConfig pc{nti.GetEntry(PipelineConfigEntryPath(inum)).GetValue()};
   StreamConfig sc{nti.GetEntry(StreamConfigEntryPath(inum)).GetValue()};
   Camera<inum>::Initialize(cc, pc, sc);
-  spdlog::info("Camera<{}> initialized", inum);
+  spdlog::info("Camera<{}{}> initialized", DEADEYE_UNIT, inum);
 }
 
 /**

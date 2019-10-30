@@ -23,7 +23,7 @@ template <int inum>
 class On : public Camera<inum> {
   using base = Camera<inum>;
 
-  void entry() override {
+  void entry() final {
     base::SetStatus(DE_ON, true);
     base::has_error_ = false;
 
@@ -35,10 +35,10 @@ class On : public Camera<inum> {
         std::rethrow_exception(std::current_exception());
       }
     });
-    spdlog::info("Camera<{}> on", inum);
+    spdlog::info("Camera<{}{}> on", DEADEYE_UNIT, inum);
   }
 
-  void react(CameraOff const &) override {
+  void react(CameraOff const &) final {
     Lights<inum>::dispatch(LightsOff());
     base::pipeline_->CancelTask();
 
@@ -56,7 +56,7 @@ class On : public Camera<inum> {
     base::template transit<camera::Off<inum>>();
   }
 
-  void exit() override { base::SetStatus(DE_ON, false); }
+  void exit() final { base::SetStatus(DE_ON, false); }
 };
 
 // ---------------------------------------------------------------------------
@@ -66,17 +66,17 @@ template <int inum>
 class Off : public Camera<inum> {
   using base = Camera<inum>;
 
-  void entry() override {
+  void entry() final {
     base::SetStatus(DE_OFF, true);
-    spdlog::info("Camera<{}> off", inum);
+    spdlog::info("Camera<{}{}> off", DEADEYE_UNIT, inum);
   }
 
-  void react(CameraOn const &) override {
+  void react(CameraOn const &) final {
     Lights<inum>::dispatch(LightsOn());
     base::template transit<camera::On<inum>>();
   }
 
-  void exit() override { base::SetStatus(DE_OFF, false); }
+  void exit() final { base::SetStatus(DE_OFF, false); }
 };
 
 // ---------------------------------------------------------------------------
@@ -86,25 +86,26 @@ template <int inum>
 class Error : public Camera<inum> {
   using base = Camera<inum>;
 
-  void entry() override {
+  void entry() final {
     base::SetStatus(DE_ERROR, true);
     Lights<inum>::dispatch(LightsBlink());
-    spdlog::error("Camera<{}> error: {}", inum, base::error_);
+    spdlog::error("Camera<{}{}> error: {}", DEADEYE_UNIT, inum, base::error_);
   }
 
-  void react(CameraOn const &) override {
+  void react(CameraOn const &) final {
     base::SetStatus(DE_ON, false);
-    spdlog::warn("Camera<{}> attempting to turn on camera in error state: {}",
-                 inum, base::error_);
+    spdlog::warn("Camera<{}{}> attempting to turn on camera in error state: {}",
+                 DEADEYE_UNIT, inum, base::error_);
   }
 
-  void react(CameraOff const &) override {
+  void react(CameraOff const &) final {
     base::SetStatus(DE_OFF, false);
-    spdlog::warn("Camera<{}> attempting to turn off camera in error state: {}",
-                 inum, base::error_);
+    spdlog::warn(
+        "Camera<{}{}> attempting to turn off camera in error state: {}",
+        DEADEYE_UNIT, inum, base::error_);
   }
 
-  void exit() override { base::SetStatus(DE_ERROR, false); }
+  void exit() final { base::SetStatus(DE_ERROR, false); }
 };
 
 }  // namespace camera

@@ -48,7 +48,7 @@ class Status : CliktCommand() {
     println("Deadeye Status")
     println("==============")
     val fmt = "%-7s %s"
-    with(Deadeye.link) {
+    with(Deadeye.config) {
       println(fmt.format("Link:", "$address:$port"))
     }
     println()
