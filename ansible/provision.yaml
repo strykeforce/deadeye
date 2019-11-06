@@ -21,5 +21,7 @@
       tags: catch
     - role: fmt
       tags: fmt
+    - role: libgpiod
+      tags: libgpiod
     # - role: seapi
     #   tags: seapi
