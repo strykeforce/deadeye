@@ -12,6 +12,11 @@ set_target_properties(Deadeye_library PROPERTIES
   EXPORT_NAME deadeye
 )
 
+if(CMAKE_CROSSCOMPILING)
+  link_directories(${CMAKE_SYSROOT}/usr/lib/aarch64-linux-gnu/tegra/)
+  message("Cross-compiling for ${CMAKE_SYSTEM_NAME} ${CMAKE_SYSTEM_PROCESSOR} on ${CMAKE_HOST_SYSTEM_NAME}")
+endif(CMAKE_CROSSCOMPILING)
+
 target_compile_definitions(Deadeye_library
   PUBLIC
   DEADEYE_UNIT_ID=${DEADEYE_UNIT_ID}
@@ -62,4 +67,9 @@ target_link_libraries(Deadeye_deadeyed
     PRIVATE
     Deadeye_library
 )
+
+include(GNUInstallDirs)
+install(TARGETS Deadeye_deadeyed DESTINATION ${CMAKE_INSTALL_BINDIR})
+
 endif(enableBuildMain)
+
