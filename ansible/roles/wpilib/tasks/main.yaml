@@ -44,3 +44,19 @@
   tags:
     - wpilib
     - build
+
+- name: Copy ld config
+  copy:
+    content: /usr/local/wpilib/lib
+    dest: /etc/ld.so.conf.d/wpilib.conf
+  register: wpilib_conf
+  tags:
+    - wpilib
+    - build
+
+- name: Update ld cache
+  command: /sbin/ldconfig
+  when: wpilib_conf is changed
+  tags:
+    - wpilib
+    - build
