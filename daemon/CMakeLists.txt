@@ -30,7 +30,9 @@ endif()
 string(REGEX REPLACE "[\n\r]+" ";" hashList "${hashList}")
 list(LENGTH hashList Deadeye_COMMITS_SINCE_VERSION_CHANGE)
 
-enable_testing()
+if(NOT CMAKE_CROSSCOMPILING)
+    enable_testing()
+endif(NOT CMAKE_CROSSCOMPILING)
 
 # Project-wide setup
 set(CMAKE_CXX_STANDARD 17)
@@ -59,14 +61,26 @@ find_package(cscore REQUIRED)
 find_package(Threads REQUIRED) # required for ntcore
 find_package(nlohmann_json REQUIRED)
 
+if(CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
+    if(CMAKE_CROSSCOMPILING)    
+        set(ENV{PKG_CONFIG_DIR} "")
+        set(ENV{PKG_CONFIG_SYSROOT_DIR} ${CMAKE_SYSROOT})
+        set(ENV{PKG_CONFIG_LIBDIR} "${CMAKE_SYSROOT}/usr/lib/pkgconfig:${CMAKE_SYSROOT}/usr/local/lib/pkgconfig:${CMAKE_SYSROOT}/usr/share/pkgconfig")
+    endif(CMAKE_CROSSCOMPILING)    
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(GPIOD REQUIRED IMPORTED_TARGET libgpiodcxx)
+endif(CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
+
 add_subdirectory(dependencies)
 
 get_directory_property(hasParent PARENT_DIRECTORY)
 if(NOT hasParent)
-set(enableBuildMain YES)
-find_package(Catch2 REQUIRED)
-add_subdirectory(tests)
-endif()
+    set(enableBuildMain YES)
+    if(NOT CMAKE_CROSSCOMPILING)
+        find_package(Catch2 REQUIRED)
+        add_subdirectory(tests)    
+    endif(NOT CMAKE_CROSSCOMPILING)
+endif(NOT hasParent)
 
 
 # Main target

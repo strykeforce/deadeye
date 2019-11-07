@@ -18,7 +18,10 @@ set_target_properties(Deadeye_library PROPERTIES
 
 if(CMAKE_CROSSCOMPILING)
   link_directories(${CMAKE_SYSROOT}/usr/lib/aarch64-linux-gnu/tegra/)
-  message("Cross-compiling for ${CMAKE_SYSTEM_NAME} ${CMAKE_SYSTEM_PROCESSOR} on ${CMAKE_HOST_SYSTEM_NAME}")
+  message(
+    STATUS
+    "Cross-compiling for ${CMAKE_SYSTEM_NAME} ${CMAKE_SYSTEM_PROCESSOR} on ${CMAKE_HOST_SYSTEM_NAME}"
+  )
 endif(CMAKE_CROSSCOMPILING)
 
 target_compile_definitions(Deadeye_library
@@ -40,11 +43,19 @@ target_link_libraries(Deadeye_library
     ntcore
     cscore
     spdlog::spdlog
-    tinyfsm
     nlohmann_json::nlohmann_json
+    tinyfsm
     safe
     readerwriterqueue
 )
+
+if(CMAKE_CROSSCOMPILING)
+target_link_libraries(Deadeye_library
+    PRIVATE
+    PkgConfig::GPIOD
+)  
+endif(CMAKE_CROSSCOMPILING)
+
 
 # Build main target
 if(enableBuildMain)

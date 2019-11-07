@@ -8,6 +8,7 @@
 #include <tinyfsm.hpp>
 
 #include "config/deadeye_config.h"
+#include "fsm/led_drive.h"
 
 namespace deadeye {
 // ---------------------------------------------------------------------------
@@ -38,6 +39,7 @@ class Lights : public tinyfsm::Fsm<Lights<inum>> {
  protected:
   static std::future<void> task_future_;
   static std::atomic<bool> cancel_task_;
+  static LedDrive led_;
 
   void SetStatus(std::string name, bool state) {
     std::string path = fmt::format("{}/{}", LightsControlTablePath(inum), name);
@@ -52,5 +54,8 @@ std::future<void> Lights<inum>::task_future_;
 
 template <int inum>
 std::atomic<bool> Lights<inum>::cancel_task_{false};
+
+template <int inum>
+LedDrive Lights<inum>::led_{inum};
 
 }  // namespace deadeye
