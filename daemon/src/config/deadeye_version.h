@@ -2,7 +2,6 @@
 #include <string>
 
 namespace deadeye {
-
 std::string GetDeadeyeVersion();
 unsigned GetDeadeyeVersionMajor();
 unsigned GetDeadeyeVersionMinor();
