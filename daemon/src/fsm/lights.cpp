@@ -29,6 +29,7 @@ class On : public Lights<inum> {
   void entry() override {
     base::SetStatus(DE_ON, true);
     spdlog::info("Lights<{}{}> on", DEADEYE_UNIT, inum);
+    base::led_.On();
   }
 
   void react(LightsBlink const &) override {
@@ -53,10 +54,12 @@ class Blinking : public Lights<inum> {
     base::task_future_ = std::async(std::launch::async, [] {
       while (true) {
         spdlog::trace("Lights<{}{}> on", DEADEYE_UNIT, inum);
+        base::led_.On();
         std::this_thread::sleep_for(kBlinkPeriod);
         if (base::cancel_task_.load()) break;
 
         spdlog::trace("Lights<{}{}> off", DEADEYE_UNIT, inum);
+        base::led_.Off();
         std::this_thread::sleep_for(kBlinkPeriod);
         if (base::cancel_task_.load()) break;
       }
@@ -96,6 +99,7 @@ class Off : public Lights<inum> {
   void entry() override {
     base::SetStatus(DE_OFF, true);
     spdlog::info("Lights<{}{}> off", DEADEYE_UNIT, inum);
+    base::led_.Off();
   }
 
   void react(LightsOn const &) override {
