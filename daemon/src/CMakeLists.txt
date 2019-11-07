@@ -49,12 +49,12 @@ target_link_libraries(Deadeye_library
     readerwriterqueue
 )
 
-if(CMAKE_CROSSCOMPILING)
+if(CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
 target_link_libraries(Deadeye_library
     PRIVATE
     PkgConfig::GPIOD
-)  
-endif(CMAKE_CROSSCOMPILING)
+)
+endif(CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
 
 
 # Build main target
