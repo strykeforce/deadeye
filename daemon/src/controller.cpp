@@ -9,6 +9,7 @@
 #include <tinyfsm.hpp>
 
 #include "config/deadeye_config.h"
+#include "config/deadeye_version.h"
 #include "config/link_config.h"
 #include "config/pipeline_config.h"
 #include "config/stream_config.h"
@@ -45,6 +46,7 @@ std::array<std::unique_ptr<Pipeline>, 5> EMPTY = {
  * Constructor for Controller.
  */
 Controller::Controller(PipelinesPtr pipelines) {
+  spdlog::info("Deadeye {} controller starting", GetDeadeyeVersion());
   assert(pipelines);
 
   for (int i = 0; i < static_cast<int>(pipelines->size()); i++) {

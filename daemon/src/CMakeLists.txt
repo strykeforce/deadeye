@@ -1,7 +1,11 @@
 # Build library to facilitate testing
+configure_file(config/deadeye_version.cpp.in deadeye_version.cpp @ONLY)
+
 add_library(Deadeye_library
     controller.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/deadeye_version.cpp
 )
+
 add_subdirectory(config)
 add_subdirectory(fsm)
 add_subdirectory(link)
@@ -28,6 +32,7 @@ target_compile_definitions(Deadeye_library
 
 target_include_directories(Deadeye_library
   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
+  PRIVATE "${CMAKE_CURRENT_BINARY_DIR}"
 )
 
 target_link_libraries(Deadeye_library

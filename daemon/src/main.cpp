@@ -14,7 +14,6 @@ void ConfigureLogging() {
 
 int main(int argc, char** argv) {
   ConfigureLogging();
-  spdlog::info("Deadeye unit {} starting", DEADEYE_UNIT);
 
   try {
     DEADEYE_INIT()
