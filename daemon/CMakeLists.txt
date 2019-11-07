@@ -22,6 +22,7 @@ execute_process(
     OUTPUT_VARIABLE hashList
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
+
 if(result)
     message(FATAL_ERROR "Failed to get list of git hashes: ${result}")
 endif()

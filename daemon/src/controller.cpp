@@ -48,6 +48,7 @@ std::array<std::unique_ptr<Pipeline>, 5> EMPTY = {
 Controller::Controller(PipelinesPtr pipelines) {
   spdlog::info("Deadeye {}, commits since last version change: {}",
                GetDeadeyeVersion(), GetDeadeyeCommitsSinceVersionChange());
+
   assert(pipelines);
 
   for (int i = 0; i < static_cast<int>(pipelines->size()); i++) {
