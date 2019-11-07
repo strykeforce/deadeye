@@ -6,7 +6,7 @@ project(Deadeye LANGUAGES CXX VERSION ${Deadeye_VER})
 find_package(Git REQUIRED)
 
 execute_process(
-    COMMAND ${GIT_EXECUTABLE} rev-list -1 HEAD version.cmake
+    COMMAND ${GIT_EXECUTABLE} rev-list -1 HEAD -- version.cmake
     RESULT_VARIABLE result
     OUTPUT_VARIABLE lastChangeHash
     OUTPUT_STRIP_TRAILING_WHITESPACE

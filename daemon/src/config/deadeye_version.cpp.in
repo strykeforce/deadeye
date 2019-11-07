@@ -10,3 +10,4 @@ unsigned deadeye::GetDeadeyeVersionPatch() { return @Deadeye_VERSION_PATCH@+0; }
 
 unsigned deadeye::GetDeadeyeVersionTweak() { return @Deadeye_VERSION_TWEAK@+0; }
 
+unsigned deadeye::GetDeadeyeCommitsSinceVersionChange() { return @Deadeye_COMMITS_SINCE_VERSION_CHANGE@; }

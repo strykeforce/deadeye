@@ -13,4 +13,6 @@ unsigned GetDeadeyeVersionPatch();
 
 unsigned GetDeadeyeVersionTweak();
 
+unsigned GetDeadeyeCommitsSinceVersionChange();
+
 }  // namespace deadeye
