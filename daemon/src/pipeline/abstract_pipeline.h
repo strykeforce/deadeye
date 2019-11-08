@@ -45,7 +45,8 @@ class AbstractPipeline : public Pipeline {
   std::atomic<bool> stream_config_ready_{false};
   LockablePipelineConfig pipeline_config_;
   std::atomic<bool> pipeline_config_ready_{false};
-  std::string pipeline_type_{"haha"};
+  std::string pipeline_type_{"unknown"};
+  int fps_;
 
  private:
   void StreamFrame();
@@ -57,8 +58,6 @@ class AbstractPipeline : public Pipeline {
              contour_ == StreamConfig::Contour::none);
   }
 
-  inline bool LogEnabled() { return true; }
-
   cv::Mat frame_;
   cv::Mat hsv_threshold_output_;
   Contours filter_contours_output_;
@@ -67,6 +66,7 @@ class AbstractPipeline : public Pipeline {
   StreamConfig::Contour contour_;
   cs::CvSource cvsource_;
   TargetDataPtr target_data_;
+  bool log_enabled_;
 };
 
 }  // namespace deadeye

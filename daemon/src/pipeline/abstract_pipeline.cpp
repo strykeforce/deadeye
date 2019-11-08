@@ -31,6 +31,7 @@ void AbstractPipeline::ConfigCapture(CaptureConfig const &config) {
   safe::WriteAccess<LockableCaptureConfig> cc{capture_config_};
   *cc = config;
   pipeline_type_ = config.PipelineType();
+  fps_ = config.frame_rate;
   spdlog::debug("{}:{}", *this, *cc);
   capture_config_ready_ = true;
 }
@@ -78,7 +79,7 @@ void AbstractPipeline::Run() {
   cv::Scalar hsv_low, hsv_high;
   cv::TickMeter tm;
   PipelineLoggerQueue log_queue;
-  int log_counter = 60;
+  int log_counter = fps_;
 
   // Start frame logging thread
   auto lfuture =
@@ -109,6 +110,7 @@ void AbstractPipeline::Run() {
       safe::ReadAccess<LockablePipelineConfig> pc{pipeline_config_};
       hsv_low = cv::Scalar(pc->hue[0], pc->sat[0], pc->val[0]);
       hsv_high = cv::Scalar(pc->hue[1], pc->sat[1], pc->val[1]);
+      log_enabled_ = pc->log;
       pipeline_config_ready_ = false;
       spdlog::debug("{}:{}", *this, *pc);
     }
@@ -138,11 +140,11 @@ void AbstractPipeline::Run() {
 
     if (StreamEnabled()) StreamFrame();
 
-    if (LogEnabled() && --log_counter == 0) {
+    if (log_enabled_ && --log_counter == 0) {
       log_queue.enqueue(
-          PipelineLogEntry(frame_, hsv_threshold_output_, find_contours_output_,
-                           filter_contours_output_, std::move(target_data_)));
-      log_counter = 60;
+          PipelineLogEntry{frame_, hsv_threshold_output_, find_contours_output_,
+                           filter_contours_output_, std::move(target_data_)});
+      log_counter = fps_;
     }
 
     tm.stop();
