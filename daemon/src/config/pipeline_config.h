@@ -4,7 +4,8 @@
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <string>
-#include "config/capture_config.h"
+
+#include "config/log_config.h"
 
 using json = nlohmann::json;
 
@@ -25,7 +26,7 @@ struct PipelineConfig {
   hsv_t sat{-1, -1};
   hsv_t val{-1, -1};
   double exposure{-1.0};
-  bool log{false};
+  LogConfig log;
 
   /**
    * Default constructor.
@@ -36,7 +37,7 @@ struct PipelineConfig {
    * Constructor from member values.
    */
   PipelineConfig(int sn, hsv_t hue, hsv_t sat, hsv_t val, double exposure,
-                 bool log);
+                 LogConfig log);
 
   /**
    * Constructor from NetworkTables.
@@ -49,7 +50,8 @@ struct PipelineConfig {
        << pc.hue[1] << "], "
        << "sat=[" << pc.sat[0] << "," << pc.sat[1] << "], "
        << "val=[" << pc.val[0] << "," << pc.val[1]
-       << "], exposure=" << pc.exposure << ", log=" << pc.log << ">";
+       << "], exposure=" << pc.exposure << ", log=<" << pc.log.path << ", "
+       << pc.log.enabled << ">>";
     return os;
   }
 };

@@ -5,6 +5,7 @@
 #include <opencv2/core/mat.hpp>
 #include <string>
 
+#include "config/log_config.h"
 #include "link/target_data.h"
 #include "pipeline/pipeline.h"  // for Contours
 
@@ -27,13 +28,14 @@ using PipelineLoggerQueue =
 
 class PipelineLogger {
  public:
-  PipelineLogger(std::string id, PipelineLoggerQueue& queue,
+  PipelineLogger(std::string id, LogConfig config, PipelineLoggerQueue& queue,
                  std::atomic<bool>& cancel);
   void operator()();
 
  private:
   std::string id_;
-  std::string template_{"/tmp/deadeye/{}/{}.jpg"};
+  bool enabled_;
+  std::string template_;
   PipelineLoggerQueue& queue_;
   std::atomic<bool>& cancel_;
 };

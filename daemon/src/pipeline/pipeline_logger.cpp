@@ -18,16 +18,25 @@ PipelineLogEntry::PipelineLogEntry(cv::Mat const frame, cv::Mat const mask,
       filtered_contours(filtered_contours),
       target(std::move(target)) {}
 
-PipelineLogger::PipelineLogger(std::string id, PipelineLoggerQueue& queue,
+PipelineLogger::PipelineLogger(std::string id, LogConfig config,
+                               PipelineLoggerQueue& queue,
                                std::atomic<bool>& cancel)
-    : id_(id), queue_(queue), cancel_(cancel) {}
+    : id_(id),
+      enabled_(config.enabled),
+      template_(fmt::format("{}/{{}}/{{}}.jpg", config.path)),
+      queue_(queue),
+      cancel_(cancel) {}
 
 void PipelineLogger::operator()() {
   int i = 0;
   PipelineLogEntry entry;
-  spdlog::info("Logging frames to {}", fmt::format(template_, id_, "nnn"));
+  if (enabled_)
+    spdlog::info("Logging pipeline to {}", fmt::format(template_, id_, "nnn"));
+  else
+    spdlog::warn("Pipeline logging disabled");
+
   while (!cancel_.load()) {
-    if (!queue_.wait_dequeue_timed(entry, std::chrono::milliseconds(10))) {
+    if (!queue_.wait_dequeue_timed(entry, std::chrono::milliseconds(100))) {
       continue;
     }
     auto path = fmt::format(template_, id_, i++);
