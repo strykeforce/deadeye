@@ -47,6 +47,11 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
   static void SetPipeline(std::unique_ptr<Pipeline> pipeline) {
     pipeline_ = std::move(pipeline);
   }
+
+  static Pipeline* GetPipeline() {
+    return pipeline_.get();
+  }
+
   static void Initialize(CaptureConfig const &cc, PipelineConfig const &pc,
                          StreamConfig const &sc) {
     pipeline_->ConfigCapture(cc);
