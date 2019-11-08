@@ -16,6 +16,7 @@ struct PipelineConfig {
   static char const* kHsvSatKey;
   static char const* kHsvValKey;
   static char const* kExposureKey;
+  static char const* kLogKey;
 
   using hsv_t = std::array<int, 2>;
 
@@ -24,6 +25,7 @@ struct PipelineConfig {
   hsv_t sat{-1, -1};
   hsv_t val{-1, -1};
   double exposure{-1.0};
+  bool log{false};
 
   /**
    * Default constructor.
@@ -33,7 +35,8 @@ struct PipelineConfig {
   /**
    * Constructor from member values.
    */
-  PipelineConfig(int sn, hsv_t hue, hsv_t sat, hsv_t val, double exposure);
+  PipelineConfig(int sn, hsv_t hue, hsv_t sat, hsv_t val, double exposure,
+                 bool log);
 
   /**
    * Constructor from NetworkTables.
@@ -46,7 +49,7 @@ struct PipelineConfig {
        << pc.hue[1] << "], "
        << "sat=[" << pc.sat[0] << "," << pc.sat[1] << "], "
        << "val=[" << pc.val[0] << "," << pc.val[1]
-       << "], exposure=" << pc.exposure << ">";
+       << "], exposure=" << pc.exposure << ", log=" << pc.log << ">";
     return os;
   }
 };
@@ -56,7 +59,8 @@ void from_json(const json& j, PipelineConfig& p);
 
 inline bool operator==(PipelineConfig const& lhs, PipelineConfig const& rhs) {
   return lhs.sn == rhs.sn && lhs.hue == rhs.hue && lhs.sat == rhs.sat &&
-         lhs.val == rhs.val && lhs.exposure == rhs.exposure;
+         lhs.val == rhs.val && lhs.exposure == rhs.exposure &&
+         lhs.log == rhs.log;
 }
 
 inline bool operator!=(PipelineConfig const& lhs, PipelineConfig const& rhs) {

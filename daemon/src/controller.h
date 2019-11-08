@@ -35,6 +35,9 @@ class Controller {
   template <int inum>
   void InitializeCamera();
 
+  template <int inum>
+  void LogCamera();
+
   void StartPoller();
 
   NT_Inst inst_;

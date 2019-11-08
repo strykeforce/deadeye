@@ -40,6 +40,7 @@ std::array<std::unique_ptr<Pipeline>, 5> EMPTY = {
     std::unique_ptr<Pipeline>{nullptr}, std::unique_ptr<Pipeline>{nullptr},
     std::unique_ptr<Pipeline>{nullptr}, std::unique_ptr<Pipeline>{nullptr},
     std::unique_ptr<Pipeline>{nullptr}};
+
 }  // namespace
 
 /**
@@ -63,8 +64,6 @@ Controller::Controller(PipelinesPtr pipelines) {
                        *(*pipelines)[i], i);
       throw std::runtime_error("critical error");
     }
-    spdlog::info("Camera<{}{}>: {} {}", DEADEYE_UNIT, i, *(*pipelines)[i],
-                 has_active_pipeline_[i] ? "active" : "");
   }
 
   std::signal(SIGINT, signal_handler);
@@ -84,6 +83,13 @@ Controller::Controller(PipelinesPtr pipelines) {
   InitializeCamera<2>();
   InitializeCamera<3>();
   InitializeCamera<4>();
+
+  LogCamera<0>();
+  LogCamera<1>();
+  LogCamera<2>();
+  LogCamera<3>();
+  LogCamera<4>();
+
   StartPoller();
 }
 
@@ -490,7 +496,7 @@ void Controller::InitializeNetworkTables() {
     entry.SetPersistent();
 
     entry = nti.GetEntry(PipelineConfigEntryPath(i));
-    PipelineConfig pc{0, {0, 255}, {0, 255}, {0, 255}, 0.5};
+    PipelineConfig pc{0, {0, 255}, {0, 255}, {0, 255}, 0.5, false};
     j = pc;
     entry.SetDefaultString(j.dump());
     entry.SetPersistent();
@@ -517,7 +523,14 @@ void Controller::InitializeCamera() {
   PipelineConfig pc{nti.GetEntry(PipelineConfigEntryPath(inum)).GetValue()};
   StreamConfig sc{nti.GetEntry(StreamConfigEntryPath(inum)).GetValue()};
   Camera<inum>::Initialize(cc, pc, sc);
-  spdlog::info("Camera<{}{}> initialized", DEADEYE_UNIT, inum);
+  spdlog::debug("Camera<{}{}> initialized", DEADEYE_UNIT, inum);
+}
+
+template <int inum>
+void Controller::LogCamera() {
+  auto pl = Camera<inum>::GetPipeline();
+  spdlog::info("Camera<{}{}>: {} {}", DEADEYE_UNIT, inum, *pl,
+               has_active_pipeline_[inum] ? "[active]" : "");
 }
 
 /**
