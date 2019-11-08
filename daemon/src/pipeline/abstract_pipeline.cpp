@@ -82,8 +82,13 @@ void AbstractPipeline::Run() {
   int log_counter = fps_;
 
   // Start frame logging thread
-  auto lfuture =
-      std::async(std::launch::async, PipelineLogger(id_, log_queue, cancel_));
+  LogConfig lc;
+  {
+    safe::ReadAccess<LockablePipelineConfig> pc{pipeline_config_};
+    lc = pc->log;
+  }
+  auto lfuture = std::async(std::launch::async,
+                            PipelineLogger(id_, lc, log_queue, cancel_));
 
   if (!StartCapture()) {
     spdlog::critical("{} failed to start video capture", *this);
@@ -110,7 +115,7 @@ void AbstractPipeline::Run() {
       safe::ReadAccess<LockablePipelineConfig> pc{pipeline_config_};
       hsv_low = cv::Scalar(pc->hue[0], pc->sat[0], pc->val[0]);
       hsv_high = cv::Scalar(pc->hue[1], pc->sat[1], pc->val[1]);
-      log_enabled_ = pc->log;
+      log_enabled_ = pc->log.enabled;
       pipeline_config_ready_ = false;
       spdlog::debug("{}:{}", *this, *pc);
     }
