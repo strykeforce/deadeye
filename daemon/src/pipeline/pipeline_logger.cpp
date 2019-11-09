@@ -2,6 +2,8 @@
 
 #include <fmt/core.h>
 #include <spdlog/spdlog.h>
+#include <sys/stat.h>
+#include <cstring>
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
@@ -25,7 +27,10 @@ PipelineLogger::PipelineLogger(std::string id, LogConfig config,
       enabled_(config.enabled),
       template_(fmt::format("{}/{{}}/{{}}.jpg", config.path)),
       queue_(queue),
-      cancel_(cancel) {}
+      cancel_(cancel) {
+  // disable logging if mounted log filesystem expected but missing
+  enabled_ = enabled_ && CheckMount(config);
+}
 
 void PipelineLogger::operator()() {
   int i = 0;
@@ -39,6 +44,8 @@ void PipelineLogger::operator()() {
     if (!queue_.wait_dequeue_timed(entry, std::chrono::milliseconds(100))) {
       continue;
     }
+    if (!enabled_) continue;  // throw away if logged by upstream while disabled
+
     auto path = fmt::format(template_, id_, i++);
     try {
       cv::cvtColor(entry.mask, entry.mask, cv::COLOR_GRAY2BGR);
@@ -77,4 +84,35 @@ void PipelineLogger::operator()() {
       spdlog::warn("frame logging queue: {}", queue_.size_approx());
   }
   spdlog::trace("Frame logging task exited");
+}
+
+bool PipelineLogger::CheckMount(LogConfig const& config) {
+  struct stat mnt;
+  struct stat parent;
+
+  // check mount point
+  if (stat(config.path.c_str(), &mnt) == -1) {
+    spdlog::error("failed to stat {}: {}", config.path, std::strerror(errno));
+    return false;
+  }
+
+  // ...and its parent
+  std::string parent_path = config.path + "/..";
+  if (stat(parent_path.c_str(), &parent) == -1) {
+    spdlog::error("failed to stat {}: {}", parent_path, std::strerror(errno));
+    return false;
+  }
+
+  // compare st_dev fields, if equal then both belong to same filesystem
+  bool mounted = mnt.st_dev != parent.st_dev;
+  if (mounted == config.mount) {
+    spdlog::debug("PipelineLogger<{}>: {} is a mounted filesystem", id_,
+                  config.path);
+    return true;
+  } else {
+    spdlog::error(
+        "PipelineLogger<{}>: {} has mounted filesystem is {}, expected {}", id_,
+        config.path, mounted, config.mount);
+    return false;
+  }
 }

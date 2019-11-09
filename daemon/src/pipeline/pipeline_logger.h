@@ -33,6 +33,8 @@ class PipelineLogger {
   void operator()();
 
  private:
+  bool CheckMount(LogConfig const& config);
+
   std::string id_;
   bool enabled_;
   std::string template_;

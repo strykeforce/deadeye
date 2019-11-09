@@ -25,7 +25,8 @@ TEST_CASE("PipelineConfig to JSON", "[pipeline]") {
   PipelineConfig pc{2767, {1, 2}, {25, 24}, {250, 251}, 0.5, LogConfig()};
   json j = pc;
   json expected = R"(
-{"exposure":0.5,"hue":[1,2],"sat":[25,24],"sn":2767,"val":[250,251],"log":{"enabled":false,"path":"/mnt/deadeye"}}
+{"exposure":0.5,"hue":[1,2],"sat":[25,24],"sn":2767,"val":[250,251],
+"log":{"enabled":false,"path":"/mnt/deadeye","mount":true}}
 )"_json;
 
   REQUIRE(j == expected);
@@ -61,5 +62,12 @@ TEST_CASE("PipelineConfig from JSON", "[pipeline]") {
   REQUIRE(pc.sat[1] == 6);
   REQUIRE(pc.val[0] == 8);
   REQUIRE(pc.val[1] == 10);
-  REQUIRE(pc.log == LogConfig("/foo", true));
+  REQUIRE(pc.log == LogConfig("/foo", true, true));
+}
+
+TEST_CASE("LogConfig has sane defaults", "[pipeline]") {
+  auto lc = LogConfig();
+  REQUIRE(lc.path == LogConfig::kDefaultPath);
+  REQUIRE_FALSE(lc.enabled);
+  REQUIRE(lc.mount);
 }
