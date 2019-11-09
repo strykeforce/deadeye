@@ -1,0 +1,8 @@
+[Unit]
+Description=Deadeye Vision System Daemon
+
+[Service]
+ExecStart=/usr/local/bin/deadeyed
+
+[Install]
+WantedBy=multi-user.target
