@@ -396,6 +396,10 @@ void Controller::Run() {
           break;
         }
 
+        case hash(DE_CONFIG_ENTRY):
+          spdlog::debug("Deadeye: {}", entry.value);
+          break;
+
         default:
           spdlog::warn("Controller: {} event unrecognized in {}, line {}",
                        entry.name, __FILE__, __LINE__);
