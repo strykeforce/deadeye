@@ -169,6 +169,8 @@ void Controller::Run() {
           assert(has_active_pipeline_[0]);
           if (entry.value->GetBoolean()) Camera<0>::dispatch(CameraOff());
           break;
+        case hash(DE_CAMERA_CONTROL("0", DE_ERROR)):
+          break;
         case hash(DE_LIGHTS_CONTROL("0", DE_ON)):
           assert(has_active_pipeline_[0]);
           if (entry.value->GetBoolean()) Lights<0>::dispatch(LightsOn());
@@ -214,6 +216,8 @@ void Controller::Run() {
         case hash(DE_CAMERA_CONTROL("1", DE_OFF)):
           assert(has_active_pipeline_[1]);
           if (entry.value->GetBoolean()) Camera<1>::dispatch(CameraOff());
+          break;
+        case hash(DE_CAMERA_CONTROL("1", DE_ERROR)):
           break;
         case hash(DE_LIGHTS_CONTROL("1", DE_ON)):
           assert(has_active_pipeline_[1]);
@@ -263,6 +267,8 @@ void Controller::Run() {
           assert(has_active_pipeline_[2]);
           if (entry.value->GetBoolean()) Camera<2>::dispatch(CameraOff());
           break;
+        case hash(DE_CAMERA_CONTROL("2", DE_ERROR)):
+          break;
         case hash(DE_LIGHTS_CONTROL("2", DE_ON)):
           assert(has_active_pipeline_[2]);
           if (entry.value->GetBoolean()) Lights<2>::dispatch(LightsOn());
@@ -311,6 +317,8 @@ void Controller::Run() {
           assert(has_active_pipeline_[3]);
           if (entry.value->GetBoolean()) Camera<3>::dispatch(CameraOff());
           break;
+        case hash(DE_CAMERA_CONTROL("3", DE_ERROR)):
+          break;
         case hash(DE_LIGHTS_CONTROL("3", DE_ON)):
           assert(has_active_pipeline_[3]);
           if (entry.value->GetBoolean()) Lights<3>::dispatch(LightsOn());
@@ -358,6 +366,8 @@ void Controller::Run() {
         case hash(DE_CAMERA_CONTROL("4", DE_OFF)):
           assert(has_active_pipeline_[4]);
           if (entry.value->GetBoolean()) Camera<4>::dispatch(CameraOff());
+          break;
+        case hash(DE_CAMERA_CONTROL("4", DE_ERROR)):
           break;
         case hash(DE_LIGHTS_CONTROL("4", DE_ON)):
           assert(has_active_pipeline_[4]);
