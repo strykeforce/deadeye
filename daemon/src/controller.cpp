@@ -461,13 +461,11 @@ void Controller::StartNetworkTables() {
   auto conn_listener = nt::AddConnectionListener(
       inst_, [&](auto event) mutable { barrier.set_value(); }, true);
 
-  if (std::getenv("DEADEYE_NT_SERVER")) {
-    spdlog::info("Starting NetworkTables server");
-    nt::StartServer(inst_, "persistent.ini", "", NT_DEFAULT_PORT);
-  } else {
-    spdlog::info("Starting NetworkTables client connecting to {}", NT_SERVER);
-    nt::StartClient(inst_, NT_SERVER, NT_DEFAULT_PORT);
-  }
+  char* env_nt_server = std::getenv("DEADEYE_NT_SERVER");
+  const char* nt_server = env_nt_server ? env_nt_server : NT_SERVER;
+
+  spdlog::info("Starting NetworkTables client connecting to {}", nt_server);
+  nt::StartClient(inst_, nt_server, NT_DEFAULT_PORT);
 
   spdlog::debug("Waiting for connection...");
   barrier_future.wait();
