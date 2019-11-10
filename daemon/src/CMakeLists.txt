@@ -3,6 +3,7 @@ configure_file(config/deadeye_version.cpp.in deadeye_version.cpp @ONLY)
 
 add_library(Deadeye_library
     controller.cpp
+    log.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/deadeye_version.cpp
 )
 
@@ -49,6 +50,13 @@ target_link_libraries(Deadeye_library
     readerwriterqueue
 )
 
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+target_link_libraries(Deadeye_library
+    PRIVATE
+    PkgConfig::SYSTEMD
+)
+endif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+
 if(CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
 target_link_libraries(Deadeye_library
     PRIVATE
@@ -83,14 +91,6 @@ target_link_libraries(Deadeye_deadeyed
     PRIVATE
     Deadeye_library
 )
-
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-target_link_libraries(Deadeye_deadeyed
-    PRIVATE
-    PkgConfig::SYSTEMD
-)
-endif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-
 
 include(GNUInstallDirs)
 install(TARGETS Deadeye_deadeyed DESTINATION ${CMAKE_INSTALL_BINDIR})
