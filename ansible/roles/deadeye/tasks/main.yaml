@@ -5,6 +5,9 @@
     name:
       - git
       - cmake-curses-gui
+      - pkg-config
+      - autoconf-archive
+      - libsystemd-dev
 
 - name: Set jhh authorized keys
   authorized_key:

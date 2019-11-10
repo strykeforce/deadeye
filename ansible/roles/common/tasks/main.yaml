@@ -11,7 +11,5 @@
       - build-essential
       - cmake
       - ninja-build
-      - pkg-config
-      - autoconf-archive
   tags:
     - common
