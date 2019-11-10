@@ -1,8 +1,11 @@
 [Unit]
 Description=Deadeye Vision System Daemon
+Requires=network-online.target
+After=network-online.target
 
 [Service]
 ExecStart=/usr/local/bin/deadeyed
+Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
