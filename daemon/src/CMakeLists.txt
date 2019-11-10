@@ -84,8 +84,15 @@ target_link_libraries(Deadeye_deadeyed
     Deadeye_library
 )
 
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+target_link_libraries(Deadeye_deadeyed
+    PRIVATE
+    PkgConfig::SYSTEMD
+)
+endif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+
+
 include(GNUInstallDirs)
 install(TARGETS Deadeye_deadeyed DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 endif(enableBuildMain)
-

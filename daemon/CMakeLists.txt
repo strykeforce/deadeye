@@ -61,13 +61,18 @@ find_package(cscore REQUIRED)
 find_package(Threads REQUIRED) # required for ntcore
 find_package(nlohmann_json REQUIRED)
 
-if(CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
-    if(CMAKE_CROSSCOMPILING)    
-        set(ENV{PKG_CONFIG_DIR} "")
-        set(ENV{PKG_CONFIG_SYSROOT_DIR} ${CMAKE_SYSROOT})
-        set(ENV{PKG_CONFIG_LIBDIR} "${CMAKE_SYSROOT}/usr/lib/pkgconfig:${CMAKE_SYSROOT}/usr/local/lib/pkgconfig:${CMAKE_SYSROOT}/usr/share/pkgconfig")
-    endif(CMAKE_CROSSCOMPILING)    
+if(CMAKE_CROSSCOMPILING)
+    set(ENV{PKG_CONFIG_DIR} "")
+    set(ENV{PKG_CONFIG_SYSROOT_DIR} ${CMAKE_SYSROOT})
+    set(ENV{PKG_CONFIG_LIBDIR} "${CMAKE_SYSROOT}/usr/lib/pkgconfig:${CMAKE_SYSROOT}/usr/local/lib/pkgconfig:${CMAKE_SYSROOT}/usr/share/pkgconfig")
+endif(CMAKE_CROSSCOMPILING)
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     find_package(PkgConfig REQUIRED)
+    pkg_check_modules(SYSTEMD REQUIRED IMPORTED_TARGET libsystemd)
+endif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+
+if(CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
     pkg_check_modules(GPIOD REQUIRED IMPORTED_TARGET libgpiodcxx)
 endif(CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
 
@@ -78,7 +83,7 @@ if(NOT hasParent)
     set(enableBuildMain YES)
     if(NOT CMAKE_CROSSCOMPILING)
         find_package(Catch2 REQUIRED)
-        add_subdirectory(tests)    
+        add_subdirectory(tests)
     endif(NOT CMAKE_CROSSCOMPILING)
 endif(NOT hasParent)
 
