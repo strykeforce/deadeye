@@ -1,6 +1,7 @@
 [Unit]
 Description=Deadeye Vision System Daemon
 Requires=network-online.target
+Wants=mnt-deadeye.mount
 After=network-online.target
 
 [Service]

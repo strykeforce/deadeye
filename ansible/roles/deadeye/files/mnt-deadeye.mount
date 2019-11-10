@@ -1,0 +1,6 @@
+[Unit]
+Description=Deadeye Log Storage
+
+[Mount]
+What=/dev/sda1
+Where=/mnt/deadeye
