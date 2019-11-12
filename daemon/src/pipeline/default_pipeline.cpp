@@ -25,8 +25,11 @@ bool DefaultPipeline::StartCapture() {
 void DefaultPipeline::StopCapture() { cap_.release(); }
 
 bool DefaultPipeline::GrabFrame(cv::Mat &frame) {
-  if (!cap_.read(frame)) return false;  // TODO: check for empty?
-  if (frame.rows == 240) return true;
+  if (!cap_.read(frame)) return false;
+
+  // FIXME: pipeline should prefer 720p aspect ratio
+  int rows = frame.rows;
+  if (rows == 120 || rows == 240 || rows == 480 || rows == 960) return true;
 
   // change aspect ration
   int border = frame.rows / 6;

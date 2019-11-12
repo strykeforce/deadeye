@@ -1,5 +1,6 @@
 #include "center_target_data.h"
 
+#include <fmt/core.h>
 #include <opencv2/imgproc.hpp>
 
 using namespace deadeye;
@@ -23,6 +24,10 @@ std::string CenterTargetData::Dump() const {
                 {CenterTargetData::kXKey, x},
                 {CenterTargetData::kYKey, y}};
   return j.dump();
+}
+
+std::string CenterTargetData::ToString() const {
+  return fmt::format("id={} sn={} valid={} x={} y={}", id, serial, valid, x, y);
 }
 
 // ---------------------------------------------------------------------------

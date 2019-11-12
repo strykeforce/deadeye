@@ -10,7 +10,7 @@ using json = nlohmann::json;
 namespace deadeye {
 
 struct CaptureConfig {
-  enum class Type { jetson, osx, test };
+  enum class Type { autosrc, jetson, osx, test };
 
   static char const* kTypeKey;
   static char const* kCaptureWidthKey;

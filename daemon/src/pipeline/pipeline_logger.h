@@ -2,10 +2,12 @@
 
 #include <readerwriterqueue.h>
 #include <atomic>
+#include <chrono>
 #include <opencv2/core/mat.hpp>
 #include <string>
 
-#include "config/log_config.h"
+#include "config/capture_config.h"
+#include "config/pipeline_config.h"
 #include "link/target_data.h"
 #include "pipeline/pipeline.h"  // for Contours
 
@@ -13,12 +15,10 @@ namespace deadeye {
 
 struct PipelineLogEntry {
   PipelineLogEntry() = default;
-  PipelineLogEntry(cv::Mat const frame, cv::Mat const mask, Contours contours,
-                   Contours filtered_contours, TargetDataPtr target);
+  PipelineLogEntry(cv::Mat const frame, Contours filtered_contours,
+                   TargetDataPtr target);
 
   cv::Mat frame;
-  cv::Mat mask;
-  Contours contours;
   Contours filtered_contours;
   TargetDataPtr target;
 };
@@ -28,7 +28,8 @@ using PipelineLoggerQueue =
 
 class PipelineLogger {
  public:
-  PipelineLogger(std::string id, LogConfig config, PipelineLoggerQueue& queue,
+  PipelineLogger(std::string id, CaptureConfig capture_config,
+                 PipelineConfig pipeline_config, PipelineLoggerQueue& queue,
                  std::atomic<bool>& cancel);
   void operator()();
 
@@ -37,10 +38,15 @@ class PipelineLogger {
   bool CheckDir(LogConfig const& config);
 
   std::string id_;
+
   bool enabled_;
+  CaptureConfig capture_;
+  cv::Scalar hsv_low_;
+  cv::Scalar hsv_high_;
   std::string template_;
   PipelineLoggerQueue& queue_;
   std::atomic<bool>& cancel_;
+  std::chrono::high_resolution_clock::time_point begin_{std::chrono::high_resolution_clock::now()};
 };
 
 }  // namespace deadeye
