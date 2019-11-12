@@ -23,6 +23,7 @@ struct TargetData {
 
   virtual void DrawMarkers(cv::Mat& preview);
   virtual std::string Dump() const;
+  virtual std::string ToString() const { return Dump(); }
 };
 
 void to_json(json& j, TargetData const& td);

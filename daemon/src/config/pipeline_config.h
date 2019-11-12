@@ -3,6 +3,7 @@
 #include <spdlog/fmt/ostr.h>
 #include <iostream>
 #include <nlohmann/json.hpp>
+#include <opencv2/core/types.hpp>
 #include <string>
 
 #include "config/log_config.h"
@@ -43,6 +44,9 @@ struct PipelineConfig {
    * Constructor from NetworkTables.
    */
   PipelineConfig(std::shared_ptr<nt::Value> value);
+
+  cv::Scalar HsvLow() const { return cv::Scalar(hue[0], sat[0], val[0]); }
+  cv::Scalar HsvHigh() const { return cv::Scalar(hue[1], sat[1], val[1]); }
 
   template <typename OStream>
   friend OStream& operator<<(OStream& os, PipelineConfig const& pc) {

@@ -5,41 +5,45 @@
 #include <spdlog/spdlog.h>
 #include <sys/stat.h>
 #include <cstring>
+#include <nlohmann/json.hpp>
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
-#include <opencv2/imgproc.hpp>
+
+#include "pipeline/pipeline_ops.h"
 
 using namespace deadeye;
+using json = nlohmann::json;
 
 namespace {
 static const cv::Size kFrameSize{320, 240};
 }
 
-PipelineLogEntry::PipelineLogEntry(cv::Mat const frame, cv::Mat const mask,
-                                   Contours contours,
+PipelineLogEntry::PipelineLogEntry(cv::Mat const frame,
                                    Contours filtered_contours,
                                    TargetDataPtr target)
     : frame(frame.clone()),
-      mask(mask.clone()),
-      contours(contours),
       filtered_contours(filtered_contours),
       target(std::move(target)) {}
 
-PipelineLogger::PipelineLogger(std::string id, LogConfig config,
+PipelineLogger::PipelineLogger(std::string id, CaptureConfig capture_config,
+                               PipelineConfig pipeline_config,
                                PipelineLoggerQueue& queue,
                                std::atomic<bool>& cancel)
     : id_(id),
-      enabled_(config.enabled),
-      template_(fmt::format("{}/{{}}/{{}}.jpg", config.path)),
+      enabled_(pipeline_config.log.enabled),
+      capture_(capture_config),
+      hsv_low_(pipeline_config.HsvLow()),
+      hsv_high_(pipeline_config.HsvHigh()),
+      template_(fmt::format("{}/{{}}/{{}}.jpg", pipeline_config.log.path)),
       queue_(queue),
       cancel_(cancel) {
   // disable logging if filesystem checks fail
-  enabled_ = enabled_ && CheckMount(config);
-  enabled_ = enabled_ && CheckDir(config);
+  enabled_ = enabled_ && CheckMount(pipeline_config.log);
+  enabled_ = enabled_ && CheckDir(pipeline_config.log);
 }
 
 void PipelineLogger::operator()() {
-  int i = 0;
+  int seq = 1;
   PipelineLogEntry entry;
   if (enabled_)
     spdlog::info("PipelineLogger<{}>: logging to {}", id_,
@@ -53,15 +57,23 @@ void PipelineLogger::operator()() {
     }
     if (!enabled_) continue;  // throw away if logged by upstream while disabled
 
-    auto path = fmt::format(template_, id_, i++);
+    auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
+        std::chrono::high_resolution_clock::now() - begin_);
+
+    cv::Mat mask;
+    DE_IN_RANGE(entry.frame, hsv_low_, hsv_high_, mask);
+    Contours contours;
+    DE_FIND_CONTOURS(mask, contours);
+
+    auto path = fmt::format(template_, id_, seq);
     try {
       if (entry.frame.cols > kFrameSize.width) {
         cv::resize(entry.frame, entry.frame, kFrameSize, 0, 0, cv::INTER_AREA);
-        cv::resize(entry.mask, entry.mask, kFrameSize, 0, 0, cv::INTER_AREA);
+        cv::resize(mask, mask, kFrameSize, 0, 0, cv::INTER_AREA);
       }
 
-      cv::cvtColor(entry.mask, entry.mask, cv::COLOR_GRAY2BGR);
-      cv::Mat mat_array[] = {entry.frame, entry.mask, cv::Mat()};
+      cv::cvtColor(mask, mask, cv::COLOR_GRAY2BGR);
+      cv::Mat mat_array[] = {entry.frame, mask, cv::Mat()};
 
       cv::Mat top;
       cv::hconcat(mat_array, 2, top);
@@ -74,7 +86,7 @@ void PipelineLogger::operator()() {
       entry.target->DrawMarkers(gray);
 
       cv::Mat black{entry.frame.size(), CV_8UC3, cv::Scalar::all(0)};
-      cv::drawContours(black, entry.contours, -1, cv::Scalar(255, 0, 240), 2);
+      cv::drawContours(black, contours, -1, cv::Scalar(255, 0, 240), 2);
 
       mat_array[0] = black;
       mat_array[1] = gray;
@@ -83,33 +95,39 @@ void PipelineLogger::operator()() {
 
       cv::Mat output;
       cv::Mat info{top.rows / 4, top.cols, CV_8UC3, cv::Scalar::all(255)};
-      std::string text =
-          "0123456789"
-          "0123456789"
-          "0123456789"
-          "0123456789"
-          "0123456789"
-          "0123456789";
+
+      std::string text = fmt::format(
+          "CAPTURE: exp={} cap={}x{} out={}x{} seq={} elapsed={} msec",
+          capture_.exposure, capture_.capture_width, capture_.capture_height,
+          capture_.output_width, capture_.output_height, seq, elapsed.count());
       int font = cv::FONT_HERSHEY_PLAIN;
       double font_scale = 1;
       int thickness = 1;
       int baseline = 0;
       // cv::getTextSize(text, font, font_scale, thickness, &baseline);
-      baseline = info.rows / 4 - 1;
+      baseline = info.rows / 3;
 
-      cv::Point text_org{2, baseline};
+      cv::Point text_org{2, baseline - 5};
 
       cv::putText(info, text, text_org, font, font_scale, cv::Scalar::all(0),
                   thickness, cv::LINE_8);
       text_org += cv::Point(0, baseline);
+
+      text = fmt::format(
+          "PIPELINE: hue=[{:.0f}, {:.0f}] sat=[{:.0f}, {:.0f}] "
+          "val=[{:.0f}, {:.0f}] contours={}/{}",
+          hsv_low_[0], hsv_high_[0], hsv_low_[1], hsv_high_[1], hsv_low_[2],
+          hsv_high_[2], entry.filtered_contours.size(), contours.size());
+
       cv::putText(info, text, text_org, font, font_scale, cv::Scalar::all(0),
                   thickness, cv::LINE_8);
       text_org += cv::Point(0, baseline);
+
+      text = fmt::format("TARGET: {}", entry.target->ToString());
+
       cv::putText(info, text, text_org, font, font_scale, cv::Scalar::all(0),
                   thickness, cv::LINE_8);
-      text_org += cv::Point(0, baseline);
-      cv::putText(info, text, text_org, font, font_scale, cv::Scalar::all(0),
-                  thickness, cv::LINE_8);
+
       mat_array[0] = top;
       mat_array[1] = bottom;
       mat_array[2] = info;
@@ -124,6 +142,8 @@ void PipelineLogger::operator()() {
     if (queue_.size_approx() > 0)
       spdlog::warn("PipelineLogger<{}>: queue filling: {}", id_,
                    queue_.size_approx());
+
+    seq++;
   }
   spdlog::trace("PipelineLogger<{}>: task exited", id_);
 }

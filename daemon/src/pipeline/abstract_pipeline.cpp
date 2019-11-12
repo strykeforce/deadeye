@@ -4,11 +4,11 @@
 #include <spdlog/spdlog.h>
 #include <wpi/Logger.h>
 #include <future>
-#include <opencv2/imgproc.hpp>
 
 #include "config/deadeye_config.h"
 #include "link/link.h"
 #include "pipeline/pipeline_logger.h"
+#include "pipeline/pipeline_ops.h"
 
 using namespace deadeye;
 
@@ -81,13 +81,17 @@ void AbstractPipeline::Run() {
   int log_counter = fps_;
 
   // Start frame logging thread
-  LogConfig lc;
+  CaptureConfig capture_config;
+  PipelineConfig pipeline_config;
   {
     safe::ReadAccess<LockablePipelineConfig> pc{pipeline_config_};
-    lc = pc->log;
+    pipeline_config = *pc;
+    safe::ReadAccess<LockableCaptureConfig> cc{capture_config_};
+    capture_config = *cc;
   }
-  auto lfuture = std::async(std::launch::async,
-                            PipelineLogger(id_, lc, log_queue, cancel_));
+  auto lfuture = std::async(
+      std::launch::async,
+      PipelineLogger(id_, capture_config, pipeline_config, log_queue, cancel_));
 
   if (!StartCapture()) {
     spdlog::critical("{} failed to start video capture", *this);
@@ -112,22 +116,15 @@ void AbstractPipeline::Run() {
 
     if (pipeline_config_ready_.load()) {
       safe::ReadAccess<LockablePipelineConfig> pc{pipeline_config_};
-      hsv_low = cv::Scalar(pc->hue[0], pc->sat[0], pc->val[0]);
-      hsv_high = cv::Scalar(pc->hue[1], pc->sat[1], pc->val[1]);
+      hsv_low = pc->HsvLow();
+      hsv_high = pc->HsvHigh();
       log_enabled_ = pc->log.enabled;
       pipeline_config_ready_ = false;
       spdlog::debug("{}:{}", *this, *pc);
     }
 
-    cv::cvtColor(frame_, hsv_threshold_output_, cv::COLOR_BGR2HSV);
-    cv::inRange(hsv_threshold_output_, hsv_low, hsv_high,
-                hsv_threshold_output_);
-
-    find_contours_output_.clear();
-    cv::findContours(hsv_threshold_output_, find_contours_output_,
-                     cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
-
-    // spdlog::debug("Contours found: {}", find_contours_output_.size());
+    DE_IN_RANGE(frame_, hsv_low, hsv_high, hsv_threshold_output_);
+    DE_FIND_CONTOURS(hsv_threshold_output_, find_contours_output_);
 
     FilterContours(find_contours_output_, filter_contours_output_);
     target_data_ = ProcessTarget(filter_contours_output_);
@@ -145,9 +142,8 @@ void AbstractPipeline::Run() {
     if (StreamEnabled()) StreamFrame();
 
     if (log_enabled_ && --log_counter == 0) {
-      log_queue.enqueue(
-          PipelineLogEntry{frame_, hsv_threshold_output_, find_contours_output_,
-                           filter_contours_output_, std::move(target_data_)});
+      log_queue.enqueue(PipelineLogEntry{frame_, filter_contours_output_,
+                                         std::move(target_data_)});
       log_counter = fps_;
     }
 
