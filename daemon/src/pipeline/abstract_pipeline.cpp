@@ -13,8 +13,7 @@
 using namespace deadeye;
 
 namespace {
-static const int kPreviewWidth = 320;
-static const int kPreviewHeight = 240;
+static const cv::Size kStreamSize{320, 240};
 void InitializeLogging();
 }  // namespace
 
@@ -69,8 +68,8 @@ void AbstractPipeline::Run() {
   // Set up streaming. CScore streaming will hang on connection if too many
   // connections are attempted, current workaround is for user to  disable and
   // reenable the stream to reset.
-  cvsource_ = cs::CvSource("cvsource", cs::VideoMode::kMJPEG, kPreviewWidth,
-                           kPreviewHeight, 30);
+  cvsource_ = cs::CvSource("cvsource", cs::VideoMode::kMJPEG, kStreamSize.width,
+                           kStreamSize.height, 30);
   cs::MjpegServer mjpegServer{"cvhttpserver", 5800 + inum_};
   mjpegServer.SetSource(cvsource_);
   spdlog::info("{} streaming on port {}", *this, mjpegServer.GetPort());
@@ -199,8 +198,8 @@ void AbstractPipeline::StreamFrame() {
       break;
   }
 
-  cv::resize(preview, preview, cv::Size(kPreviewWidth, kPreviewHeight), 0, 0,
-             cv::INTER_AREA);
+  if (preview.cols != kStreamSize.width)
+    cv::resize(preview, preview, kStreamSize, 0, 0, cv::INTER_AREA);
   cvsource_.PutFrame(preview);
 }
 

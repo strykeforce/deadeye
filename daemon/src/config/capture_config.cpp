@@ -50,6 +50,9 @@ CaptureConfig::CaptureConfig(std::shared_ptr<nt::Value> value) {
 
 std::string CaptureConfig::Pipeline() const {
   switch (type) {
+    case Type::autosrc:
+      return "autovideosrc ! videoconvert ! appsink";
+
     case Type::jetson: {
       std::string jetson{
           R"(nvarguscamerasrc aelock={} awblock={} wbmode={})"
@@ -68,8 +71,12 @@ std::string CaptureConfig::Pipeline() const {
                          flip_mode, output_width, output_height);
     }
 
-    case Type::osx:
-      return "autovideosrc ! videoconvert ! appsink";
+    case Type::osx: {
+      std::string osx{
+          "avfvideosrc ! video/x-raw,width={},height={} ! videoconvert ! "
+          "video/x-raw, format=(string)BGR ! appsink"};
+      return fmt::format(osx, output_width, output_height);
+    }
 
     case Type::test:
       std::string test{
@@ -84,6 +91,8 @@ std::string CaptureConfig::Pipeline() const {
 
 std::string CaptureConfig::PipelineType() const {
   switch (type) {
+    case Type::autosrc:
+      return "auto";
     case Type::jetson:
       return "jetson";
     case Type::osx:

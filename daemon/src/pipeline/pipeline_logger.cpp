@@ -11,6 +11,10 @@
 
 using namespace deadeye;
 
+namespace {
+static const cv::Size kFrameSize{320, 240};
+}
+
 PipelineLogEntry::PipelineLogEntry(cv::Mat const frame, cv::Mat const mask,
                                    Contours contours,
                                    Contours filtered_contours,
@@ -51,8 +55,13 @@ void PipelineLogger::operator()() {
 
     auto path = fmt::format(template_, id_, i++);
     try {
+      if (entry.frame.cols > kFrameSize.width) {
+        cv::resize(entry.frame, entry.frame, kFrameSize, 0, 0, cv::INTER_AREA);
+        cv::resize(entry.mask, entry.mask, kFrameSize, 0, 0, cv::INTER_AREA);
+      }
+
       cv::cvtColor(entry.mask, entry.mask, cv::COLOR_GRAY2BGR);
-      cv::Mat mat_array[] = {entry.frame, entry.mask};
+      cv::Mat mat_array[] = {entry.frame, entry.mask, cv::Mat()};
 
       cv::Mat top;
       cv::hconcat(mat_array, 2, top);
@@ -64,7 +73,7 @@ void PipelineLogger::operator()() {
                        cv::Scalar(255, 0, 240), 2);
       entry.target->DrawMarkers(gray);
 
-      cv::Mat black = cv::Mat::zeros(entry.frame.size(), CV_8UC3);
+      cv::Mat black{entry.frame.size(), CV_8UC3, cv::Scalar::all(0)};
       cv::drawContours(black, entry.contours, -1, cv::Scalar(255, 0, 240), 2);
 
       mat_array[0] = black;
@@ -73,9 +82,38 @@ void PipelineLogger::operator()() {
       cv::hconcat(mat_array, 2, bottom);
 
       cv::Mat output;
+      cv::Mat info{top.rows / 4, top.cols, CV_8UC3, cv::Scalar::all(255)};
+      std::string text =
+          "0123456789"
+          "0123456789"
+          "0123456789"
+          "0123456789"
+          "0123456789"
+          "0123456789";
+      int font = cv::FONT_HERSHEY_PLAIN;
+      double font_scale = 1;
+      int thickness = 1;
+      int baseline = 0;
+      // cv::getTextSize(text, font, font_scale, thickness, &baseline);
+      baseline = info.rows / 4 - 1;
+
+      cv::Point text_org{2, baseline};
+
+      cv::putText(info, text, text_org, font, font_scale, cv::Scalar::all(0),
+                  thickness, cv::LINE_8);
+      text_org += cv::Point(0, baseline);
+      cv::putText(info, text, text_org, font, font_scale, cv::Scalar::all(0),
+                  thickness, cv::LINE_8);
+      text_org += cv::Point(0, baseline);
+      cv::putText(info, text, text_org, font, font_scale, cv::Scalar::all(0),
+                  thickness, cv::LINE_8);
+      text_org += cv::Point(0, baseline);
+      cv::putText(info, text, text_org, font, font_scale, cv::Scalar::all(0),
+                  thickness, cv::LINE_8);
       mat_array[0] = top;
       mat_array[1] = bottom;
-      cv::vconcat(mat_array, 2, output);
+      mat_array[2] = info;
+      cv::vconcat(mat_array, 3, output);
 
       cv::imwrite(path, output);
     } catch (const cv::Exception& ex) {
