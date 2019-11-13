@@ -84,23 +84,12 @@
     - build
     - cmake
 
--name: Build and Install
- command:
+- name: Build and Install
+  command:
     chdir: '{{ deadeye_home }}/deadeye/build'
     argv:
       - /usr/bin/ninja
       - install
-  tags:
-    - build
-    - cmake
-
-
-- name: Fix permissions
-  file:
-    path: '{{ deadeye_home }}/deadeye'
-    owner: '{{ build_user }}'
-    group: '{{ build_user }}'
-    recurse: true
   tags:
     - build
     - cmake

@@ -92,7 +92,7 @@ target_link_libraries(Deadeye_deadeyed
     Deadeye_library
 )
 
-install(TARGETS Deadeye_deadeyed DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS Deadeye_deadeyed DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
 
 if(CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
 add_executable(Deadeye_shutdownd
@@ -111,7 +111,7 @@ target_link_libraries(Deadeye_shutdownd
   PkgConfig::GPIOD
 )
 
-install(TARGETS Deadeye_shutdownd DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS Deadeye_shutdownd DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
 
 endif(CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
 
