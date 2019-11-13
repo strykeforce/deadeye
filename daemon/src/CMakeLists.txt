@@ -95,4 +95,26 @@ target_link_libraries(Deadeye_deadeyed
 include(GNUInstallDirs)
 install(TARGETS Deadeye_deadeyed DESTINATION ${CMAKE_INSTALL_BINDIR})
 
+if(CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
+add_executable(Deadeye_shutdownd
+  shutdown.cpp
+)
+add_executable(Deadeye::shutdownd ALIAS Deadeye_shutdownd)
+set_target_properties(Deadeye_shutdownd PROPERTIES
+  OUTPUT_NAME shutdownd
+  EXPORT_NAME shutdownd
+)
+
+target_link_libraries(Deadeye_shutdownd
+  PRIVATE
+  Deadeye_library
+  spdlog::spdlog
+  PkgConfig::GPIOD
+)
+
+install(TARGETS Deadeye_shutdownd DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+endif(CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
+
+
 endif(enableBuildMain)
