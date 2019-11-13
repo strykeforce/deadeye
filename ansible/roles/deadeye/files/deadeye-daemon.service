@@ -5,8 +5,10 @@ Wants=mnt-deadeye.mount
 After=network-online.target
 
 [Service]
-Environment=DEADEYE_NT_SERVER=192.168.1.137
-ExecStart=/usr/local/bin/deadeyed
+Environment=DEADEYE_NT_SERVER=10.27.67.2
+EnvironmentFile=/etc/opt/deadeye/deadeye.conf
+ExecStartPre=/bin/sh -c 'until ping -c1 $DEADEYE_NT_SERVER; do sleep 1; done;'
+ExecStart=/opt/deadeye/bin/deadeyed
 Restart=on-failure
 
 [Install]
