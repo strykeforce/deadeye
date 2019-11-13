@@ -18,11 +18,11 @@ deadeye:
   vars:
     ansible_python_interpreter: /usr/bin/python3
     ansible_become: true
-    camera_0_pipeline: TestPatternPipeline
-    camera_1_pipeline: NullPipeline
-    camera_2_pipeline: NullPipeline
-    camera_3_pipeline: NullPipeline
-    camera_4_pipeline: NullPipeline
+    camera_0_pipeline:
+    camera_1_pipeline:
+    camera_2_pipeline:
+    camera_3_pipeline:
+    camera_4_pipeline:
 
 bootstrap:
   hosts:
