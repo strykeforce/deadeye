@@ -11,32 +11,32 @@
 
 - name: Set jhh authorized keys
   authorized_key:
-    user: "{{ build_user }}"
+    user: '{{ build_user }}'
     state: present
     key: https://github.com/jhh.keys
 
 - name: Copy private deploy key
   copy:
     src: id_deadeye
-    dest: "{{ deadeye_home }}/.ssh/"
-    owner: "{{ build_user }}"
-    group: "{{ build_user }}"
+    dest: '{{ deadeye_home }}/.ssh/'
+    owner: '{{ build_user }}'
+    group: '{{ build_user }}'
     mode: 0600
 
 - name: Copy public deploy key
   copy:
     src: id_deadeye.pub
-    dest: "{{ deadeye_home }}/.ssh/"
-    owner: "{{ build_user }}"
-    group: "{{ build_user }}"
+    dest: '{{ deadeye_home }}/.ssh/'
+    owner: '{{ build_user }}'
+    group: '{{ build_user }}'
     mode: 0664
 
 - name: Configure ssh to use deploy key
   blockinfile:
-    path: "{{ deadeye_home }}/.ssh/config"
+    path: '{{ deadeye_home }}/.ssh/config'
     create: true
-    owner: "{{ build_user }}"
-    group: "{{ build_user }}"
+    owner: '{{ build_user }}'
+    group: '{{ build_user }}'
     mode: 0600
     block: |
       Host github.com
@@ -46,16 +46,16 @@
 
 - name: Clone repo
   git:
-    repo: "{{ deadeye_repo }}"
-    dest: "{{ deadeye_home }}/deadeye"
+    repo: '{{ deadeye_repo }}'
+    dest: '{{ deadeye_home }}/deadeye'
     accept_hostkey: true
-    key_file: "{{ deadeye_home }}/.ssh/id_deadeye"
+    key_file: '{{ deadeye_home }}/.ssh/id_deadeye'
   tags:
     - build
 
 - name: Create build directory
   file:
-    path: "{{ deadeye_home }}/deadeye/build"
+    path: '{{ deadeye_home }}/deadeye/build'
     state: directory
   tags:
     - build
@@ -63,12 +63,13 @@
 
 - name: Run cmake
   command:
-    chdir: "{{ deadeye_home }}/deadeye/build"
+    chdir: '{{ deadeye_home }}/deadeye/build'
     argv:
       - /usr/bin/cmake
       - -GNinja
-      - -DCMAKE_BUILD_TYPE=Debug
-      - -DCMAKE_INSTALL_PREFIX=/usr/local
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_INSTALL_PREFIX=/opt/deadeye
+      - -DCMAKE_CXX_FLAGS_RELEASE="-Ofast -march=native -mtune=native -flto -ffat-lto-objects -DNDEBUG"
       - -DDEADEYE_UNIT_ID={{ deadeye_unit }}
       - -DDEADEYE_CAMERA0_PIPELINE={{ camera_0_pipeline }}
       - -DDEADEYE_CAMERA1_PIPELINE={{ camera_1_pipeline }}
@@ -83,11 +84,22 @@
     - build
     - cmake
 
+-name: Build and Install
+ command:
+    chdir: '{{ deadeye_home }}/deadeye/build'
+    argv:
+      - /usr/bin/ninja
+      - install
+  tags:
+    - build
+    - cmake
+
+
 - name: Fix permissions
   file:
-    path: "{{ deadeye_home }}/deadeye"
-    owner: "{{ build_user }}"
-    group: "{{ build_user }}"
+    path: '{{ deadeye_home }}/deadeye'
+    owner: '{{ build_user }}'
+    group: '{{ build_user }}'
     recurse: true
   tags:
     - build

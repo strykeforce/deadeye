@@ -4,11 +4,11 @@ deadeye:
     deadeye-b:
       ansible_host: deadeye-b.local
       ansible_user: jeff
-      build_user: jeff
+      build_user: root
       build_type: Debug
       deadeye_unit: B
-      camera_0_pipeline: TestPatternPipeline
-      camera_1_pipeline: DriverPipeline
+      camera_0_pipeline: DefaultPipeline
+      camera_1_pipeline: DefaultPipeline
     deadeye-c:
       ansible_host: deadeye-c.local
       ansible_user: pi
