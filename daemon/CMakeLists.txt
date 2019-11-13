@@ -64,7 +64,13 @@ find_package(nlohmann_json REQUIRED)
 if(CMAKE_CROSSCOMPILING)
     set(ENV{PKG_CONFIG_DIR} "")
     set(ENV{PKG_CONFIG_SYSROOT_DIR} ${CMAKE_SYSROOT})
-    set(ENV{PKG_CONFIG_LIBDIR} "${CMAKE_SYSROOT}/usr/lib/pkgconfig:${CMAKE_SYSROOT}/usr/local/lib/pkgconfig:${CMAKE_SYSROOT}/usr/share/pkgconfig")
+    set(pkgconfigPath
+        "${CMAKE_SYSROOT}/usr/lib/pkgconfig"
+        "${CMAKE_SYSROOT}/usr/local/lib/pkgconfig"
+        "${CMAKE_SYSROOT}/usr/share/pkgconfig"
+        "${CMAKE_SYSROOT}/usr/lib/aarch64-linux-gnu/pkgconfig"
+    )
+    string(REPLACE ";" ":" ENV{PKG_CONFIG_LIBDIR} "${pkgconfigPath}")
 endif(CMAKE_CROSSCOMPILING)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")

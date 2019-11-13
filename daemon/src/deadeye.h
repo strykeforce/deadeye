@@ -39,7 +39,7 @@
 #define DEADEYE_MAIN()                                                        \
   int main(int argc, char **argv) {                                           \
     try {                                                                     \
-      ::deadeye::log::Configure();                                            \
+      ::deadeye::log::Configure("deadeye");                                   \
       ::deadeye::Controller::Initialize({DE_P0, DE_P1, DE_P2, DE_P3, DE_P4}); \
       ::deadeye::Controller::GetInstance().Run();                             \
     } catch (std::exception const &e) {                                       \
