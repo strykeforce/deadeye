@@ -7,8 +7,8 @@ deadeye:
       build_user: root
       build_type: Debug
       deadeye_unit: B
-      camera_0_pipeline: DefaultPipeline
-      camera_1_pipeline: DefaultPipeline
+      camera_0_pipeline: deadeye::DefaultPipeline
+      camera_1_pipeline: deadeye::DefaultPipeline
     deadeye-c:
       ansible_host: deadeye-c.local
       ansible_user: pi
