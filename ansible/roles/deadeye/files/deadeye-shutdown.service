@@ -1,0 +1,9 @@
+[Unit]
+Description=Deadeye System Shutdown Daemon
+SuccessAction=poweroff
+
+[Service]
+ExecStart=/opt/deadeye/bin/shutdownd
+
+[Install]
+WantedBy=multi-user.target
