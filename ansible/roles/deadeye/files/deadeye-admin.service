@@ -3,9 +3,10 @@ Description=Deadeye Admin Server
 Requires=network-online.target
 
 [Service]
-Environment=DEADEYE_NT_SERVER=10.27.67.2 VIRTUAL_ENV=/opt/deadeye
+Environment=DEADEYE_NT_SERVER=10.27.67.2
+Environment=VIRTUAL_ENV=/opt/deadeye FLASK_ENV=development
 EnvironmentFile=/etc/opt/deadeye/deadeye.conf
-ExecStart=/opt/deadeye/bin/python deadeye
+ExecStart=/opt/deadeye/bin/python -m deadeye
 Restart=on-failure
 
 [Install]

@@ -13,4 +13,4 @@ logging.getLogger("deadeye").setLevel(
 
 APP = create_app()
 API = Api(APP)
-API.socketio.run(APP)
+API.socketio.run(APP, host="0.0.0.0")
