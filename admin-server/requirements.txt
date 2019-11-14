@@ -1,0 +1,16 @@
+-i https://pypi.org/simple
+click==7.0
+dnspython==1.16.0
+eventlet==0.25.1
+flask-socketio==4.2.1
+flask==1.1.1
+greenlet==0.4.15
+itsdangerous==1.1.0
+jinja2==2.10.1
+markupsafe==1.1.1
+monotonic==1.5
+pynetworktables==2019.0.2
+python-engineio==3.9.3
+python-socketio==4.3.1
+six==1.12.0
+werkzeug==0.15.5
