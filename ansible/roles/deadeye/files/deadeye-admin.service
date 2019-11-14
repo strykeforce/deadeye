@@ -4,7 +4,7 @@ Requires=network-online.target
 
 [Service]
 Environment=DEADEYE_NT_SERVER=10.27.67.2
-Environment=VIRTUAL_ENV=/opt/deadeye FLASK_ENV=development
+Environment=VIRTUAL_ENV=/opt/deadeye FLASK_ENV=production
 EnvironmentFile=/etc/opt/deadeye/deadeye.conf
 ExecStart=/opt/deadeye/bin/python -m deadeye
 Restart=on-failure

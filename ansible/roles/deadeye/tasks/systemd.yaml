@@ -21,6 +21,7 @@
     dest: /etc/systemd/system/
     mode: 0664
   loop:
+    - deadeye-admin.service
     - deadeye-daemon.service
     - deadeye-shutdown.service
     - var-opt-deadeye.mount
@@ -33,5 +34,6 @@
     daemon_reload: yes
   loop:
     - { name: 'deadeye-daemon.service', state: 'restarted' }
+    - { name: 'deadeye-admin.service', state: 'restarted' }
     - { name: 'deadeye-shutdown.service', state: 'started' }
     - { name: 'var-opt-deadeye.mount', state: 'started' }
