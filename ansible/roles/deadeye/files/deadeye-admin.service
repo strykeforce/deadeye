@@ -1,0 +1,12 @@
+[Unit]
+Description=Deadeye Admin Server
+Requires=network-online.target
+
+[Service]
+Environment=DEADEYE_NT_SERVER=10.27.67.2 VIRTUAL_ENV=/opt/deadeye
+EnvironmentFile=/etc/opt/deadeye/deadeye.conf
+ExecStart=/opt/deadeye/bin/python deadeye
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
