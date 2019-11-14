@@ -1,0 +1,38 @@
+---
+- name: Install pip packages
+  pip:
+    requirements: '{{ deadeye_src }}/admin-server/requirements.txt'
+    virtualenv: /opt/deadeye
+    virtualenv_python: python3
+
+- name: Clean admin dist dir
+  file:
+    path: '{{ deadeye_src }}/admin-server/dist'
+    state: absent
+  when: deadeye_repo is changed
+
+- name: Link admin-web build files
+  file:
+    src: '{{ deadeye_src }}/admin-web/build'
+    dest: '{{ deadeye_src }}/admin-server/deadeye/assets'
+    state: link
+
+- name: Build installation archive
+  command:
+    chdir: '{{ deadeye_src }}/admin-server'
+    argv:
+      - /usr/bin/python3
+      - setup.py
+      - sdist
+  when: deadeye_repo is changed
+
+- name: install sdist
+  pip:
+    virtualenv: /opt/deadeye
+    virtualenv_python: python3
+    name: file://{{ deadeye_src }}/admin-server/dist/deadeye-1.0.tar.gz
+    state: latest
+  when: deadeye_repo is changed
+  tags: foo
+
+-
