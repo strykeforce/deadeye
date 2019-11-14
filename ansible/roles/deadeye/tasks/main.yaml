@@ -50,6 +50,7 @@
     dest: '{{ deadeye_src }}/deadeye'
     accept_hostkey: true
     key_file: '{{ deadeye_src }}/.ssh/id_deadeye'
+  register: deadeye_clone
   tags:
     - build
 
@@ -86,6 +87,7 @@
   environment:
     LDFLAGS: -latomic
     CXXFLAGS: -Wno-psabi
+  when: deadeye_clone is changed
   tags:
     - build
     - cmake
@@ -96,6 +98,7 @@
     argv:
       - /usr/bin/ninja
       - install
+  when: deadeye_clone is changed
   tags:
     - build
     - cmake
@@ -123,12 +126,13 @@
 
 - name: Enable systemd services
   systemd:
-    name: '{{ item }}'
+    name: '{{ item.name }}'
     enabled: yes
-    state: started
+    state: '{{ item.state }}'
+    daemon_reload: yes
   loop:
-    - deadeye-daemon.service
-    - deadeye-shutdown.service
-    - var-opt-deadeye.mount
+    - { name: 'deadeye-daemon.service', state: 'restarted' }
+    - { name: 'deadeye-shutdown.service', state: 'started' }
+    - { name: 'var-opt-deadeye.mount', state: 'started' }
   tags:
     - systemd
