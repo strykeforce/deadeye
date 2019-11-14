@@ -24,7 +24,7 @@
     path: '{{ deadeye_src }}/admin-web'
   when: deadeye_repo is changed
 
-- name: Build and Stage
+- name: Build and stage admin front-end
   command:
     chdir: '{{ deadeye_src }}/admin-web'
     argv:

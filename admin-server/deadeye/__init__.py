@@ -5,11 +5,7 @@ from .models import Unit
 
 
 def create_app():
-    app = Flask(
-        __name__,
-        static_folder="../../admin-web/build/static",
-        template_folder="../../admin-web/build",
-    )
+    app = Flask(__name__, static_folder="assets/static", template_folder="assets")
     app.config.from_mapping(SECRET_KEY="dev")
     app.config.from_envvar("DEADEYE_SETTINGS", silent=True)
 
