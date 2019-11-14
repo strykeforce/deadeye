@@ -43,7 +43,7 @@
 - name: Clone repo
   git:
     repo: '{{ deadeye_repo }}'
-    dest: '{{ deadeye_src }}/deadeye'
+    dest: '{{ deadeye_src }}'
     accept_hostkey: true
     key_file: '{{ deadeye_src }}/.ssh/id_deadeye'
   register: deadeye_repo

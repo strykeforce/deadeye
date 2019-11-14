@@ -3,6 +3,7 @@
   tags:
     - repo
     - deadeyed
+    - admin
 
 - import_tasks: deadeyed.yaml
   tags:
@@ -11,3 +12,7 @@
 - import_tasks: systemd.yaml
   tags:
     - systemd
+
+- import_tasks: admin-web.yaml
+  tags:
+    - admin

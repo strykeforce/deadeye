@@ -10,13 +10,13 @@
 
 - name: Create build directory
   file:
-    path: '{{ deadeye_src }}/deadeye/build'
+    path: '{{ deadeye_src }}/build'
     state: directory
     mode: 0775
 
 - name: Run cmake
   command:
-    chdir: '{{ deadeye_src }}/deadeye/build'
+    chdir: '{{ deadeye_src }}/build'
     argv:
       - /usr/bin/cmake
       - -GNinja
@@ -37,7 +37,7 @@
 
 - name: Build and Install
   command:
-    chdir: '{{ deadeye_src }}/deadeye/build'
+    chdir: '{{ deadeye_src }}/build'
     argv:
       - /usr/bin/ninja
       - install

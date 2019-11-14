@@ -1,5 +1,6 @@
 ---
 deadeye_repo: git@github.com:strykeforce/deadeye.git
-deadeye_src: /usr/local/src
+deadeye_src: /usr/local/src/deadeye
 deadeye_conf: /etc/opt/deadeye
 deadeye_mount: /var/opt/deadeye
+deadeye_node_version: 13.x
