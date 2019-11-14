@@ -6,7 +6,7 @@ using json = nlohmann::json;
 char const* LogConfig::kPathKey{"path"};
 char const* LogConfig::kMountKey{"mount"};
 char const* LogConfig::kEnabledKey{"enabled"};
-char const* LogConfig::kDefaultPath{"/mnt/deadeye"};
+char const* LogConfig::kDefaultPath{"/var/opt/deadeye"};
 
 LogConfig::LogConfig(std::string path, bool enabled, bool mount)
     : path(path), enabled(enabled), mount(mount) {}

@@ -18,7 +18,7 @@
 - name: Copy private deploy key
   copy:
     src: id_deadeye
-    dest: '{{ deadeye_home }}/.ssh/'
+    dest: '{{ deadeye_src }}/.ssh/'
     owner: '{{ build_user }}'
     group: '{{ build_user }}'
     mode: 0600
@@ -26,14 +26,14 @@
 - name: Copy public deploy key
   copy:
     src: id_deadeye.pub
-    dest: '{{ deadeye_home }}/.ssh/'
+    dest: '{{ deadeye_src }}/.ssh/'
     owner: '{{ build_user }}'
     group: '{{ build_user }}'
     mode: 0664
 
 - name: Configure ssh to use deploy key
   blockinfile:
-    path: '{{ deadeye_home }}/.ssh/config'
+    path: '{{ deadeye_src }}/.ssh/config'
     create: true
     owner: '{{ build_user }}'
     group: '{{ build_user }}'
@@ -41,29 +41,35 @@
     block: |
       Host github.com
         User git
-        IdentityFile "{{ deadeye_home }}/.ssh/id_deadeye"
+        IdentityFile "{{ deadeye_src }}/.ssh/id_deadeye"
         IdentitiesOnly yes
 
 - name: Clone repo
   git:
     repo: '{{ deadeye_repo }}'
-    dest: '{{ deadeye_home }}/deadeye'
+    dest: '{{ deadeye_src }}/deadeye'
     accept_hostkey: true
-    key_file: '{{ deadeye_home }}/.ssh/id_deadeye'
+    key_file: '{{ deadeye_src }}/.ssh/id_deadeye'
   tags:
     - build
 
-- name: Create build directory
+- name: Create directories
   file:
-    path: '{{ deadeye_home }}/deadeye/build'
+    path: '{{ item }}'
     state: directory
+    mode: 0775
+  loop:
+    - '{{ deadeye_src }}/deadeye/build'
+    - '{{ deadeye_conf }}'
+    - '{{ deadeye_mount }}'
   tags:
     - build
     - cmake
+    - systemd
 
 - name: Run cmake
   command:
-    chdir: '{{ deadeye_home }}/deadeye/build'
+    chdir: '{{ deadeye_src }}/deadeye/build'
     argv:
       - /usr/bin/cmake
       - -GNinja
@@ -86,10 +92,43 @@
 
 - name: Build and Install
   command:
-    chdir: '{{ deadeye_home }}/deadeye/build'
+    chdir: '{{ deadeye_src }}/deadeye/build'
     argv:
       - /usr/bin/ninja
       - install
   tags:
     - build
     - cmake
+
+- name: Copy optional config file
+  copy:
+    src: deadeye.conf
+    dest: '{{ deadeye_conf }}'
+    mode: 0664
+    force: no
+  tags:
+    - systemd
+
+- name: Copy systemd unit files
+  copy:
+    src: '{{ item }}'
+    dest: /etc/systemd/system/
+    mode: 0664
+  loop:
+    - deadeye-daemon.service
+    - deadeye-shutdown.service
+    - var-opt-deadeye.mount
+  tags:
+    - systemd
+
+- name: Enable systemd services
+  systemd:
+    name: '{{ item }}'
+    enabled: yes
+    state: started
+  loop:
+    - deadeye-daemon.service
+    - deadeye-shutdown.service
+    - var-opt-deadeye.mount
+  tags:
+    - systemd
