@@ -1,6 +1,7 @@
 from flask_socketio import SocketIO
 from threading import Lock
 import json
+import os
 from networktables import NetworkTables
 from .models import Unit
 
@@ -64,8 +65,9 @@ class Api:
         self.app.logger.debug("client connected")
         if not self.nt_connected and not self.nt_connecting:
             self.nt_connecting = True
-            self.app.logger.debug("connecting to NetworkTables...")
-            NetworkTables.initialize(server="127.0.0.1")
+            nt_server = os.environ["DEADEYE_NT_SERVER"]
+            self.app.logger.debug("connecting to NetworkTables at %s...", nt_server)
+            NetworkTables.initialize(server=nt_server)
             NetworkTables.addConnectionListener(
                 self.nt_connection_listener, immediateNotify=True
             )
