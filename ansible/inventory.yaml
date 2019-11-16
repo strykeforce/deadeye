@@ -5,16 +5,17 @@ deadeye:
       ansible_host: deadeye-b.local
       ansible_user: jeff
       build_user: root
-      build_type: Debug
+      build_type: Release
       deadeye_unit: B
       camera_0_pipeline: deadeye::DefaultPipeline
       camera_1_pipeline: deadeye::DefaultPipeline
     deadeye-c:
       ansible_host: deadeye-c.local
-      ansible_user: pi
-      build_user: pi
+      ansible_user: jeff
+      build_user: root
       build_type: Release
       deadeye_unit: C
+      camera_0_pipeline: deadeye::DefaultPipeline
   vars:
     ansible_python_interpreter: /usr/bin/python3
     ansible_become: true
@@ -28,6 +29,6 @@ bootstrap:
   hosts:
     raspberrypi:
       ansible_host: raspberrypi.local
-      ansible_user: pi
+      ansible_user: jeff
       ansible_become: true
       ansible_python_interpreter: /usr/bin/python3

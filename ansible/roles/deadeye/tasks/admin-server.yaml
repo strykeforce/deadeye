@@ -1,4 +1,13 @@
 ---
+- name: Install build prereqs
+  apt:
+    update_cache: no
+    name:
+      - python3-virtualenv
+      - python-virtualenv
+      - python3-dev
+      - python3-setuptools
+
 - name: Install pip packages
   pip:
     requirements: '{{ deadeye_src }}/admin-server/requirements.txt'

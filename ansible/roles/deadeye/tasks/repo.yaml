@@ -7,23 +7,18 @@
 
 - name: Copy private deploy key
   copy:
-    src: id_deadeye
-    dest: '{{ deadeye_src }}/.ssh/'
+    src: '{{ item.name }}'
+    dest: '/root/.ssh/'
     owner: '{{ build_user }}'
     group: '{{ build_user }}'
-    mode: 0600
-
-- name: Copy public deploy key
-  copy:
-    src: id_deadeye.pub
-    dest: '{{ deadeye_src }}/.ssh/'
-    owner: '{{ build_user }}'
-    group: '{{ build_user }}'
-    mode: 0664
+    mode: '{{ item.mode }}'
+  loop:
+    - { name: 'id_deadeye', mode: 600 }
+    - { name: 'id_deadeye.pub', mode: 664 }
 
 - name: Configure ssh to use deploy key
   blockinfile:
-    path: '{{ deadeye_src }}/.ssh/config'
+    path: '/root/.ssh/config'
     create: true
     owner: '{{ build_user }}'
     group: '{{ build_user }}'
@@ -31,7 +26,7 @@
     block: |
       Host github.com
         User git
-        IdentityFile "{{ deadeye_src }}/.ssh/id_deadeye"
+        IdentityFile "/root/.ssh/id_deadeye"
         IdentitiesOnly yes
 
 - name: Install git
@@ -45,5 +40,5 @@
     repo: '{{ deadeye_repo }}'
     dest: '{{ deadeye_src }}'
     accept_hostkey: true
-    key_file: '{{ deadeye_src }}/.ssh/id_deadeye'
+    key_file: '/root/.ssh/id_deadeye'
   register: deadeye_repo

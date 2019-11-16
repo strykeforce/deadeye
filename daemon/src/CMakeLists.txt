@@ -43,12 +43,18 @@ target_link_libraries(Deadeye_library
     PUBLIC
     ntcore
     cscore
-    spdlog::spdlog
     nlohmann_json::nlohmann_json
     tinyfsm
     safe
     readerwriterqueue
 )
+
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+  target_link_libraries(Deadeye_library PUBLIC spdlog::spdlog_header_only)
+else()
+  target_link_libraries(Deadeye_library PUBLIC spdlog::spdlog)
+endif(CMAKE_BUILD_TYPE STREQUAL "Release")
+
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 target_link_libraries(Deadeye_library

@@ -6,9 +6,19 @@
       file:
         path: /etc/systemd/system/{{ item }}
         state: absent
-      with_items:
+      loop:
         - nv-l4t-usb-device-mode.service
         - nv-l4t-usb-device-mode-runtime.service
+      tags: jetson
+    - name: Create persistent systemd journal dir
+      file:
+        path: /var/log/journal
+        state: directory
+      register: jetson_journal_dir
+      tags: jetson
+    - name: Set systemd journal dir access mode and ownership
+      command: /bin/systemd-tmpfiles --create --prefix /var/log/journal
+      when: jetson_journal_dir is changed
       tags: jetson
   roles:
     - role: wpilib
