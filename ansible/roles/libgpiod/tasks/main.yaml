@@ -1,4 +1,10 @@
 ---
+- name: Install build prereqs
+  apt:
+    update_cache: no
+    name:
+      - autoconf-archive
+
 - name: Unarchive sources
   unarchive:
     src: https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/snapshot/libgpiod-{{ libgpiod_version }}.tar.gz

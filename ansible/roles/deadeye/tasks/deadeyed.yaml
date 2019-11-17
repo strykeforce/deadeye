@@ -5,7 +5,6 @@
     name:
       - cmake-curses-gui
       - pkg-config
-      - autoconf-archive
       - libsystemd-dev
 
 - name: Create build directory
@@ -20,7 +19,7 @@
     argv:
       - /usr/bin/cmake
       - -GNinja
-      - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_BUILD_TYPE={{ build_type }}
       - -DCMAKE_INSTALL_PREFIX=/opt/deadeye
       - -DCMAKE_CXX_FLAGS_RELEASE=-Ofast -march=native -mtune=native -flto -ffat-lto-objects -DNDEBUG
       - -DDEADEYE_UNIT_ID={{ deadeye_unit }}

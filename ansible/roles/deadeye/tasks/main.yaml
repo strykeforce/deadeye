@@ -9,10 +9,6 @@
   tags:
     - deadeyed
 
-- import_tasks: systemd.yaml
-  tags:
-    - systemd
-
 - import_tasks: admin-web.yaml
   tags:
     - admin
@@ -20,3 +16,7 @@
 - import_tasks: admin-server.yaml
   tags:
     - admin
+
+- import_tasks: systemd.yaml
+  tags:
+    - systemd
