@@ -1,8 +1,8 @@
 +++
-title = "My presentation"
+title = "Deadeye Documentation"
 outputs = ["Reveal"]
 +++
 
-# Hello world!
+## Deadeye Documentation
 
-This is my first slide.
+-   [Setting up a Jetson Nano](/provisioning/)
