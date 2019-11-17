@@ -3,6 +3,7 @@
   command: apt-get install -y aptitude
   args:
     creates: /usr/bin/aptitude
+    warn: false
 
 - name: Install build prereqs
   apt:
