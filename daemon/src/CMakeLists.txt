@@ -98,6 +98,7 @@ install(TARGETS Deadeye_deadeyed DESTINATION ${CMAKE_INSTALL_BINDIR})
 if(CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
 add_executable(Deadeye_shutdownd
   shutdown.cpp
+  log.cpp
 )
 add_executable(Deadeye::shutdownd ALIAS Deadeye_shutdownd)
 set_target_properties(Deadeye_shutdownd PROPERTIES
@@ -107,9 +108,9 @@ set_target_properties(Deadeye_shutdownd PROPERTIES
 
 target_link_libraries(Deadeye_shutdownd
   PRIVATE
-  Deadeye_library
   spdlog::spdlog
   PkgConfig::GPIOD
+  PkgConfig::SYSTEMD
 )
 
 install(TARGETS Deadeye_shutdownd DESTINATION ${CMAKE_INSTALL_BINDIR})
