@@ -14,7 +14,10 @@ CenterTargetData::CenterTargetData(std::string id, int sn, bool valid, int x,
     : TargetData{id, sn, valid}, x(x), y(y) {}
 
 void CenterTargetData::DrawMarkers(cv::Mat& preview) {
-  cv::drawMarker(preview, cv::Point(x, y), cv::Scalar(255, 255, 255));
+  cv::Point center{preview.cols / 2, preview.rows / 2};
+  cv::Point offset{x, y};
+  cv::Point target = center + offset;
+  cv::drawMarker(preview, target, cv::Scalar::all(255));
 }
 
 std::string CenterTargetData::Dump() const {

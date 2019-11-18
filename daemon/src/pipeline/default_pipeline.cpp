@@ -19,6 +19,7 @@ bool DefaultPipeline::StartCapture() {
   safe::ReadAccess<LockableCaptureConfig> cc{capture_config_};
   auto pipeline = cc->Pipeline();
   spdlog::debug("{}: {}", *this, pipeline);
+  center_ = cv::Point{cc->output_width / 2, cc->output_height / 2};
   return cap_.open(pipeline, cv::CAP_GSTREAMER);
 }
 
@@ -56,11 +57,10 @@ TargetDataPtr DefaultPipeline::ProcessTarget(Contours const &contours) {
   if (contours.size() == 0)
     return std::make_unique<CenterTargetData>(id_, 0, false, 0, 0);
   auto contour = contours[0];
-  auto rect = cv::boundingRect(contour);
-  int x = rect.x + (rect.width / 2);
-  int y = rect.y + (rect.height / 2);
-
-  return std::make_unique<CenterTargetData>(id_, 0, true, x, y);
+  auto bb = cv::boundingRect(contour);
+  cv::Point target = (bb.tl() + bb.br()) / 2;
+  cv::Point offset = target - center_;
+  return std::make_unique<CenterTargetData>(id_, 0, true, offset.x, offset.y);
 }
 
 std::string DefaultPipeline::ToString() const {

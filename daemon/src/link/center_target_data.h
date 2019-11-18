@@ -10,6 +10,7 @@ struct CenterTargetData : public TargetData {
   static char const* kXKey;
   static char const* kYKey;
 
+  // x & y are offsets from frame center point
   int x;
   int y;
 
