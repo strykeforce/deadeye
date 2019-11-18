@@ -16,5 +16,6 @@ class DefaultPipeline : public AbstractPipeline {
   std::string ToString() const final;
 
   cv::VideoCapture cap_;
+  cv::Point center_;
 };
 }  // namespace deadeye

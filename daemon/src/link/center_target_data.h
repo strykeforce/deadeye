@@ -1,5 +1,6 @@
 #pragma once
 #include <nlohmann/json.hpp>
+#include <opencv2/core/types.hpp>
 
 #include "link/target_data.h"
 
@@ -10,10 +11,9 @@ struct CenterTargetData : public TargetData {
   static char const* kXKey;
   static char const* kYKey;
 
-  int x;
-  int y;
+  cv::Point offset;
 
-  CenterTargetData(std::string id, int sn, bool valid, int x, int y);
+  CenterTargetData(std::string id, int sn, bool valid, cv::Point offset);
 
   void DrawMarkers(cv::Mat& preview) override;
   std::string Dump() const override;
