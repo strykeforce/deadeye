@@ -26,7 +26,7 @@ TEST_CASE("PipelineConfig to JSON", "[pipeline]") {
   json j = pc;
   json expected = R"(
 {"exposure":0.5,"hue":[1,2],"sat":[25,24],"sn":2767,"val":[250,251],
-"log":{"enabled":false,"path":"/mnt/deadeye","mount":true}}
+"log":{"enabled":false,"path":"/var/opt/deadeye","mount":true}}
 )"_json;
 
   REQUIRE(j == expected);
