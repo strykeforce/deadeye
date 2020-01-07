@@ -2,3 +2,11 @@
   width: 600px;
   text-align: center;
 }
+
+section.present {
+  text-align: left;
+}
+
+section.center {
+  text-align: center;
+}
