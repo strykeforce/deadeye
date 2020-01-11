@@ -12,6 +12,12 @@ deadeye:
       ansible_user: deadeye
       deadeye_unit: C
       camera_0_pipeline: deadeye::DefaultPipeline
+    deadeye-d:
+      ansible_host: deadeye-d.local
+      ansible_user: deadeye
+      deadeye_unit: D
+      camera_0_pipeline: deadeye::DefaultPipeline
+      camera_1_pipeline: deadeye::DriverPipeline
   vars:
     ansible_python_interpreter: /usr/bin/python3
     ansible_become: true
@@ -26,7 +32,7 @@ deadeye:
 bootstrap:
   hosts:
     raspberrypi:
-      ansible_host: raspberrypi.local
+      ansible_host: deadeye-d.local
       ansible_user: jeff
       ansible_become: true
       ansible_python_interpreter: /usr/bin/python3

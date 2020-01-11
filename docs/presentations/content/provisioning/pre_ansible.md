@@ -15,3 +15,5 @@ Disable the graphical boot:
 ```sh
 > sudo systemctl set-default multi-user.target
 ```
+
+Configure static IP address with `nmtui`.
