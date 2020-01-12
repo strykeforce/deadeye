@@ -1,6 +1,7 @@
 #include "driver_pipeline.h"
 
 #include <cscore.h>
+#include <cscore_cv.h>
 #include <fmt/core.h>
 #include <spdlog/spdlog.h>
 #include <wpi/Logger.h>

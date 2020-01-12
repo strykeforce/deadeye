@@ -56,8 +56,7 @@ set(DEADEYE_CAMERA4_PIPELINE "" CACHE STRING "Camera 4 Pipeline class")
 
 # Dependencies
 find_package(spdlog REQUIRED)
-find_package(ntcore REQUIRED)
-find_package(cscore REQUIRED)
+find_package(wpilib REQUIRED)
 find_package(Threads REQUIRED) # required for ntcore
 find_package(nlohmann_json REQUIRED)
 
