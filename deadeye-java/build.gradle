@@ -22,9 +22,9 @@ repositories {
 dependencies {
   implementation "edu.wpi.first.ntcore:ntcore-java:2020.1.2"
   implementation "org.jetbrains.kotlin:kotlin-stdlib"
-  implementation "org.slf4j:slf4j-api:1.7.28"
-  implementation "com.squareup.moshi:moshi:1.8.0"
-  kapt "com.squareup.moshi:moshi-kotlin-codegen:1.8.0"
+  implementation "org.slf4j:slf4j-api:1.7.30"
+  implementation "com.squareup.moshi:moshi:1.9.2"
+  kapt "com.squareup.moshi:moshi-kotlin-codegen:1.9.2"
 
 }
 
