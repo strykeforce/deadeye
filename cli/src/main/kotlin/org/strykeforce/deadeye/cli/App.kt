@@ -13,7 +13,7 @@ import java.util.concurrent.CountDownLatch
 
 class App : CliktCommand() {
   private val verbose by option("--verbose", "-v").flag("--no-verbose")
-  private val nt by option("--nt-server", "-n").default("127.0.0.1")
+  private val nt by option("--nt-server", "-n").default("10.27.67.2")
   override fun run() {
     val connectedSignal = CountDownLatch(1)
     var connectionListener = 0
