@@ -1,5 +1,8 @@
 # Ignore Intellij files
 .idea
+*.iml
+*.ipr
+*.iws
 
 # Ignore Gradle project-specific cache directory
 .gradle

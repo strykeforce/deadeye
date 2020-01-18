@@ -1,10 +1,8 @@
 plugins {
   // Apply the Kotlin JVM plugin to add support for Kotlin.
   id("org.jetbrains.kotlin.jvm") version "1.3.61"
-
   // Apply the application plugin to add support for building a CLI application.
   application
-
   idea
 }
 
