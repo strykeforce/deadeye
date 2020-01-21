@@ -10,7 +10,8 @@ import okio.Buffer
 private const val ON = "On"
 private const val OFF = "Off"
 private const val ERROR = "Error"
-private const val CONFIG = "Config"
+private const val CAPTURE = "Capture"
+private const val CONFIG = "Pipeline"
 private const val STREAM = "Stream"
 
 internal class CameraImpl<T : TargetData>(override val id: String) : Camera<T> {
@@ -34,6 +35,11 @@ internal class CameraImpl<T : TargetData>(override val id: String) : Camera<T> {
 
     override val error: Boolean
         get() = table.getEntry(ERROR).getBoolean(false)
+
+    override val capture: Camera.Capture
+        get() = with(table.getEntry(CAPTURE).getString("{}")) {
+            Camera_CaptureJsonAdapter(moshi).fromJson(this) ?: throw JsonDataException("Capture: $this")
+        }
 
     override val config: Camera.Config
         get() = with(table.getEntry(CONFIG).getString("{}")) {
