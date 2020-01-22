@@ -1,10 +1,8 @@
 plugins {
   // Apply the Kotlin JVM plugin to add support for Kotlin.
-  id("org.jetbrains.kotlin.jvm") version "1.3.50"
-
+  id("org.jetbrains.kotlin.jvm") version "1.3.61"
   // Apply the application plugin to add support for building a CLI application.
   application
-
   idea
 }
 
@@ -23,10 +21,10 @@ dependencies {
   implementation("edu.wpi.first.ntcore:ntcore-java:$wpiVersion")
   implementation("edu.wpi.first.ntcore:ntcore-jni:$wpiVersion:osxx86-64")
   implementation("edu.wpi.first.wpiutil:wpiutil-java:$wpiVersion")
-  implementation("org.jline:jline-terminal:3.12.1")
+  implementation("org.jline:jline-terminal:3.13.3")
   implementation("org.fusesource.jansi:jansi:1.18")
-  implementation("com.github.ajalt:clikt:2.2.0")
-  implementation ("com.squareup.moshi:moshi:1.8.0")
+  implementation("com.github.ajalt:clikt:2.3.0")
+  implementation ("com.squareup.moshi:moshi:1.9.2")
 
 
   // Align versions of all Kotlin components

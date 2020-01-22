@@ -10,45 +10,51 @@ import okio.Buffer
 private const val ON = "On"
 private const val OFF = "Off"
 private const val ERROR = "Error"
-private const val CONFIG = "Config"
+private const val CAPTURE = "Capture"
+private const val CONFIG = "Pipeline"
 private const val STREAM = "Stream"
 
 internal class CameraImpl<T : TargetData>(override val id: String) : Camera<T> {
 
-  override var targetDataListener: TargetDataListener? = null
+    override var targetDataListener: TargetDataListener? = null
 
-  @Suppress("MemberVisibilityCanBePrivate")
-  var targetData: TargetData = TargetData("")
+    @Suppress("MemberVisibilityCanBePrivate")
+    var targetData: TargetData = TargetData("")
 
-  private val table: NetworkTable by lazy { NetworkTableInstance.getDefault().getTable("/Deadeye/${id[0]}/${id[1]}") }
+    private val table: NetworkTable by lazy { NetworkTableInstance.getDefault().getTable("/Deadeye/${id[0]}/${id[1]}") }
 
-  private val moshi: Moshi by lazy { Moshi.Builder().build() }
+    private val moshi: Moshi by lazy { Moshi.Builder().build() }
 
-  override lateinit var jsonAdapter: JsonAdapter<T>
+    override lateinit var jsonAdapter: JsonAdapter<T>
 
-  override var enabled: Boolean
-    set(value) {
-      table.getEntry(if (value) ON else OFF).apply { setBoolean(true) }
+    override var enabled: Boolean
+        set(value) {
+            table.getEntry(if (value) ON else OFF).apply { setBoolean(true) }
+        }
+        get() = table.getEntry(ON).getBoolean(false)
+
+    override val error: Boolean
+        get() = table.getEntry(ERROR).getBoolean(false)
+
+    override val capture: Camera.Capture
+        get() = with(table.getEntry(CAPTURE).getString("{}")) {
+            Camera_CaptureJsonAdapter(moshi).fromJson(this) ?: throw JsonDataException("Capture: $this")
+        }
+
+    override val config: Camera.Config
+        get() = with(table.getEntry(CONFIG).getString("{}")) {
+            Camera_ConfigJsonAdapter(moshi).fromJson(this) ?: throw JsonDataException("Config: $this")
+        }
+
+    override val stream: Camera.Stream
+        get() = with(table.getEntry(STREAM).getString("{}")) {
+            Camera_StreamJsonAdapter(moshi).fromJson(this) ?: throw JsonDataException("Stream: $this")
+        }
+
+    override fun parse(buffer: Buffer) {
+        var targetData = jsonAdapter.fromJson(buffer) ?: throw JsonDataException("parse error")
+        this.targetData = targetData
+        targetDataListener?.onTargetData(targetData)
     }
-    get() = table.getEntry(ON).getBoolean(false)
-
-  override val error: Boolean
-    get() = table.getEntry(ERROR).getBoolean(false)
-
-  override val config: Camera.Config
-    get() = with(table.getEntry(CONFIG).getString("{}")) {
-      Camera_ConfigJsonAdapter(moshi).fromJson(this) ?: throw JsonDataException("Config: $this")
-    }
-
-  override val stream: Camera.Stream
-    get() = with(table.getEntry(STREAM).getString("{}")) {
-      Camera_StreamJsonAdapter(moshi).fromJson(this) ?: throw JsonDataException("Stream: $this")
-    }
-
-  override fun parse(buffer: Buffer) {
-    var targetData = jsonAdapter.fromJson(buffer) ?: throw JsonDataException("parse error")
-    this.targetData = targetData
-    targetDataListener?.onTargetData(targetData)
-  }
 
 }

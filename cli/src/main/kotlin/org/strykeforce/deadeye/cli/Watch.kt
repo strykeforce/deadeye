@@ -2,6 +2,7 @@ package org.strykeforce.deadeye.cli
 
 import com.codahale.metrics.Meter
 import com.codahale.metrics.MetricRegistry
+import com.github.ajalt.clikt.core.BadParameterValue
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.arguments.multiple
@@ -25,7 +26,12 @@ class Watch : CliktCommand() {
   override fun run() {
     AnsiConsole.systemInstall()
     val prevLink = Deadeye.config
-    Deadeye.config = Deadeye.getCamera<CenterTargetData>(ids.first()).stream.toLink()
+    val stream = try {
+      Deadeye.getCamera<CenterTargetData>(ids.first()).stream
+    } catch (e: Exception) {
+      throw BadParameterValue("Camera ${ids.first()} not found")
+    }
+    Deadeye.config = stream.toLink()
     println()
     println(ansi().fgBrightBlue().a("id  serial  tgt     x     y   fps  drop"))
     println(ansi().a("=========================================").reset())
