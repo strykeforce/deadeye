@@ -32,5 +32,4 @@ interface Camera<T : TargetData> {
 
     @JsonClass(generateAdapter = true)
     data class Stream(@Json(name = "sn") val serial: Int, val contour: String, val view: String, val url: String)
-
 }

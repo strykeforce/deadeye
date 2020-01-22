@@ -6,56 +6,66 @@ import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
+import com.squareup.moshi.JsonWriter
+import com.squareup.moshi.Moshi
 import edu.wpi.first.networktables.NetworkTableInstance
-import org.strykeforce.deadeye.Deadeye
-import org.strykeforce.deadeye.TargetData
+import okio.Buffer
+import org.strykeforce.deadeye.*
 import java.util.concurrent.CountDownLatch
 
 class App : CliktCommand() {
-  private val verbose by option("--verbose", "-v").flag("--no-verbose")
-  private val nt by option("--nt-server", "-n").default("10.27.67.2")
-  override fun run() {
-    val connectedSignal = CountDownLatch(1)
-    var connectionListener = 0
-    NetworkTableInstance.getDefault().apply {
-      addLogger({ println("NetworkTables: ${it.message}") }, if (verbose) 20 else 30, 100)
-      startClient(nt)
-      connectionListener = addConnectionListener({ connectedSignal.countDown() }, true)
+    private val verbose by option("--verbose", "-v").flag("--no-verbose")
+    private val nt by option("--nt-server", "-n").default("10.27.67.2")
+    override fun run() {
+        val connectedSignal = CountDownLatch(1)
+        var connectionListener = 0
+        NetworkTableInstance.getDefault().apply {
+            addLogger({ println("NetworkTables: ${it.message}") }, if (verbose) 20 else 30, 100)
+            startClient(nt)
+            connectionListener = addConnectionListener({ connectedSignal.countDown() }, true)
+        }
+        connectedSignal.await()
+        NetworkTableInstance.getDefault().removeConnectionListener(connectionListener)
     }
-    connectedSignal.await()
-    NetworkTableInstance.getDefault().removeConnectionListener(connectionListener)
-  }
 }
 
 class Enable : CliktCommand() {
-  private val id by argument()
-  override fun run() {
-    val camera = Deadeye.getCamera<TargetData>(id)
-    camera.enabled = true
-  }
+    private val id by argument()
+    override fun run() {
+        val camera = Deadeye.getCamera<TargetData>(id)
+        camera.enabled = true
+    }
 }
 
 class Disable : CliktCommand() {
-  private val id by argument()
-  override fun run() {
-    val camera = Deadeye.getCamera<TargetData>(id)
-    camera.enabled = false
-  }
-}
-
-class Status : CliktCommand() {
-  private val id by argument()
-  override fun run() {
-    println("Deadeye Status")
-    println("==============")
-    val fmt = "%-7s %s"
-    with(Deadeye.config) {
-      println(fmt.format("Link:", "$address:$port"))
+    private val id by argument()
+    override fun run() {
+        val camera = Deadeye.getCamera<TargetData>(id)
+        camera.enabled = false
     }
-    println()
-    val camera = Deadeye.getCamera<TargetData>(id)
-    println("${camera.capture}\n${camera.config}\n${camera.stream}")
-  }
 }
 
-fun main(args: Array<String>) = App().subcommands(Enable(), Disable(), Status(), Watch()).main(args)
+class Dump : CliktCommand() {
+    private val id by argument()
+    override fun run() {
+        val camera = Deadeye.getCamera<TargetData>(id)
+        val sink = Buffer()
+        val writer = JsonWriter.of(sink).also { it.indent = "  " }
+        camera.toJson(writer)
+        sink.copyTo(System.out)
+    }
+}
+
+fun main(args: Array<String>) = App().subcommands(Enable(), Disable(), Dump(), Watch()).main(args)
+
+fun <T : TargetData> Camera<T>.toJson(writer: JsonWriter) {
+    val moshi = Moshi.Builder().build()
+    writer.beginObject()
+    writer.name("capture")
+    Camera_CaptureJsonAdapter(moshi).toJson(writer, this.capture)
+    writer.name("pipeline")
+    Camera_ConfigJsonAdapter(moshi).toJson(writer, this.config)
+    writer.name("stream")
+    Camera_StreamJsonAdapter(moshi).toJson(writer, this.stream)
+    writer.endObject()
+}
