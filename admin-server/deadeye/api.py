@@ -2,6 +2,7 @@ from flask_socketio import SocketIO
 from threading import Lock
 import json
 import os
+import sys
 from networktables import NetworkTables
 from .models import Unit
 
@@ -21,6 +22,7 @@ class Api:
         self.socketio.on_event("pipeline_config", self.handle_pipeline_config_event)
         self.socketio.on_event("stream_config", self.handle_stream_config_event)
         self.socketio.on_event("connect", self.handle_connect)
+        self.running = True
 
     def handle_message(self, message):
         self.app.logger.debug("received message: " + str(message))
@@ -84,11 +86,19 @@ class Api:
     def nt_connection_listener(self, is_connected, info):
         self.nt_connected = is_connected
         self.nt_connecting = not is_connected
-        Unit.init(self)
+        root = NetworkTables.getGlobalTable()
+        if not root.containsSubTable("Deadeye"):
+            self.app.logger.fatal("Deadeye subtable missing from Network Tables")
+            NetworkTables.shutdown()
+            self.running = False
+            return
+        self.app.logger.debug("Initializing Deadeye Units")
+        with self.app.app_context():
+            Unit.init(self)
         self.app.logger.debug("Connected = %s, info = %s", is_connected, info)
 
     def background_thread(self, app):
-        while True:
+        while self.running:
             if self.refresh:
                 self.app.logger.debug("model refresh available")
                 self.socketio.emit(
@@ -96,3 +106,4 @@ class Api:
                 )
                 self.refresh = False
             self.socketio.sleep(0.250)
+        self.app.logger.warn("Exit model refresh thread")

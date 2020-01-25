@@ -13,8 +13,11 @@ class Unit:
         self.cameras = {}
         self.id = unit_id
         for inum in camera_inums:
-            cam = Camera(unit_id, inum)
-            self.cameras[inum] = cam
+            try:
+                cam = Camera(unit_id, inum)
+                self.cameras[inum] = cam
+            except:
+                current_app.logger.error("error loading Camera %s%s", unit_id, inum)
 
     @classmethod
     def init(cls, api):

@@ -9,5 +9,6 @@
     "**/__pycache__": true,
     "deadeye.egg-info": true,
   },
-  "python.pythonPath": "/Users/jeff/.local/share/virtualenvs/admin-server-JnuXv_jv/bin/python"
+  "python.pythonPath": "/Users/jeff/.local/share/virtualenvs/admin-server-WsaKkzV_/bin/python",
+  "python.formatting.provider": "black"
 }
