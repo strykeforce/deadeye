@@ -50,9 +50,11 @@ object Deadeye {
             while (true) {
                 socket.receive(packet)
                 val id = String(packet.data, 0, 2)
-                val camera = cameraCache[id] ?: throw JsonDataException("Unrecognized camera id: $id")
-                buffer.write(packet.data, 2, packet.length - 2)
-                camera.parse(buffer)
+                val camera = cameraCache[id]
+                if (camera != null) {
+                    buffer.write(packet.data, 2, packet.length - 2)
+                    camera.parse(buffer)
+                }
             }
         }
     }
