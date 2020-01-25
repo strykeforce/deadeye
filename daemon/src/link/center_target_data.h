@@ -11,9 +11,10 @@ struct CenterTargetData : public TargetData {
   static char const* kXKey;
   static char const* kYKey;
 
+  cv::Rect bb;
   cv::Point offset;
-
-  CenterTargetData(std::string id, int sn, bool valid, cv::Point offset);
+  CenterTargetData(std::string id, int sn, bool valid, cv::Rect bb,
+                   cv::Point center);
 
   void DrawMarkers(cv::Mat& preview) override;
   std::string Dump() const override;

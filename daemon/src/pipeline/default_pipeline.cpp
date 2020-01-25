@@ -55,12 +55,11 @@ void DefaultPipeline::FilterContours(Contours const &src, Contours &dest) {
 // Target is center of contour bounding box.
 TargetDataPtr DefaultPipeline::ProcessTarget(Contours const &contours) {
   if (contours.size() == 0)
-    return std::make_unique<CenterTargetData>(id_, 0, false, cv::Point{0, 0});
+    return std::make_unique<CenterTargetData>(
+        id_, 0, false, cv::Rect{0, 0, 0, 0}, cv::Point{0, 0});
   auto contour = contours[0];
   cv::Rect bb = cv::boundingRect(contour);
-  cv::Point target = (bb.tl() + bb.br()) / 2;
-  cv::Point offset = target - center_;
-  return std::make_unique<CenterTargetData>(id_, 0, true, offset);
+  return std::make_unique<CenterTargetData>(id_, 0, true, bb, center_);
 }
 
 std::string DefaultPipeline::ToString() const {

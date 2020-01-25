@@ -10,8 +10,11 @@ char const* CenterTargetData::kXKey{"x"};
 char const* CenterTargetData::kYKey{"y"};
 
 CenterTargetData::CenterTargetData(std::string id, int sn, bool valid,
-                                   cv::Point offset)
-    : TargetData{id, sn, valid}, offset(offset) {}
+                                   cv::Rect bb, cv::Point center)
+    : TargetData{id, sn, valid}, bb(bb) {
+  cv::Point target = (bb.tl() + bb.br()) / 2;
+  offset = target - center;
+}
 
 void CenterTargetData::DrawMarkers(cv::Mat& preview) {
   cv::Point center{preview.cols / 2, preview.rows / 2};

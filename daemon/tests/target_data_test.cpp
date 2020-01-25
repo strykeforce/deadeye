@@ -12,9 +12,10 @@ TEST_CASE("TargetData to JSON", "[link]") {
 }
 
 TEST_CASE("CenterTargetData to JSON", "[link]") {
-  CenterTargetData td{"Z1", 1, true, cv::Point{27, 67}};
+  CenterTargetData td{"Z1", 1, true, cv::Rect{0, 0, 100, 100},
+                      cv::Point{50, 50}};
 
-  json expected = R"({"id":"Z1","sn":1,"valid":true,"x":27,"y":67})"_json;
+  json expected = R"({"id":"Z1","sn":1,"valid":true,"x":0,"y":0})"_json;
   json j = json::parse(td.Dump());
   REQUIRE(j == expected);
 }
