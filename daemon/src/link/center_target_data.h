@@ -8,6 +8,10 @@ using json = nlohmann::json;
 
 namespace deadeye {
 struct CenterTargetData : public TargetData {
+  static char const* kTLX;
+  static char const* kTLY;
+  static char const* kBRX;
+  static char const* kBRY;
   static char const* kXKey;
   static char const* kYKey;
 

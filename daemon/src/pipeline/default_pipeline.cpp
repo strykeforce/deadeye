@@ -20,6 +20,10 @@ bool DefaultPipeline::StartCapture() {
   auto pipeline = cc->Pipeline();
   spdlog::debug("{}: {}", *this, pipeline);
   center_ = cv::Point{cc->output_width / 2, cc->output_height / 2};
+  int rows = cc->output_height;
+  // FIXME: workaround for border in GrabFrame
+  if (rows == 90 || rows == 180 || rows == 360 || rows == 720)
+    center_.y += cc->output_height / 6;
   return cap_.open(pipeline, cv::CAP_GSTREAMER);
 }
 
@@ -28,7 +32,7 @@ void DefaultPipeline::StopCapture() { cap_.release(); }
 bool DefaultPipeline::GrabFrame(cv::Mat &frame) {
   if (!cap_.read(frame)) return false;
 
-  // FIXME: pipeline should prefer 720p aspect ratio
+  // FIXME: Aspect ratio should only be changed for preview
   int rows = frame.rows;
   if (rows == 120 || rows == 240 || rows == 480 || rows == 960) return true;
 
@@ -59,6 +63,8 @@ TargetDataPtr DefaultPipeline::ProcessTarget(Contours const &contours) {
         id_, 0, false, cv::Rect{0, 0, 0, 0}, cv::Point{0, 0});
   auto contour = contours[0];
   cv::Rect bb = cv::boundingRect(contour);
+  // spdlog::debug("ul = {},{} br = {},{} cen = {},{}", bb.tl().x, bb.tl().y,
+  //               bb.br().x, bb.br().y, center_.x, center_.y);
   return std::make_unique<CenterTargetData>(id_, 0, true, bb, center_);
 }
 
