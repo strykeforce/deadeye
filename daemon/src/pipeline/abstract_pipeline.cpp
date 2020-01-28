@@ -22,6 +22,10 @@ AbstractPipeline::AbstractPipeline(int inum)
   InitializeLogging();
 }
 
+namespace {
+static int gcd(int a, int b) { return (b == 0) ? a : gcd(b, a % b); }
+}  // namespace
+
 /**
  * ConfigCapture handles changes to capture settings and only takes effect
  * after pipeline restart.
@@ -29,9 +33,28 @@ AbstractPipeline::AbstractPipeline(int inum)
 void AbstractPipeline::ConfigCapture(CaptureConfig const &config) {
   safe::WriteAccess<LockableCaptureConfig> cc{capture_config_};
   *cc = config;
-  pipeline_type_ = config.PipelineType();
-  fps_ = config.frame_rate;
-  spdlog::debug("{}:{}", *this, *cc);
+  pipeline_type_ = cc->PipelineType();
+  fps_ = cc->frame_rate;
+  int h = cc->OutputSize().height;
+  int w = cc->OutputSize().width;
+  preview_resize_ = w != kStreamSize.width;
+
+  int r = gcd(w, h);
+  int wr = w / r;
+  int hr = h / r;
+  spdlog::debug("{}: capture output: {}x{} ({}:{})", *this, w, h, wr, hr);
+
+  if (wr == 4 && hr == 3) {  // 4:3
+    preview_border_ = 0;
+  } else if (wr == 16 && hr == 9) {
+    preview_border_ = h / 6;
+  } else {
+    spdlog::error("{}: invalid aspect ratio: {}:{}", *this, wr, hr);
+    preview_border_ = 0;
+  }
+
+  spdlog::debug("{}: {} {}", *this, *cc,
+                preview_resize_ ? "[preview resized]" : "");
   capture_config_ready_ = true;
 }
 
@@ -41,7 +64,7 @@ void AbstractPipeline::ConfigCapture(CaptureConfig const &config) {
 void AbstractPipeline::ConfigPipeline(PipelineConfig const &config) {
   safe::WriteAccess<LockablePipelineConfig> pc{pipeline_config_};
   *pc = config;
-  spdlog::debug("{}:{}", *this, *pc);
+  spdlog::debug("{}: {}", *this, *pc);
   pipeline_config_ready_ = true;
 }
 
@@ -51,7 +74,7 @@ void AbstractPipeline::ConfigPipeline(PipelineConfig const &config) {
 void AbstractPipeline::ConfigStream(StreamConfig const &config) {
   safe::WriteAccess<LockableStreamConfig> sc{stream_config_};
   *sc = config;
-  spdlog::debug("{}:{}", *this, *sc);
+  spdlog::debug("{}: {}", *this, *sc);
   stream_config_ready_ = true;
 }
 
@@ -163,7 +186,7 @@ void AbstractPipeline::StreamFrame() {
   switch (view_) {
     case View::none:
       if (contour_ != Contour::none) {
-        preview = cv::Mat::zeros(frame_.size(), CV_8UC3);
+        preview = cv::Mat::zeros(kStreamSize, CV_8UC3);
       }
       break;
     case View::original:
@@ -194,7 +217,12 @@ void AbstractPipeline::StreamFrame() {
       break;
   }
 
-  if (preview.cols != kStreamSize.width)
+  if (preview_border_ != 0) {
+    cv::copyMakeBorder(preview, preview, preview_border_, preview_border_, 0, 0,
+                       cv::BORDER_CONSTANT, cv::Scalar(0, 0, 0));
+  }
+
+  if (preview_resize_)
     cv::resize(preview, preview, kStreamSize, 0, 0, cv::INTER_AREA);
   cvsource_.PutFrame(preview);
 }

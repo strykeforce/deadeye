@@ -21,27 +21,12 @@ bool DefaultPipeline::StartCapture() {
   spdlog::debug("{}: {}", *this, pipeline);
   center_ = cv::Point{cc->output_width / 2, cc->output_height / 2};
   int rows = cc->output_height;
-  // FIXME: workaround for border in GrabFrame
-  if (rows == 90 || rows == 180 || rows == 360 || rows == 720)
-    center_.y += cc->output_height / 6;
   return cap_.open(pipeline, cv::CAP_GSTREAMER);
 }
 
 void DefaultPipeline::StopCapture() { cap_.release(); }
 
-bool DefaultPipeline::GrabFrame(cv::Mat &frame) {
-  if (!cap_.read(frame)) return false;
-
-  // FIXME: Aspect ratio should only be changed for preview
-  int rows = frame.rows;
-  if (rows == 120 || rows == 240 || rows == 480 || rows == 960) return true;
-
-  // change aspect ration
-  int border = frame.rows / 6;
-  cv::copyMakeBorder(frame, frame, border, border, 0, 0, cv::BORDER_CONSTANT,
-                     cv::Scalar(0, 0, 0));
-  return true;
-}
+bool DefaultPipeline::GrabFrame(cv::Mat &frame) { return cap_.read(frame); }
 
 // This filter returns the contour with the largest area.
 void DefaultPipeline::FilterContours(Contours const &src, Contours &dest) {

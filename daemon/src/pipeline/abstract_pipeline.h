@@ -68,6 +68,8 @@ class AbstractPipeline : public Pipeline {
   cs::CvSource cvsource_;
   TargetDataPtr target_data_;
   bool log_enabled_;
+  int preview_border_;
+  bool preview_resize_;
 };
 
 }  // namespace deadeye

@@ -103,6 +103,14 @@ std::string CaptureConfig::PipelineType() const {
   return "";
 }
 
+cv::Size CaptureConfig::CaptureSize() const {
+  return cv::Size{capture_width, capture_height};
+}
+
+cv::Size CaptureConfig::OutputSize() const {
+  return cv::Size{output_width, output_height};
+}
+
 // ---------------------------------------------------------------------------
 // nlohmann_json support
 //
