@@ -4,6 +4,7 @@
 #include <spdlog/fmt/ostr.h>
 #include <iostream>
 #include <nlohmann/json.hpp>
+#include <opencv2/core/types.hpp>
 
 using json = nlohmann::json;
 
@@ -53,6 +54,16 @@ struct CaptureConfig {
   std::string Pipeline() const;
 
   std::string PipelineType() const;
+
+  /*
+   * Get captured size of frame.
+   */
+  cv::Size CaptureSize() const;
+
+  /*
+   * Get output size of frame.
+   */
+  cv::Size OutputSize() const;
 
   template <typename OStream>
   friend OStream& operator<<(OStream& os, CaptureConfig const& cc) {
