@@ -7,25 +7,29 @@
 using json = nlohmann::json;
 
 namespace deadeye {
-struct CenterTargetData : public TargetData {
+struct MinAreaTargetData : public TargetData {
+  static char const* kBLX;
+  static char const* kBLY;
   static char const* kTLX;
   static char const* kTLY;
+  static char const* kTRX;
+  static char const* kTRY;
   static char const* kBRX;
   static char const* kBRY;
   static char const* kXKey;
   static char const* kYKey;
+  static char const* kWKey;
+  static char const* kHKey;
+  static char const* kAngleKey;
 
-  cv::Rect bb;
-  cv::Point offset;
-  CenterTargetData(std::string id, int sn, bool valid, cv::Rect bb,
-                   cv::Point center);
+  cv::RotatedRect rect;
+  cv::Point2f offset;
+  MinAreaTargetData(std::string id, int sn, bool valid, cv::RotatedRect rect,
+                    cv::Point2f center);
 
   void DrawMarkers(cv::Mat& preview) override;
   std::string Dump() const override;
   std::string ToString() const override;
 };
-
-void to_json(json& j, CenterTargetData const& td);
-void from_json(json const& j, CenterTargetData& td);
-
 }  // namespace deadeye
+   //

@@ -6,7 +6,7 @@
 
 #include "config/pipeline_config.h"
 #include "config/stream_config.h"
-#include "link/center_target_data.h"
+#include "link/upright_target_data.h"
 
 using namespace deadeye;
 
@@ -20,6 +20,7 @@ bool DefaultPipeline::StartCapture() {
   auto pipeline = cc->Pipeline();
   spdlog::debug("{}: {}", *this, pipeline);
   center_ = cv::Point{cc->output_width / 2, cc->output_height / 2};
+  center2f_ = static_cast<cv::Point2f>(center_);
   int rows = cc->output_height;
   return cap_.open(pipeline, cv::CAP_GSTREAMER);
 }
@@ -44,13 +45,13 @@ void DefaultPipeline::FilterContours(Contours const &src, Contours &dest) {
 // Target is center of contour bounding box.
 TargetDataPtr DefaultPipeline::ProcessTarget(Contours const &contours) {
   if (contours.size() == 0)
-    return std::make_unique<CenterTargetData>(
+    return std::make_unique<UprightTargetData>(
         id_, 0, false, cv::Rect{0, 0, 0, 0}, cv::Point{0, 0});
   auto contour = contours[0];
   cv::Rect bb = cv::boundingRect(contour);
   // spdlog::debug("ul = {},{} br = {},{} cen = {},{}", bb.tl().x, bb.tl().y,
   //               bb.br().x, bb.br().y, center_.x, center_.y);
-  return std::make_unique<CenterTargetData>(id_, 0, true, bb, center_);
+  return std::make_unique<UprightTargetData>(id_, 0, true, bb, center_);
 }
 
 std::string DefaultPipeline::ToString() const {
