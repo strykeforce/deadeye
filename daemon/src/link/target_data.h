@@ -25,8 +25,4 @@ struct TargetData {
   virtual std::string Dump() const;
   virtual std::string ToString() const { return Dump(); }
 };
-
-void to_json(json& j, TargetData const& td);
-void from_json(json const& j, TargetData& td);
-
 }  // namespace deadeye

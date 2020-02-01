@@ -24,8 +24,4 @@ struct UprightTargetData : public TargetData {
   std::string Dump() const override;
   std::string ToString() const override;
 };
-
-void to_json(json& j, UprightTargetData const& td);
-void from_json(json const& j, UprightTargetData& td);
-
 }  // namespace deadeye

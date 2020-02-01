@@ -45,21 +45,3 @@ std::string UprightTargetData::ToString() const {
                      serial, valid, bb.tl().x, bb.tl().y, bb.br().x, bb.br().y,
                      offset.x, offset.y);
 }
-
-// ---------------------------------------------------------------------------
-// nlohmann_json support
-//
-void deadeye::to_json(json& j, UprightTargetData const& ctd) {
-  j = json{{TargetData::kSerialKey, ctd.serial},
-           {TargetData::kValidKey, ctd.valid},
-           {UprightTargetData::kTLX, ctd.bb.tl().x},
-           {UprightTargetData::kTLY, ctd.bb.tl().y},
-           {UprightTargetData::kBRX, ctd.bb.br().x},
-           {UprightTargetData::kBRY, ctd.bb.br().y},
-           {UprightTargetData::kXKey, ctd.offset.x},
-           {UprightTargetData::kYKey, ctd.offset.y}};
-}
-
-void deadeye::from_json(json const& j, UprightTargetData& ctd) {
-  throw new std::runtime_error("JSON parsing not supported");
-}

@@ -12,21 +12,11 @@ TargetData::TargetData(std::string id, int serial, bool valid)
 
 void TargetData::DrawMarkers(cv::Mat& preview) {}
 
+// Dump method here instead of normal nlohmann to_json() because we need to call
+// this polymorphically.
 std::string TargetData::Dump() const {
   json j = json{{TargetData::kIdKey, id},
                 {TargetData::kSerialKey, serial},
                 {TargetData::kValidKey, valid}};
   return j.dump();
-}
-
-// ---------------------------------------------------------------------------
-// nlohmann_json support
-//
-void deadeye::to_json(json& j, TargetData const& td) {
-  j = json{{TargetData::kSerialKey, td.serial},
-           {TargetData::kValidKey, td.valid}};
-}
-
-void deadeye::from_json(json const& j, TargetData& td) {
-  throw new std::runtime_error("JSON parsing not supported");
 }
