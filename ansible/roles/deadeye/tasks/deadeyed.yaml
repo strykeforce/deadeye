@@ -9,13 +9,13 @@
 
 - name: Create build directory
   file:
-    path: '{{ deadeye_src }}/build'
+    path: "{{ deadeye_src }}/build"
     state: directory
     mode: 0775
 
 - name: Run cmake
   command:
-    chdir: '{{ deadeye_src }}/build'
+    chdir: "{{ deadeye_src }}/build"
     argv:
       - /usr/bin/cmake
       - -GNinja
@@ -32,12 +32,10 @@
   environment:
     LDFLAGS: -latomic
     CXXFLAGS: -Wno-psabi
-  when: deadeye_repo is changed
 
 - name: Build and Install
   command:
-    chdir: '{{ deadeye_src }}/build'
+    chdir: "{{ deadeye_src }}/build"
     argv:
       - /usr/bin/ninja
       - install
-  when: deadeye_repo is changed

@@ -18,7 +18,6 @@
   file:
     path: "{{ deadeye_src }}/admin-server/dist"
     state: absent
-  when: deadeye_repo is changed
 
 - name: Link admin-web build files
   file:
@@ -33,7 +32,6 @@
       - /usr/bin/python3
       - setup.py
       - sdist
-  when: deadeye_repo is changed
 
 - name: install sdist
   pip:
@@ -41,7 +39,6 @@
     virtualenv_python: python3
     name: file://{{ deadeye_src }}/admin-server/dist/deadeye-1.1.tar.gz
     state: latest
-  when: deadeye_repo is changed
   tags: foo
 
 -
