@@ -24,6 +24,8 @@ struct MinAreaTargetData : public TargetData {
 
   cv::RotatedRect rect;
   cv::Point2f offset;
+  cv::Point2f corners[4];
+
   MinAreaTargetData(std::string id, int sn, bool valid, cv::RotatedRect rect,
                     cv::Point2f center);
 

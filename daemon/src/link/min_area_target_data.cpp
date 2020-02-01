@@ -24,12 +24,16 @@ MinAreaTargetData::MinAreaTargetData(std::string id, int sn, bool valid,
                                      cv::RotatedRect rect, cv::Point2f center)
     : TargetData{id, sn, valid}, rect(rect) {
   offset = rect.center - center;
+  rect.points(corners);
 }
 
 void MinAreaTargetData::DrawMarkers(cv::Mat& preview) {
   cv::Point center{preview.cols / 2, preview.rows / 2};
   cv::Point2f target = static_cast<cv::Point2f>(center) + offset;
   cv::drawMarker(preview, target, cv::Scalar::all(255));
+  for (int i = 0; i < 4; i++)
+    cv::circle(preview, corners[i], 3, cv::Scalar(0, 0, 255), cv::FILLED,
+               cv::LINE_AA);
   // cv::rectangle(preview, bb, cv::Scalar(255, 0, 0));
 }
 
@@ -37,18 +41,27 @@ std::string MinAreaTargetData::Dump() const {
   json j = json{{TargetData::kIdKey, id},
                 {TargetData::kSerialKey, serial},
                 {TargetData::kValidKey, valid},
-                // {MinAreaTargetData::kTLX, bb.tl().x},
-                // {MinAreaTargetData::kTLY, bb.tl().y},
-                // {MinAreaTargetData::kBRX, bb.br().x},
-                // {MinAreaTargetData::kBRY, bb.br().y},
+                {MinAreaTargetData::kBLX, corners[0].x},
+                {MinAreaTargetData::kBLY, corners[0].y},
+                {MinAreaTargetData::kTLX, corners[1].x},
+                {MinAreaTargetData::kTLY, corners[1].y},
+                {MinAreaTargetData::kTRX, corners[2].x},
+                {MinAreaTargetData::kTRY, corners[2].y},
+                {MinAreaTargetData::kBRX, corners[3].x},
+                {MinAreaTargetData::kBRY, corners[3].y},
                 {MinAreaTargetData::kXKey, offset.x},
-                {MinAreaTargetData::kYKey, offset.y}};
+                {MinAreaTargetData::kYKey, offset.y},
+                {MinAreaTargetData::kWKey, rect.size.width},
+                {MinAreaTargetData::kHKey, rect.size.height},
+                {MinAreaTargetData::kAngleKey, rect.angle}};
   return j.dump();
 }
 
 std::string MinAreaTargetData::ToString() const {
   return fmt::format(
-      "id={} sn={} val={} tl=({},{}) br=({},{}) off=({},{})", id,
-      //  serial, valid, bb.tl().x, bb.tl().y, bb.br().x, bb.br().y,
-      offset.x, offset.y);
+      "id={} sn={} val={} bl=({},{}) tl=({},{}) tr=({},{}) br=({},{}) "
+      "off=({},{}) w={} h={} a={}",
+      id, serial, valid, corners[0].x, corners[0].y, corners[1].x, corners[1].y,
+      corners[2].x, corners[2].y, corners[3].x, corners[3].y, offset.x,
+      offset.y, rect.size.width, rect.size.height, rect.angle);
 }
