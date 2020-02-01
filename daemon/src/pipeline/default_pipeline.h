@@ -7,15 +7,16 @@ class DefaultPipeline : public AbstractPipeline {
   DefaultPipeline(int inum);
 
   void FilterContours(Contours const &src, Contours &dest) final;
-  TargetDataPtr ProcessTarget(Contours const &contours) final;
+  virtual TargetDataPtr ProcessTarget(Contours const &contours) = 0;
 
  protected:
   bool StartCapture() final;
   void StopCapture() final;
   bool GrabFrame(cv::Mat &frame) final;
-  std::string ToString() const final;
+  virtual std::string ToString() const;
 
   cv::VideoCapture cap_;
   cv::Point center_;
+  cv::Point2f center2f_;
 };
 }  // namespace deadeye

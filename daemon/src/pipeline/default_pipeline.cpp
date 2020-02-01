@@ -20,6 +20,7 @@ bool DefaultPipeline::StartCapture() {
   auto pipeline = cc->Pipeline();
   spdlog::debug("{}: {}", *this, pipeline);
   center_ = cv::Point{cc->output_width / 2, cc->output_height / 2};
+  center2f_ = static_cast<cv::Point2f>(center_);
   int rows = cc->output_height;
   return cap_.open(pipeline, cv::CAP_GSTREAMER);
 }

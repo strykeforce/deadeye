@@ -3,8 +3,9 @@
 #include "config/deadeye_config.h"
 #include "controller.h"
 #include "log.h"
-#include "pipeline/default_pipeline.h"
 #include "pipeline/driver_pipeline.h"
+#include "pipeline/min_area_rect_pipeline.h"
+#include "pipeline/upright_rect_pipeline.h"
 
 #ifdef DEADEYE_CAMERA0_PIPELINE
 #define DE_P0 std::make_unique<DEADEYE_CAMERA0_PIPELINE>(0)
