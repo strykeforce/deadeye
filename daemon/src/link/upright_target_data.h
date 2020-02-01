@@ -7,7 +7,7 @@
 using json = nlohmann::json;
 
 namespace deadeye {
-struct CenterTargetData : public TargetData {
+struct UprightTargetData : public TargetData {
   static char const* kTLX;
   static char const* kTLY;
   static char const* kBRX;
@@ -17,15 +17,15 @@ struct CenterTargetData : public TargetData {
 
   cv::Rect bb;
   cv::Point offset;
-  CenterTargetData(std::string id, int sn, bool valid, cv::Rect bb,
-                   cv::Point center);
+  UprightTargetData(std::string id, int sn, bool valid, cv::Rect bb,
+                    cv::Point center);
 
   void DrawMarkers(cv::Mat& preview) override;
   std::string Dump() const override;
   std::string ToString() const override;
 };
 
-void to_json(json& j, CenterTargetData const& td);
-void from_json(json const& j, CenterTargetData& td);
+void to_json(json& j, UprightTargetData const& td);
+void from_json(json const& j, UprightTargetData& td);
 
 }  // namespace deadeye
