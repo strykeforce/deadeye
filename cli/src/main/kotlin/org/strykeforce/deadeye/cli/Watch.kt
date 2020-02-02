@@ -27,7 +27,7 @@ class Watch : CliktCommand() {
     AnsiConsole.systemInstall()
     val prevLink = Deadeye.config
     val stream = try {
-      Deadeye.getCamera<CenterTargetData>(ids.first()).stream
+      Deadeye.getCamera<UprightTargetData>(ids.first()).stream
     } catch (e: Exception) {
       throw BadParameterValue("Camera ${ids.first()} not found")
     }
@@ -36,7 +36,7 @@ class Watch : CliktCommand() {
     println(ansi().fgBrightBlue().a("id  serial  tgt        ul        br       off   fps  drop"))
     println(ansi().a("=========================================================").reset())
 
-    val watchers = ids.map { Deadeye.getCamera<CenterTargetData>(it) }.map(::Watcher)
+    val watchers = ids.map { Deadeye.getCamera<UprightTargetData>(it) }.map(::Watcher)
     repeat(watchers.size + 1) { println() }
 
     val timer = timer(period = 250) {
@@ -59,22 +59,22 @@ class Watch : CliktCommand() {
   }
 }
 
-class Watcher(val camera: Camera<CenterTargetData>) : TargetDataListener {
+class Watcher(val camera: Camera<UprightTargetData>) : TargetDataListener {
 
   init {
     camera.targetDataListener = this
     camera.enabled = true
-    camera.jsonAdapter = CenterTargetDataJsonAdapter(Moshi.Builder().build())
+    camera.jsonAdapter = UprightTargetDataJsonAdapter(Moshi.Builder().build())
   }
 
-  private var td = CenterTargetData()
+  private var td = UprightTargetData()
   private var dropped = 0
   private val fpsMeter: Meter by lazy { metrics.meter(camera.id) }
 
 
   override fun onTargetData(data: TargetData) {
     if (data.sn - td.sn > 1) dropped += data.sn - td.sn
-    td = data as CenterTargetData
+    td = data as UprightTargetData
     fpsMeter.mark()
   }
 
