@@ -21,80 +21,76 @@ private val metrics = MetricRegistry()
 
 class Watch : CliktCommand() {
 
-  private val ids by argument().multiple()
+    private val ids by argument().multiple()
 
-  override fun run() {
-    AnsiConsole.systemInstall()
-    val prevLink = Deadeye.config
-    val stream = try {
-      Deadeye.getCamera<UprightTargetData>(ids.first()).stream
-    } catch (e: Exception) {
-      throw BadParameterValue("Camera ${ids.first()} not found")
+    override fun run() {
+        AnsiConsole.systemInstall()
+        val prevLink = Deadeye.config
+        val stream = try {
+            Deadeye.getCamera<TargetData>(ids.first()).stream
+        } catch (e: Exception) {
+            throw BadParameterValue("Camera ${ids.first()} not found")
+        }
+        Deadeye.config = stream.toLink()
+        println()
+        println(ansi().fgBrightBlue().a("id  serial  tgt   fps  drop"))
+        println(ansi().a("===========================").reset())
+
+        val watchers = ids.map { Deadeye.getCamera<TargetData>(it) }.map(::Watcher)
+        repeat(watchers.size + 1) { println() }
+
+        val timer = timer(period = 250) {
+            print(ansi().cursorUpLine(watchers.size + 1))
+            watchers.forEach(Watcher::output)
+            println()
+        }
+
+        val terminal = TerminalBuilder.builder().jansi(true).system(true).build()
+        terminal.puts(InfoCmp.Capability.cursor_invisible)
+        terminal.enterRawMode()
+        terminal.reader().read()
+
+        watchers.forEach { it.camera.enabled = false }
+        timer.cancel()
+
+        Deadeye.config = prevLink
+        terminal.close()
+        AnsiConsole.systemUninstall()
     }
-    Deadeye.config = stream.toLink()
-    println()
-    println(ansi().fgBrightBlue().a("id  serial  tgt        ul        br       off   fps  drop"))
-    println(ansi().a("=========================================================").reset())
-
-    val watchers = ids.map { Deadeye.getCamera<UprightTargetData>(it) }.map(::Watcher)
-    repeat(watchers.size + 1) { println() }
-
-    val timer = timer(period = 250) {
-      print(ansi().cursorUpLine(watchers.size + 1))
-      watchers.forEach(Watcher::output)
-      println()
-    }
-
-    val terminal = TerminalBuilder.builder().jansi(true).system(true).build()
-    terminal.puts(InfoCmp.Capability.cursor_invisible)
-    terminal.enterRawMode()
-    terminal.reader().read()
-
-    watchers.forEach { it.camera.enabled = false }
-    timer.cancel()
-
-    Deadeye.config = prevLink
-    terminal.close()
-    AnsiConsole.systemUninstall()
-  }
 }
 
-class Watcher(val camera: Camera<UprightTargetData>) : TargetDataListener {
+class Watcher(val camera: Camera<TargetData>) : TargetDataListener {
 
-  init {
-    camera.targetDataListener = this
-    camera.enabled = true
-    camera.jsonAdapter = UprightTargetDataJsonAdapter(Moshi.Builder().build())
-  }
+    init {
+        camera.targetDataListener = this
+        camera.enabled = true
+        camera.jsonAdapter = TargetDataJsonAdapter(Moshi.Builder().build())
+    }
 
-  private var td = UprightTargetData()
-  private var dropped = 0
-  private val fpsMeter: Meter by lazy { metrics.meter(camera.id) }
+    private var td = TargetData()
+    private var dropped = 0
+    private val fpsMeter: Meter by lazy { metrics.meter(camera.id) }
 
 
-  override fun onTargetData(data: TargetData) {
-    if (data.sn - td.sn > 1) dropped += data.sn - td.sn
-    td = data as UprightTargetData
-    fpsMeter.mark()
-  }
+    override fun onTargetData(data: TargetData) {
+        if (data.sn - td.sn > 1) dropped += data.sn - td.sn
+        td = data
+        fpsMeter.mark()
+    }
 
-  fun output() {
-    val id = ansi().fgBrightBlue().a(td.id).reset()
-    val sn = ansi().a(INTENSITY_FAINT).a(td.sn.toString().padStart(6)).reset()
-    val valid = if (td.valid) ansi().fgBrightGreen().a("Y").reset() else ansi().fgBrightRed().a("N").reset()
-    val ul = "${td.topLeftX},${td.topLeftY}".padStart(9)
-    val br = "${td.bottomRightX},${td.bottomRightY}".padStart(9)
-    val ctr = "${td.centerOffsetX},${td.centerOffsetY}".padStart(9)
-//    val x = td.x.toString().padStart(5)
-//    val y = td.y.toString().padStart(5)
-    val fps = ansi().fgBrightYellow().a("%5.1f".format(fpsMeter.oneMinuteRate)).reset()
-    val d =
-      ansi().let { if (dropped == 0) it.a(INTENSITY_FAINT) else it.fgBrightRed() }.a(dropped.toString().padStart(4))
-        .reset()
-    println("$id  $sn   $valid  $ul $br $ctr $fps  $d")
-  }
+    fun output() {
+        val id = ansi().fgBrightBlue().a(td.id).reset()
+        val sn = ansi().a(INTENSITY_FAINT).a(td.sn.toString().padStart(6)).reset()
+        val valid = if (td.valid) ansi().fgBrightGreen().a("Y").reset() else ansi().fgBrightRed().a("N").reset()
+        val fps = ansi().fgBrightYellow().a("%5.1f".format(fpsMeter.oneMinuteRate)).reset()
+        val d =
+            ansi().let { if (dropped == 0) it.a(INTENSITY_FAINT) else it.fgBrightRed() }
+                .a(dropped.toString().padStart(4))
+                .reset()
+        println("$id  $sn   $valid $fps  $d ${td as MinAreaRectTargetData}")
+    }
 }
 
 fun Camera.Stream.toLink(): Deadeye.Config = Socket(URL(this.url).host, 22).use {
-  Deadeye.Config(it.localAddress.hostAddress, 5800, true)
+    Deadeye.Config(it.localAddress.hostAddress, 5800, true)
 }

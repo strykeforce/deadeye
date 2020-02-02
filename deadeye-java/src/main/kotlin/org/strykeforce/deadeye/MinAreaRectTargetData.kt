@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 /**
- * MinAreaRectTargetData contains targeting data from Deadeye daemon's MinAreaRectPipelin, a pipeline that uses a
+ * MinAreaRectTargetData contains targeting data from Deadeye daemon's MinAreaRectPipeline, a pipeline that uses a
  * minimum-area (rotated) rectangle around the target contour.
  */
 @JsonClass(generateAdapter = true)
@@ -25,4 +25,9 @@ class MinAreaRectTargetData(
     @Json(name = "w") val width: Double = 0.0,
     @Json(name = "h") val height: Double = 0.0,
     @Json(name = "a") val angle: Double = 0.0
-) : TargetData(id, sn, valid)
+) : TargetData(id, sn, valid) {
+
+    override fun toString(): String {
+        return "{\"blx\":$bottomLeftX,\"bly\":$bottomLeftY,\"tlx\":$topLeftX,\"tly\":$topLeftY,\"trx\":$topRightX, \"try\":$topRightY,\"brx\":$bottomRightX,\"bry\":$bottomRightY,\"w\":$width,\"h\":$height,\"a\":$angle}"
+    }
+}
