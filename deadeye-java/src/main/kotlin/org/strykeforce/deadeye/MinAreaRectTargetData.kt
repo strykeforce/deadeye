@@ -28,6 +28,6 @@ class MinAreaRectTargetData(
 ) : TargetData(id, sn, valid) {
 
     override fun toString(): String {
-        return "{\"blx\":$bottomLeftX,\"bly\":$bottomLeftY,\"tlx\":$topLeftX,\"tly\":$topLeftY,\"trx\":$topRightX, \"try\":$topRightY,\"brx\":$bottomRightX,\"bry\":$bottomRightY,\"w\":$width,\"h\":$height,\"a\":$angle}"
+        return "{\"blx\":$bottomLeftX,\"bly\":$bottomLeftY,\"tlx\":$topLeftX,\"tly\":$topLeftY,\"trx\":$topRightX, \"try\":$topRightY,\"brx\":$bottomRightX,\"bry\":$bottomRightY,\"x\":$centerOffsetX,\"y\":$centerOffsetY,\"w\":$width,\"h\":$height,\"a\":$angle}"
     }
 }
