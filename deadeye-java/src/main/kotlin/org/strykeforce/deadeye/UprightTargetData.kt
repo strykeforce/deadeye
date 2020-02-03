@@ -3,8 +3,12 @@ package org.strykeforce.deadeye
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
+/**
+ * UprightTargetData contains targeting data from Deadeye daemon's UprightRectPipeline, a pipeline that uses an upright
+ * bounding box around the target contour.
+ */
 @JsonClass(generateAdapter = true)
-class CenterTargetData(
+class UprightTargetData(
     id: String = "NA",
     sn: Int = 0,
     valid: Boolean = false,
