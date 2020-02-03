@@ -87,7 +87,7 @@ class Watcher(val camera: Camera<TargetData>) : TargetDataListener {
             ansi().let { if (dropped == 0) it.a(INTENSITY_FAINT) else it.fgBrightRed() }
                 .a(dropped.toString().padStart(4))
                 .reset()
-        println("$id  $sn   $valid $fps  $d ${td as MinAreaRectTargetData}")
+        println("$id  $sn   $valid $fps  $d")
     }
 }
 
