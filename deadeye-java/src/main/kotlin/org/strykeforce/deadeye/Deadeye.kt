@@ -42,7 +42,7 @@ object Deadeye {
 
     init {
         thread(isDaemon = true) {
-            val socket = DatagramSocket(5800)
+            val socket = DatagramSocket(config.port)
             val bytes = ByteArray(512)
             val buffer = Buffer()
             val packet = DatagramPacket(bytes, bytes.size)
