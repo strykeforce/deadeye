@@ -113,7 +113,7 @@ std::string first_rfc1918() {
 }
 
 std::string stream_url(int inum) {
-  return fmt::format("http://{}:{}/stream.mjpg", first_rfc1918(), 5800 + inum);
+  return fmt::format("http://{}:{}/stream.mjpg", first_rfc1918(), 5805 + inum);
 }
 
 }  // namespace

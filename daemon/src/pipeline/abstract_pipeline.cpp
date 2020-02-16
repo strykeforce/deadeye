@@ -93,7 +93,7 @@ void AbstractPipeline::Run() {
   // reenable the stream to reset.
   cvsource_ = cs::CvSource("cvsource", cs::VideoMode::kMJPEG, kStreamSize.width,
                            kStreamSize.height, 30);
-  cs::MjpegServer mjpegServer{"cvhttpserver", 5800 + inum_};
+  cs::MjpegServer mjpegServer{"cvhttpserver", 5805 + inum_};
   mjpegServer.SetSource(cvsource_);
   spdlog::info("{} streaming on port {}", *this, mjpegServer.GetPort());
 
