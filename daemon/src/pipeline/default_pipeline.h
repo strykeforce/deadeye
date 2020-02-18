@@ -6,7 +6,8 @@ class DefaultPipeline : public AbstractPipeline {
  public:
   DefaultPipeline(int inum);
 
-  void FilterContours(Contours const &src, Contours &dest) final;
+  void FilterContours(FilterConfig const &filter, Contours const &src,
+                      Contours &dest) final;
   virtual TargetDataPtr ProcessTarget(Contours const &contours) = 0;
 
  protected:
@@ -18,5 +19,6 @@ class DefaultPipeline : public AbstractPipeline {
   cv::VideoCapture cap_;
   cv::Point center_;
   cv::Point2f center2f_;
+  double frame_area_;
 };
 }  // namespace deadeye

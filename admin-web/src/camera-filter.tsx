@@ -8,28 +8,26 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import { configPipeline } from './api';
-import Level from './level';
 import { Camera } from './models';
 
 interface Props {
   camera: Camera;
 }
 
-const CameraCapture = ({ camera }: Props): JSX.Element => {
+const CameraFilter = ({ camera }: Props): JSX.Element => {
   const classes = useStyles();
-  const capture = camera.capture;
+  const filter = camera.pipeline.filter;
 
   const handleLevelChange = (name: string) => (value: number) => {
-    const newCapture = Object.assign(capture, { [name]: value });
-    console.log(newCapture);
-    // configPipeline(camera.unit, camera.inum, newCapture);
+    // const newFilter = Object.assign(filter, { [name]: value });
+    // console.log(newFilter);
+    // configPipeline(camera.unit, camera.inum, newfilter);
   };
 
   return (
     <Paper className={classes.root}>
       <Typography component="h2" variant="h6" color="inherit" noWrap>
-        Capture Settings
+        Contour Filter Settings
       </Typography>
 
       <TableContainer>
@@ -42,28 +40,22 @@ const CameraCapture = ({ camera }: Props): JSX.Element => {
           </TableHead>
           <TableBody>
             <TableRow>
-              <TableCell>Type</TableCell>
-              <TableCell>{capture.type}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Exposure</TableCell>
-              <TableCell>{capture.exp}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Capture Size</TableCell>
+              <TableCell>Bounding Box Area</TableCell>
               <TableCell>
-                {capture.cw}x{capture.ch}
+                {filter.area[0]} - {filter.area[1]}
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Output Size</TableCell>
+              <TableCell>Fullness</TableCell>
               <TableCell>
-                {capture.ow}x{capture.oh}
+                {filter.fullness[0]} - {filter.fullness[1]}
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Flip Mode</TableCell>
-              <TableCell>{capture.flip}</TableCell>
+              <TableCell>Aspect Ratio</TableCell>
+              <TableCell>
+                {filter.aspect[0]} - {filter.aspect[1]}
+              </TableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -72,7 +64,7 @@ const CameraCapture = ({ camera }: Props): JSX.Element => {
   );
 };
 
-export default CameraCapture;
+export default CameraFilter;
 
 const useStyles = makeStyles(theme => ({
   root: {

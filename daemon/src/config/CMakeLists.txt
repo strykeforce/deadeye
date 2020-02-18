@@ -4,6 +4,7 @@ target_sources(Deadeye_library
   ${CMAKE_CURRENT_LIST_DIR}/capture_config.cpp
   ${CMAKE_CURRENT_LIST_DIR}/link_config.cpp
   ${CMAKE_CURRENT_LIST_DIR}/pipeline_config.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/filter_config.cpp
   ${CMAKE_CURRENT_LIST_DIR}/log_config.cpp
   ${CMAKE_CURRENT_LIST_DIR}/stream_config.cpp
 )

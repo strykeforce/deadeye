@@ -18,8 +18,31 @@ export interface Camera {
   on: boolean;
   error: boolean;
   light: Light;
-  stream: StreamConfig;
+  capture: CaptureConfig;
   pipeline: PipelineConfig;
+  stream: StreamConfig;
+}
+
+export interface CaptureConfig {
+  exp: number;
+  type: string;
+  ch: number;
+  cw: number;
+  oh: number;
+  ow: number;
+  flip: number;
+}
+
+export interface FilterConfig {
+  area: number[];
+  aspect: number[];
+  fullness: number[];
+}
+
+export interface LogConfig {
+  path: string;
+  enabled: boolean;
+  mount: boolean;
 }
 
 export interface PipelineConfig {
@@ -28,6 +51,8 @@ export interface PipelineConfig {
   hue: number[];
   sat: number[];
   val: number[];
+  filter: FilterConfig;
+  log: LogConfig;
 }
 
 export interface Light {

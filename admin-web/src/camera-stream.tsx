@@ -65,6 +65,7 @@ export default CameraStream;
 const useStyles = makeStyles(theme => ({
   root: {
     padding: theme.spacing(2),
+    maxWidth: 365,
   },
   formControl: {
     margin: theme.spacing(3),
