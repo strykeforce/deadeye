@@ -23,4 +23,9 @@ void deadeye::from_json(const json& j, FilterConfig& fc) {
   j.at(FilterConfig::kAreaKey).get_to(fc.area);
   j.at(FilterConfig::kFullnessKey).get_to(fc.fullness);
   j.at(FilterConfig::kAspectKey).get_to(fc.aspect);
+  fc.area_enabled = fc.area[0] != kAreaMin || fc.area[1] != kAreaMax;
+  fc.fullness_enabled =
+      fc.fullness[0] != kFullnessMin || fc.fullness[1] != kFullnessMax;
+  fc.aspect_enabled = fc.aspect[0] != kAspectMin || fc.aspect[1] != kAspectMax;
+  fc.enabled = fc.area_enabled || fc.fullness_enabled || fc.aspect_enabled;
 }

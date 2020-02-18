@@ -22,16 +22,16 @@ const CameraPanel = (props: Props): JSX.Element => {
       <div style={{ gridColumn: '1/2', gridRow: '1/2' }}>
         <CameraControl camera={camera} />
       </div>
-      <div style={{ gridColumn: '1/2', gridRow: '2/3' }}>
+      <div style={{ gridColumn: '1/2', gridRow: '3/4' }}>
         <CameraCapture camera={camera} />
       </div>
-      <div style={{ gridColumn: '1/2', gridRow: '3/4' }}>
+      <div style={{ gridColumn: '1/2', gridRow: '2/3' }}>
         <CameraPipeline camera={camera} />
       </div>
-      <div style={{ gridColumn: '1/2', gridRow: '4/5' }}>
+      <div style={{ gridColumn: '2/3', gridRow: '3/4' }}>
         <CameraFilter camera={camera} />
       </div>
-      <div style={{ gridColumn: '2/3', gridRow: '1/5' }}>{stream}</div>
+      <div style={{ gridColumn: '2/3', gridRow: '1/3' }}>{stream}</div>
     </div>
   );
 };

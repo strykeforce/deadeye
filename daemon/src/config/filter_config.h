@@ -6,6 +6,15 @@ using json = nlohmann::json;
 
 namespace deadeye {
 
+namespace {
+static constexpr double kAreaMin = 0.0;
+static constexpr double kAreaMax = 1.0;
+static constexpr double kFullnessMin = 0.0;
+static constexpr double kFullnessMax = 1.0;
+static constexpr double kAspectMin = 0.0;
+static constexpr double kAspectMax = 20.0;
+}  // namespace
+
 struct FilterConfig {
   static char const* kAreaKey;
   static char const* kFullnessKey;
@@ -13,9 +22,14 @@ struct FilterConfig {
 
   using filter_t = std::array<double, 2>;
 
-  filter_t area{0.0, 100.0};
-  filter_t fullness{0.0, 100.0};
-  filter_t aspect{0.0, 100.0};
+  filter_t area{kAreaMin, kAreaMax};
+  filter_t fullness{kFullnessMin, kFullnessMax};
+  filter_t aspect{kAspectMin, kAspectMax};
+
+  bool enabled = false;
+  bool area_enabled = false;
+  bool fullness_enabled = false;
+  bool aspect_enabled = false;
 
   /**
    * Default constructor.

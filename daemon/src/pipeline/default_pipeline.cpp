@@ -21,7 +21,7 @@ bool DefaultPipeline::StartCapture() {
   spdlog::debug("{}: {}", *this, pipeline);
   center_ = cv::Point{cc->output_width / 2, cc->output_height / 2};
   center2f_ = static_cast<cv::Point2f>(center_);
-  int rows = cc->output_height;
+  frame_area_ = cc->output_height * cc->output_width;
   return cap_.open(pipeline, cv::CAP_GSTREAMER);
 }
 
@@ -29,9 +29,53 @@ void DefaultPipeline::StopCapture() { cap_.release(); }
 
 bool DefaultPipeline::GrabFrame(cv::Mat &frame) { return cap_.read(frame); }
 
-// This filter returns the contour with the largest area.
-void DefaultPipeline::FilterContours(Contours const &src, Contours &dest) {
+// Filter with FilterConfig or max area contour
+void DefaultPipeline::FilterContours(FilterConfig const &filter,
+                                     Contours const &src, Contours &dest) {
   dest.clear();
+
+  if (filter.enabled) {
+    for (auto const &contour : src) {
+      // set these to true if filter is skipped, false otherwise
+      bool area_ok = !filter.area_enabled;
+      bool fullness_ok = !filter.fullness_enabled;
+      bool aspect_ok = !filter.aspect_enabled;
+
+      double area = cv::contourArea(contour);
+      cv::Rect bb = cv::boundingRect(contour);
+
+      if (filter.area_enabled) {
+        double ratio = bb.area() / frame_area_;
+        area_ok = ratio >= filter.area[0] && ratio <= filter.area[1];
+        // spdlog::debug("area = {}", ratio);
+      }
+
+      if (filter.fullness_enabled) {
+        std::vector<cv::Point> hull;
+        cv::convexHull(contour, hull);
+        double hull_area = cv::contourArea(hull);
+        double fullness = area / hull_area;
+        fullness_ok =
+            fullness >= filter.fullness[0] && fullness <= filter.fullness[1];
+        // spdlog::debug("fullness = {}", fullness);
+      }
+
+      if (filter.aspect_enabled) {
+        double aspect =
+            static_cast<double>(bb.width) / static_cast<double>(bb.height);
+        aspect_ok = aspect >= filter.aspect[0] && aspect <= filter.aspect[1];
+        // spdlog::debug("aspect = {}", aspect);
+      }
+
+      if (area_ok && fullness_ok && aspect_ok) {
+        dest.push_back(contour);
+      }
+    }
+
+    return;
+  }
+
+  // if no filters configured, return max area contour
   auto max_area_iter = std::max_element(
       src.begin(), src.end(),
       [](std::vector<cv::Point> const &a, std::vector<cv::Point> const &b) {
@@ -40,18 +84,6 @@ void DefaultPipeline::FilterContours(Contours const &src, Contours &dest) {
   if (max_area_iter != src.end()) dest.push_back(*max_area_iter);
 
   // throw PipelineException("Test Exception");
-}
-
-// Target is center of contour bounding box.
-TargetDataPtr DefaultPipeline::ProcessTarget(Contours const &contours) {
-  if (contours.size() == 0)
-    return std::make_unique<UprightTargetData>(
-        id_, 0, false, cv::Rect{0, 0, 0, 0}, cv::Point{0, 0});
-  auto contour = contours[0];
-  cv::Rect bb = cv::boundingRect(contour);
-  // spdlog::debug("ul = {},{} br = {},{} cen = {},{}", bb.tl().x, bb.tl().y,
-  //               bb.br().x, bb.br().y, center_.x, center_.y);
-  return std::make_unique<UprightTargetData>(id_, 0, true, bb, center_);
 }
 
 std::string DefaultPipeline::ToString() const {

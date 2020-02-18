@@ -99,6 +99,7 @@ void AbstractPipeline::Run() {
 
   Link link{inum_};
   cv::Scalar hsv_low, hsv_high;
+  FilterConfig filter;
   cv::TickMeter tm;
   PipelineLoggerQueue log_queue;
   int log_counter = fps_;
@@ -141,6 +142,7 @@ void AbstractPipeline::Run() {
       safe::ReadAccess<LockablePipelineConfig> pc{pipeline_config_};
       hsv_low = pc->HsvLow();
       hsv_high = pc->HsvHigh();
+      filter = pc->filter;
       log_enabled_ = pc->log.enabled;
       pipeline_config_ready_ = false;
       spdlog::debug("{}:{}", *this, *pc);
@@ -149,7 +151,7 @@ void AbstractPipeline::Run() {
     DE_IN_RANGE(frame_, hsv_low, hsv_high, hsv_threshold_output_);
     DE_FIND_CONTOURS(hsv_threshold_output_, find_contours_output_);
 
-    FilterContours(find_contours_output_, filter_contours_output_);
+    FilterContours(filter, find_contours_output_, filter_contours_output_);
     target_data_ = ProcessTarget(filter_contours_output_);
     target_data_->serial = i;
     link.Send(target_data_.get());

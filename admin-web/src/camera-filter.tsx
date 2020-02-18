@@ -40,15 +40,15 @@ const CameraFilter = ({ camera }: Props): JSX.Element => {
           </TableHead>
           <TableBody>
             <TableRow>
-              <TableCell>Area of Frame</TableCell>
+              <TableCell>Bounding Box Area</TableCell>
               <TableCell>
-                {filter.area[0]}% - {filter.area[1]}%
+                {filter.area[0]} - {filter.area[1]}
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>Fullness</TableCell>
               <TableCell>
-                {filter.fullness[0]}% - {filter.fullness[1]}%
+                {filter.fullness[0]} - {filter.fullness[1]}
               </TableCell>
             </TableRow>
             <TableRow>

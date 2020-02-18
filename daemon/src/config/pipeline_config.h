@@ -12,6 +12,10 @@
 
 using json = nlohmann::json;
 
+namespace {
+std::string onoff(bool state) { return state ? "(on)" : "(off)"; }
+}  // namespace
+
 namespace deadeye {
 
 struct PipelineConfig {
@@ -54,12 +58,15 @@ struct PipelineConfig {
   friend OStream& operator<<(OStream& os, PipelineConfig const& pc) {
     std::string output = fmt::format(
         "PipelineConfig<sn={}, hue=[{},{}], sat=[{},{}], val=[{},{}], "
-        "filter=<area=[{},{}], fullness=[{},{}], aspect=[{},{}]>, log=<{}, "
+        "filter=<area=[{},{}] {}, fullness=[{},{}] {}, aspect=[{},{}] "
+        "{}>, log=<{}, "
         "{}>>",
         pc.sn, pc.hue[0], pc.hue[1], pc.sat[0], pc.sat[1], pc.val[0], pc.val[0],
-        pc.filter.area[0], pc.filter.area[1], pc.filter.fullness[0],
-        pc.filter.fullness[1], pc.filter.aspect[0], pc.filter.aspect[1],
-        pc.log.path, pc.log.enabled);
+        pc.filter.area[0], pc.filter.area[1], onoff(pc.filter.area_enabled),
+        pc.filter.fullness[0], pc.filter.fullness[1],
+        onoff(pc.filter.fullness_enabled), pc.filter.aspect[0],
+        pc.filter.aspect[1], onoff(pc.filter.aspect_enabled), pc.log.path,
+        pc.log.enabled);
     os << output;
     return os;
   }
