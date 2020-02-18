@@ -3,6 +3,7 @@ add_executable(Deadeye_tests
   json.cpp
   link_config_test.cpp
   pipeline_config_test.cpp
+  filter_config_test.cpp
   stream_config_test.cpp
   gstreamer_config_test.cpp
   target_data_test.cpp
