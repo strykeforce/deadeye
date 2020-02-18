@@ -18,8 +18,19 @@ export interface Camera {
   on: boolean;
   error: boolean;
   light: Light;
-  stream: StreamConfig;
+  capture: CaptureConfig;
   pipeline: PipelineConfig;
+  stream: StreamConfig;
+}
+
+export interface CaptureConfig {
+  exp: number;
+  type: string;
+  ch: number;
+  cw: number;
+  oh: number;
+  ow: number;
+  flip: number;
 }
 
 export interface PipelineConfig {

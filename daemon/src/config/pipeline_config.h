@@ -19,7 +19,6 @@ struct PipelineConfig {
   static char const* kHsvHueKey;
   static char const* kHsvSatKey;
   static char const* kHsvValKey;
-  static char const* kExposureKey;
   static char const* kFilterKey;
   static char const* kLogKey;
 
@@ -29,7 +28,6 @@ struct PipelineConfig {
   hsv_t hue{-1, -1};
   hsv_t sat{-1, -1};
   hsv_t val{-1, -1};
-  double exposure{-1.0};  // FIXME: unused, remove
   FilterConfig filter;
   LogConfig log;
 
@@ -41,8 +39,8 @@ struct PipelineConfig {
   /**
    * Constructor from member values.
    */
-  PipelineConfig(int sn, hsv_t hue, hsv_t sat, hsv_t val, double exposure,
-                 FilterConfig filter, LogConfig log);
+  PipelineConfig(int sn, hsv_t hue, hsv_t sat, hsv_t val, FilterConfig filter,
+                 LogConfig log);
 
   /**
    * Constructor from NetworkTables.
@@ -72,8 +70,7 @@ void from_json(const json& j, PipelineConfig& p);
 
 inline bool operator==(PipelineConfig const& lhs, PipelineConfig const& rhs) {
   return lhs.sn == rhs.sn && lhs.hue == rhs.hue && lhs.sat == rhs.sat &&
-         lhs.val == rhs.val && lhs.exposure == rhs.exposure &&
-         lhs.filter == rhs.filter && lhs.log == rhs.log;
+         lhs.val == rhs.val && lhs.filter == rhs.filter && lhs.log == rhs.log;
 }
 
 inline bool operator!=(PipelineConfig const& lhs, PipelineConfig const& rhs) {

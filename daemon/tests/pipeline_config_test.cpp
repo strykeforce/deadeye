@@ -13,23 +13,23 @@ TEST_CASE("PipelineConfig HSV bound as array", "[pipeline]") {
 }
 
 TEST_CASE("PipelineConfig equality", "[pipeline]") {
-  PipelineConfig pc1{0,   {1, 2},         {25, 24},   {250, 251},
-                     0.5, FilterConfig(), LogConfig()};
-  PipelineConfig pc2{0,   {1, 2},         {25, 24},   {250, 251},
-                     0.5, FilterConfig(), LogConfig()};
+  PipelineConfig pc1{0,          {1, 2},         {25, 24},
+                     {250, 251}, FilterConfig(), LogConfig()};
+  PipelineConfig pc2{0,          {1, 2},         {25, 24},
+                     {250, 251}, FilterConfig(), LogConfig()};
   REQUIRE(pc1 == pc2);
 
-  PipelineConfig pc3{0,   {0, 1},         {253, 255}, {23, 45},
-                     0.5, FilterConfig(), LogConfig()};
+  PipelineConfig pc3{0,        {0, 1},         {253, 255},
+                     {23, 45}, FilterConfig(), LogConfig()};
   REQUIRE(pc1 != pc3);
 }
 
 TEST_CASE("PipelineConfig to JSON", "[pipeline]") {
-  PipelineConfig pc{2767, {1, 2},         {25, 24},   {250, 251},
-                    0.5,  FilterConfig(), LogConfig()};
+  PipelineConfig pc{2767,       {1, 2},         {25, 24},
+                    {250, 251}, FilterConfig(), LogConfig()};
   json j = pc;
   json expected = R"(
-{"exposure":0.5,"hue":[1,2],"sat":[25,24],"sn":2767,"val":[250,251],
+{"hue":[1,2],"sat":[25,24],"sn":2767,"val":[250,251],
 "log":{"enabled":false,"path":"/var/opt/deadeye","mount":true},
 "filter":{"area":[0.0,100.0],"aspect":[0.0,100.0],"fullness":[0.0,100.0]}}
 )"_json;
@@ -38,8 +38,8 @@ TEST_CASE("PipelineConfig to JSON", "[pipeline]") {
 }
 
 TEST_CASE("PipelineConfig New", "[pipeline]") {
-  PipelineConfig expected{2767, {1, 2},         {25, 24},   {250, 251},
-                          0.5,  FilterConfig(), LogConfig()};
+  PipelineConfig expected{2767,       {1, 2},         {25, 24},
+                          {250, 251}, FilterConfig(), LogConfig()};
   json j = expected;
   auto val = nt::Value::MakeString(j.dump());
   auto pc = PipelineConfig{val};
@@ -50,7 +50,6 @@ TEST_CASE("PipelineConfig from JSON", "[pipeline]") {
   auto expected = R"(
 {
   "sn": 2767,
-  "exposure": 0.75,
   "hue": [2, 4],
   "sat": [4, 6],
   "val": [8, 10],
@@ -62,7 +61,6 @@ TEST_CASE("PipelineConfig from JSON", "[pipeline]") {
   PipelineConfig pc = expected;
 
   REQUIRE(pc.sn == 2767);
-  REQUIRE(pc.exposure == 0.75);
   REQUIRE(pc.hue[0] == 2);
   REQUIRE(pc.hue[1] == 4);
   REQUIRE(pc.sat[0] == 4);

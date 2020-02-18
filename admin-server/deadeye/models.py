@@ -43,8 +43,9 @@ class Camera:
         control_table = self.table()
         self.on = control_table.getBoolean("On", False)
         self.error = control_table.getBoolean("Error", False)
-        self.stream = json.loads(control_table.getString("Stream", ""))
+        self.capture = json.loads(control_table.getString("Capture", ""))
         self.pipeline = json.loads(control_table.getString("Pipeline", ""))
+        self.stream = json.loads(control_table.getString("Stream", ""))
         control_table.addEntryListenerEx(
             self.entry_listener, NetworkTablesInstance.NotifyFlags.UPDATE
         )
@@ -90,6 +91,8 @@ class Camera:
             self.stream = json.loads(value)
         elif key == "Pipeline":
             self.pipeline = json.loads(value)
+        elif key == "Capture":
+            self.capture = json.loads(value)
         else:
             current_app.logger.error("unrecognized key: %s", key)
 
