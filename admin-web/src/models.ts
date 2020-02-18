@@ -33,12 +33,26 @@ export interface CaptureConfig {
   flip: number;
 }
 
+export interface FilterConfig {
+  area: number[];
+  aspect: number[];
+  fullness: number[];
+}
+
+export interface LogConfig {
+  path: string;
+  enabled: boolean;
+  mount: boolean;
+}
+
 export interface PipelineConfig {
   sn: number;
   exposure: number;
   hue: number[];
   sat: number[];
   val: number[];
+  filter: FilterConfig;
+  log: LogConfig;
 }
 
 export interface Light {
