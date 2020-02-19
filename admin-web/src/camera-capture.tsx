@@ -46,6 +46,10 @@ const CameraCapture = ({ camera }: Props): JSX.Element => {
               <TableCell>{capture.exp}</TableCell>
             </TableRow>
             <TableRow>
+              <TableCell>FPS</TableCell>
+              <TableCell>{capture.fps}</TableCell>
+            </TableRow>
+            <TableRow>
               <TableCell>Capture Size</TableCell>
               <TableCell>
                 {capture.cw}x{capture.ch}

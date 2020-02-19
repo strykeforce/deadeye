@@ -31,6 +31,7 @@ export interface CaptureConfig {
   oh: number;
   ow: number;
   flip: number;
+  fps: number;
 }
 
 export interface FilterConfig {
