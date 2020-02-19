@@ -21,9 +21,6 @@ const CameraPipeline = ({ camera }: Props): JSX.Element => {
 
   return (
     <Paper className={classes.root}>
-      <Typography component="h2" variant="h6" color="inherit" noWrap>
-        Pipeline Settings
-      </Typography>
       <Range
         key={`${camera.id}-hue`}
         label="Hue"

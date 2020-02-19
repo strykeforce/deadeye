@@ -28,12 +28,8 @@ const CameraCapture = ({ camera }: Props): JSX.Element => {
 
   return (
     <Paper className={classes.root}>
-      <Typography component="h2" variant="h6" color="inherit" noWrap>
-        Capture Settings
-      </Typography>
-
       <TableContainer>
-        <Table>
+        <Table size="small">
           <TableHead>
             <TableRow>
               <TableCell>Parameter</TableCell>
