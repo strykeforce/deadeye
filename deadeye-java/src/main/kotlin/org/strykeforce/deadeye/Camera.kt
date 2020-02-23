@@ -27,7 +27,7 @@ interface Camera<T : TargetData> {
 
     @JsonClass(generateAdapter = true)
     data class Config(
-        @Json(name = "sn") val serial: Int, val exposure: Double,
+        @Json(name = "sn") val serial: Int,
         val hue: List<Int>, @Json(name = "sat") val saturation: List<Int>, @Json(name = "val") val value: List<Int>
     )
 
