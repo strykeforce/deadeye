@@ -49,9 +49,9 @@ internal class CameraImpl<T : TargetData>(override val id: String) : Camera<T> {
             Camera_CaptureJsonAdapter(moshi).fromJson(this) ?: throw JsonDataException("Capture: $this")
         }
 
-    override val config: Camera.Config
+    override val pipeline: Camera.Pipeline
         get() = with(table.getEntry(CONFIG).getString("{}")) {
-            Camera_ConfigJsonAdapter(moshi).fromJson(this) ?: throw JsonDataException("Config: $this")
+            Camera_PipelineJsonAdapter(moshi).fromJson(this) ?: throw JsonDataException("Config: $this")
         }
 
     override val stream: Camera.Stream
