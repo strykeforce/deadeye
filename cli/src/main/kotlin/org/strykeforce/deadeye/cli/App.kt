@@ -64,7 +64,7 @@ fun <T : TargetData> Camera<T>.toJson(writer: JsonWriter) {
     writer.name("capture")
     Camera_CaptureJsonAdapter(moshi).toJson(writer, this.capture)
     writer.name("pipeline")
-    Camera_ConfigJsonAdapter(moshi).toJson(writer, this.config)
+    Camera_PipelineJsonAdapter(moshi).toJson(writer, this.pipeline)
     writer.name("stream")
     Camera_StreamJsonAdapter(moshi).toJson(writer, this.stream)
     writer.endObject()

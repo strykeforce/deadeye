@@ -11,7 +11,7 @@ interface Camera<T : TargetData> {
     var lightEnabled: Boolean
     val error: Boolean
     val capture: Capture
-    val config: Config
+    val pipeline: Pipeline
     val stream: Stream
     var targetDataListener: TargetDataListener?
     var jsonAdapter: JsonAdapter<T>
@@ -26,9 +26,15 @@ interface Camera<T : TargetData> {
     )
 
     @JsonClass(generateAdapter = true)
-    data class Config(
+    data class Filter(
+        val area: List<Double>, val fullness: List<Double>, val aspect: List<Double>
+    )
+
+    @JsonClass(generateAdapter = true)
+    data class Pipeline(
         @Json(name = "sn") val serial: Int,
-        val hue: List<Int>, @Json(name = "sat") val saturation: List<Int>, @Json(name = "val") val value: List<Int>
+        val hue: List<Int>, @Json(name = "sat") val saturation: List<Int>, @Json(name = "val") val value: List<Int>,
+        val filter: Filter
     )
 
     @JsonClass(generateAdapter = true)
