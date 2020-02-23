@@ -1,6 +1,11 @@
 ---
 deadeye:
   hosts:
+    deadeye-a:
+      ansible_host: deadeye-a.local
+      ansible_user: deadeye
+      deadeye_unit: A
+      camera_0_pipeline: deadeye::MinAreaRectPipeline
     deadeye-b:
       ansible_host: deadeye-b.local
       ansible_user: jeff
