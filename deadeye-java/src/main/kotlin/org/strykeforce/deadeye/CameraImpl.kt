@@ -23,15 +23,23 @@ internal class CameraImpl<T : TargetData>(override val id: String) : Camera<T> {
 
     private val table: NetworkTable by lazy { NetworkTableInstance.getDefault().getTable("/Deadeye/${id[0]}/${id[1]}") }
 
+    private val lightTable: NetworkTable by lazy { NetworkTableInstance.getDefault().getTable("/Deadeye/${id[0]}/${id[1]}/Light") }
+
     private val moshi: Moshi by lazy { Moshi.Builder().build() }
 
     override lateinit var jsonAdapter: JsonAdapter<T>
 
     override var enabled: Boolean
+        get() = table.getEntry(ON).getBoolean(false)
         set(value) {
             table.getEntry(if (value) ON else OFF).apply { setBoolean(true) }
         }
-        get() = table.getEntry(ON).getBoolean(false)
+
+    override var lightEnabled: Boolean
+        get() = lightTable.getEntry(ON).getBoolean(false)
+        set(value) {
+            lightTable.getEntry(if (value) ON else OFF).apply { setBoolean(true) }
+        }
 
     override val error: Boolean
         get() = table.getEntry(ERROR).getBoolean(false)

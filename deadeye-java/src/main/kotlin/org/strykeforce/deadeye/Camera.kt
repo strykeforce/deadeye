@@ -8,6 +8,7 @@ import okio.Buffer
 interface Camera<T : TargetData> {
     val id: String
     var enabled: Boolean
+    var lightEnabled: Boolean
     val error: Boolean
     val capture: Capture
     val config: Config
