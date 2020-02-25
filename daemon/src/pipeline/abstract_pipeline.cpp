@@ -103,6 +103,7 @@ void AbstractPipeline::Run() {
   cv::TickMeter tm;
   PipelineLoggerQueue log_queue;
   int log_counter = fps_;
+  bool is_yuv;
 
   // Start frame logging thread
   CaptureConfig capture_config;
@@ -112,6 +113,7 @@ void AbstractPipeline::Run() {
     pipeline_config = *pc;
     safe::ReadAccess<LockableCaptureConfig> cc{capture_config_};
     capture_config = *cc;
+    is_yuv = capture_config.type == CaptureConfig::Type::jetson;
   }
   auto lfuture = std::async(
       std::launch::async,
@@ -147,6 +149,8 @@ void AbstractPipeline::Run() {
       pipeline_config_ready_ = false;
       spdlog::debug("{}:{}", *this, *pc);
     }
+
+    if (is_yuv) cv::cvtColor(frame_, frame_, cv::COLOR_YUV2BGR_I420);
 
     DE_IN_RANGE(frame_, hsv_low, hsv_high, hsv_threshold_output_);
     DE_FIND_CONTOURS(hsv_threshold_output_, find_contours_output_);
