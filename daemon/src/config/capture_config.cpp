@@ -55,12 +55,12 @@ std::string CaptureConfig::Pipeline() const {
 
     case Type::jetson: {
       std::string jetson{
-          R"(nvarguscamerasrc aelock={} awblock={} wbmode={})"
+          R"(nvarguscamerasrc aelock={} awblock={} wbmode={} maxperf=1)"
           R"( ispdigitalgainrange="{}" gainrange="{}" exposuretimerange="{} {}" !)"
           R"( video/x-raw(memory:NVMM), width=(int){}, height=(int){},)"
           R"( format=(string)NV12, framerate=(fraction){}/1 ! nvvidconv)"
-          R"( flip-method={} ! video/x-raw, width=(int){}, height=(int){},)"
-          R"( format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink)"};
+          R"( flip-method={} ! video/x-raw, format=I420, width=(int){}, height=(int){})"
+          R"( ! appsink)"};
 
       int exp =
           static_cast<int>(exposure * (kExposureRange[1] - kExposureRange[0]));
