@@ -15,7 +15,7 @@ using namespace deadeye;
 using json = nlohmann::json;
 
 namespace {
-static const cv::Size kFrameSize{320, 240};
+static const cv::Size kFrameSize{640, 360};
 }
 
 PipelineLogEntry::PipelineLogEntry(cv::Mat const frame,
