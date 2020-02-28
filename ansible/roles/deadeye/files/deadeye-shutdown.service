@@ -1,6 +1,6 @@
 [Unit]
 Description=Deadeye System Shutdown Daemon
-SuccessAction=poweroff
+SuccessAction=poweroff-force
 
 [Service]
 ExecStart=/opt/deadeye/bin/shutdownd

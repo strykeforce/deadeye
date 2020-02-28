@@ -1,6 +1,7 @@
 [Unit]
 Description=Deadeye Admin Server
-Requires=network-online.target
+Wants=deadeye-daemon.service
+After=deadeye-daemon.service
 
 [Service]
 Environment=DEADEYE_NT_SERVER=10.27.67.2
