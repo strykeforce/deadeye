@@ -18,6 +18,8 @@ namespace {
 static const cv::Size kFrameSize{640, 360};
 }
 
+int PipelineLogger::enable_count_{0};
+
 PipelineLogEntry::PipelineLogEntry(cv::Mat const frame,
                                    Contours filtered_contours,
                                    TargetDataPtr target)
@@ -34,12 +36,16 @@ PipelineLogger::PipelineLogger(std::string id, CaptureConfig capture_config,
       capture_(capture_config),
       hsv_low_(pipeline_config.HsvLow()),
       hsv_high_(pipeline_config.HsvHigh()),
-      template_(fmt::format("{}/{{}}/{{}}.jpg", pipeline_config.log.path)),
+      filter_(pipeline_config.filter),
+
       queue_(queue),
       cancel_(cancel) {
   // disable logging if filesystem checks fail
   enabled_ = enabled_ && CheckMount(pipeline_config.log);
   enabled_ = enabled_ && CheckDir(pipeline_config.log);
+  PipelineLogger::enable_count_++;
+  template_ = fmt::format("{}/{{}}/{}-{{}}.jpg", pipeline_config.log.path,
+                          PipelineLogger::enable_count_);
 }
 
 void PipelineLogger::operator()() {
@@ -105,7 +111,7 @@ void PipelineLogger::operator()() {
       int thickness = 1;
       int baseline = 0;
       // cv::getTextSize(text, font, font_scale, thickness, &baseline);
-      baseline = info.rows / 3;
+      baseline = info.rows / 4;
 
       cv::Point text_org{2, baseline - 5};
 
@@ -115,9 +121,12 @@ void PipelineLogger::operator()() {
 
       text = fmt::format(
           "PIPELINE: hue=[{:.0f}, {:.0f}] sat=[{:.0f}, {:.0f}] "
-          "val=[{:.0f}, {:.0f}] contours={}/{}",
+          "val=[{:.0f}, {:.0f}] area=[{:.2f}, {:.2f}], fullness=[{:.2f}, "
+          "{:.2f}], aspect=[{:.2f}, {:.2f}], contours={}/{}",
           hsv_low_[0], hsv_high_[0], hsv_low_[1], hsv_high_[1], hsv_low_[2],
-          hsv_high_[2], entry.filtered_contours.size(), contours.size());
+          hsv_high_[2], filter_.area[0], filter_.area[1], filter_.fullness[0],
+          filter_.fullness[1], filter_.aspect[0], filter_.aspect[1],
+          entry.filtered_contours.size(), contours.size());
 
       cv::putText(info, text, text_org, font, font_scale, cv::Scalar::all(0),
                   thickness, cv::LINE_8);

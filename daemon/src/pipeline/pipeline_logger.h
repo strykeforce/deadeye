@@ -39,14 +39,17 @@ class PipelineLogger {
 
   std::string id_;
 
+  static int enable_count_;
   bool enabled_;
   CaptureConfig capture_;
   cv::Scalar hsv_low_;
   cv::Scalar hsv_high_;
+  FilterConfig filter_;
   std::string template_;
   PipelineLoggerQueue& queue_;
   std::atomic<bool>& cancel_;
-  std::chrono::high_resolution_clock::time_point begin_{std::chrono::high_resolution_clock::now()};
+  std::chrono::high_resolution_clock::time_point begin_{
+      std::chrono::high_resolution_clock::now()};
 };
 
 }  // namespace deadeye
