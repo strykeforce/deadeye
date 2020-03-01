@@ -17,7 +17,7 @@ TEST_CASE("CaptureConfig equality", "[gstreamer]") {
 TEST_CASE("Pipeline", "[gstreamer]") {
   CaptureConfig cc{Type::jetson, 1280, 720, 320, 180, 120, 0, 0.5};
   std::string expected =
-      R"(nvarguscamerasrc aelock=true awblock=false wbmode=0 ispdigitalgainrange="1 1" gainrange="1 1" exposuretimerange="4160166 4160166" ! video/x-raw(memory:NVMM), width=(int)1280, height=(int)720, format=(string)NV12, framerate=(fraction)120/1 ! nvvidconv flip-method=0 ! video/x-raw, width=(int)320, height=(int)180, format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink)";
+      R"(nvarguscamerasrc aelock=true awblock=false wbmode=0 maxperf=1 ispdigitalgainrange="1 1" gainrange="1 1" exposuretimerange="4160166 4160166" ! video/x-raw(memory:NVMM), width=(int)1280, height=(int)720, format=(string)NV12, framerate=(fraction)120/1 ! nvvidconv flip-method=0 ! video/x-raw, format=I420, width=(int)320, height=(int)180 ! appsink)";
   std::string actual = cc.Pipeline();
   // std::cerr << "E:" << expected << std::endl;
   // std::cerr << "A:" << actual << std::endl;
