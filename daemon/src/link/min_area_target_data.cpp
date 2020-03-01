@@ -30,6 +30,8 @@ MinAreaTargetData::MinAreaTargetData(std::string id, int sn, bool valid,
 void MinAreaTargetData::DrawMarkers(cv::Mat& preview) {
   cv::Point center{preview.cols / 2, preview.rows / 2};
   cv::Point2f target = static_cast<cv::Point2f>(center) + offset;
+  cv::drawMarker(preview, center, cv::Scalar::all(255),
+                 cv::MARKER_TILTED_CROSS);
   cv::drawMarker(preview, target, cv::Scalar::all(255));
   for (int i = 0; i < 4; i++)
     cv::circle(preview, corners[i], 3, cv::Scalar(0, 0, 255), cv::FILLED,
