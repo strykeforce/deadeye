@@ -32,7 +32,8 @@ PipelineLogger::PipelineLogger(std::string id, CaptureConfig capture_config,
                                PipelineLoggerQueue& queue,
                                std::atomic<bool>& cancel)
     : id_(id),
-      enabled_(pipeline_config.log.enabled),
+      enabled_(pipeline_config.log.fps > 0 && CheckMount(pipeline_config.log) &&
+               CheckDir(pipeline_config.log)),
       capture_(capture_config),
       hsv_low_(pipeline_config.HsvLow()),
       hsv_high_(pipeline_config.HsvHigh()),
@@ -41,8 +42,6 @@ PipelineLogger::PipelineLogger(std::string id, CaptureConfig capture_config,
       queue_(queue),
       cancel_(cancel) {
   // disable logging if filesystem checks fail
-  enabled_ = enabled_ && CheckMount(pipeline_config.log);
-  enabled_ = enabled_ && CheckDir(pipeline_config.log);
   PipelineLogger::enable_count_++;
   template_ = fmt::format("{}/{{}}/{}-{{}}.jpg", pipeline_config.log.path,
                           PipelineLogger::enable_count_);

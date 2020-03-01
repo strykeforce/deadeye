@@ -30,8 +30,8 @@ TEST_CASE("PipelineConfig to JSON", "[pipeline]") {
   json j = pc;
   json expected = R"(
 {"hue":[1,2],"sat":[25,24],"sn":2767,"val":[250,251],
-"log":{"enabled":false,"path":"/var/opt/deadeye","mount":true},
-"filter":{"area":[0.0,100.0],"aspect":[0.0,100.0],"fullness":[0.0,100.0]}}
+"log":{"fps":0,"path":"/var/opt/deadeye","mount":true},
+"filter":{"area":[0.0,1.0],"aspect":[0.0,20.0],"fullness":[0.0,1.0]}}
 )"_json;
 
   REQUIRE(j == expected);
@@ -53,7 +53,7 @@ TEST_CASE("PipelineConfig from JSON", "[pipeline]") {
   "hue": [2, 4],
   "sat": [4, 6],
   "val": [8, 10],
-  "log": {"enabled":true, "path":"/foo"},
+  "log": {"fps":1, "path":"/foo"},
   "filter": {"area":[0.0,1.0], "aspect":[2.0,3.0], "fullness":[4.0,5.0]}
   }
 )"_json;
@@ -68,12 +68,12 @@ TEST_CASE("PipelineConfig from JSON", "[pipeline]") {
   REQUIRE(pc.val[0] == 8);
   REQUIRE(pc.val[1] == 10);
   REQUIRE(pc.filter == FilterConfig({0.0, 1.0}, {4.0, 5.0}, {2.0, 3.0}));
-  REQUIRE(pc.log == LogConfig("/foo", true, true));
+  REQUIRE(pc.log == LogConfig("/foo", 1, true));
 }
 
 TEST_CASE("LogConfig has sane defaults", "[pipeline]") {
   auto lc = LogConfig();
   REQUIRE(lc.path == LogConfig::kDefaultPath);
-  REQUIRE_FALSE(lc.enabled);
+  REQUIRE(lc.fps == 0);
   REQUIRE(lc.mount);
 }
