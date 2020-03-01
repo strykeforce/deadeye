@@ -48,7 +48,6 @@ class AbstractPipeline : public Pipeline {
   LockablePipelineConfig pipeline_config_;
   std::atomic<bool> pipeline_config_ready_{false};
   std::string pipeline_type_{"unknown"};
-  int fps_;
 
  private:
   void StreamFrame();
@@ -68,7 +67,9 @@ class AbstractPipeline : public Pipeline {
   StreamConfig::Contour contour_;
   cs::CvSource cvsource_;
   TargetDataPtr target_data_;
+  int fps_;
   bool log_enabled_;
+  int log_interval_;
   int preview_border_;
   bool preview_resize_;
 };

@@ -102,7 +102,7 @@ void AbstractPipeline::Run() {
   FilterConfig filter;
   cv::TickMeter tm;
   PipelineLoggerQueue log_queue;
-  int log_counter = fps_;
+  int log_counter = 0;
   bool is_yuv;
 
   // Start frame logging thread
@@ -145,7 +145,9 @@ void AbstractPipeline::Run() {
       hsv_low = pc->HsvLow();
       hsv_high = pc->HsvHigh();
       filter = pc->filter;
-      log_enabled_ = pc->log.enabled;
+      log_enabled_ = pc->log.fps > 0;
+      log_interval_ = log_enabled_ ? fps_ / pc->log.fps : 0;
+      log_counter = log_interval_;
       pipeline_config_ready_ = false;
       spdlog::debug("{}:{}", *this, *pc);
     }
@@ -173,7 +175,7 @@ void AbstractPipeline::Run() {
     if (log_enabled_ && --log_counter == 0) {
       log_queue.enqueue(PipelineLogEntry{frame_, filter_contours_output_,
                                          std::move(target_data_)});
-      log_counter = fps_;
+      log_counter = log_interval_;
     }
 
     tm.stop();

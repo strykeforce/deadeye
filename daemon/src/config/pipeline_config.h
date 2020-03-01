@@ -66,7 +66,7 @@ struct PipelineConfig {
         pc.filter.fullness[0], pc.filter.fullness[1],
         onoff(pc.filter.fullness_enabled), pc.filter.aspect[0],
         pc.filter.aspect[1], onoff(pc.filter.aspect_enabled), pc.log.path,
-        pc.log.enabled);
+        pc.log.fps);
     os << output;
     return os;
   }
