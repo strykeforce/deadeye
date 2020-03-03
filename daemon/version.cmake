@@ -1,1 +1,1 @@
-set(Deadeye_VER 20.1.1)
+set(Deadeye_VER 20.2.0)
