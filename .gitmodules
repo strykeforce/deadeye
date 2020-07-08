@@ -7,6 +7,3 @@
 [submodule "daemon/dependencies/readerwriterqueue"]
 	path = daemon/dependencies/readerwriterqueue
 	url = https://github.com/cameron314/readerwriterqueue.git
-[submodule "docs/presentations/themes/reveal-hugo"]
-	path = docs/presentations/themes/reveal-hugo
-	url = https://github.com/dzello/reveal-hugo.git
