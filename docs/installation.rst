@@ -2,7 +2,7 @@
 Installation
 ************
 
-This page describes how to prepare a Jetson Nano with Deadeye on it. You may install Deadeye on multiple systems such as another Nano, macOS or Linux -- just be sure to give each a different unit ID (A, B, C, etc.).
+This section describes how to prepare a Jetson Nano for Deadeye deployment. We deploy the base Linux OS, and prepare the system for automated provisioning in the next section (see :ref:`deployment`).
 
 .. contents:: Topics
 
@@ -74,8 +74,10 @@ When you boot the first time, the Jetson Nano Developer Kit will take you throug
 
 #. Select a host name corresponding to the unit ID, for example, unit A is **deadeye-a**.
 
-Network Configuration
-=====================
+#. Reboot the Jetson Nano using ``sudo reboot``.
+
+2767 Configuration
+==================
 
 For team 2767, computer name and IP address are according to the following table:
 
@@ -90,33 +92,28 @@ For team 2767, computer name and IP address are according to the following table
 
 The gateway and DNS server are **10.27.67.1** for all units.
 
-To set a static IP address, log in as user **deadeye** and run ``sudo nmtui`` at the command prompt to enter the network configuration utility. Select to edit **Wired Connection 1** and configure according to the table above. For example, deadeye-c would be configured as below:
+.. important:: Make sure you have rebooted the Jetson Nano after performing initial set-up since its network interface will change after first boot.
 
-.. image:: images/nmtui.png
+To finish configuration, log in as user **deadeye** and run the following command to install the ``curl`` utility:
+
+.. code-block:: shell-session
+
+    $ sudo apt install -y curl
+
+When the ``curl`` utility is successfully installed, run our custom bootstrap script:
+
+.. code-block:: shell-session
+
+    $ curl https://www.strykeforce.org/deadeye/bootstrap.sh | sudo bash
 
 Reboot the Jetson Nano using ``sudo reboot`` and confirm you can log in remotely from your computer via SSH: ``ssh deadeye@10.27.67.12`` (deadeye-c).
 
 Miscellaneous
 =============
 
-Update installed packages:
+Update installed packages, this may take a while depending on the number of out-of-date packages:
 
 .. code-block:: shell-session
 
     $ sudo apt upgrade
 
-
-To use Ansible later we need to allow use of ``sudo`` without password:
-
-.. code-block:: shell-session
-
-    $ sudo visudo
-    $ # then edit the following line to read
-    %sudo   ALL=(ALL:ALL) NOPASSWD:ALL
-
-
-Disable the graphical boot:
-
-.. code-block:: shell-session
-
-    $ sudo systemctl set-default multi-user.target
