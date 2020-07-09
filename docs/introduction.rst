@@ -78,7 +78,7 @@ Shutdown Switch
 The **deadeye-shutdown** daemon checks ``GPIO pin 7`` of the ``J41`` header every second and will initiate a system shutdown if the input is pulled high by the shutdown switch for three consecutive seconds.
 
 .. figure:: images/shutdown-schematic.svg
-   :scale: 200%
+   :scale: 220%
    :align: center
 
    Shutdown Switch Circuit
