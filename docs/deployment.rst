@@ -16,7 +16,7 @@ Ansible is a tool written in Python so we use `Pipenv <https://pipenv.pypa.io/en
 Prerequisites
 =============
 
-#. Make sure you've go Python and pip and both are available from your command line. Help can be found `here <https://pipenv.pypa.io/en/latest/install/#make-sure-you-ve-got-python-pip>`_.
+#. Make sure you've got Python and pip and both are available from your command line. Help can be found `here <https://pipenv.pypa.io/en/latest/install/#make-sure-you-ve-got-python-pip>`_.
 
 #. Install Pipenv using these `instructions <https://pipenv.pypa.io/en/latest/install/#installing-pipenv>`_.
 
@@ -46,7 +46,7 @@ We'll assumed Ansible in the ``strykeforce/deadeye`` repository is configured th
 Building
 ========
 
-Deployment builds and install Deadeye system components (see :ref:`sect_intro`) on the Jetson Nano.
+This step builds and install Deadeye system components (see :ref:`sect_intro`) on the Jetson Nano.
 
 This step is run each time you wish to update a Jetson Nano with the most current version in the ``strykeforce/deadeye`` repository.
 

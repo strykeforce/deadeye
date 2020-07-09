@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xl="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="614 429 181 118" width="181" height="118">
+  <defs>
+    <font-face font-family="Helvetica Neue" font-size="16" panose-1="2 0 5 3 0 0 0 2 0 4" units-per-em="1000" underline-position="-100" underline-thickness="50" slope="0" x-height="517" cap-height="714" ascent="951.9958" descent="-212.99744" font-weight="400">
+      <font-face-src>
+        <font-face-name name="HelveticaNeue"/>
+      </font-face-src>
+    </font-face>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="Arrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 10 8" markerWidth="10" markerHeight="8" color="black">
+      <g>
+        <path d="M 8 0 L 0 -3 L 0 3 Z" fill="none" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <font-face font-family="Helvetica" font-size="7" units-per-em="1000" underline-position="-75.68359" underline-thickness="49.316406" slope="0" x-height="532.22656" cap-height="719.7266" ascent="770.0195" descent="-229.98047" font-weight="700">
+      <font-face-src>
+        <font-face-name name="Helvetica-Bold"/>
+      </font-face-src>
+    </font-face>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.16 
+    <dc:date>2020-07-09 20:12:07 +0000</dc:date>
+  </metadata>
+  <g id="Canvas_1" fill="none" fill-opacity="1" stroke="none" stroke-dasharray="none" stroke-opacity="1">
+    <title>Canvas 1</title>
+    <g id="Canvas_1: Layer 1">
+      <title>Layer 1</title>
+      <g id="Group_2">
+        <g id="Graphic_6">
+          <rect x="719.4095" y="454.4" width="26" height="28" fill="white"/>
+          <rect x="719.4095" y="454.4" width="26" height="28" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+          <text transform="translate(724.4095 459.176)" fill="black">
+            <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="8" y="15">      </tspan>
+          </text>
+        </g>
+        <g id="Graphic_5">
+          <ellipse cx="724.40145" cy="469.01025" rx="2.741959381375" ry="2.99324978291182" fill="#cbcbcb"/>
+          <ellipse cx="724.40145" cy="469.01025" rx="2.741959381375" ry="2.99324978291182" stroke="black" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="1"/>
+        </g>
+        <g id="Graphic_4">
+          <ellipse cx="740.1815" cy="469.0093" rx="2.74198938142313" ry="2.99328478296783" fill="#cbcbcb"/>
+          <ellipse cx="740.1815" cy="469.0093" rx="2.74198938142313" ry="2.99328478296783" stroke="black" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="1"/>
+        </g>
+        <g id="Line_3">
+          <line x1="740.9095" y1="458.605" x2="726.9095" y2="468.355" stroke="#00193f" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="1"/>
+        </g>
+      </g>
+      <g id="Group_7">
+        <g id="Line_10">
+          <path d="M 690.8 522.4 L 690.8 516.4 L 695.8 514.4 L 685.8 511.4 L 695.8 508.4 L 685.8 505.4 L 695.8 502.4 L 685.8 499.4 L 695.8 496.4 L 685.8 493.4 L 690.8 491.4 L 690.8 485.4" stroke="black" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="1"/>
+        </g>
+        <g id="Line_9">
+          <line x1="690.8" y1="485.4" x2="690.8" y2="491.4" stroke="black" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="1"/>
+        </g>
+        <g id="Line_8">
+          <line x1="690.8" y1="516.4" x2="690.8" y2="522.4" stroke="black" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="1"/>
+        </g>
+      </g>
+      <g id="Group_11">
+        <g id="Group_13">
+          <g id="Line_16">
+            <line x1="680.8" y1="536.8" x2="700.8" y2="536.8" stroke="#00193f" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="1"/>
+          </g>
+          <g id="Line_15">
+            <line x1="684.8" y1="539.6" x2="696.8" y2="539.6" stroke="#00193f" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="1"/>
+          </g>
+          <g id="Line_14">
+            <line x1="688.8" y1="542.4" x2="692.8" y2="542.4" stroke="#00193f" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="1"/>
+          </g>
+        </g>
+        <g id="Line_12">
+          <line x1="690.8" y1="536.8" x2="690.8" y2="527.4" stroke="black" stroke-linecap="butt" stroke-linejoin="miter" stroke-width="1"/>
+        </g>
+      </g>
+      <g id="Line_23">
+        <path d="M 690.8 485.4 L 690.8 469.21434 L 724.40145 469.21434" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_24">
+        <path d="M 690.8 522.4 L 690.8 524.93647 L 690.7906 527.4" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_25">
+        <path d="M 740.2495 469.14535 L 777.1387 469.14535 L 777.1387 453.67985" marker-end="url(#Arrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_27">
+        <line x1="721.6658" y1="469.21434" x2="660.4306" y2="469.21434" marker-end="url(#Arrow_Marker)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_28">
+        <text transform="translate(763.4 434.4)" fill="black">
+          <tspan font-family="Helvetica" font-size="7" font-weight="700" fill="black" x="0" y="6">3.3 VDC</tspan>
+        </text>
+      </g>
+      <g id="Graphic_29">
+        <text transform="translate(619.2 465.2)" fill="black">
+          <tspan font-family="Helvetica" font-size="7" font-weight="700" fill="black" x="0" y="6">J41 PIN 7</tspan>
+        </text>
+      </g>
+      <g id="Graphic_30">
+        <text transform="translate(705.2 499.9)" fill="black">
+          <tspan font-family="Helvetica" font-size="7" font-weight="700" fill="black" x="0" y="6">3.3 K</tspan>
+        </text>
+      </g>
+    </g>
+  </g>
+</svg>
