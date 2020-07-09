@@ -9,6 +9,7 @@ sphinx-autobuild = "*"
 
 [packages]
 sphinx = "*"
+sphinx-rtd-theme = "*"
 
 [requires]
 python_version = "3.7"
