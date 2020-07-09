@@ -49,9 +49,9 @@ First Boot
 
 #. Connect the ethernet cable to your network.
 
-#. Attach the circuit board jumper cap across **J48**.
+#. Attach the circuit board jumper cap across ``J48``.
 
-#. Attach the 5v power supply to the **J25 power jack** to boot the Jetson Nano.
+#. Attach the 5v power supply to the ``J25 power jack`` to boot the Jetson Nano.
 
 #. When boot is complete, connect to the Jetson Nano via USB serial.  You will need a serial terminal application such as **puTTY** for Windows or **screen** for Linux and macOS. More information about connecting with a serial terminal can be found at `JetsonHacks <https://www.jetsonhacks.com/2019/08/21/jetson-nano-headless-setup/>`_.
 
