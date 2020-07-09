@@ -40,7 +40,7 @@
     </font-face>
   </defs>
   <metadata> Produced by OmniGraffle 7.16 
-    <dc:date>2020-07-09 20:14:55 +0000</dc:date>
+    <dc:date>2020-07-09 20:46:30 +0000</dc:date>
   </metadata>
   <g id="Canvas_1" fill="none" fill-opacity="1" stroke="none" stroke-dasharray="none" stroke-opacity="1">
     <title>Canvas 1</title>
@@ -220,6 +220,11 @@
       <g id="Graphic_62">
         <text transform="translate(54 439.832)" fill="black">
           <tspan font-family="Helvetica Neue" font-size="12" font-weight="400" fill="black" x="0" y="11">J41 PIN 19</tspan>
+        </text>
+      </g>
+      <g id="Graphic_63">
+        <text transform="translate(201.80735 439.832)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="12" font-weight="400" fill="black" x="6288303e-19" y="11">2N3904</tspan>
         </text>
       </g>
     </g>
