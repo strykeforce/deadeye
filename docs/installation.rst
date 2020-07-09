@@ -1,8 +1,12 @@
+.. _sect_install:
+
 ************
 Installation
 ************
 
-This section describes how to prepare a Jetson Nano for Deadeye deployment. We deploy the base Linux OS, and prepare the system for automated provisioning in the next section (see :ref:`deployment`).
+This section describes how to prepare a Jetson Nano for Deadeye deployment. We deploy the base Linux OS, and prepare the system for automated provisioning in the next section (see :ref:`sect_deployment`).
+
+.. note:: This step is only done once for each Jetson Nano Development Kit SD card you prepare.
 
 .. contents:: Topics
 
@@ -96,13 +100,13 @@ The gateway and DNS server are **10.27.67.1** for all units.
 
 To finish configuration, log in as user **deadeye** and run the following command to install the ``curl`` utility:
 
-.. code-block:: shell-session
+.. code-block:: console
 
     $ sudo apt install -y curl
 
 When the ``curl`` utility is successfully installed, run our custom bootstrap script:
 
-.. code-block:: shell-session
+.. code-block:: console
 
     $ curl https://www.strykeforce.org/deadeye/bootstrap.sh | sudo bash
 
@@ -113,7 +117,7 @@ Miscellaneous
 
 Update installed packages, this may take a while depending on the number of out-of-date packages:
 
-.. code-block:: shell-session
+.. code-block:: console
 
     $ sudo apt upgrade
 

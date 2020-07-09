@@ -6,17 +6,30 @@
 Deadeye Vision System
 =====================
 
+Deadeye is a computer vision system developed by `Stryke Force Team 2767 <https://www.strykeforce.org>`_ for FIRST\ :sup:`®` Robotics Competition. 
+
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Getting Started
 
+   introduction
    installation
    deployment
+   configuration
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Tutorials
 
-Indices and tables
-==================
+   tutorials
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. toctree::
+   :maxdepth: 2
+   :caption: Development
+   
+.. Indices and tables
+.. ==================
+.. 
+.. * :ref:`genindex`
+.. * :ref:`modindex`
+.. * :ref:`search`
