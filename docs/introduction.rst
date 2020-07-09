@@ -51,7 +51,7 @@ Our default vision processing pipeline relies on bright green LED illumination r
 We drive the green LEDs using a LUXdrive A009-D-V-1000 BuckBlock LED driver module.
 
 .. figure:: images/lights-schematic.svg
-   :scale: 140%
+   :width: 60%
    :align: center
 
    Camera Lights Driver Circuit
@@ -78,7 +78,7 @@ Shutdown Switch
 The **deadeye-shutdown** daemon checks ``GPIO pin 7`` of the ``J41`` header every second and will initiate a system shutdown if the input is pulled high by the shutdown switch for three consecutive seconds.
 
 .. figure:: images/shutdown-schematic.svg
-   :scale: 220%
+   :width: 50%
    :align: center
 
    Shutdown Switch Circuit
