@@ -16,9 +16,11 @@ Ansible is a tool written in Python so we use `Pipenv <https://pipenv.pypa.io/en
 Prerequisites
 =============
 
-#. Make sure you've got Python and pip and both are available from your command line. Help can be found `here <https://pipenv.pypa.io/en/latest/install/#make-sure-you-ve-got-python-pip>`_.
+#. Your Jetson Nano has a connection to the internet.
 
-#. Install Pipenv using these `instructions <https://pipenv.pypa.io/en/latest/install/#installing-pipenv>`_.
+#. Make sure you've got **Python** and ``pip`` and both are available from your command line. Help can be found `here <https://pipenv.pypa.io/en/latest/install/#make-sure-you-ve-got-python-pip>`_.
+
+#. Install **Pipenv** using these `instructions <https://pipenv.pypa.io/en/latest/install/#installing-pipenv>`_.
 
 #. The `strykeforce/deadeye repository <https://github.com/strykeforce/deadeye>`_ has been cloned to your computer.
 
