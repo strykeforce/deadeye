@@ -78,7 +78,7 @@ When you boot the first time, the Jetson Nano Developer Kit will take you throug
 
 #. Select a host name corresponding to the unit ID, for example, unit A is **deadeye-a**.
 
-#. Reboot the Jetson Nano using ``sudo reboot``.
+#. Log back into the Jetson Nano as user **deadeye** and reboot using ``sudo reboot``.
 
 2767 Configuration
 ==================

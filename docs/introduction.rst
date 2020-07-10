@@ -5,33 +5,51 @@
 Introduction
 ************
 
+Deadeye consists of software and hardware that together provide a vision processing system for FRC robots. The main system components are identified in the block diagram below. In addition to the main vision processing pipeline shown in red, we have an adminstration dashboard in blue, and miscellaneous services in yellow.  
+
+.. figure:: images/block-diagram.svg
+   :width: 80%
+   :align: center
+
+   Block Diagram
+
 Software
 ========
 
 The Deadeye system has several components that run on the Jetson Nano, client roboRIO and web browser. They communicate over the network and require a running `NetworkTables <https://docs.wpilib.org/en/stable/docs/software/networktables/>`_ server.
 
 **deadeye-daemon**
-    The main vision processing process running on the Jetson Nano that manages cameras and associated target processing pipelines.
+    The main vision processing process running on the Jetson Nano that manages up to five cameras and associated target processing pipelines. Each running instance is identified by a unit ID: A, B, C...
     
-    It communicates via NetworkTables for configuration and control and via UDP to a **deadeye-java** client that uses streaming targeting data. It also provides an on-demand camera video stream directly to **deadeye-web** over TCP.
+    Communication is via NetworkTables for configuration and control to **deadeye-admin** and **deadeye-java** client and via UDP to **deadeye-java** client that uses streaming targeting data. It also provides an on-demand camera video stream directly to **deadeye-web** over TCP.
+
+    It runs as a systemd service named ``deadeye-daemon.service``.
 
 **deadeye-java**
-    Client Java libary used by FRC roboRIO robot code to control and communicate with **deadeye-daemon**.
+    Java libary used by FRC roboRIO robot code to control and communicate with **deadeye-daemon**.
     
-    It communicates via NetworkTables for configuration and control and to **deadeye-daemon** directly via UDP for streaming target data.
+    Communication to other components is via NetworkTables for configuration and control and to **deadeye-daemon** directly via UDP for streaming target data.
+
+    To include this client library in your robot program, download `deadeye.json <http://maven.strykeforce.org/deadeye.json>`_ and place in your program's ``vendordeps`` directory.
 
 **deadeye-admin**
     A Python web service running on the Jetson Nano that is the backend for the web-based administration dashboard, **deadeye-web**, that configures and controls **deadeye-daemon**.
     
-    It communicates with **deadeye-daemon** via NetworkTables and with **deadeye-web** over websockets.
+    Communication with **deadeye-daemon** is via NetworkTables and with **deadeye-web** over websockets.
+
+    It runs as a systemd service named ``deadeye-admin.service``.
 
 **deadeye-web**
     The web-based adminstration dashboard run on a developer's computer used to control, configure and monitor **deadeye-daemon**.
     
     It communicates with **deadeye-admin** over websockets and streams camera video directly from **deadeye-deadeye** over TCP.
 
+    It can be loaded by connecting with a web browser to Jetson Nano port 5000, for example, http://10.27.67.10:5000/.
+
 **deadeye-shutdown**
     A background service running on the Jetson Nano that watches for a shutdown button press and performs a clean shutdown if it pressed for three or more seconds.
+
+    It runs as a systemd service named ``deadeye-shutdown.service``.
 
 Hardware
 ========
