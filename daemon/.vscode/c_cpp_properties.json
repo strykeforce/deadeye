@@ -8,12 +8,10 @@
                 "/usr/local/wpilib/include/ntcore",
                 "/usr/local/wpilib/include/wpiutil",
                 "/usr/local/wpilib/include/cscore",
-                "/usr/local/Cellar/spdlog/1.4.2/include"
+                "/usr/local/Cellar/spdlog/1.7.0/include"
             ],
             "defines": [],
-            "macFrameworkPath": [
-                "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks"
-            ],
+            "macFrameworkPath": [],
             "compilerPath": "/usr/bin/clang",
             "cStandard": "c11",
             "cppStandard": "c++17",
