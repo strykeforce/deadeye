@@ -3,6 +3,7 @@ Description=Deadeye System Shutdown Daemon
 SuccessAction=poweroff-force
 
 [Service]
+Environment=SPDLOG_LEVEL=info
 ExecStart=/opt/deadeye/bin/shutdownd
 
 [Install]
