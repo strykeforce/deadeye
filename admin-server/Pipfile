@@ -7,7 +7,7 @@ verify_ssl = true
 server = "python ./deadeye/server/main.py"
 
 [dev-packages]
-black = "==19.3b0"
+black = "*"
 pylint = "*"
 rope = "*"
 deadeye = {editable = true,path = "."}
