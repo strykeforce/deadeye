@@ -15,7 +15,7 @@ const UnitPanel = (props: PanelProps): JSX.Element => {
   return (
     <Container maxWidth="lg" className={classes.container}>
       <Grid container spacing={3}>
-        {Object.values(cameras).map(camera => (
+        {Object.values(cameras).map((camera) => (
           <Grid key={camera.id} item xs={'auto'}>
             <CameraStream camera={camera} label={'Camera ' + camera.id} />
           </Grid>
@@ -27,7 +27,7 @@ const UnitPanel = (props: PanelProps): JSX.Element => {
 
 export default UnitPanel;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     paddingTop: theme.spacing(4),
     paddingBottom: theme.spacing(4),

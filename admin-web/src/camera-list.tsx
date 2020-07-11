@@ -22,7 +22,7 @@ const CameraList = (props: Props): JSX.Element => {
 
   return (
     <List>
-      {Object.values(units).map(unit => (
+      {Object.values(units).map((unit) => (
         <div key={unit.id}>
           <ListItem button selected={selectedId === unit.id} onClick={() => onClick(unit.id)}>
             <ListItemIcon>
@@ -30,7 +30,7 @@ const CameraList = (props: Props): JSX.Element => {
             </ListItemIcon>
             <ListItemText primary={`Unit ${unit.id}`} />
           </ListItem>
-          {Object.values(unit.cameras).map(camera => (
+          {Object.values(unit.cameras).map((camera) => (
             <ListItem
               button
               className={classes.camera}

@@ -62,7 +62,7 @@ const CameraFilter = ({ camera }: Props): JSX.Element => {
 
 export default CameraFilter;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     padding: theme.spacing(2),
     display: 'flex',

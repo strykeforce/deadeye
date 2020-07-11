@@ -45,7 +45,7 @@ const CameraPipeline = ({ camera }: Props): JSX.Element => {
 
 export default CameraPipeline;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     padding: theme.spacing(2),
     display: 'flex',
