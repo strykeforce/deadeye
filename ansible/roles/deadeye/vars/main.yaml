@@ -1,6 +1,7 @@
 ---
+deadeye_version: 20.2.0 # keep in sync with admin-server/setup.py
 deadeye_repo: git@github.com:strykeforce/deadeye.git
-deadeye_src: /usr/local/src/deadeye
+deadeye_src: /opt/deadeye/src
 deadeye_conf: /etc/opt/deadeye
 deadeye_mount: /var/opt/deadeye
 deadeye_node_version: 13.x
