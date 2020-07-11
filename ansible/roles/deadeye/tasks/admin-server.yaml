@@ -37,7 +37,7 @@
   pip:
     virtualenv: /opt/deadeye
     virtualenv_python: python3
-    name: file://{{ deadeye_src }}/admin-server/dist/deadeye-20.2.tar.gz
+    name: file://{{ deadeye_src }}/admin-server/dist/deadeye-{{ deadeye_version }}.tar.gz
     state: latest
   tags: foo
 
