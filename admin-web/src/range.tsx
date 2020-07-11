@@ -101,7 +101,7 @@ const Range = (props: Props): JSX.Element => {
 
 export default Range;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     padding: theme.spacing(1),
     width: 350,

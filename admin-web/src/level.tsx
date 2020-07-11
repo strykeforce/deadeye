@@ -59,7 +59,7 @@ const Range = (props: Props): JSX.Element => {
             className={classes.input}
             value={input}
             margin="dense"
-            onChange={e => setInput(e.target.value)}
+            onChange={(e) => setInput(e.target.value)}
             onBlur={() => setInput(String(level))}
             onKeyDown={handleKeyDown}
           />
@@ -71,7 +71,7 @@ const Range = (props: Props): JSX.Element => {
 
 export default Range;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     adding: theme.spacing(1),
     width: 341,

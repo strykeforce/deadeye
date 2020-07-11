@@ -70,7 +70,7 @@ const Dashboard = (props: Props): JSX.Element => {
           </IconButton>
         </div>
         <Divider />
-        <CameraList units={units} selectedId={selectedId} onClick={id => setSelectedId(id)} />
+        <CameraList units={units} selectedId={selectedId} onClick={(id) => setSelectedId(id)} />
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
@@ -96,7 +96,7 @@ const MadeWithLove = (): JSX.Element => {
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
   },
