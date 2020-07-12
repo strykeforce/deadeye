@@ -43,6 +43,7 @@ set(BUILD_SHARED_LIBS NO)
 
 # Build options
 option(DEADEYE_BUILD_TESTS "Build tests" ON)
+option(DEADEYE_BUILD_BENCHMARKS "Build benchmark tests" ON)
 
 set(DEADEYE_UNIT_ID "A" CACHE STRING "Deadeye unique unit ID")
 set(DEADEYE_NT_SERVER "10.27.67.2" CACHE STRING "NetworkTables server address")

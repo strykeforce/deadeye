@@ -1,4 +1,5 @@
 #include <opencv2/core/types.hpp>
+
 #include "catch2/catch.hpp"
 #include "link/upright_target_data.h"
 
@@ -29,3 +30,14 @@ TEST_CASE("Offset test - Cyan", "[link") {
   UprightTargetData td{"Z1", 1, true, bb, center};
   REQUIRE(td.bb == bb);
 }
+
+#ifdef CATCH_CONFIG_ENABLE_BENCHMARKING
+
+TEST_CASE("Benchmark UprightTargetData", "[.][benchmark]") {
+  BENCHMARK("Serialize") {
+    UprightTargetData td{"Z1", 1, true, cv::Rect{0, 0, 100, 100},
+                         cv::Point{50, 50}};
+    return td.ToString();
+  };
+}
+#endif

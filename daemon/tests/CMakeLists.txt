@@ -1,13 +1,16 @@
 add_executable(Deadeye_tests
   main.cpp
-  json.cpp
-  link_config_test.cpp
-  pipeline_config_test.cpp
-  filter_config_test.cpp
-  stream_config_test.cpp
-  gstreamer_config_test.cpp
-  target_data_test.cpp
 )
+
+add_subdirectory(config)
+add_subdirectory(link)
+
+if(DEADEYE_BUILD_BENCHMARKS)
+  target_compile_definitions(Deadeye_tests
+    PRIVATE
+    CATCH_CONFIG_ENABLE_BENCHMARKING
+  )
+endif(DEADEYE_BUILD_BENCHMARKS)
 
 target_link_libraries(Deadeye_tests
   Deadeye::library
