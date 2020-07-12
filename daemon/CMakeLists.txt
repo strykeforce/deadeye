@@ -42,6 +42,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(BUILD_SHARED_LIBS NO)
 
 # Build options
+option(DEADEYE_BUILD_TESTS "Build tests" ON)
+
 set(DEADEYE_UNIT_ID "A" CACHE STRING "Deadeye unique unit ID")
 set(DEADEYE_NT_SERVER "10.27.67.2" CACHE STRING "NetworkTables server address")
 set(DEADEYE_CLIENT_ADDRESS "10.27.67.2" CACHE STRING "Deadeye client address")
@@ -86,10 +88,10 @@ add_subdirectory(dependencies)
 get_directory_property(hasParent PARENT_DIRECTORY)
 if(NOT hasParent)
     set(enableBuildMain YES)
-    if(NOT CMAKE_CROSSCOMPILING)
+    if(DEADEYE_BUILD_TESTS AND NOT CMAKE_CROSSCOMPILING)
         find_package(Catch2 REQUIRED)
         add_subdirectory(tests)
-    endif(NOT CMAKE_CROSSCOMPILING)
+    endif(DEADEYE_BUILD_TESTS AND NOT CMAKE_CROSSCOMPILING)
 endif(NOT hasParent)
 
 
