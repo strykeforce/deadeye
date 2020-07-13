@@ -89,7 +89,12 @@
     "vector": "cpp",
     "*.tcc": "cpp",
     "memory_resource": "cpp",
-    "cinttypes": "cpp"
+    "cinttypes": "cpp",
+    "compare": "cpp",
+    "unordered_set": "cpp",
+    "concepts": "cpp",
+    "ranges": "cpp",
+    "stop_token": "cpp"
   },
   "cmake.configureSettings": {
     "DEADEYE_UNIT_ID": "E",
