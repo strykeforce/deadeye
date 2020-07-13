@@ -4,6 +4,7 @@
 #include <fmt/core.h>
 #include <spdlog/spdlog.h>
 #include <sys/stat.h>
+
 #include <cstring>
 #include <nlohmann/json.hpp>
 #include <opencv2/core.hpp>
@@ -66,9 +67,9 @@ void PipelineLogger::operator()() {
         std::chrono::high_resolution_clock::now() - begin_);
 
     cv::Mat mask;
-    DE_IN_RANGE(entry.frame, hsv_low_, hsv_high_, mask);
+    MaskFrame(entry.frame, mask, hsv_low_, hsv_high_);
     Contours contours;
-    DE_FIND_CONTOURS(mask, contours);
+    FindContours(mask, contours);
 
     auto path = fmt::format(template_, id_, seq);
     try {

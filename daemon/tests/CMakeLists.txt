@@ -4,13 +4,13 @@ add_executable(Deadeye_tests
 
 add_subdirectory(config)
 add_subdirectory(link)
+add_subdirectory(pipeline)
 
-if(DEADEYE_BUILD_BENCHMARKS)
-  target_compile_definitions(Deadeye_tests
-    PRIVATE
-    CATCH_CONFIG_ENABLE_BENCHMARKING
-  )
-endif(DEADEYE_BUILD_BENCHMARKS)
+target_compile_definitions(Deadeye_tests
+  PRIVATE
+  $<$<BOOL:DEADEYE_BUILD_BENCHMARKS>:CATCH_CONFIG_ENABLE_BENCHMARKING>
+  DEADEYE_TEST_DATA="${CMAKE_CURRENT_LIST_DIR}/data/"
+)
 
 target_link_libraries(Deadeye_tests
   Deadeye::library

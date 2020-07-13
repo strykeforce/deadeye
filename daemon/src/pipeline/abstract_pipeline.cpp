@@ -3,6 +3,7 @@
 #include <readerwriterqueue.h>
 #include <spdlog/spdlog.h>
 #include <wpi/Logger.h>
+
 #include <future>
 
 #include "config/deadeye_config.h"
@@ -154,8 +155,8 @@ void AbstractPipeline::Run() {
 
     if (is_yuv) cv::cvtColor(frame_, frame_, cv::COLOR_YUV2BGR_I420);
 
-    DE_IN_RANGE(frame_, hsv_low, hsv_high, hsv_threshold_output_);
-    DE_FIND_CONTOURS(hsv_threshold_output_, find_contours_output_);
+    MaskFrame(frame_, hsv_threshold_output_, hsv_low, hsv_high);
+    FindContours(hsv_threshold_output_, find_contours_output_);
 
     FilterContours(filter, find_contours_output_, filter_contours_output_);
     target_data_ = ProcessTarget(filter_contours_output_);
