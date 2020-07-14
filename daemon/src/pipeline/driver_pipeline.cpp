@@ -5,6 +5,7 @@
 #include <fmt/core.h>
 #include <spdlog/spdlog.h>
 #include <wpi/Logger.h>
+
 #include <map>
 #include <opencv2/core/mat.hpp>
 
@@ -12,6 +13,7 @@
 #include "config/pipeline_config.h"
 #include "config/stream_config.h"
 #include "link/link.h"
+#include "pipeline/pipeline_exception.h"
 
 using namespace deadeye;
 
