@@ -1,7 +1,10 @@
+#include "controller.h"
+
 #include <networktables/NetworkTableInstance.h>
 #include <networktables/NetworkTableValue.h>
 #include <ntcore_cpp.h>
 #include <spdlog/spdlog.h>
+
 #include <atomic>
 #include <cassert>
 #include <csignal>
@@ -13,7 +16,6 @@
 #include "config/link_config.h"
 #include "config/pipeline_config.h"
 #include "config/stream_config.h"
-#include "controller.h"
 #include "fsm/camera.h"
 #include "fsm/lights.h"
 
@@ -32,14 +34,9 @@ void signal_handler(int signal) { quit = true; }
 /**
  * From http://www.rioki.org/2016/03/31/cpp-switch-string.html
  */
-constexpr unsigned int hash(const char* str, int h = 0) {
+static constexpr unsigned int hash(const char* str, int h = 0) {
   return !str[h] ? 5381 : (hash(str, h + 1) * 33) ^ str[h];
 }
-
-std::array<std::unique_ptr<Pipeline>, 5> EMPTY = {
-    std::unique_ptr<Pipeline>{nullptr}, std::unique_ptr<Pipeline>{nullptr},
-    std::unique_ptr<Pipeline>{nullptr}, std::unique_ptr<Pipeline>{nullptr},
-    std::unique_ptr<Pipeline>{nullptr}};
 
 }  // namespace
 
@@ -449,11 +446,12 @@ void Controller::ShutDown() {
 void Controller::StartNetworkTables() {
   inst_ = nt::GetDefaultInstance();
 
-  nt::AddLogger(inst_,
-                [](const nt::LogMessage& msg) {
-                  spdlog::log(Nt2spdlogLevel(msg), msg.message);
-                },
-                0, UINT_MAX);
+  nt::AddLogger(
+      inst_,
+      [](const nt::LogMessage& msg) {
+        spdlog::log(Nt2spdlogLevel(msg), msg.message);
+      },
+      0, UINT_MAX);
 
   std::promise<void> barrier;
   std::future<void> barrier_future = barrier.get_future();

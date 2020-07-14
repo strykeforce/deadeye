@@ -37,15 +37,16 @@
 #define DE_P4 std::unique_ptr<::deadeye::Pipeline>(nullptr)
 #endif
 
-#define DEADEYE_MAIN()                                                        \
-  int main(int argc, char **argv) {                                           \
-    try {                                                                     \
-      ::deadeye::log::Configure("deadeye");                                   \
-      ::deadeye::Controller::Initialize({DE_P0, DE_P1, DE_P2, DE_P3, DE_P4}); \
-      ::deadeye::Controller::GetInstance().Run();                             \
-    } catch (std::exception const &e) {                                       \
-      spdlog::critical("DEADEYE_MAIN: {}", e.what());                         \
-      std::exit(EXIT_FAILURE);                                                \
-    }                                                                         \
-    std::exit(EXIT_SUCCESS);                                                  \
+#define DEADEYE_MAIN()                                                     \
+  int main(int argc, char **argv) {                                        \
+    try {                                                                  \
+      ::deadeye::log::Configure("deadeye");                                \
+      ::deadeye::Pipelines pipelines({DE_P0, DE_P1, DE_P2, DE_P3, DE_P4}); \
+      ::deadeye::Controller::Initialize(std::move(pipelines));             \
+      ::deadeye::Controller::GetInstance().Run();                          \
+    } catch (std::exception const &e) {                                    \
+      spdlog::critical("DEADEYE_MAIN: {}", e.what());                      \
+      std::exit(EXIT_FAILURE);                                             \
+    }                                                                      \
+    std::exit(EXIT_SUCCESS);                                               \
   }
