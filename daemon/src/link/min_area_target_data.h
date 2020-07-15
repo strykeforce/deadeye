@@ -29,7 +29,7 @@ struct MinAreaTargetData : public TargetData {
   MinAreaTargetData(std::string id, int sn, bool valid, cv::RotatedRect rect,
                     cv::Point2f center);
 
-  void DrawMarkers(cv::Mat& preview) override;
+  void DrawMarkers(cv::Mat& preview) const override;
   std::string Dump() const override;
   std::string ToString() const override;
 };

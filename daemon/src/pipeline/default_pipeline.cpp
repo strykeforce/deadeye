@@ -2,6 +2,7 @@
 
 #include <fmt/core.h>
 #include <spdlog/spdlog.h>
+
 #include <opencv2/imgproc.hpp>
 
 #include "config/pipeline_config.h"
@@ -13,15 +14,14 @@ using namespace deadeye;
 DefaultPipeline::DefaultPipeline(int inum) : AbstractPipeline{inum} {}
 
 bool DefaultPipeline::StartCapture() {
-  assert(capture_config_ready_.load());
   if (cap_.isOpened()) return true;
 
-  safe::ReadAccess<LockableCaptureConfig> cc{capture_config_};
-  auto pipeline = cc->Pipeline();
+  auto pipeline = capture_config_.Pipeline();
   spdlog::debug("{}: {}", *this, pipeline);
-  center_ = cv::Point{cc->output_width / 2, cc->output_height / 2};
+  center_ = cv::Point{capture_config_.output_width / 2,
+                      capture_config_.output_height / 2};
   center2f_ = static_cast<cv::Point2f>(center_);
-  frame_area_ = cc->output_height * cc->output_width;
+  frame_area_ = capture_config_.output_height * capture_config_.output_width;
   return cap_.open(pipeline, cv::CAP_GSTREAMER);
 }
 

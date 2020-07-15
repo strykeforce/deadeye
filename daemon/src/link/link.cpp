@@ -6,6 +6,7 @@
 #include <spdlog/spdlog.h>
 #include <sys/socket.h>
 #include <unistd.h>
+
 #include <nlohmann/json.hpp>
 
 #include "config/deadeye_config.h"
@@ -49,7 +50,7 @@ LinkConfig Link::GetConfig() {
   return LinkConfig{nti.GetEntry(DE_CONFIG_ENTRY).GetValue()};
 }
 
-void Link::Send(TargetData* const td) {
+void Link::Send(TargetData* const td) const {
   if (!enabled_) return;
 
   std::string msg = id_ + td->Dump();

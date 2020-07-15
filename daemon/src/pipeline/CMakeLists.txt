@@ -4,6 +4,6 @@ target_sources(Deadeye_library
   ${CMAKE_CURRENT_LIST_DIR}/default_pipeline.cpp
   ${CMAKE_CURRENT_LIST_DIR}/upright_rect_pipeline.cpp
   ${CMAKE_CURRENT_LIST_DIR}/min_area_rect_pipeline.cpp
-  ${CMAKE_CURRENT_LIST_DIR}/driver_pipeline.cpp
   ${CMAKE_CURRENT_LIST_DIR}/pipeline_logger.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/pipeline_runner.cpp
 )

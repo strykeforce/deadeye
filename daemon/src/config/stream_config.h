@@ -1,6 +1,7 @@
 #pragma once
 #include <networktables/NetworkTableValue.h>
 #include <spdlog/fmt/ostr.h>
+
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <string>
@@ -42,6 +43,13 @@ struct StreamConfig {
    * Constructor from NetworkTables.
    */
   StreamConfig(std::shared_ptr<nt::Value> value);
+
+  /**
+   * Get stream enabled.
+   */
+  inline bool StreamEnabled() const {
+    return !(view == View::none && contour == Contour::none);
+  }
 
   template <typename OStream>
   friend OStream& operator<<(OStream& os, StreamConfig const& sc) {

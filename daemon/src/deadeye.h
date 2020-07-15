@@ -3,7 +3,6 @@
 #include "config/deadeye_config.h"
 #include "controller.h"
 #include "log.h"
-#include "pipeline/driver_pipeline.h"
 #include "pipeline/min_area_rect_pipeline.h"
 #include "pipeline/upright_rect_pipeline.h"
 

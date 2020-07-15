@@ -4,6 +4,7 @@
 #include <networktables/NetworkTableInstance.h>
 #include <networktables/NetworkTableValue.h>
 #include <spdlog/spdlog.h>
+
 #include <atomic>
 #include <future>
 #include <memory>
@@ -14,6 +15,7 @@
 #include "config/pipeline_config.h"
 #include "config/stream_config.h"
 #include "pipeline/pipeline.h"
+#include "pipeline/pipeline_runner.h"
 
 namespace deadeye {
 
@@ -44,19 +46,20 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
 
  public:
   static bool HasError() { return has_error_.load(); }
+
   static void SetPipeline(std::unique_ptr<Pipeline> pipeline) {
-    pipeline_ = std::move(pipeline);
+    pipeline_runner_.SetPipeline(std::move(pipeline));
   }
 
   static Pipeline* GetPipeline() {
-    return pipeline_.get();
+    return pipeline_runner_.GetPipeline();
   }
 
   static void Initialize(CaptureConfig const &cc, PipelineConfig const &pc,
                          StreamConfig const &sc) {
-    pipeline_->ConfigCapture(cc);
-    pipeline_->ConfigPipeline(pc);
-    pipeline_->ConfigStream(sc);
+    pipeline_runner_.ConfigCapture(cc);
+    pipeline_runner_.ConfigPipeline(pc);
+    pipeline_runner_.ConfigStream(sc);
   }
 
  private:
@@ -65,20 +68,20 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
   virtual void react(CameraOn const &) {}
   virtual void react(CameraOff const &) {}
   virtual void react(ConfigCapture const &c) {
-    Camera<inum>::pipeline_->ConfigCapture(c.config);
+    Camera<inum>::pipeline_runner_.ConfigCapture(c.config);
   }
   virtual void react(ConfigPipeline const &c) {
-    Camera<inum>::pipeline_->ConfigPipeline(c.config);
+    Camera<inum>::pipeline_runner_.ConfigPipeline(c.config);
   }
   virtual void react(ConfigStream const &s) {
-    Camera<inum>::pipeline_->ConfigStream(s.config);
+    Camera<inum>::pipeline_runner_.ConfigStream(s.config);
   }
 
   virtual void entry() = 0;
   virtual void exit() = 0;
 
  protected:
-  static std::unique_ptr<Pipeline> pipeline_;
+  static PipelineRunner pipeline_runner_;
   static std::future<void> pipeline_future_;
   static std::atomic<bool> has_error_;
   static std::string error_;
@@ -92,7 +95,7 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
 
 // state variable definitions
 template <int inum>
-std::unique_ptr<Pipeline> Camera<inum>::pipeline_;
+PipelineRunner Camera<inum>::pipeline_runner_;
 
 template <int inum>
 std::future<void> Camera<inum>::pipeline_future_;

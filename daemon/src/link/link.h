@@ -14,7 +14,7 @@ class Link {
   Link(const Link&) = delete;
   Link& operator=(const Link&) = delete;
 
-  void Send(TargetData* const td);  // Caller retains ownership
+  void Send(TargetData* const td) const;  // Caller retains ownership
 
  private:
   bool enabled_;

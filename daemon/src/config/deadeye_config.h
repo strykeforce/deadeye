@@ -1,4 +1,5 @@
 #pragma once
+#include <opencv2/core/types.hpp>
 #include <string>
 
 #define DE_STRINGIFY(s) DE_STR(s)
@@ -42,4 +43,6 @@ std::string LightsControlTablePath(int inum);
 std::string CaptureConfigEntryPath(int inum);
 std::string PipelineConfigEntryPath(int inum);
 std::string StreamConfigEntryPath(int inum);
+
+static const cv::Size kStreamSize{320, 240};
 }  // namespace deadeye

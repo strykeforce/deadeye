@@ -1,6 +1,7 @@
 #include "upright_target_data.h"
 
 #include <fmt/core.h>
+
 #include <opencv2/imgproc.hpp>
 
 using namespace deadeye;
@@ -20,7 +21,7 @@ UprightTargetData::UprightTargetData(std::string id, int sn, bool valid,
   offset = target - center;
 }
 
-void UprightTargetData::DrawMarkers(cv::Mat& preview) {
+void UprightTargetData::DrawMarkers(cv::Mat& preview) const {
   cv::Point center{preview.cols / 2, preview.rows / 2};
   cv::Point target = center + offset;
   cv::drawMarker(preview, target, cv::Scalar::all(255));
