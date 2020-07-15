@@ -5,6 +5,7 @@
 #include <wpi/Logger.h>
 
 #include <future>
+#include <opencv2/imgproc.hpp>
 
 #include "config/deadeye_config.h"
 #include "link/link.h"
@@ -54,11 +55,13 @@ void PipelineRunner::Run() {
 
   // load capture config at start of run
   int fps{0};
+  bool is_yuv{false};
   if (capture_config_ready_.load()) {
     capture_config_ready_ = false;
     safe::ReadAccess<SafeCaptureConfig> value{capture_config_};
     pipeline_->ConfigCapture(*value);
     fps = value->frame_rate;
+    is_yuv = value->type == CaptureConfig::Type::jetson;
     spdlog::debug("{}:{}", *pipeline_, *value);
   }
 
@@ -133,6 +136,8 @@ void PipelineRunner::Run() {
     if (!pipeline_->GrabFrame(frame)) {
       spdlog::critical("{} failed to grab frame", *pipeline_);
     }
+
+    if (is_yuv) cv::cvtColor(frame, frame, cv::COLOR_YUV2BGR_I420);
 
     // Process frame through pipeline
     TargetDataPtr target_data = pipeline_->ProcessFrame(frame);
