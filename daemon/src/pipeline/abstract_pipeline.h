@@ -15,16 +15,16 @@ class AbstractPipeline : public Pipeline {
  public:
   AbstractPipeline(int inum);
 
-  void ConfigCapture(CaptureConfig const &config) final;
-  void ConfigPipeline(PipelineConfig const &config) final;
-  void ConfigStream(StreamConfig const &config) final;
-  Contours GetFilteredContours() final;
+  void ConfigCapture(CaptureConfig const &config) override;
+  void ConfigPipeline(PipelineConfig const &config) override;
+  void ConfigStream(StreamConfig const &config) override;
+  Contours GetFilteredContours() override;
 
  protected:
   virtual TargetDataPtr ProcessFrame(cv::Mat const &frame) override;
-  // virtual void ProcessFrame(cv::Mat const &frame) {}
+
   virtual void FilterContours(FilterConfig const &filter, Contours const &src,
-                              Contours &dest) {}
+                              Contours &dest) = 0;
   virtual TargetDataPtr ProcessTarget(Contours const &contours) = 0;
   virtual void ProcessStreamFrame(cv::Mat &preview,
                                   TargetData const *target_data) override;

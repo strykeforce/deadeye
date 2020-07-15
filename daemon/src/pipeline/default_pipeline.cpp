@@ -86,6 +86,10 @@ void DefaultPipeline::FilterContours(FilterConfig const &filter,
   // throw PipelineException("Test Exception");
 }
 
+TargetDataPtr DefaultPipeline::ProcessTarget(Contours const &contours) {
+  return std::make_unique<TargetData>(id_, 0, false);
+}
+
 std::string DefaultPipeline::ToString() const {
   assert(pipeline_type_ != "");
   return fmt::format("DefaultPipeline<{}, {}>", id_, pipeline_type_);

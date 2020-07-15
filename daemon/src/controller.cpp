@@ -18,6 +18,7 @@
 #include "config/stream_config.h"
 #include "fsm/camera.h"
 #include "fsm/lights.h"
+#include "pipeline/null_pipeline.h"
 
 // forward declaration
 static spdlog::level::level_enum Nt2spdlogLevel(const nt::LogMessage& msg);
