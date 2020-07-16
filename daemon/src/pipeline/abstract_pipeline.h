@@ -18,16 +18,19 @@ class AbstractPipeline : public Pipeline {
   void ConfigCapture(CaptureConfig const &config) override;
   void ConfigPipeline(PipelineConfig const &config) override;
   void ConfigStream(StreamConfig const &config) override;
-  Contours GetFilteredContours() override;
 
- protected:
   virtual TargetDataPtr ProcessFrame(cv::Mat const &frame) override;
 
+  Contours GetContours() override;
+  Contours GetFilteredContours() override;
+
+  virtual void ProcessStreamFrame(cv::Mat &preview,
+                                  TargetData const *target_data) override;
+
+ protected:
   virtual void FilterContours(FilterConfig const &filter, Contours const &src,
                               Contours &dest) = 0;
   virtual TargetDataPtr ProcessTarget(Contours const &contours) = 0;
-  virtual void ProcessStreamFrame(cv::Mat &preview,
-                                  TargetData const *target_data) override;
 
   std::string id_;
   std::string pipeline_type_{"unknown"};
@@ -40,8 +43,8 @@ class AbstractPipeline : public Pipeline {
  private:
   cv::Mat frame_;
   cv::Mat hsv_threshold_output_;
-  Contours filter_contours_output_;
   Contours find_contours_output_;
+  Contours filter_contours_output_;
   int preview_border_;
   bool preview_resize_;
 };

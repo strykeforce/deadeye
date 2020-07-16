@@ -55,12 +55,20 @@ void AbstractPipeline::ConfigStream(StreamConfig const &config) {
 }
 
 /**
- * Get a copy of the most recent filtered contours, typically for logging.
+ * Get a copy of all found contours.
+ */
+Contours AbstractPipeline::GetContours() { return find_contours_output_; }
+
+/**
+ * Get a copy of the filtered contours.
  */
 Contours AbstractPipeline::GetFilteredContours() {
   return filter_contours_output_;
 }
 
+/**
+ * Process a frame and return target data.
+ */
 TargetDataPtr AbstractPipeline::ProcessFrame(cv::Mat const &frame) {
   frame_ = frame;
   MaskFrame(frame_, hsv_threshold_output_, pipeline_config_.HsvLow(),

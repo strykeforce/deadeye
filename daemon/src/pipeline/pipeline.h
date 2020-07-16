@@ -36,6 +36,7 @@ class Pipeline {
 
   virtual TargetDataPtr ProcessFrame(cv::Mat const &frame) = 0;
 
+  virtual Contours GetContours() = 0;
   virtual Contours GetFilteredContours() = 0;
 
   virtual void ProcessStreamFrame(cv::Mat &preview,

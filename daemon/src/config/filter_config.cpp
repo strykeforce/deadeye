@@ -8,7 +8,12 @@ char const* FilterConfig::kFullnessKey{"fullness"};
 char const* FilterConfig::kAspectKey{"aspect"};
 
 FilterConfig::FilterConfig(filter_t area, filter_t fullness, filter_t aspect)
-    : area(area), fullness(fullness), aspect(aspect) {}
+    : area(area), fullness(fullness), aspect(aspect) {
+  area_enabled = area[0] != kAreaMin || area[1] != kAreaMax;
+  fullness_enabled = fullness[0] != kFullnessMin || fullness[1] != kFullnessMax;
+  aspect_enabled = aspect[0] != kAspectMin || aspect[1] != kAspectMax;
+  enabled = area_enabled || fullness_enabled || aspect_enabled;
+}
 
 // ---------------------------------------------------------------------------
 // nlohmann_json support

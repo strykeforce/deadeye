@@ -23,6 +23,7 @@ class NullPipeline : public Pipeline {
     return std::make_unique<TargetData>(id_, 0, false);
   };
 
+  virtual Contours GetContours() final { return Contours{}; }
   virtual Contours GetFilteredContours() final { return Contours{}; }
 
   virtual void ProcessStreamFrame(cv::Mat &preview,

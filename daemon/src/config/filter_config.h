@@ -26,6 +26,8 @@ struct FilterConfig {
   filter_t fullness{kFullnessMin, kFullnessMax};
   filter_t aspect{kAspectMin, kAspectMax};
 
+  int frame_area{0};
+
   bool enabled = false;
   bool area_enabled = false;
   bool fullness_enabled = false;
