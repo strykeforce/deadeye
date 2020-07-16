@@ -1,17 +1,21 @@
 #pragma once
 #include <ntcore.h>
+
 #include <array>
 #include <memory>
 
 namespace deadeye {
 
+static constexpr int kNumCameras = 5;
+
 class Pipeline;
-using PipelinesPtr = std::array<std::unique_ptr<Pipeline>, 5>* const;
+using Pipelines = std::array<std::unique_ptr<Pipeline>, kNumCameras>;
+using PipelinesPtr = Pipelines* const;
 
 class Controller {
  public:
-  static void Initialize(std::array<std::unique_ptr<Pipeline>, 5> pipelines) {
-    getInstanceImpl(&pipelines);
+  static Controller& Initialize(Pipelines pipelines) {
+    return getInstanceImpl(&pipelines);
   }
   static Controller& GetInstance() { return getInstanceImpl(); }
 
@@ -43,6 +47,6 @@ class Controller {
   NT_Inst inst_;
   NT_EntryListenerPoller poller_;
   NT_EntryListener entry_listener_;
-  std::array<bool, 5> has_active_pipeline_;
+  std::array<bool, kNumCameras> has_active_pipeline_;
 };
 }  // namespace deadeye

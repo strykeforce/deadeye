@@ -12,7 +12,7 @@
 #endif
 
 void deadeye::log::Configure(std::string name) {
-  spdlog::cfg::load_env_levels();
+  spdlog::cfg::load_env_levels();  // take from SPDLOG_LEVEL
 
 #ifdef __linux__
   const char* journal = std::getenv("JOURNAL_STREAM");

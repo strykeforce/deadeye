@@ -21,7 +21,7 @@ struct TargetData {
   TargetData(TargetData const&) = delete;
   TargetData& operator=(TargetData const&) = delete;
 
-  virtual void DrawMarkers(cv::Mat& preview);
+  virtual void DrawMarkers(cv::Mat& preview) const;
   virtual std::string Dump() const;  // json format
   virtual std::string ToString() const { return Dump(); }
 };

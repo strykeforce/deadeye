@@ -11,6 +11,7 @@ static const bool kWhiteBalanceLock = false;
 static const int kWhiteBalanceMode = 0;
 static const std::string kIspDigitalGainRange = "1 1";
 static const std::string kGainRange = "1 1";
+// exposure time max is 1/120 fps in nanosec
 static const std::array<int, 2> kExposureRange{13000, 8333333};
 }  // namespace
 
@@ -54,8 +55,9 @@ std::string CaptureConfig::Pipeline() const {
       return "autovideosrc ! videoconvert ! appsink";
 
     case Type::jetson: {
+      // `gst-inspect-1.0 nvarguscamerasrc` to list supported properties
       std::string jetson{
-          R"(nvarguscamerasrc aelock={} awblock={} wbmode={} maxperf=1)"
+          R"(nvarguscamerasrc aelock={} awblock={} wbmode={})"
           R"( ispdigitalgainrange="{}" gainrange="{}" exposuretimerange="{} {}" !)"
           R"( video/x-raw(memory:NVMM), width=(int){}, height=(int){},)"
           R"( format=(string)NV12, framerate=(fraction){}/1 ! nvvidconv)"

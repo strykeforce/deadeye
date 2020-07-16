@@ -29,7 +29,7 @@ class On : public Camera<inum> {
 
     base::pipeline_future_ = std::async(std::launch::async, [] {
       try {
-        base::pipeline_->Run();
+        base::pipeline_runner_.Run();
       } catch (...) {
         base::has_error_ = true;
         std::rethrow_exception(std::current_exception());
@@ -40,7 +40,7 @@ class On : public Camera<inum> {
 
   void react(CameraOff const &) final {
     Lights<inum>::dispatch(LightsOff());
-    base::pipeline_->CancelTask();
+    base::pipeline_runner_.Stop();
 
     // future will not be valid at start-up since pipeline task not started yet
     if (base::pipeline_future_.valid()) {

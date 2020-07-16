@@ -1,6 +1,7 @@
 #include "min_area_target_data.h"
 
 #include <fmt/core.h>
+
 #include <opencv2/imgproc.hpp>
 
 using namespace deadeye;
@@ -27,7 +28,7 @@ MinAreaTargetData::MinAreaTargetData(std::string id, int sn, bool valid,
   rect.points(corners);
 }
 
-void MinAreaTargetData::DrawMarkers(cv::Mat& preview) {
+void MinAreaTargetData::DrawMarkers(cv::Mat& preview) const {
   cv::Point center{preview.cols / 2, preview.rows / 2};
   cv::Point2f target = static_cast<cv::Point2f>(center) + offset;
   cv::drawMarker(preview, center, cv::Scalar::all(255),
