@@ -1,22 +1,22 @@
 ---
 - name: Unarchive sources
   unarchive:
-    src: https://github.com/gabime/safe/archive/v{{ safe_version }}.tar.gz
+    src: https://github.com/jhh/tinyfsm/archive/v{{ tinyfsm_version }}.tar.gz
     dest: /usr/local/src
     remote_src: true
   tags:
-    - safe
+    - tinyfsm
 
 - name: Create build directory
   file:
-    path: /usr/local/src/safe-{{ safe_version }}/build
+    path: /usr/local/src/tinyfsm-{{ tinyfsm_version }}/build
     state: directory
   tags:
-    - safe
+    - tinyfsm
 
 - name: Run cmake
   command:
-    chdir: /usr/local/src/safe-{{ safe_version }}/build
+    chdir: /usr/local/src/tinyfsm-{{ tinyfsm_version }}/build
     argv:
       - /usr/bin/cmake
       - -DCMAKE_BUILD_TYPE=Release
@@ -24,16 +24,16 @@
       - -GNinja
       - ..
   tags:
-    - safe
+    - tinyfsm
     - build
     - cmake
 
 - name: Build and install
   command:
-    chdir: /usr/local/src/safe-{{ safe_version }}/build
+    chdir: /usr/local/src/tinyfsm-{{ tinyfsm_version }}/build
     argv:
       - /usr/bin/ninja
       - install
   tags:
-    - safe
+    - tinyfsm
     - build

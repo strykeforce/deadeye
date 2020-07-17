@@ -63,6 +63,7 @@ find_package(wpilib REQUIRED)
 find_package(Threads REQUIRED) # required for ntcore
 find_package(nlohmann_json REQUIRED)
 find_package(safe REQUIRED)
+find_package(tinyfsm REQUIRED)
 
 if(CMAKE_CROSSCOMPILING)
     set(ENV{PKG_CONFIG_DIR} "")
@@ -84,8 +85,6 @@ endif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 if(CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
     pkg_check_modules(GPIOD REQUIRED IMPORTED_TARGET libgpiodcxx)
 endif(CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
-
-add_subdirectory(dependencies)
 
 get_directory_property(hasParent PARENT_DIRECTORY)
 if(NOT hasParent)
