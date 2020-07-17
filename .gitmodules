@@ -1,3 +1,0 @@
-[submodule "vendor/tinyfsm"]
-	path = daemon/dependencies/tinyfsm
-	url = https://github.com/digint/tinyfsm.git
