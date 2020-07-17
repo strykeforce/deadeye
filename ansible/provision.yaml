@@ -33,5 +33,7 @@
       tags: fmt
     - role: libgpiod
       tags: libgpiod
+    - role: safe
+      tags: safe
     # - role: seapi
     #   tags: seapi
