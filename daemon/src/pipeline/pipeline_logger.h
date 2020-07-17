@@ -1,6 +1,7 @@
 #pragma once
 
-#include <readerwriterqueue.h>
+#include <readerwriterqueue/readerwriterqueue.h>
+
 #include <atomic>
 #include <chrono>
 #include <opencv2/core/mat.hpp>

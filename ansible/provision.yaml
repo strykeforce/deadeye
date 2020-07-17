@@ -35,5 +35,7 @@
       tags: libgpiod
     - role: safe
       tags: safe
+    - role: readerwriterqueue
+      tags: readerwriterqueue
     # - role: seapi
     #   tags: seapi

@@ -45,7 +45,6 @@ target_link_libraries(Deadeye_library
     cscore
     nlohmann_json::nlohmann_json
     tinyfsm
-    readerwriterqueue
 )
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
