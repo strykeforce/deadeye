@@ -9,28 +9,28 @@ namespace deadeye {
 namespace {
 static constexpr double kAreaMin = 0.0;
 static constexpr double kAreaMax = 1.0;
-static constexpr double kFullnessMin = 0.0;
-static constexpr double kFullnessMax = 1.0;
+static constexpr double kSolidityMin = 0.0;
+static constexpr double kSolidityMax = 1.0;
 static constexpr double kAspectMin = 0.0;
 static constexpr double kAspectMax = 20.0;
 }  // namespace
 
 struct FilterConfig {
   static char const* kAreaKey;
-  static char const* kFullnessKey;
+  static char const* kSolidityKey;
   static char const* kAspectKey;
 
   using filter_t = std::array<double, 2>;
 
   filter_t area{kAreaMin, kAreaMax};
-  filter_t fullness{kFullnessMin, kFullnessMax};
+  filter_t solidity{kSolidityMin, kSolidityMax};
   filter_t aspect{kAspectMin, kAspectMax};
 
   int frame_area{0};
 
   bool enabled = false;
   bool area_enabled = false;
-  bool fullness_enabled = false;
+  bool solidity_enabled = false;
   bool aspect_enabled = false;
 
   /**
@@ -41,14 +41,14 @@ struct FilterConfig {
   /**
    * Constructor from member values.
    */
-  FilterConfig(filter_t area, filter_t fullness, filter_t aspect);
+  FilterConfig(filter_t area, filter_t solidity, filter_t aspect);
 };
 
 void to_json(json& j, const FilterConfig& l);
 void from_json(const json& j, FilterConfig& l);
 
 inline bool operator==(FilterConfig const& lhs, FilterConfig const& rhs) {
-  return lhs.area == rhs.area && lhs.fullness == rhs.fullness &&
+  return lhs.area == rhs.area && lhs.solidity == rhs.solidity &&
          lhs.aspect == rhs.aspect;
 }
 

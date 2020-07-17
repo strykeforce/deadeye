@@ -35,7 +35,7 @@ inline void GeometricContoursFilter(FilterConfig const& filter,
   for (auto const& contour : src) {
     // set these to true if filter is skipped, false otherwise
     bool area_ok = !filter.area_enabled;
-    bool fullness_ok = !filter.fullness_enabled;
+    bool solidity_ok = !filter.solidity_enabled;
     bool aspect_ok = !filter.aspect_enabled;
 
     double area = cv::contourArea(contour);
@@ -49,14 +49,14 @@ inline void GeometricContoursFilter(FilterConfig const& filter,
       //               filter.frame_area, ratio);
     }
 
-    if (filter.fullness_enabled) {
+    if (filter.solidity_enabled) {
       std::vector<cv::Point> hull;
       cv::convexHull(contour, hull);
       double hull_area = cv::contourArea(hull);
-      double fullness = area / hull_area;
-      fullness_ok =
-          fullness >= filter.fullness[0] && fullness <= filter.fullness[1];
-      // spdlog::debug("fullness = {}", fullness);
+      double solidity = area / hull_area;
+      solidity_ok =
+          solidity >= filter.solidity[0] && solidity <= filter.solidity[1];
+      // spdlog::debug("solidity = {}", solidity);
     }
 
     if (filter.aspect_enabled) {
@@ -65,7 +65,7 @@ inline void GeometricContoursFilter(FilterConfig const& filter,
       // spdlog::debug("aspect = {}", aspect);
     }
 
-    if (area_ok && fullness_ok && aspect_ok) {
+    if (area_ok && solidity_ok && aspect_ok) {
       dest.push_back(contour);
     }
   }

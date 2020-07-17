@@ -27,7 +27,7 @@ TEST_CASE("pipeline filter tests", "[pipeline][filter]") {
 
     REQUIRE(pipeline_config.filter.enabled);
     REQUIRE(pipeline_config.filter.area_enabled);
-    REQUIRE(pipeline_config.filter.fullness_enabled);
+    REQUIRE(pipeline_config.filter.solidity_enabled);
     REQUIRE(pipeline_config.filter.aspect_enabled);
 
     pipeline.ConfigPipeline(pipeline_config);
@@ -39,12 +39,12 @@ TEST_CASE("pipeline filter tests", "[pipeline][filter]") {
 
   SECTION("area > 5e-05") {
     FilterConfig filter{
-        {5e-05, 1.0}, {kFullnessMin, kFullnessMax}, {kAspectMin, kAspectMax}};
+        {5e-05, 1.0}, {kSolidityMin, kSolidityMax}, {kAspectMin, kAspectMax}};
     filter.frame_area = frame.cols * frame.rows;
     pipeline_config.filter = filter;
 
     REQUIRE(pipeline_config.filter.area_enabled);
-    REQUIRE_FALSE(pipeline_config.filter.fullness_enabled);
+    REQUIRE_FALSE(pipeline_config.filter.solidity_enabled);
     REQUIRE_FALSE(pipeline_config.filter.aspect_enabled);
 
     pipeline.ConfigPipeline(pipeline_config);
