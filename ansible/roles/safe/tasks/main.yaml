@@ -1,7 +1,7 @@
 ---
 - name: Unarchive sources
   unarchive:
-    src: https://github.com/LouisCharlesC/safe/archive/v{{ safe_version }}.tar.gz
+    src: https://github.com/gabime/safe/archive/v{{ safe_version }}.tar.gz
     dest: /usr/local/src
     remote_src: true
   tags:
@@ -21,6 +21,10 @@
       - /usr/bin/cmake
       - -DCMAKE_BUILD_TYPE=Release
       - -DCMAKE_INSTALL_PREFIX=/usr/local
+      - -Dsafe_BUILD_EXAMPLE=OFF
+      - -Dsafe_BUILD_BENCH=OFF
+      - -Dsafe_BUILD_TESTS=OFF
+      - -Dsafe_FMT_EXTERNAL=ON
       - -GNinja
       - ..
   tags:

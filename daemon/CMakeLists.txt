@@ -62,6 +62,7 @@ find_package(spdlog REQUIRED)
 find_package(wpilib REQUIRED)
 find_package(Threads REQUIRED) # required for ntcore
 find_package(nlohmann_json REQUIRED)
+find_package(safe REQUIRED)
 
 if(CMAKE_CROSSCOMPILING)
     set(ENV{PKG_CONFIG_DIR} "")
