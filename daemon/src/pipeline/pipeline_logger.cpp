@@ -121,11 +121,11 @@ void PipelineLogger::operator()() {
 
       text = fmt::format(
           "PIPELINE: hue=[{:.0f}, {:.0f}] sat=[{:.0f}, {:.0f}] "
-          "val=[{:.0f}, {:.0f}] area=[{:.2f}, {:.2f}], fullness=[{:.2f}, "
+          "val=[{:.0f}, {:.0f}] area=[{:.2f}, {:.2f}], solidity=[{:.2f}, "
           "{:.2f}], aspect=[{:.2f}, {:.2f}], contours={}/{}",
           hsv_low_[0], hsv_high_[0], hsv_low_[1], hsv_high_[1], hsv_low_[2],
-          hsv_high_[2], filter_.area[0], filter_.area[1], filter_.fullness[0],
-          filter_.fullness[1], filter_.aspect[0], filter_.aspect[1],
+          hsv_high_[2], filter_.area[0], filter_.area[1], filter_.solidity[0],
+          filter_.solidity[1], filter_.aspect[0], filter_.aspect[1],
           entry.filtered_contours.size(), contours.size());
 
       cv::putText(info, text, text_org, font, font_scale, cv::Scalar::all(0),

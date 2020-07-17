@@ -17,7 +17,7 @@ TEMPLATE_TEST_CASE("benchmark pipelines", "[.][benchmark]", DefaultPipeline,
     pipeline_config.filter = filter;
     pipeline.ConfigPipeline(pipeline_config);
     REQUIRE(pipeline_config.filter.area_enabled);
-    REQUIRE(pipeline_config.filter.fullness_enabled);
+    REQUIRE(pipeline_config.filter.solidity_enabled);
     REQUIRE(pipeline_config.filter.aspect_enabled);
 
     BENCHMARK("ProcessFrame") { return pipeline.ProcessFrame(frame); };
@@ -31,7 +31,7 @@ TEMPLATE_TEST_CASE("benchmark pipelines", "[.][benchmark]", DefaultPipeline,
     pipeline_config.filter.frame_area = frame.cols * frame.rows;
     pipeline.ConfigPipeline(pipeline_config);
     REQUIRE_FALSE(pipeline_config.filter.area_enabled);
-    REQUIRE_FALSE(pipeline_config.filter.fullness_enabled);
+    REQUIRE_FALSE(pipeline_config.filter.solidity_enabled);
     REQUIRE_FALSE(pipeline_config.filter.aspect_enabled);
 
     BENCHMARK("ProcessFrame") { return pipeline.ProcessFrame(frame); };
@@ -42,12 +42,12 @@ TEMPLATE_TEST_CASE("benchmark pipelines", "[.][benchmark]", DefaultPipeline,
 
   SECTION("area filter > 5e-05") {
     FilterConfig filter{
-        {5e-05, 1.0}, {kFullnessMin, kFullnessMax}, {kAspectMin, kAspectMax}};
+        {5e-05, 1.0}, {kSolidityMin, kSolidityMax}, {kAspectMin, kAspectMax}};
     filter.frame_area = frame.cols * frame.rows;
     pipeline_config.filter = filter;
     pipeline.ConfigPipeline(pipeline_config);
     REQUIRE(pipeline_config.filter.area_enabled);
-    REQUIRE_FALSE(pipeline_config.filter.fullness_enabled);
+    REQUIRE_FALSE(pipeline_config.filter.solidity_enabled);
     REQUIRE_FALSE(pipeline_config.filter.aspect_enabled);
 
     BENCHMARK("ProcessFrame") { return pipeline.ProcessFrame(frame); };

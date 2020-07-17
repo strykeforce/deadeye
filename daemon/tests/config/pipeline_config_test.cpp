@@ -1,8 +1,9 @@
 #include "config/pipeline_config.h"
-#include "config/capture_config.h"
 
 #include <opencv2/core/mat.hpp>
+
 #include "catch2/catch.hpp"
+#include "config/capture_config.h"
 
 using namespace deadeye;
 
@@ -31,7 +32,7 @@ TEST_CASE("PipelineConfig to JSON", "[pipeline]") {
   json expected = R"(
 {"hue":[1,2],"sat":[25,24],"sn":2767,"val":[250,251],
 "log":{"fps":0,"path":"/var/opt/deadeye","mount":true},
-"filter":{"area":[0.0,1.0],"aspect":[0.0,20.0],"fullness":[0.0,1.0]}}
+"filter":{"area":[0.0,1.0],"aspect":[0.0,20.0],"solidity":[0.0,1.0]}}
 )"_json;
 
   REQUIRE(j == expected);
@@ -54,7 +55,7 @@ TEST_CASE("PipelineConfig from JSON", "[pipeline]") {
   "sat": [4, 6],
   "val": [8, 10],
   "log": {"fps":1, "path":"/foo"},
-  "filter": {"area":[0.0,1.0], "aspect":[2.0,3.0], "fullness":[4.0,5.0]}
+  "filter": {"area":[0.0,1.0], "aspect":[2.0,3.0], "solidity":[4.0,5.0]}
   }
 )"_json;
 

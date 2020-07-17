@@ -48,7 +48,7 @@ TEST_CASE("GeometricContoursFilter", "[!mayfail][ops]") {
 
   SECTION("area 0.2713") {
     FilterConfig filter{
-        {0.27, 0.29}, {kFullnessMin, kFullnessMax}, {kAspectMin, kAspectMax}};
+        {0.27, 0.29}, {kSolidityMin, kSolidityMax}, {kAspectMin, kAspectMax}};
     filter.frame_area = 1280 * 720;
     GeometricContoursFilter(filter, contours, filtered_contours);
     REQUIRE(filtered_contours.size() == 1);
@@ -56,7 +56,7 @@ TEST_CASE("GeometricContoursFilter", "[!mayfail][ops]") {
 
   SECTION("area 0.0678") {
     FilterConfig filter{
-        {0.06, 0.08}, {kFullnessMin, kFullnessMax}, {kAspectMin, kAspectMax}};
+        {0.06, 0.08}, {kSolidityMin, kSolidityMax}, {kAspectMin, kAspectMax}};
     filter.frame_area = 1280 * 720;
     GeometricContoursFilter(filter, contours, filtered_contours);
     REQUIRE(filtered_contours.size() == 2);
@@ -64,7 +64,7 @@ TEST_CASE("GeometricContoursFilter", "[!mayfail][ops]") {
 
   SECTION("area 0.0170") {
     FilterConfig filter{
-        {0.01, 0.02}, {kFullnessMin, kFullnessMax}, {kAspectMin, kAspectMax}};
+        {0.01, 0.02}, {kSolidityMin, kSolidityMax}, {kAspectMin, kAspectMax}};
     filter.frame_area = 1280 * 720;
     GeometricContoursFilter(filter, contours, filtered_contours);
     REQUIRE(filtered_contours.size() == 4);
@@ -72,7 +72,7 @@ TEST_CASE("GeometricContoursFilter", "[!mayfail][ops]") {
 
   SECTION("area 0.0039") {
     FilterConfig filter{
-        {0.004, 0.006}, {kFullnessMin, kFullnessMax}, {kAspectMin, kAspectMax}};
+        {0.004, 0.006}, {kSolidityMin, kSolidityMax}, {kAspectMin, kAspectMax}};
     filter.frame_area = 1280 * 720;
     GeometricContoursFilter(filter, contours, filtered_contours);
     REQUIRE(filtered_contours.size() == 8);
@@ -80,7 +80,7 @@ TEST_CASE("GeometricContoursFilter", "[!mayfail][ops]") {
 
   SECTION("area 0.0170, 0.0678, 0.2713") {
     FilterConfig filter{
-        {0.01, 1.0}, {kFullnessMin, kFullnessMax}, {kAspectMin, kAspectMax}};
+        {0.01, 1.0}, {kSolidityMin, kSolidityMax}, {kAspectMin, kAspectMax}};
     filter.frame_area = 1280 * 720;
     GeometricContoursFilter(filter, contours, filtered_contours);
     REQUIRE(filtered_contours.size() == 7);

@@ -2,6 +2,7 @@
 #include <fmt/core.h>
 #include <networktables/NetworkTableValue.h>
 #include <spdlog/fmt/ostr.h>
+
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <opencv2/core/types.hpp>
@@ -58,13 +59,13 @@ struct PipelineConfig {
   friend OStream& operator<<(OStream& os, PipelineConfig const& pc) {
     std::string output = fmt::format(
         "PipelineConfig<sn={}, hue=[{},{}], sat=[{},{}], val=[{},{}], "
-        "filter=<area=[{},{}] {}, fullness=[{},{}] {}, aspect=[{},{}] "
+        "filter=<area=[{},{}] {}, solidity=[{},{}] {}, aspect=[{},{}] "
         "{}>, log=<{}, "
         "{}>>",
         pc.sn, pc.hue[0], pc.hue[1], pc.sat[0], pc.sat[1], pc.val[0], pc.val[0],
         pc.filter.area[0], pc.filter.area[1], onoff(pc.filter.area_enabled),
-        pc.filter.fullness[0], pc.filter.fullness[1],
-        onoff(pc.filter.fullness_enabled), pc.filter.aspect[0],
+        pc.filter.solidity[0], pc.filter.solidity[1],
+        onoff(pc.filter.solidity_enabled), pc.filter.aspect[0],
         pc.filter.aspect[1], onoff(pc.filter.aspect_enabled), pc.log.path,
         pc.log.fps);
     os << output;
