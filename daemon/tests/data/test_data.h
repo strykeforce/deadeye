@@ -1,5 +1,6 @@
 #pragma once
 
+#include <opencv2/core/types.hpp>
 #include <string>
 
 #include "config/capture_config.h"
@@ -23,3 +24,8 @@ static deadeye::PipelineConfig kTargetMasterPipelineConfig{
     deadeye::LogConfig()};
 
 static std::string kAreaFilter{DEADEYE_TEST_DATA "area_filter.jpg"};
+
+static cv::Scalar kHsvLow{32, 130, 200};
+static cv::Scalar kHsvHigh{110, 255, 255};
+
+static std::string kSolidityFilter{DEADEYE_TEST_DATA "solidity_filter.jpg"};

@@ -26,17 +26,18 @@ TEST_CASE("FindContours", "[ops]") {
 void MaskWrite(cv::Mat const &mask, Contours const &contours) {
   cv::Mat output;
   cv::cvtColor(mask, output, cv::COLOR_GRAY2BGR);
-  cv::drawContours(output, contours, -1, cv::Scalar(255, 0, 240), 1);
+  cv::drawContours(output, contours, -1, cv::Scalar(255, 0, 240), 2);
   cv::imwrite("mask.jpg", output);
 }
 
-TEST_CASE("GeometricContoursFilter", "[!mayfail][ops]") {
+TEST_CASE("area filter", "[ops]") {
   cv::Mat frame{cv::imread(kAreaFilter)};
   cv::Mat mask;
-  MaskFrame(frame, mask, cv::Scalar(32, 130, 200), cv::Scalar(110, 255, 255));
+  MaskFrame(frame, mask, kHsvLow, kHsvHigh);
 
   Contours contours;
   FindContours(mask, contours);
+  REQUIRE(contours.size() == 15);
 
   Contours filtered_contours;
 
@@ -84,5 +85,53 @@ TEST_CASE("GeometricContoursFilter", "[!mayfail][ops]") {
     filter.frame_area = 1280 * 720;
     GeometricContoursFilter(filter, contours, filtered_contours);
     REQUIRE(filtered_contours.size() == 7);
+  }
+}
+
+TEST_CASE("solidity filter", "[ops]") {
+  cv::Mat frame{cv::imread(kSolidityFilter)};
+  cv::Mat mask;
+  MaskFrame(frame, mask, kHsvLow, kHsvHigh);
+
+  Contours contours;
+  FindContours(mask, contours);
+  REQUIRE(contours.size() == 8);
+
+  // std::vector<cv::Point> hull;
+  // cv::convexHull(contours[1], hull);
+  // contours.push_back(hull);
+  // MaskWrite(mask, contours);
+
+  Contours filtered_contours;
+
+  SECTION("no filters") {
+    FilterConfig filter;
+    GeometricContoursFilter(filter, contours, filtered_contours);
+    REQUIRE(filtered_contours.size() == contours.size());
+  }
+
+  SECTION("solidity 0.35") {
+    FilterConfig filter{
+        {kAreaMin, kAreaMax}, {0.35, 0.37}, {kAspectMin, kAspectMax}};
+    filter.frame_area = 1280 * 720;
+    GeometricContoursFilter(filter, contours, filtered_contours);
+    REQUIRE(filtered_contours.size() == 5);
+  }
+
+  SECTION("solidity 0.4899") {
+    FilterConfig filter{
+        {kAreaMin, kAreaMax}, {0.48, 0.49}, {kAspectMin, kAspectMax}};
+    filter.frame_area = 1280 * 720;
+    GeometricContoursFilter(filter, contours, filtered_contours);
+    REQUIRE(filtered_contours.size() == 1);
+  }
+
+  SECTION("solidity 1.0") {
+    FilterConfig filter{{kAreaMin, kAreaMax},
+                        {kSolidityMax, kSolidityMax},
+                        {kAspectMin, kAspectMax}};
+    filter.frame_area = 1280 * 720;
+    GeometricContoursFilter(filter, contours, filtered_contours);
+    REQUIRE(filtered_contours.size() == 1);
   }
 }
