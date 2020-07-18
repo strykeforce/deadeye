@@ -1,10 +1,12 @@
+#include "lights.h"
+
 #include <spdlog/spdlog.h>
+
 #include <future>
 #include <thread>
 #include <tinyfsm.hpp>
 
 #include "controller.h"
-#include "lights.h"
 
 using namespace deadeye;
 

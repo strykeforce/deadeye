@@ -16,8 +16,8 @@
 #include "config/link_config.h"
 #include "config/pipeline_config.h"
 #include "config/stream_config.h"
-#include "fsm/camera.h"
-#include "fsm/lights.h"
+#include "hardware/camera.h"
+#include "hardware/lights.h"
 #include "pipeline/null_pipeline.h"
 
 // forward declaration

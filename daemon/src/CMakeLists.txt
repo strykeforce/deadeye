@@ -8,7 +8,7 @@ add_library(Deadeye_library
 )
 
 add_subdirectory(config)
-add_subdirectory(fsm)
+add_subdirectory(hardware)
 add_subdirectory(link)
 add_subdirectory(pipeline)
 add_library(Deadeye::library ALIAS Deadeye_library)
