@@ -23,9 +23,10 @@ static deadeye::PipelineConfig kTargetMasterPipelineConfig{
     deadeye::FilterConfig(),
     deadeye::LogConfig()};
 
-static std::string kAreaFilter{DEADEYE_TEST_DATA "area_filter.jpg"};
-
+// test images below will mask with these HSV values
 static cv::Scalar kHsvLow{32, 130, 200};
 static cv::Scalar kHsvHigh{110, 255, 255};
 
+static std::string kAreaFilter{DEADEYE_TEST_DATA "area_filter.jpg"};
 static std::string kSolidityFilter{DEADEYE_TEST_DATA "solidity_filter.jpg"};
+static std::string kAspectFilter{DEADEYE_TEST_DATA "aspect_filter.jpg"};

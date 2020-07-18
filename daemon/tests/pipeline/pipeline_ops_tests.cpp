@@ -44,7 +44,7 @@ TEST_CASE("area filter", "[ops]") {
   SECTION("no filters") {
     FilterConfig filter;
     GeometricContoursFilter(filter, contours, filtered_contours);
-    REQUIRE(filtered_contours.size() == 15);
+    REQUIRE(filtered_contours == contours);
   }
 
   SECTION("area 0.2713") {
@@ -107,7 +107,7 @@ TEST_CASE("solidity filter", "[ops]") {
   SECTION("no filters") {
     FilterConfig filter;
     GeometricContoursFilter(filter, contours, filtered_contours);
-    REQUIRE(filtered_contours.size() == contours.size());
+    REQUIRE(filtered_contours == contours);
   }
 
   SECTION("solidity 0.35") {
@@ -130,6 +130,64 @@ TEST_CASE("solidity filter", "[ops]") {
     FilterConfig filter{{kAreaMin, kAreaMax},
                         {kSolidityMax, kSolidityMax},
                         {kAspectMin, kAspectMax}};
+    filter.frame_area = 1280 * 720;
+    GeometricContoursFilter(filter, contours, filtered_contours);
+    REQUIRE(filtered_contours.size() == 1);
+  }
+}
+
+TEST_CASE("aspect filter", "[ops]") {
+  cv::Mat frame{cv::imread(kAspectFilter)};
+  cv::Mat mask;
+  MaskFrame(frame, mask, kHsvLow, kHsvHigh);
+
+  Contours contours;
+  FindContours(mask, contours);
+  REQUIRE(contours.size() == 5);
+
+  Contours filtered_contours;
+
+  SECTION("no filters") {
+    FilterConfig filter;
+    GeometricContoursFilter(filter, contours, filtered_contours);
+    REQUIRE(filtered_contours == contours);
+  }
+
+  SECTION("aspect 0.1") {
+    FilterConfig filter{
+        {kAreaMin, kAreaMax}, {kSolidityMin, kSolidityMax}, {0.1, 0.1}};
+    filter.frame_area = 1280 * 720;
+    GeometricContoursFilter(filter, contours, filtered_contours);
+    REQUIRE(filtered_contours.size() == 1);
+  }
+
+  SECTION("aspect 0.5") {
+    FilterConfig filter{
+        {kAreaMin, kAreaMax}, {kSolidityMin, kSolidityMax}, {0.5, 0.5}};
+    filter.frame_area = 1280 * 720;
+    GeometricContoursFilter(filter, contours, filtered_contours);
+    REQUIRE(filtered_contours.size() == 1);
+  }
+
+  SECTION("aspect 1.0") {
+    FilterConfig filter{
+        {kAreaMin, kAreaMax}, {kSolidityMin, kSolidityMax}, {1.0, 1.0}};
+    filter.frame_area = 1280 * 720;
+    GeometricContoursFilter(filter, contours, filtered_contours);
+    REQUIRE(filtered_contours.size() == 1);
+  }
+
+  SECTION("aspect 2.0") {
+    FilterConfig filter{
+        {kAreaMin, kAreaMax}, {kSolidityMin, kSolidityMax}, {2.0, 2.0}};
+    filter.frame_area = 1280 * 720;
+    GeometricContoursFilter(filter, contours, filtered_contours);
+    REQUIRE(filtered_contours.size() == 1);
+  }
+
+  SECTION("aspect 10.0") {
+    FilterConfig filter{
+        {kAreaMin, kAreaMax}, {kSolidityMin, kSolidityMax}, {10.0, 210.0}};
     filter.frame_area = 1280 * 720;
     GeometricContoursFilter(filter, contours, filtered_contours);
     REQUIRE(filtered_contours.size() == 1);
