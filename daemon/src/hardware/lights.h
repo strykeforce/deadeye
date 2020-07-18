@@ -3,12 +3,13 @@
 #include <fmt/core.h>
 #include <networktables/NetworkTableInstance.h>
 #include <networktables/NetworkTableValue.h>
+
 #include <atomic>
 #include <future>
 #include <tinyfsm.hpp>
 
 #include "config/deadeye_config.h"
-#include "fsm/led_drive.h"
+#include "led_drive.h"
 
 namespace deadeye {
 // ---------------------------------------------------------------------------
