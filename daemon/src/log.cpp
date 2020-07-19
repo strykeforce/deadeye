@@ -1,6 +1,6 @@
 #include "log.h"
 
-#include "spdlog/cfg/env.h"
+#include <spdlog/cfg/env.h>
 
 #ifdef __linux__
 #include <fmt/core.h>
