@@ -66,16 +66,16 @@ std::ostream& operator<<(std::ostream& os, const StreamConfig& sc) {
 //
 
 namespace {
-constexpr uint32_t nm08 = htonl(0xFF000000);
-constexpr uint32_t nm12 = htonl(0xFFF00000);
-constexpr uint32_t nm16 = htonl(0xFFFF0000);
+const uint32_t nm08 = htonl(0xFF000000);
+const uint32_t nm12 = htonl(0xFFF00000);
+const uint32_t nm16 = htonl(0xFFFF0000);
 
 // 10.0.0.0-10.255.255.255
-constexpr uint32_t n010 = htonl(0x0A000000) & nm08;
+const uint32_t n010 = htonl(0x0A000000) & nm08;
 // 172.16.0.0-172.31.255.255
-constexpr uint32_t n172 = htonl(0xAC100000) & nm12;
+const uint32_t n172 = htonl(0xAC100000) & nm12;
 // 192.168.0.0-192.168.255.255
-constexpr uint32_t n192 = htonl(0xC0A80000) & nm16;
+const uint32_t n192 = htonl(0xC0A80000) & nm16;
 
 bool is_private(struct sockaddr* addr) {
   if (addr == nullptr) return false;
