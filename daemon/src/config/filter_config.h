@@ -16,9 +16,9 @@ static constexpr double kAspectMax = 20.0;
 }  // namespace
 
 struct FilterConfig {
-  static char const* kAreaKey;
-  static char const* kSolidityKey;
-  static char const* kAspectKey;
+  static const char* kAreaKey;
+  static const char* kSolidityKey;
+  static const char* kAspectKey;
 
   using filter_t = std::array<double, 2>;
 
@@ -47,12 +47,12 @@ struct FilterConfig {
 void to_json(json& j, const FilterConfig& l);
 void from_json(const json& j, FilterConfig& l);
 
-inline bool operator==(FilterConfig const& lhs, FilterConfig const& rhs) {
+inline bool operator==(const FilterConfig& lhs, const FilterConfig& rhs) {
   return lhs.area == rhs.area && lhs.solidity == rhs.solidity &&
          lhs.aspect == rhs.aspect;
 }
 
-inline bool operator!=(FilterConfig const& lhs, FilterConfig const& rhs) {
+inline bool operator!=(const FilterConfig& lhs, const FilterConfig& rhs) {
   return !(lhs == rhs);
 }
 

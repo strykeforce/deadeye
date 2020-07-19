@@ -20,12 +20,12 @@ std::string onoff(bool state) { return state ? "(on)" : "(off)"; }
 namespace deadeye {
 
 struct PipelineConfig {
-  static char const* kSerialKey;
-  static char const* kHsvHueKey;
-  static char const* kHsvSatKey;
-  static char const* kHsvValKey;
-  static char const* kFilterKey;
-  static char const* kLogKey;
+  static const char* kSerialKey;
+  static const char* kHsvHueKey;
+  static const char* kHsvSatKey;
+  static const char* kHsvValKey;
+  static const char* kFilterKey;
+  static const char* kLogKey;
 
   using hsv_t = std::array<int, 2>;
 
@@ -56,7 +56,7 @@ struct PipelineConfig {
   cv::Scalar HsvHigh() const { return cv::Scalar(hue[1], sat[1], val[1]); }
 
   template <typename OStream>
-  friend OStream& operator<<(OStream& os, PipelineConfig const& pc) {
+  friend OStream& operator<<(OStream& os, const PipelineConfig& pc) {
     std::string output = fmt::format(
         "PipelineConfig<sn={}, hue=[{},{}], sat=[{},{}], val=[{},{}], "
         "filter=<area=[{},{}] {}, solidity=[{},{}] {}, aspect=[{},{}] "
@@ -76,12 +76,12 @@ struct PipelineConfig {
 void to_json(json& j, const PipelineConfig& p);
 void from_json(const json& j, PipelineConfig& p);
 
-inline bool operator==(PipelineConfig const& lhs, PipelineConfig const& rhs) {
+inline bool operator==(const PipelineConfig& lhs, const PipelineConfig& rhs) {
   return lhs.sn == rhs.sn && lhs.hue == rhs.hue && lhs.sat == rhs.sat &&
          lhs.val == rhs.val && lhs.filter == rhs.filter && lhs.log == rhs.log;
 }
 
-inline bool operator!=(PipelineConfig const& lhs, PipelineConfig const& rhs) {
+inline bool operator!=(const PipelineConfig& lhs, const PipelineConfig& rhs) {
   return !(lhs == rhs);
 }
 

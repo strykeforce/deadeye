@@ -6,9 +6,9 @@ using json = nlohmann::json;
 
 namespace deadeye {
 struct TargetData {
-  static char const* kIdKey;
-  static char const* kSerialKey;
-  static char const* kValidKey;
+  static const char* kIdKey;
+  static const char* kSerialKey;
+  static const char* kValidKey;
 
   std::string id;
   int serial;
@@ -18,8 +18,8 @@ struct TargetData {
   virtual ~TargetData() = default;
   TargetData(std::string id, int serial, bool valid);
 
-  TargetData(TargetData const&) = delete;
-  TargetData& operator=(TargetData const&) = delete;
+  TargetData(const TargetData&) = delete;
+  TargetData& operator=(const TargetData&) = delete;
 
   virtual void DrawMarkers(cv::Mat& preview) const;
   virtual std::string Dump() const;  // json format

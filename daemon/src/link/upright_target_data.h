@@ -8,12 +8,12 @@ using json = nlohmann::json;
 
 namespace deadeye {
 struct UprightTargetData : public TargetData {
-  static char const* kTLX;
-  static char const* kTLY;
-  static char const* kBRX;
-  static char const* kBRY;
-  static char const* kXKey;
-  static char const* kYKey;
+  static const char* kTLX;
+  static const char* kTLY;
+  static const char* kBRX;
+  static const char* kBRY;
+  static const char* kXKey;
+  static const char* kYKey;
 
   cv::Rect bb;
   cv::Point offset;

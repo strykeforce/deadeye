@@ -15,14 +15,14 @@ static const std::string kGainRange = "1 1";
 static const std::array<int, 2> kExposureRange{13000, 8333333};
 }  // namespace
 
-char const* CaptureConfig::kTypeKey{"type"};
-char const* CaptureConfig::kCaptureWidthKey{"cw"};
-char const* CaptureConfig::kCaptureHeightKey{"ch"};
-char const* CaptureConfig::kOutputWidthKey{"ow"};
-char const* CaptureConfig::kOutputHeightKey{"oh"};
-char const* CaptureConfig::kFrameRateKey{"fps"};
-char const* CaptureConfig::kFlipModeKey{"flip"};
-char const* CaptureConfig::kExposureKey{"exp"};
+const char* CaptureConfig::kTypeKey{"type"};
+const char* CaptureConfig::kCaptureWidthKey{"cw"};
+const char* CaptureConfig::kCaptureHeightKey{"ch"};
+const char* CaptureConfig::kOutputWidthKey{"ow"};
+const char* CaptureConfig::kOutputHeightKey{"oh"};
+const char* CaptureConfig::kFrameRateKey{"fps"};
+const char* CaptureConfig::kFlipModeKey{"flip"};
+const char* CaptureConfig::kExposureKey{"exp"};
 
 CaptureConfig::CaptureConfig(Type type, int capture_width, int capture_height,
                              int output_width, int output_height,

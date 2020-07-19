@@ -5,15 +5,16 @@
 #include <ifaddrs.h>
 #include <spdlog/spdlog.h>
 #include <stdio.h>
+
 #include <sstream>
 
 using namespace deadeye;
 using json = nlohmann::json;
 
-char const* StreamConfig::kSerialKey{"sn"};
-char const* StreamConfig::kUrlKey{"url"};
-char const* StreamConfig::kViewKey{"view"};
-char const* StreamConfig::kContourKey{"contour"};
+const char* StreamConfig::kSerialKey{"sn"};
+const char* StreamConfig::kUrlKey{"url"};
+const char* StreamConfig::kViewKey{"view"};
+const char* StreamConfig::kContourKey{"contour"};
 
 namespace {
 std::string stream_url(int inum);
@@ -60,7 +61,7 @@ void deadeye::from_json(const json& j, StreamConfig& sc) {
 // iostream support
 //
 
-std::ostream& operator<<(std::ostream& os, StreamConfig const& sc) {
+std::ostream& operator<<(std::ostream& os, const StreamConfig& sc) {
   os << fmt::format("StreamConfig<{}, {}>", sc.sn, sc.url);
   return os;
 }

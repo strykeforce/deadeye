@@ -7,12 +7,12 @@
 using namespace deadeye;
 using json = nlohmann::json;
 
-char const* UprightTargetData::kTLX{"tx"};
-char const* UprightTargetData::kTLY{"ty"};
-char const* UprightTargetData::kBRX{"bx"};
-char const* UprightTargetData::kBRY{"by"};
-char const* UprightTargetData::kXKey{"x"};
-char const* UprightTargetData::kYKey{"y"};
+const char* UprightTargetData::kTLX{"tx"};
+const char* UprightTargetData::kTLY{"ty"};
+const char* UprightTargetData::kBRX{"bx"};
+const char* UprightTargetData::kBRY{"by"};
+const char* UprightTargetData::kXKey{"x"};
+const char* UprightTargetData::kYKey{"y"};
 
 UprightTargetData::UprightTargetData(std::string id, int sn, bool valid,
                                      cv::Rect bb, cv::Point center)

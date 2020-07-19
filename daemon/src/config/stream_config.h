@@ -14,10 +14,10 @@ struct StreamConfig {
   enum class View { none, original, mask };
   enum class Contour { none, filter, all };
 
-  static char const* kSerialKey;
-  static char const* kUrlKey;
-  static char const* kViewKey;
-  static char const* kContourKey;
+  static const char* kSerialKey;
+  static const char* kUrlKey;
+  static const char* kViewKey;
+  static const char* kContourKey;
 
   int sn = 0;
   std::string url;
@@ -52,7 +52,7 @@ struct StreamConfig {
   }
 
   template <typename OStream>
-  friend OStream& operator<<(OStream& os, StreamConfig const& sc) {
+  friend OStream& operator<<(OStream& os, const StreamConfig& sc) {
     std::string view;
     switch (sc.view) {
       case View::none:
@@ -87,12 +87,12 @@ struct StreamConfig {
 void to_json(json& j, const StreamConfig& p);
 void from_json(const json& j, StreamConfig& p);
 
-inline bool operator==(StreamConfig const& lhs, StreamConfig const& rhs) {
+inline bool operator==(const StreamConfig& lhs, const StreamConfig& rhs) {
   return lhs.view == rhs.view && lhs.contour == rhs.contour &&
          lhs.url == rhs.url;
 }
 
-inline bool operator!=(StreamConfig const& lhs, StreamConfig const& rhs) {
+inline bool operator!=(const StreamConfig& lhs, const StreamConfig& rhs) {
   return !(lhs == rhs);
 }
 

@@ -3,9 +3,9 @@
 using namespace deadeye;
 using json = nlohmann::json;
 
-char const* TargetData::kIdKey{"id"};
-char const* TargetData::kSerialKey{"sn"};
-char const* TargetData::kValidKey{"valid"};
+const char* TargetData::kIdKey{"id"};
+const char* TargetData::kSerialKey{"sn"};
+const char* TargetData::kValidKey{"valid"};
 
 TargetData::TargetData(std::string id, int serial, bool valid)
     : id(id), serial(serial), valid(valid) {}

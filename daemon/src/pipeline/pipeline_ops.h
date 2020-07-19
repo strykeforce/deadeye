@@ -3,15 +3,15 @@
 #include <opencv2/imgproc.hpp>
 
 namespace deadeye {
-inline void MaskFrame(cv::Mat const& frame, cv::Mat& output,
-                      cv::Scalar const& low, cv::Scalar const& high) {
+inline void MaskFrame(const cv::Mat& frame, cv::Mat& output,
+                      const cv::Scalar& low, const cv::Scalar& high) {
   cv::cvtColor(frame, output, cv::COLOR_BGR2HSV);
   cv::inRange(output, (low), (high), output);
 }
 
 using Contours = std::vector<std::vector<cv::Point>>;
 
-inline void FindContours(cv::Mat const& mask, Contours& contours) {
+inline void FindContours(const cv::Mat& mask, Contours& contours) {
   contours.clear();
   cv::findContours(mask, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
 }
@@ -19,8 +19,8 @@ inline void FindContours(cv::Mat const& mask, Contours& contours) {
 /**
  * Filters according to filter; dest is copy of src if filters not enabled;
  */
-inline void GeometricContoursFilter(FilterConfig const& filter,
-                                    Contours const& src, Contours& dest) {
+inline void GeometricContoursFilter(const FilterConfig& filter,
+                                    const Contours& src, Contours& dest) {
   if (!filter.enabled) {
     dest = src;
     return;
@@ -32,7 +32,7 @@ inline void GeometricContoursFilter(FilterConfig const& filter,
   if (filter.area_enabled) assert(filter.frame_area > 0);
 #endif
 
-  for (auto const& contour : src) {
+  for (const auto& contour : src) {
     // set these to true if filter is skipped, false otherwise
     bool area_ok = !filter.area_enabled;
     bool solidity_ok = !filter.solidity_enabled;

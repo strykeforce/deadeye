@@ -3,9 +3,9 @@
 using namespace deadeye;
 using json = nlohmann::json;
 
-char const* FilterConfig::kAreaKey{"area"};
-char const* FilterConfig::kSolidityKey{"solidity"};
-char const* FilterConfig::kAspectKey{"aspect"};
+const char* FilterConfig::kAreaKey{"area"};
+const char* FilterConfig::kSolidityKey{"solidity"};
+const char* FilterConfig::kAspectKey{"aspect"};
 
 FilterConfig::FilterConfig(filter_t area, filter_t solidity, filter_t aspect)
     : area(area), solidity(solidity), aspect(aspect) {
