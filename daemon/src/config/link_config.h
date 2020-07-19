@@ -9,9 +9,9 @@ using json = nlohmann::json;
 namespace deadeye {
 
 struct LinkConfig {
-  static const char* kAddressKey;
-  static const char* kPortKey;
-  static const char* kEnabledKey;
+  static constexpr auto kAddressKey = "address";
+  static constexpr auto kPortKey = "port";
+  static constexpr auto kEnabledKey = "enabled";
 
   std::string address;
   int port;

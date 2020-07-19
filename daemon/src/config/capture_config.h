@@ -14,14 +14,14 @@ namespace deadeye {
 struct CaptureConfig {
   enum class Type { autosrc, jetson, osx, test };
 
-  static const char* kTypeKey;
-  static const char* kCaptureWidthKey;
-  static const char* kCaptureHeightKey;
-  static const char* kOutputWidthKey;
-  static const char* kOutputHeightKey;
-  static const char* kFrameRateKey;
-  static const char* kFlipModeKey;
-  static const char* kExposureKey;
+  static constexpr auto kTypeKey = "type";
+  static constexpr auto kCaptureWidthKey = "cw";
+  static constexpr auto kCaptureHeightKey = "ch";
+  static constexpr auto kOutputWidthKey = "ow";
+  static constexpr auto kOutputHeightKey = "oh";
+  static constexpr auto kFrameRateKey = "fps";
+  static constexpr auto kFlipModeKey = "flip";
+  static constexpr auto kExposureKey = "exp";
 
   Type type = Type::test;
   int capture_width = 0;

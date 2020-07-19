@@ -20,12 +20,12 @@ std::string onoff(bool state) { return state ? "(on)" : "(off)"; }
 namespace deadeye {
 
 struct PipelineConfig {
-  static const char* kSerialKey;
-  static const char* kHsvHueKey;
-  static const char* kHsvSatKey;
-  static const char* kHsvValKey;
-  static const char* kFilterKey;
-  static const char* kLogKey;
+  static constexpr auto kSerialKey = "sn";
+  static constexpr auto kHsvHueKey = "hue";
+  static constexpr auto kHsvSatKey = "sat";
+  static constexpr auto kHsvValKey = "val";
+  static constexpr auto kFilterKey = "filter";
+  static constexpr auto kLogKey = "log";
 
   using hsv_t = std::array<int, 2>;
 

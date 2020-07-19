@@ -16,9 +16,9 @@ static constexpr double kAspectMax = 20.0;
 }  // namespace
 
 struct FilterConfig {
-  static const char* kAreaKey;
-  static const char* kSolidityKey;
-  static const char* kAspectKey;
+  static constexpr auto kAreaKey = "area";
+  static constexpr auto kSolidityKey = "solidity";
+  static constexpr auto kAspectKey = "aspect";
 
   using filter_t = std::array<double, 2>;
 

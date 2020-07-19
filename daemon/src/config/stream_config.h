@@ -14,10 +14,10 @@ struct StreamConfig {
   enum class View { none, original, mask };
   enum class Contour { none, filter, all };
 
-  static const char* kSerialKey;
-  static const char* kUrlKey;
-  static const char* kViewKey;
-  static const char* kContourKey;
+  static constexpr auto kSerialKey = "sn";
+  static constexpr auto kUrlKey = "url";
+  static constexpr auto kViewKey = "view";
+  static constexpr auto kContourKey = "contour";
 
   int sn = 0;
   std::string url;

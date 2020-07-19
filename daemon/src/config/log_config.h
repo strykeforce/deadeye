@@ -7,10 +7,10 @@ using json = nlohmann::json;
 namespace deadeye {
 
 struct LogConfig {
-  static const char* kFpsKey;
-  static const char* kPathKey;
-  static const char* kMountKey;
-  static const char* kDefaultPath;
+  static constexpr auto kFpsKey = "fps";
+  static constexpr auto kPathKey = "path";
+  static constexpr auto kMountKey = "mount";
+  static constexpr auto kDefaultPath = "/var/opt/deadeye";
 
   std::string path{kDefaultPath};
   int fps{0};

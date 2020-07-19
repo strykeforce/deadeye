@@ -3,10 +3,6 @@
 using namespace deadeye;
 using json = nlohmann::json;
 
-const char* LinkConfig::kAddressKey{"address"};
-const char* LinkConfig::kPortKey{"port"};
-const char* LinkConfig::kEnabledKey{"enabled"};
-
 LinkConfig::LinkConfig() {}
 
 LinkConfig::LinkConfig(std::string address, int port, bool enabled)

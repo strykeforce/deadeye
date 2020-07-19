@@ -3,13 +3,6 @@
 using namespace deadeye;
 using json = nlohmann::json;
 
-const char* PipelineConfig::kSerialKey{"sn"};
-const char* PipelineConfig::kHsvHueKey{"hue"};
-const char* PipelineConfig::kHsvSatKey{"sat"};
-const char* PipelineConfig::kHsvValKey{"val"};
-const char* PipelineConfig::kFilterKey{"filter"};
-const char* PipelineConfig::kLogKey{"log"};
-
 PipelineConfig::PipelineConfig(int sn, hsv_t hue, hsv_t sat, hsv_t val,
                                FilterConfig filter, LogConfig log)
     : sn(sn), hue(hue), sat(sat), val(val), filter(filter), log(log) {}
