@@ -98,7 +98,7 @@ Controller::~Controller() {
   try {
     nt::Flush(inst_);
     nt::DestroyEntryListenerPoller(poller_);
-  } catch (std::exception const& e) {
+  } catch (const std::exception& e) {
     spdlog::error("~Controller: {}", e.what());
   }
   spdlog::info("Deadeye Controller exiting.");

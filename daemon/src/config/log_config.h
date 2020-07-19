@@ -7,10 +7,10 @@ using json = nlohmann::json;
 namespace deadeye {
 
 struct LogConfig {
-  static char const* kFpsKey;
-  static char const* kPathKey;
-  static char const* kMountKey;
-  static char const* kDefaultPath;
+  static constexpr auto kFpsKey = "fps";
+  static constexpr auto kPathKey = "path";
+  static constexpr auto kMountKey = "mount";
+  static constexpr auto kDefaultPath = "/var/opt/deadeye";
 
   std::string path{kDefaultPath};
   int fps{0};
@@ -30,11 +30,11 @@ struct LogConfig {
 void to_json(json& j, const LogConfig& l);
 void from_json(const json& j, LogConfig& l);
 
-inline bool operator==(LogConfig const& lhs, LogConfig const& rhs) {
+inline bool operator==(const LogConfig& lhs, const LogConfig& rhs) {
   return lhs.path == rhs.path && lhs.fps == rhs.fps && lhs.mount == rhs.mount;
 }
 
-inline bool operator!=(LogConfig const& lhs, LogConfig const& rhs) {
+inline bool operator!=(const LogConfig& lhs, const LogConfig& rhs) {
   return !(lhs == rhs);
 }
 

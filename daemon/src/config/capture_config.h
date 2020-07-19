@@ -2,6 +2,7 @@
 #include <fmt/core.h>
 #include <networktables/NetworkTableValue.h>
 #include <spdlog/fmt/ostr.h>
+
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <opencv2/core/types.hpp>
@@ -13,14 +14,14 @@ namespace deadeye {
 struct CaptureConfig {
   enum class Type { autosrc, jetson, osx, test };
 
-  static char const* kTypeKey;
-  static char const* kCaptureWidthKey;
-  static char const* kCaptureHeightKey;
-  static char const* kOutputWidthKey;
-  static char const* kOutputHeightKey;
-  static char const* kFrameRateKey;
-  static char const* kFlipModeKey;
-  static char const* kExposureKey;
+  static constexpr auto kTypeKey = "type";
+  static constexpr auto kCaptureWidthKey = "cw";
+  static constexpr auto kCaptureHeightKey = "ch";
+  static constexpr auto kOutputWidthKey = "ow";
+  static constexpr auto kOutputHeightKey = "oh";
+  static constexpr auto kFrameRateKey = "fps";
+  static constexpr auto kFlipModeKey = "flip";
+  static constexpr auto kExposureKey = "exp";
 
   Type type = Type::test;
   int capture_width = 0;
@@ -66,7 +67,7 @@ struct CaptureConfig {
   cv::Size OutputSize() const;
 
   template <typename OStream>
-  friend OStream& operator<<(OStream& os, CaptureConfig const& cc) {
+  friend OStream& operator<<(OStream& os, const CaptureConfig& cc) {
     std::string output = fmt::format(
         "CaptureConfig<type={}, cw={}, ch={}, ow={}, oh={}, fps={}, flip={}, "
         "exp={}>",
@@ -80,7 +81,7 @@ struct CaptureConfig {
 void to_json(json& j, const CaptureConfig& cc);
 void from_json(const json& j, CaptureConfig& cc);
 
-inline bool operator==(CaptureConfig const& lhs, CaptureConfig const& rhs) {
+inline bool operator==(const CaptureConfig& lhs, const CaptureConfig& rhs) {
   return lhs.capture_width == rhs.capture_width &&
          lhs.capture_height == rhs.capture_height &&
          lhs.output_width == rhs.output_width &&
@@ -89,7 +90,7 @@ inline bool operator==(CaptureConfig const& lhs, CaptureConfig const& rhs) {
          lhs.exposure == rhs.exposure;
 }
 
-inline bool operator!=(CaptureConfig const& lhs, CaptureConfig const& rhs) {
+inline bool operator!=(const CaptureConfig& lhs, const CaptureConfig& rhs) {
   return !(lhs == rhs);
 }
 

@@ -3,11 +3,6 @@
 using namespace deadeye;
 using json = nlohmann::json;
 
-char const* LogConfig::kPathKey{"path"};
-char const* LogConfig::kMountKey{"mount"};
-char const* LogConfig::kFpsKey{"fps"};
-char const* LogConfig::kDefaultPath{"/var/opt/deadeye"};
-
 LogConfig::LogConfig(std::string path, int fps, bool mount)
     : path(path), fps(fps), mount(mount) {}
 

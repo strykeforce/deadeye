@@ -9,13 +9,13 @@ class DefaultPipeline : public AbstractPipeline {
   bool StartCapture() override;
   void StopCapture() override;
 
-  bool GrabFrame(cv::Mat &frame) override;
+  bool GrabFrame(cv::Mat& frame) override;
 
-  void FilterContours(FilterConfig const &filter, Contours const &src,
-                      Contours &dest) override;
+  void FilterContours(const FilterConfig& filter, const Contours& src,
+                      Contours& dest) override;
 
  protected:
-  TargetDataPtr ProcessTarget(Contours const &contours) override;
+  TargetDataPtr ProcessTarget(const Contours& contours) override;
   virtual std::string ToString() const override;
 
   cv::VideoCapture cap_;

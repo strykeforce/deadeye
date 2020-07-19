@@ -8,19 +8,19 @@ using json = nlohmann::json;
 
 namespace deadeye {
 struct MinAreaTargetData : public TargetData {
-  static char const* kBLX;
-  static char const* kBLY;
-  static char const* kTLX;
-  static char const* kTLY;
-  static char const* kTRX;
-  static char const* kTRY;
-  static char const* kBRX;
-  static char const* kBRY;
-  static char const* kXKey;
-  static char const* kYKey;
-  static char const* kWKey;
-  static char const* kHKey;
-  static char const* kAngleKey;
+  static const char* kBLX;
+  static const char* kBLY;
+  static const char* kTLX;
+  static const char* kTLY;
+  static const char* kTRX;
+  static const char* kTRY;
+  static const char* kBRX;
+  static const char* kBRY;
+  static const char* kXKey;
+  static const char* kYKey;
+  static const char* kWKey;
+  static const char* kHKey;
+  static const char* kAngleKey;
 
   cv::RotatedRect rect;
   cv::Point2f offset;

@@ -37,13 +37,13 @@
 #endif
 
 #define DEADEYE_MAIN()                                                     \
-  int main(int argc, char **argv) {                                        \
+  int main(int argc, char** argv) {                                        \
     try {                                                                  \
       ::deadeye::log::Configure("deadeye");                                \
       ::deadeye::Pipelines pipelines({DE_P0, DE_P1, DE_P2, DE_P3, DE_P4}); \
       ::deadeye::Controller::Initialize(std::move(pipelines));             \
       ::deadeye::Controller::GetInstance().Run();                          \
-    } catch (std::exception const &e) {                                    \
+    } catch (const std::exception& e) {                                    \
       spdlog::critical("DEADEYE_MAIN: {}", e.what());                      \
       std::exit(EXIT_FAILURE);                                             \
     }                                                                      \

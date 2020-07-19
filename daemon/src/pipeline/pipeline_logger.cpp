@@ -157,7 +157,7 @@ void PipelineLogger::operator()() {
   spdlog::trace("PipelineLogger<{}>: task exited", id_);
 }
 
-bool PipelineLogger::CheckMount(LogConfig const& config) {
+bool PipelineLogger::CheckMount(const LogConfig& config) {
   struct stat mnt;
   struct stat parent;
 
@@ -190,7 +190,7 @@ bool PipelineLogger::CheckMount(LogConfig const& config) {
   }
 }
 
-bool PipelineLogger::CheckDir(LogConfig const& config) {
+bool PipelineLogger::CheckDir(const LogConfig& config) {
   // verify base path is dir
   DIR* dir = opendir(config.path.c_str());
   if (dir) {

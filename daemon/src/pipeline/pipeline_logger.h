@@ -35,8 +35,8 @@ class PipelineLogger {
   void operator()();
 
  private:
-  bool CheckMount(LogConfig const& config);
-  bool CheckDir(LogConfig const& config);
+  bool CheckMount(const LogConfig& config);
+  bool CheckDir(const LogConfig& config);
 
   std::string id_;
 
