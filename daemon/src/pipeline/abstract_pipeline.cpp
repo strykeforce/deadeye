@@ -10,47 +10,62 @@ AbstractPipeline::AbstractPipeline(int inum)
 
 static int gcd(int a, int b) { return (b == 0) ? a : gcd(b, a % b); }
 
-/**
- * ConfigCapture handles changes to capture settings and only takes effect
- * after pipeline restart.
- */
-void AbstractPipeline::ConfigCapture(CaptureConfig const &config) {
-  capture_config_ = config;
-  pipeline_type_ = capture_config_.PipelineType();
-  // fps_ = capture_config_.frame_rate;
-  int h = capture_config_.OutputSize().height;
-  int w = capture_config_.OutputSize().width;
-  preview_resize_ = w != kStreamSize.width;
+namespace {
+std::pair<bool, int> StreamOutputFormat(const CaptureConfig& config) {
+  int h = config.OutputSize().height;
+  int w = config.OutputSize().width;
+  bool resize = w != kStreamSize.width;
 
   int r = gcd(w, h);
   int wr = w / r;
   int hr = h / r;
-  spdlog::debug("{}: capture output: {}x{} ({}:{})", *this, w, h, wr, hr);
+  spdlog::debug("StreamOutputFormat: capture output: {}x{} ({}:{})", w, h, wr,
+                hr);
 
+  int border;
   if (wr == 4 && hr == 3) {  // 4:3
-    preview_border_ = 0;
+    int border = 0;
   } else if (wr == 16 && hr == 9) {
-    preview_border_ = h / 6;
+    border = h / 6;
   } else {
-    spdlog::error("{}: invalid aspect ratio: {}:{}", *this, wr, hr);
-    preview_border_ = 0;
+    spdlog::error("StreamOutputFormat: invalid aspect ratio: {}:{}", wr, hr);
+    border = 0;
   }
 
-  spdlog::debug("{}: {} {}", *this, capture_config_,
-                preview_resize_ ? "[preview resized]" : "");
+  spdlog::debug("StreamOutputFormat: {} {}", config,
+                resize ? "[preview resized]" : "");
+
+  return std::pair<bool, int>(resize, border);
+}
+}  // namespace
+
+/**
+ * Configure handles changes to capture settings and only takes effect
+ * after pipeline restart.
+ */
+void AbstractPipeline::Configure(const CaptureConfig& config) {
+  capture_config_ = config;
+
+  center_ = cv::Point{config.output_width / 2, config.output_height / 2};
+  center2f_ = static_cast<cv::Point2f>(center_);
+  frame_area_ = config.output_height * config.output_width;
+
+  auto of = StreamOutputFormat(capture_config_);
+  preview_resize_ = of.first;
+  preview_border_ = of.second;
 }
 
 /**
- * ConfigPipeline handles changes to pipeline config.
+ * Configure handles changes to pipeline config.
  */
-void AbstractPipeline::ConfigPipeline(PipelineConfig const &config) {
+void AbstractPipeline::Configure(PipelineConfig const& config) {
   pipeline_config_ = config;
 }
 
 /**
- * ConfigStream handles changes to video streaming.
+ * Configure handles changes to video streaming.
  */
-void AbstractPipeline::ConfigStream(StreamConfig const &config) {
+void AbstractPipeline::Configure(StreamConfig const& config) {
   stream_config_ = config;
 }
 
@@ -69,7 +84,7 @@ Contours AbstractPipeline::GetFilteredContours() {
 /**
  * Process a frame and return target data.
  */
-TargetDataPtr AbstractPipeline::ProcessFrame(cv::Mat const &frame) {
+TargetDataPtr AbstractPipeline::ProcessFrame(cv::Mat const& frame) {
   frame_ = frame;
   MaskFrame(frame_, hsv_threshold_output_, pipeline_config_.HsvLow(),
             pipeline_config_.HsvHigh());
@@ -81,8 +96,17 @@ TargetDataPtr AbstractPipeline::ProcessFrame(cv::Mat const &frame) {
   return std::move(target_data);
 }
 
-void AbstractPipeline::ProcessStreamFrame(cv::Mat &preview,
-                                          TargetData const *target_data) {
+void AbstractPipeline::FilterContours(FilterConfig const& filter,
+                                      Contours const& src, Contours& dest) {
+  GeometricContoursFilter(filter, src, dest);
+}
+
+TargetDataPtr AbstractPipeline::ProcessTarget(Contours const& contours) {
+  return std::make_unique<TargetData>(id_, 0, false);
+}
+
+void AbstractPipeline::ProcessStreamFrame(cv::Mat& preview,
+                                          TargetData const* target_data) {
   using View = StreamConfig::View;
   using Contour = StreamConfig::Contour;
 
@@ -127,4 +151,9 @@ void AbstractPipeline::ProcessStreamFrame(cv::Mat &preview,
 
   if (preview_resize_)
     cv::resize(preview, preview, kStreamSize, 0, 0, cv::INTER_AREA);
+}
+
+std::string AbstractPipeline::ToString() const {
+  assert(pipeline_type_ != "");
+  return fmt::format("AbstractPipeline<{}, {}>", id_, pipeline_type_);
 }

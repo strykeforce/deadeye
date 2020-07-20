@@ -9,6 +9,7 @@
 
 #include "config/deadeye_config.h"
 #include "link/link.h"
+#include "pipeline/gstreamer_capture.h"
 #include "pipeline/pipeline_logger.h"
 
 using namespace deadeye;
@@ -21,21 +22,19 @@ void PipelineRunner::SetPipeline(std::unique_ptr<Pipeline> pipeline) {
   pipeline_ = std::move(pipeline);
 }
 
-Pipeline *PipelineRunner::GetPipeline() { return pipeline_.get(); }
+Pipeline* PipelineRunner::GetPipeline() { return pipeline_.get(); }
 
-void PipelineRunner::ConfigCapture(CaptureConfig const &config) {
-  safe::WriteAccess<SafeCaptureConfig> value{capture_config_};
-  *value = config;
-  capture_config_ready_ = true;
+void PipelineRunner::Configure(CaptureConfig config) {
+  capture_config_ = config;
 }
 
-void PipelineRunner::ConfigPipeline(PipelineConfig const &config) {
+void PipelineRunner::Configure(PipelineConfig const& config) {
   safe::WriteAccess<SafePipelineConfig> value{pipeline_config_};
   *value = config;
   pipeline_config_ready_ = true;
 }
 
-void PipelineRunner::ConfigStream(StreamConfig const &config) {
+void PipelineRunner::Configure(StreamConfig const& config) {
   safe::WriteAccess<SafeStreamConfig> value{stream_config_};
   *value = config;
   stream_config_ready_ = true;
@@ -46,7 +45,6 @@ void PipelineRunner::ConfigStream(StreamConfig const &config) {
  */
 void PipelineRunner::Run() {
   cancel_ = false;
-  capture_config_ready_ = true;
   pipeline_config_ready_ = true;
   stream_config_ready_ = true;
 
@@ -55,15 +53,9 @@ void PipelineRunner::Run() {
 
   // load capture config at start of run
   int fps{0};
-  bool is_yuv{false};
-  if (capture_config_ready_.load()) {
-    capture_config_ready_ = false;
-    safe::ReadAccess<SafeCaptureConfig> value{capture_config_};
-    pipeline_->ConfigCapture(*value);
-    fps = value->frame_rate;
-    is_yuv = value->type == CaptureConfig::Type::jetson;
-    spdlog::debug("{}:{}", *pipeline_, *value);
-  }
+  pipeline_->Configure(capture_config_);
+  fps = capture_config_.frame_rate;
+  spdlog::debug("{}:{}", *pipeline_, capture_config_);
 
   // Set up streaming. CScore streaming will hang on connection if too many
   // connections are attempted, current workaround is for user to  disable and
@@ -86,15 +78,11 @@ void PipelineRunner::Run() {
   auto lfuture = std::async(
       std::launch::async,
       PipelineLogger(DEADEYE_UNIT + std::to_string(pipeline_->GetInum()),
-                     *capture_config_.readAccess(),
-                     *pipeline_config_.readAccess(), log_queue, cancel_));
+                     capture_config_, *pipeline_config_.readAccess(), log_queue,
+                     cancel_));
 
   // start capture
-  if (!pipeline_->StartCapture()) {
-    spdlog::critical("{} failed to start video capture", *pipeline_);
-    pipeline_->StopCapture();
-    return;
-  }
+  GstreamerCapture capture{capture_config_};
 
   cv::TickMeter tm;
   cv::Mat frame;
@@ -104,7 +92,6 @@ void PipelineRunner::Run() {
   while (true) {  // Loop until pipeline cancelled
 
     if (cancel_.load()) {
-      pipeline_->StopCapture();
       LogTickMeter(tm);
       return;
     }
@@ -115,7 +102,7 @@ void PipelineRunner::Run() {
     if (pipeline_config_ready_.load()) {
       pipeline_config_ready_ = false;
       safe::ReadAccess<SafePipelineConfig> value{pipeline_config_};
-      pipeline_->ConfigPipeline(*value);
+      pipeline_->Configure(*value);
       log_enabled = value->log.fps > 0;
       log_interval = log_enabled ? fps / value->log.fps : 0;
       log_counter = log_interval;
@@ -126,18 +113,16 @@ void PipelineRunner::Run() {
       stream_config_ready_ = false;
       safe::ReadAccess<SafeStreamConfig> value{stream_config_};
 
-      pipeline_->ConfigStream(*value);
+      pipeline_->Configure(*value);
       stream_enabled = value->StreamEnabled();
       spdlog::debug("{}:{} [{}]", *pipeline_, *value,
                     stream_enabled ? "enabled" : "disabled");
     }
 
     // Get new frame
-    if (!pipeline_->GrabFrame(frame)) {
+    if (!capture.Grab(frame)) {
       spdlog::critical("{} failed to grab frame", *pipeline_);
     }
-
-    if (is_yuv) cv::cvtColor(frame, frame, cv::COLOR_YUV2BGR_I420);
 
     // Process frame through pipeline
     TargetDataPtr target_data = pipeline_->ProcessFrame(frame);
@@ -169,7 +154,7 @@ void PipelineRunner::Stop() { cancel_ = true; }
 // private
 /////////////////////////////////////////////////////////////////////////////
 
-void PipelineRunner::LogTickMeter(cv::TickMeter &tm) {
+void PipelineRunner::LogTickMeter(cv::TickMeter& tm) {
   spdlog::info("{}: stopping", *pipeline_);
   double avg = tm.getTimeSec() / tm.getCounter();
   double fps = 1.0 / avg;
@@ -189,8 +174,8 @@ void InitializeLogging() {
       {WPI_LOG_CRITICAL, level::critical}};
 
   cs::SetLogger(
-      [](unsigned int level, char const *file, unsigned int line,
-         char const *msg) {
+      [](unsigned int level, char const* file, unsigned int line,
+         char const* msg) {
         spdlog::log(levels[level], "cscore: {} in {}, line {}", msg, file,
                     line);
       },

@@ -94,7 +94,9 @@
     "unordered_set": "cpp",
     "concepts": "cpp",
     "ranges": "cpp",
-    "stop_token": "cpp"
+    "stop_token": "cpp",
+    "__cxx_version": "cpp",
+    "filesystem": "cpp"
   },
   "cmake.configureSettings": {
     "DEADEYE_UNIT_ID": "E",

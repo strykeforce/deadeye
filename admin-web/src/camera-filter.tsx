@@ -42,9 +42,9 @@ const CameraFilter = ({ camera }: Props): JSX.Element => {
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Fullness</TableCell>
+              <TableCell>Solidity</TableCell>
               <TableCell>
-                {filter.fullness[0]} - {filter.fullness[1]}
+                {filter.solidity[0]} - {filter.solidity[1]}
               </TableCell>
             </TableRow>
             <TableRow>

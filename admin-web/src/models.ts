@@ -37,7 +37,7 @@ export interface CaptureConfig {
 export interface FilterConfig {
   area: number[];
   aspect: number[];
-  fullness: number[];
+  solidity: number[];
 }
 
 export interface LogConfig {
