@@ -12,7 +12,7 @@ using SafePipelineConfig = safe::Safe<PipelineConfig>;
 using SafeStreamConfig = safe::Safe<StreamConfig>;
 using PipelinePtr = std::unique_ptr<Pipeline>;
 
-class PipelineRunner {
+class Runner {
  public:
   void SetPipeline(std::unique_ptr<Pipeline> pipeline);
   Pipeline* GetPipeline();

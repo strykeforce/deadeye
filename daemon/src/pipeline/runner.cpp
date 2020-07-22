@@ -1,4 +1,4 @@
-#include "pipeline_runner.h"
+#include "pipeline/runner.h"
 
 #include <cscore.h>
 #include <cscore_cv.h>
@@ -18,23 +18,21 @@ namespace {
 void InitializeLogging();
 }  // namespace
 
-void PipelineRunner::SetPipeline(std::unique_ptr<Pipeline> pipeline) {
+void Runner::SetPipeline(std::unique_ptr<Pipeline> pipeline) {
   pipeline_ = std::move(pipeline);
 }
 
-Pipeline* PipelineRunner::GetPipeline() { return pipeline_.get(); }
+Pipeline* Runner::GetPipeline() { return pipeline_.get(); }
 
-void PipelineRunner::Configure(CaptureConfig config) {
-  capture_config_ = config;
-}
+void Runner::Configure(CaptureConfig config) { capture_config_ = config; }
 
-void PipelineRunner::Configure(PipelineConfig const& config) {
+void Runner::Configure(PipelineConfig const& config) {
   safe::WriteAccess<SafePipelineConfig> value{pipeline_config_};
   *value = config;
   pipeline_config_ready_ = true;
 }
 
-void PipelineRunner::Configure(StreamConfig const& config) {
+void Runner::Configure(StreamConfig const& config) {
   safe::WriteAccess<SafeStreamConfig> value{stream_config_};
   *value = config;
   stream_config_ready_ = true;
@@ -43,7 +41,7 @@ void PipelineRunner::Configure(StreamConfig const& config) {
 /**
  * Run loop
  */
-void PipelineRunner::Run() {
+void Runner::Run() {
   cancel_ = false;
   pipeline_config_ready_ = true;
   stream_config_ready_ = true;
@@ -148,13 +146,13 @@ void PipelineRunner::Run() {
   }
 }
 
-void PipelineRunner::Stop() { cancel_ = true; }
+void Runner::Stop() { cancel_ = true; }
 
 /////////////////////////////////////////////////////////////////////////////
 // private
 /////////////////////////////////////////////////////////////////////////////
 
-void PipelineRunner::LogTickMeter(cv::TickMeter& tm) {
+void Runner::LogTickMeter(cv::TickMeter& tm) {
   spdlog::info("{}: stopping", *pipeline_);
   double avg = tm.getTimeSec() / tm.getCounter();
   double fps = 1.0 / avg;

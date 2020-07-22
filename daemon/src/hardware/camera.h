@@ -15,7 +15,7 @@
 #include "config/pipeline_config.h"
 #include "config/stream_config.h"
 #include "pipeline/pipeline.h"
-#include "pipeline/pipeline_runner.h"
+#include "pipeline/runner.h"
 
 namespace deadeye {
 
@@ -79,7 +79,7 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
   virtual void exit() = 0;
 
  protected:
-  static PipelineRunner pipeline_runner_;
+  static Runner pipeline_runner_;
   static std::future<void> pipeline_future_;
   static std::atomic<bool> has_error_;
   static std::string error_;
@@ -93,7 +93,7 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
 
 // state variable definitions
 template <int inum>
-PipelineRunner Camera<inum>::pipeline_runner_;
+Runner Camera<inum>::pipeline_runner_;
 
 template <int inum>
 std::future<void> Camera<inum>::pipeline_future_;
