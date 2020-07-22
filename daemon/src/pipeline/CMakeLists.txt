@@ -3,7 +3,7 @@ target_sources(Deadeye_library
   ${CMAKE_CURRENT_LIST_DIR}/abstract_pipeline.cpp
   ${CMAKE_CURRENT_LIST_DIR}/upright_rect_pipeline.cpp
   ${CMAKE_CURRENT_LIST_DIR}/min_area_rect_pipeline.cpp
-  ${CMAKE_CURRENT_LIST_DIR}/pipeline_logger.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/logger.cpp
   ${CMAKE_CURRENT_LIST_DIR}/pipeline_runner.cpp
   ${CMAKE_CURRENT_LIST_DIR}/gstreamer_capture.cpp
 )

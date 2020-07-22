@@ -10,7 +10,7 @@
 #include "config/deadeye_config.h"
 #include "link/link.h"
 #include "pipeline/gstreamer_capture.h"
-#include "pipeline/pipeline_logger.h"
+#include "pipeline/logger.h"
 
 using namespace deadeye;
 
@@ -74,12 +74,12 @@ void PipelineRunner::Run() {
   unsigned int sn{0};
 
   // start logger if used
-  PipelineLoggerQueue log_queue;
-  auto lfuture = std::async(
-      std::launch::async,
-      PipelineLogger(DEADEYE_UNIT + std::to_string(pipeline_->GetInum()),
-                     capture_config_, *pipeline_config_.readAccess(), log_queue,
-                     cancel_));
+  LoggerQueue log_queue;
+  auto lfuture =
+      std::async(std::launch::async,
+                 Logger(DEADEYE_UNIT + std::to_string(pipeline_->GetInum()),
+                        capture_config_, *pipeline_config_.readAccess(),
+                        log_queue, cancel_));
 
   // start capture
   GstreamerCapture capture{capture_config_};
@@ -139,8 +139,8 @@ void PipelineRunner::Run() {
 
     // Log frame if neccessary
     if (log_enabled && --log_counter == 0) {
-      log_queue.enqueue(PipelineLogEntry{
-          frame, pipeline_->GetFilteredContours(), std::move(target_data)});
+      log_queue.enqueue(LogEntry{frame, pipeline_->GetFilteredContours(),
+                                 std::move(target_data)});
       log_counter = log_interval;
     }
 
