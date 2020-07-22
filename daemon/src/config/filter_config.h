@@ -6,14 +6,12 @@ using json = nlohmann::json;
 
 namespace deadeye {
 
-namespace {
 static constexpr double kAreaMin = 0.0;
 static constexpr double kAreaMax = 1.0;
 static constexpr double kSolidityMin = 0.0;
 static constexpr double kSolidityMax = 1.0;
 static constexpr double kAspectMin = 0.0;
 static constexpr double kAspectMax = 20.0;
-}  // namespace
 
 struct FilterConfig {
   static constexpr auto kAreaKey = "area";
@@ -28,10 +26,10 @@ struct FilterConfig {
 
   int frame_area{0};
 
-  bool enabled = false;
-  bool area_enabled = false;
-  bool solidity_enabled = false;
-  bool aspect_enabled = false;
+  bool area_enabled{false};
+  bool solidity_enabled{false};
+  bool aspect_enabled{false};
+  bool enabled{false};
 
   /**
    * Default constructor.

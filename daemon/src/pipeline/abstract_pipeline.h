@@ -5,7 +5,6 @@
 
 #include "config/capture_config.h"
 #include "config/pipeline_config.h"
-#include "config/stream_config.h"
 #include "link/target_data.h"
 #include "pipeline/pipeline.h"
 
@@ -15,38 +14,45 @@ class AbstractPipeline : public Pipeline {
  public:
   AbstractPipeline(int inum);
 
-  void ConfigCapture(CaptureConfig const &config) override;
-  void ConfigPipeline(PipelineConfig const &config) override;
-  void ConfigStream(StreamConfig const &config) override;
+  void Configure(const CaptureConfig& config) override;
+  void Configure(const PipelineConfig& config) override;
 
-  virtual TargetDataPtr ProcessFrame(cv::Mat const &frame) override;
+  virtual cv::Mat GetMask() const override { return hsv_threshold_output_; }
 
-  Contours GetContours() override;
-  Contours GetFilteredContours() override;
+  virtual Contours GetContours() const override {
+    return find_contours_output_;
+  }
 
-  virtual void ProcessStreamFrame(cv::Mat &preview,
-                                  TargetData const *target_data) override;
+  virtual Contours GetFilteredContours() const override {
+    return filter_contours_output_;
+  }
+
+  virtual TargetDataPtr ProcessFrame(const cv::Mat& frame) override;
 
  protected:
-  virtual void FilterContours(FilterConfig const &filter, Contours const &src,
-                              Contours &dest) = 0;
-  virtual TargetDataPtr ProcessTarget(Contours const &contours) = 0;
+  virtual void FilterContours(const FilterConfig& filter, const Contours& src,
+                              Contours& dest);
+  virtual TargetDataPtr ProcessTarget(const Contours& contours);
 
   std::string id_;
   std::string pipeline_type_{"unknown"};
 
  protected:
+  virtual std::string ToString() const override;
+
   CaptureConfig capture_config_;
   PipelineConfig pipeline_config_;
-  StreamConfig stream_config_;
+
+  // remove?
+  cv::Point center_;
+  cv::Point2f center2f_;
+  double frame_area_;
 
  private:
   cv::Mat frame_;
   cv::Mat hsv_threshold_output_;
   Contours find_contours_output_;
   Contours filter_contours_output_;
-  int preview_border_;
-  bool preview_resize_;
 };
 
 }  // namespace deadeye

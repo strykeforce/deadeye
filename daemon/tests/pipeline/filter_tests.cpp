@@ -5,15 +5,15 @@ using namespace deadeye;
 TEST_CASE("pipeline filter tests", "[pipeline][filter]") {
   cv::Mat frame = cv::imread(kTargetMaster);
 
-  DefaultPipeline pipeline{0};
-  pipeline.ConfigCapture(kTargetMasterCaptureConfig);
+  AbstractPipeline pipeline{0};
+  pipeline.Configure(kTargetMasterCaptureConfig);
   PipelineConfig pipeline_config{kTargetMasterPipelineConfig};
   pipeline_config.filter.frame_area = frame.cols * frame.rows;
 
   SECTION("all disabled") {
     REQUIRE_FALSE(pipeline_config.filter.enabled);
 
-    pipeline.ConfigPipeline(pipeline_config);
+    pipeline.Configure(pipeline_config);
     pipeline.ProcessFrame(frame);
     Contours contours = pipeline.GetFilteredContours();
 
@@ -30,7 +30,7 @@ TEST_CASE("pipeline filter tests", "[pipeline][filter]") {
     REQUIRE(pipeline_config.filter.solidity_enabled);
     REQUIRE(pipeline_config.filter.aspect_enabled);
 
-    pipeline.ConfigPipeline(pipeline_config);
+    pipeline.Configure(pipeline_config);
     pipeline.ProcessFrame(frame);
     Contours contours = pipeline.GetFilteredContours();
 
@@ -47,7 +47,7 @@ TEST_CASE("pipeline filter tests", "[pipeline][filter]") {
     REQUIRE_FALSE(pipeline_config.filter.solidity_enabled);
     REQUIRE_FALSE(pipeline_config.filter.aspect_enabled);
 
-    pipeline.ConfigPipeline(pipeline_config);
+    pipeline.Configure(pipeline_config);
     pipeline.ProcessFrame(frame);
     Contours contours = pipeline.GetFilteredContours();
 

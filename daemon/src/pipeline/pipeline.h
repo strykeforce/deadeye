@@ -20,30 +20,22 @@ class Pipeline {
  public:
   Pipeline(int inum) : inum_(inum) {}
   virtual ~Pipeline() = default;
-  Pipeline(Pipeline const &) = delete;
-  Pipeline &operator=(Pipeline const &) = delete;
+  Pipeline(const Pipeline&) = delete;
+  Pipeline& operator=(const Pipeline&) = delete;
 
-  int GetInum() { return inum_; }
+  int GetInum() const { return inum_; }
 
-  virtual void ConfigCapture(CaptureConfig const &config) = 0;
-  virtual void ConfigPipeline(PipelineConfig const &config) = 0;
-  virtual void ConfigStream(StreamConfig const &config) = 0;
+  virtual cv::Mat GetMask() const = 0;
+  virtual void Configure(const CaptureConfig& config) = 0;
+  virtual void Configure(const PipelineConfig& config) = 0;
 
-  virtual bool StartCapture() = 0;
-  virtual void StopCapture() = 0;
+  virtual Contours GetContours() const = 0;
+  virtual Contours GetFilteredContours() const = 0;
 
-  virtual bool GrabFrame(cv::Mat &frame) = 0;
-
-  virtual TargetDataPtr ProcessFrame(cv::Mat const &frame) = 0;
-
-  virtual Contours GetContours() = 0;
-  virtual Contours GetFilteredContours() = 0;
-
-  virtual void ProcessStreamFrame(cv::Mat &preview,
-                                  TargetData const *target_data) = 0;
+  virtual TargetDataPtr ProcessFrame(const cv::Mat& frame) = 0;
 
   template <typename OStream>
-  friend OStream &operator<<(OStream &os, Pipeline const &p) {
+  friend OStream& operator<<(OStream& os, const Pipeline& p) {
     os << p.ToString();
     return os;
   }

@@ -27,8 +27,9 @@ FilterConfig GetFilterNone(cv::Size size) {
 }
 }  // namespace
 
-TEMPLATE_TEST_CASE("benchmark pipelines", "[.][benchmark]", DefaultPipeline,
-                   UprightRectPipeline, MinAreaRectPipeline) {
+TEMPLATE_TEST_CASE("BM001: ProcessFrame",
+                   "[.][pipeline][benchmark][" DEADEYE_UNIT "]",
+                   AbstractPipeline, UprightRectPipeline, MinAreaRectPipeline) {
   cv::Mat frame = cv::imread(kTargetMaster);
 
   TestType pipeline{0};
@@ -41,7 +42,7 @@ TEMPLATE_TEST_CASE("benchmark pipelines", "[.][benchmark]", DefaultPipeline,
   SECTION("1280x720") {
     // all filters
     pipeline_config.filter = GetFilterAll(frame.size());
-    pipeline.ConfigPipeline(pipeline_config);
+    pipeline.Configure(pipeline_config);
 
     BENCHMARK("all filters") {
       auto td = pipeline.ProcessFrame(frame);
@@ -53,7 +54,7 @@ TEMPLATE_TEST_CASE("benchmark pipelines", "[.][benchmark]", DefaultPipeline,
 
     // no filters
     pipeline_config.filter = GetFilterNone(frame.size());
-    pipeline.ConfigPipeline(pipeline_config);
+    pipeline.Configure(pipeline_config);
 
     BENCHMARK("no filters") {
       auto td = pipeline.ProcessFrame(frame);
@@ -69,7 +70,7 @@ TEMPLATE_TEST_CASE("benchmark pipelines", "[.][benchmark]", DefaultPipeline,
 
     // all filters
     pipeline_config.filter = GetFilterAll(frame.size());
-    pipeline.ConfigPipeline(pipeline_config);
+    pipeline.Configure(pipeline_config);
 
     BENCHMARK("all filters") {
       auto td = pipeline.ProcessFrame(frame);
@@ -78,7 +79,7 @@ TEMPLATE_TEST_CASE("benchmark pipelines", "[.][benchmark]", DefaultPipeline,
 
     // no filters
     pipeline_config.filter = GetFilterNone(frame.size());
-    pipeline.ConfigPipeline(pipeline_config);
+    pipeline.Configure(pipeline_config);
 
     BENCHMARK("no filters") {
       auto td = pipeline.ProcessFrame(frame);
@@ -91,7 +92,7 @@ TEMPLATE_TEST_CASE("benchmark pipelines", "[.][benchmark]", DefaultPipeline,
 
     // all filters
     pipeline_config.filter = GetFilterAll(frame.size());
-    pipeline.ConfigPipeline(pipeline_config);
+    pipeline.Configure(pipeline_config);
 
     BENCHMARK("all filters") {
       auto td = pipeline.ProcessFrame(frame);
@@ -100,7 +101,7 @@ TEMPLATE_TEST_CASE("benchmark pipelines", "[.][benchmark]", DefaultPipeline,
 
     // no filters
     pipeline_config.filter = GetFilterNone(frame.size());
-    pipeline.ConfigPipeline(pipeline_config);
+    pipeline.Configure(pipeline_config);
 
     BENCHMARK("no filters") {
       auto td = pipeline.ProcessFrame(frame);
@@ -113,7 +114,7 @@ TEMPLATE_TEST_CASE("benchmark pipelines", "[.][benchmark]", DefaultPipeline,
 
     // all filters
     pipeline_config.filter = GetFilterAll(frame.size());
-    pipeline.ConfigPipeline(pipeline_config);
+    pipeline.Configure(pipeline_config);
 
     BENCHMARK("all filters") {
       auto td = pipeline.ProcessFrame(frame);
@@ -122,7 +123,7 @@ TEMPLATE_TEST_CASE("benchmark pipelines", "[.][benchmark]", DefaultPipeline,
 
     // no filteres
     pipeline_config.filter = GetFilterNone(frame.size());
-    pipeline.ConfigPipeline(pipeline_config);
+    pipeline.Configure(pipeline_config);
 
     BENCHMARK("no filters") {
       auto td = pipeline.ProcessFrame(frame);
@@ -134,7 +135,7 @@ TEMPLATE_TEST_CASE("benchmark pipelines", "[.][benchmark]", DefaultPipeline,
   StreamConfig stream_config{0};
   stream_config.view = StreamConfig::View::mask;
   stream_config.contour = StreamConfig::Contour::all;
-  pipeline.ConfigStream(stream_config);
+  pipeline.Configure(stream_config);
 
   TargetDataPtr target_data =
       std::make_unique<TargetData>(DEADEYE_UNIT + std::to_string(0), 0, false);

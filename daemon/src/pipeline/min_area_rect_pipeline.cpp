@@ -2,15 +2,17 @@
 
 #include <fmt/core.h>
 #include <spdlog/spdlog.h>
+
 #include <opencv2/imgproc.hpp>
+
 #include "link/min_area_target_data.h"
 
 using namespace deadeye;
 
-MinAreaRectPipeline::MinAreaRectPipeline(int inum) : DefaultPipeline{inum} {}
+MinAreaRectPipeline::MinAreaRectPipeline(int inum) : AbstractPipeline{inum} {}
 
 // Target is center of contour bounding box.
-TargetDataPtr MinAreaRectPipeline::ProcessTarget(Contours const &contours) {
+TargetDataPtr MinAreaRectPipeline::ProcessTarget(Contours const& contours) {
   if (contours.size() == 0)
     return std::make_unique<MinAreaTargetData>(id_, 0, false, cv::RotatedRect(),
                                                center2f_);

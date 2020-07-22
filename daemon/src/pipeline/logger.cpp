@@ -1,4 +1,4 @@
-#include "pipeline/pipeline_logger.h"
+#include "pipeline/logger.h"
 
 #include <dirent.h>
 #include <fmt/core.h>
@@ -19,19 +19,17 @@ namespace {
 static const cv::Size kFrameSize{640, 360};
 }
 
-int PipelineLogger::enable_count_{0};
+int Logger::enable_count_{0};
 
-PipelineLogEntry::PipelineLogEntry(cv::Mat const frame,
-                                   Contours filtered_contours,
-                                   TargetDataPtr target)
+LogEntry::LogEntry(cv::Mat const frame, Contours filtered_contours,
+                   TargetDataPtr target)
     : frame(frame.clone()),
       filtered_contours(filtered_contours),
       target(std::move(target)) {}
 
-PipelineLogger::PipelineLogger(std::string id, CaptureConfig capture_config,
-                               PipelineConfig pipeline_config,
-                               PipelineLoggerQueue& queue,
-                               std::atomic<bool>& cancel)
+Logger::Logger(std::string id, CaptureConfig capture_config,
+               PipelineConfig pipeline_config, LoggerQueue& queue,
+               std::atomic<bool>& cancel)
     : id_(id),
       enabled_(pipeline_config.log.fps > 0 && CheckMount(pipeline_config.log) &&
                CheckDir(pipeline_config.log)),
@@ -43,19 +41,19 @@ PipelineLogger::PipelineLogger(std::string id, CaptureConfig capture_config,
       queue_(queue),
       cancel_(cancel) {
   // disable logging if filesystem checks fail
-  PipelineLogger::enable_count_++;
+  Logger::enable_count_++;
   template_ = fmt::format("{}/{{}}/{}-{{}}.jpg", pipeline_config.log.path,
-                          PipelineLogger::enable_count_);
+                          Logger::enable_count_);
 }
 
-void PipelineLogger::operator()() {
+void Logger::operator()() {
   int seq = 1;
-  PipelineLogEntry entry;
+  LogEntry entry;
   if (enabled_)
-    spdlog::info("PipelineLogger<{}>: logging to {}", id_,
+    spdlog::info("Logger<{}>: logging to {}", id_,
                  fmt::format(template_, id_, "nnn"));
   else
-    spdlog::warn("PipelineLogger<{}>: logging disabled", id_);
+    spdlog::warn("Logger<{}>: logging disabled", id_);
 
   while (!cancel_.load()) {
     if (!queue_.wait_dequeue_timed(entry, std::chrono::milliseconds(100))) {
@@ -144,26 +142,25 @@ void PipelineLogger::operator()() {
 
       cv::imwrite(path, output);
     } catch (const cv::Exception& ex) {
-      spdlog::error("PipelineLogger<{}>: write exception: {}", id_, ex.what());
+      spdlog::error("Logger<{}>: write exception: {}", id_, ex.what());
     }
-    spdlog::trace("PipelineLogger<{}>: wrote image to {}", id_, path);
+    spdlog::trace("Logger<{}>: wrote image to {}", id_, path);
 
     if (queue_.size_approx() > 0)
-      spdlog::warn("PipelineLogger<{}>: queue filling: {}", id_,
-                   queue_.size_approx());
+      spdlog::warn("Logger<{}>: queue filling: {}", id_, queue_.size_approx());
 
     seq++;
   }
-  spdlog::trace("PipelineLogger<{}>: task exited", id_);
+  spdlog::trace("Logger<{}>: task exited", id_);
 }
 
-bool PipelineLogger::CheckMount(const LogConfig& config) {
+bool Logger::CheckMount(const LogConfig& config) {
   struct stat mnt;
   struct stat parent;
 
   // check mount point
   if (stat(config.path.c_str(), &mnt)) {
-    spdlog::error("PipelineLogger<{}>: failed to stat {}: {}", id_, config.path,
+    spdlog::error("Logger<{}>: failed to stat {}: {}", id_, config.path,
                   std::strerror(errno));
     return false;
   }
@@ -171,7 +168,7 @@ bool PipelineLogger::CheckMount(const LogConfig& config) {
   // ...and its parent
   std::string parent_path = config.path + "/..";
   if (stat(parent_path.c_str(), &parent)) {
-    spdlog::error("PipelineLogger<{}>: failed to stat {}: {}", id_, parent_path,
+    spdlog::error("Logger<{}>: failed to stat {}: {}", id_, parent_path,
                   std::strerror(errno));
     return false;
   }
@@ -179,28 +176,26 @@ bool PipelineLogger::CheckMount(const LogConfig& config) {
   // compare st_dev fields, if equal then both belong to same filesystem
   bool mounted = mnt.st_dev != parent.st_dev;
   if (mounted == config.mount) {
-    spdlog::debug("PipelineLogger<{}>: {} is a mounted filesystem", id_,
-                  config.path);
+    spdlog::debug("Logger<{}>: {} is a mounted filesystem", id_, config.path);
     return true;
   } else {
-    spdlog::error(
-        "PipelineLogger<{}>: {} has mounted filesystem is {}, expected {}", id_,
-        config.path, mounted, config.mount);
+    spdlog::error("Logger<{}>: {} has mounted filesystem is {}, expected {}",
+                  id_, config.path, mounted, config.mount);
     return false;
   }
 }
 
-bool PipelineLogger::CheckDir(const LogConfig& config) {
+bool Logger::CheckDir(const LogConfig& config) {
   // verify base path is dir
   DIR* dir = opendir(config.path.c_str());
   if (dir) {
     closedir(dir);
   } else if (ENOENT == errno) {
-    spdlog::error("PipelineLogger<{}>: {} does not exist", id_, config.path);
+    spdlog::error("Logger<{}>: {} does not exist", id_, config.path);
     return false;
   } else {
-    spdlog::error("PipelineLogger<{}>: failed to opendir {}: {}", id_,
-                  config.path, std::strerror(errno));
+    spdlog::error("Logger<{}>: failed to opendir {}: {}", id_, config.path,
+                  std::strerror(errno));
     return false;
   }
 
@@ -209,14 +204,14 @@ bool PipelineLogger::CheckDir(const LogConfig& config) {
   if (dir) {
     closedir(dir);
   } else if (ENOENT == errno) {
-    spdlog::info("PipelineLogger<{}>: making directory {}", id_, path);
+    spdlog::info("Logger<{}>: making directory {}", id_, path);
     if (mkdir(path.c_str(), 0777)) {
-      spdlog::error("PipelineLogger<{}>: failed to mkdir {}: {}", id_, path,
+      spdlog::error("Logger<{}>: failed to mkdir {}: {}", id_, path,
                     std::strerror(errno));
       return false;
     }
   } else {
-    spdlog::error("PipelineLogger<{}>: failed to opendir {}: {}", id_, path,
+    spdlog::error("Logger<{}>: failed to opendir {}: {}", id_, path,
                   std::strerror(errno));
     return false;
   }

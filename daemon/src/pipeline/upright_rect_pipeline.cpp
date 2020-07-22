@@ -2,6 +2,7 @@
 
 #include <fmt/core.h>
 #include <spdlog/spdlog.h>
+
 #include <opencv2/imgproc.hpp>
 
 // #include "config/pipeline_config.h"
@@ -10,11 +11,11 @@
 
 using namespace deadeye;
 
-UprightRectPipeline::UprightRectPipeline(int inum) : DefaultPipeline{inum} {}
+UprightRectPipeline::UprightRectPipeline(int inum) : AbstractPipeline{inum} {}
 
 // Target is center of contour bounding box.
-TargetDataPtr UprightRectPipeline::ProcessTarget(Contours const &contours) {
-  if (contours.size() == 0)
+TargetDataPtr UprightRectPipeline::ProcessTarget(Contours const& contours) {
+  if (contours.empty())
     return std::make_unique<UprightTargetData>(id_, 0, false,
                                                cv::Rect{0, 0, 0, 0}, center_);
   auto contour = contours[0];

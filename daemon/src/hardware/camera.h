@@ -15,7 +15,7 @@
 #include "config/pipeline_config.h"
 #include "config/stream_config.h"
 #include "pipeline/pipeline.h"
-#include "pipeline/pipeline_runner.h"
+#include "pipeline/runner.h"
 
 namespace deadeye {
 
@@ -51,37 +51,35 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
     pipeline_runner_.SetPipeline(std::move(pipeline));
   }
 
-  static Pipeline* GetPipeline() {
-    return pipeline_runner_.GetPipeline();
-  }
+  static Pipeline* GetPipeline() { return pipeline_runner_.GetPipeline(); }
 
-  static void Initialize(CaptureConfig const &cc, PipelineConfig const &pc,
-                         StreamConfig const &sc) {
-    pipeline_runner_.ConfigCapture(cc);
-    pipeline_runner_.ConfigPipeline(pc);
-    pipeline_runner_.ConfigStream(sc);
+  static void Initialize(CaptureConfig const& cc, PipelineConfig const& pc,
+                         StreamConfig const& sc) {
+    pipeline_runner_.Configure(cc);
+    pipeline_runner_.Configure(pc);
+    pipeline_runner_.Configure(sc);
   }
 
  private:
-  void react(tinyfsm::Event const &) {}  // default
+  void react(tinyfsm::Event const&) {}  // default
 
-  virtual void react(CameraOn const &) {}
-  virtual void react(CameraOff const &) {}
-  virtual void react(ConfigCapture const &c) {
-    Camera<inum>::pipeline_runner_.ConfigCapture(c.config);
+  virtual void react(CameraOn const&) {}
+  virtual void react(CameraOff const&) {}
+  virtual void react(ConfigCapture const& c) {
+    Camera<inum>::pipeline_runner_.Configure(c.config);
   }
-  virtual void react(ConfigPipeline const &c) {
-    Camera<inum>::pipeline_runner_.ConfigPipeline(c.config);
+  virtual void react(ConfigPipeline const& c) {
+    Camera<inum>::pipeline_runner_.Configure(c.config);
   }
-  virtual void react(ConfigStream const &s) {
-    Camera<inum>::pipeline_runner_.ConfigStream(s.config);
+  virtual void react(ConfigStream const& s) {
+    Camera<inum>::pipeline_runner_.Configure(s.config);
   }
 
   virtual void entry() = 0;
   virtual void exit() = 0;
 
  protected:
-  static PipelineRunner pipeline_runner_;
+  static Runner pipeline_runner_;
   static std::future<void> pipeline_future_;
   static std::atomic<bool> has_error_;
   static std::string error_;
@@ -95,7 +93,7 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
 
 // state variable definitions
 template <int inum>
-PipelineRunner Camera<inum>::pipeline_runner_;
+Runner Camera<inum>::pipeline_runner_;
 
 template <int inum>
 std::future<void> Camera<inum>::pipeline_future_;

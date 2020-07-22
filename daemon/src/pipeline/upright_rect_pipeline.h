@@ -1,12 +1,12 @@
 #pragma once
-#include "default_pipeline.h"
+#include "pipeline/abstract_pipeline.h"
 
 namespace deadeye {
-class UprightRectPipeline : public DefaultPipeline {
+class UprightRectPipeline : public AbstractPipeline {
  public:
   UprightRectPipeline(int inum);
 
-  TargetDataPtr ProcessTarget(Contours const &contours) final;
+  TargetDataPtr ProcessTarget(Contours const& contours) final;
 
  protected:
   std::string ToString() const final;

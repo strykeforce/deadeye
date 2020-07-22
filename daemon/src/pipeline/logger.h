@@ -14,24 +14,23 @@
 
 namespace deadeye {
 
-struct PipelineLogEntry {
-  PipelineLogEntry() = default;
-  PipelineLogEntry(cv::Mat const frame, Contours filtered_contours,
-                   TargetDataPtr target);
+struct LogEntry {
+  LogEntry() = default;
+  LogEntry(cv::Mat const frame, Contours filtered_contours,
+           TargetDataPtr target);
 
   cv::Mat frame;
   Contours filtered_contours;
   TargetDataPtr target;
 };
 
-using PipelineLoggerQueue =
-    moodycamel::BlockingReaderWriterQueue<PipelineLogEntry>;
+using LoggerQueue = moodycamel::BlockingReaderWriterQueue<LogEntry>;
 
-class PipelineLogger {
+class Logger {
  public:
-  PipelineLogger(std::string id, CaptureConfig capture_config,
-                 PipelineConfig pipeline_config, PipelineLoggerQueue& queue,
-                 std::atomic<bool>& cancel);
+  Logger(std::string id, CaptureConfig capture_config,
+         PipelineConfig pipeline_config, LoggerQueue& queue,
+         std::atomic<bool>& cancel);
   void operator()();
 
  private:
@@ -47,7 +46,7 @@ class PipelineLogger {
   cv::Scalar hsv_high_;
   FilterConfig filter_;
   std::string template_;
-  PipelineLoggerQueue& queue_;
+  LoggerQueue& queue_;
   std::atomic<bool>& cancel_;
   std::chrono::high_resolution_clock::time_point begin_{
       std::chrono::high_resolution_clock::now()};
