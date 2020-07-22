@@ -23,19 +23,16 @@ class Pipeline {
   Pipeline(const Pipeline&) = delete;
   Pipeline& operator=(const Pipeline&) = delete;
 
-  int GetInum() { return inum_; }
+  int GetInum() const { return inum_; }
 
+  virtual cv::Mat GetMask() const = 0;
   virtual void Configure(const CaptureConfig& config) = 0;
   virtual void Configure(const PipelineConfig& config) = 0;
-  virtual void Configure(const StreamConfig& config) = 0;
 
-  virtual Contours GetContours() = 0;
-  virtual Contours GetFilteredContours() = 0;
+  virtual Contours GetContours() const = 0;
+  virtual Contours GetFilteredContours() const = 0;
 
   virtual TargetDataPtr ProcessFrame(const cv::Mat& frame) = 0;
-
-  virtual void ProcessStreamFrame(cv::Mat& preview,
-                                  const TargetData* target_data) = 0;
 
   template <typename OStream>
   friend OStream& operator<<(OStream& os, const Pipeline& p) {

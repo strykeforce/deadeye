@@ -1,22 +1,15 @@
 #include "pipeline/runner.h"
 
-#include <cscore.h>
-#include <cscore_cv.h>
-#include <wpi/Logger.h>
-
 #include <future>
-#include <opencv2/imgproc.hpp>
+// #include <opencv2/imgproc.hpp>
 
 #include "config/deadeye_config.h"
 #include "link/link.h"
 #include "pipeline/gstreamer_capture.h"
 #include "pipeline/logger.h"
+#include "pipeline/streamer.h"
 
 using namespace deadeye;
-
-namespace {
-void InitializeLogging();
-}  // namespace
 
 void Runner::SetPipeline(std::unique_ptr<Pipeline> pipeline) {
   pipeline_ = std::move(pipeline);
@@ -46,7 +39,6 @@ void Runner::Run() {
   pipeline_config_ready_ = true;
   stream_config_ready_ = true;
 
-  InitializeLogging();
   spdlog::info("{}: starting", *pipeline_);
 
   // load capture config at start of run
@@ -58,11 +50,7 @@ void Runner::Run() {
   // Set up streaming. CScore streaming will hang on connection if too many
   // connections are attempted, current workaround is for user to  disable and
   // reenable the stream to reset.
-  cs::MjpegServer stream_server{"cvhttpserver", 5805 + pipeline_->GetInum()};
-  cs::CvSource stream_source{"cvsource", cs::VideoMode::kMJPEG,
-                             kStreamSize.width, kStreamSize.height, 30};
-  stream_server.SetSource(stream_source);
-  spdlog::info("{} streaming on port {}", *pipeline_, stream_server.GetPort());
+  Streamer streamer(pipeline_.get(), capture_config_.OutputSize());
 
   Link link{pipeline_->GetInum()};
   cv::Scalar hsv_low, hsv_high;
@@ -111,7 +99,7 @@ void Runner::Run() {
       stream_config_ready_ = false;
       safe::ReadAccess<SafeStreamConfig> value{stream_config_};
 
-      pipeline_->Configure(*value);
+      streamer.Configure(*value);
       stream_enabled = value->StreamEnabled();
       spdlog::debug("{}:{} [{}]", *pipeline_, *value,
                     stream_enabled ? "enabled" : "disabled");
@@ -129,11 +117,7 @@ void Runner::Run() {
     // Send target data to client
     link.Send(target_data.get());
 
-    if (stream_enabled) {
-      cv::Mat preview;
-      pipeline_->ProcessStreamFrame(preview, target_data.get());
-      stream_source.PutFrame(preview);
-    }
+    if (stream_enabled) streamer.Process(frame, target_data.get());
 
     // Log frame if neccessary
     if (log_enabled && --log_counter == 0) {
@@ -159,25 +143,3 @@ void Runner::LogTickMeter(cv::TickMeter& tm) {
   spdlog::info("{}: avg. time = {:6.3f} ms, FPS = {:5.2f}", *pipeline_,
                avg * 1000.0, fps);
 }
-
-namespace {
-void InitializeLogging() {
-  using namespace wpi;
-  using namespace spdlog;
-  static std::map<unsigned int, level::level_enum> levels{
-      {WPI_LOG_DEBUG4, level::debug},     {WPI_LOG_DEBUG3, level::debug},
-      {WPI_LOG_DEBUG2, level::debug},     {WPI_LOG_DEBUG1, level::debug},
-      {WPI_LOG_DEBUG, level::debug},      {WPI_LOG_INFO, level::info},
-      {WPI_LOG_WARNING, level::warn},     {WPI_LOG_ERROR, level::err},
-      {WPI_LOG_CRITICAL, level::critical}};
-
-  cs::SetLogger(
-      [](unsigned int level, char const* file, unsigned int line,
-         char const* msg) {
-        spdlog::log(levels[level], "cscore: {} in {}, line {}", msg, file,
-                    line);
-      },
-      WPI_LOG_WARNING);
-}
-
-}  // namespace

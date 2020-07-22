@@ -5,7 +5,6 @@
 
 #include "config/capture_config.h"
 #include "config/pipeline_config.h"
-#include "config/stream_config.h"
 #include "link/target_data.h"
 #include "pipeline/pipeline.h"
 
@@ -17,15 +16,18 @@ class AbstractPipeline : public Pipeline {
 
   void Configure(const CaptureConfig& config) override;
   void Configure(const PipelineConfig& config) override;
-  void Configure(const StreamConfig& config) override;
 
-  Contours GetContours() override;
-  Contours GetFilteredContours() override;
+  virtual cv::Mat GetMask() const override { return hsv_threshold_output_; }
+
+  virtual Contours GetContours() const override {
+    return find_contours_output_;
+  }
+
+  virtual Contours GetFilteredContours() const override {
+    return filter_contours_output_;
+  }
 
   virtual TargetDataPtr ProcessFrame(const cv::Mat& frame) override;
-
-  virtual void ProcessStreamFrame(cv::Mat& preview,
-                                  const TargetData* target_data) override;
 
  protected:
   virtual void FilterContours(const FilterConfig& filter, const Contours& src,
@@ -40,7 +42,6 @@ class AbstractPipeline : public Pipeline {
 
   CaptureConfig capture_config_;
   PipelineConfig pipeline_config_;
-  StreamConfig stream_config_;
 
   // remove?
   cv::Point center_;
@@ -52,8 +53,6 @@ class AbstractPipeline : public Pipeline {
   cv::Mat hsv_threshold_output_;
   Contours find_contours_output_;
   Contours filter_contours_output_;
-  int preview_border_;
-  bool preview_resize_;
 };
 
 }  // namespace deadeye
