@@ -5,6 +5,7 @@
 
 #include "../data/test_data.h"
 #include "catch2/catch.hpp"
+#include "config/deadeye_config.h"
 #include "pipeline/abstract_pipeline.h"
 #include "pipeline/min_area_rect_pipeline.h"
 #include "pipeline/pipeline_ops.h"

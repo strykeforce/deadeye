@@ -4,7 +4,8 @@ using namespace deadeye;
 
 static double e = 1e-6;
 
-TEST_CASE("pipeline ops separate", "[.][ops]") {
+TEST_CASE("BM002: pipeline ops separate",
+          "[.][ops][benchmark][" DEADEYE_UNIT "]") {
   cv::Mat frame = cv::imread(kTargetMaster);
   PipelineConfig pc{kTargetMasterPipelineConfig};
 
@@ -34,7 +35,8 @@ TEST_CASE("pipeline ops separate", "[.][ops]") {
   };
 }
 
-TEST_CASE("pipeline ops together", "[.][ops]") {
+TEST_CASE("BM003: pipeline ops together",
+          "[.][ops][benchmark][" DEADEYE_UNIT "]") {
   cv::Mat frame = cv::imread(kTargetMaster);
   PipelineConfig pc{kTargetMasterPipelineConfig};
 

@@ -27,8 +27,9 @@ FilterConfig GetFilterNone(cv::Size size) {
 }
 }  // namespace
 
-TEMPLATE_TEST_CASE("benchmark pipelines", "[.][benchmark]", AbstractPipeline,
-                   UprightRectPipeline, MinAreaRectPipeline) {
+TEMPLATE_TEST_CASE("BM001: ProcessFrame",
+                   "[.][pipeline][benchmark][" DEADEYE_UNIT "]",
+                   AbstractPipeline, UprightRectPipeline, MinAreaRectPipeline) {
   cv::Mat frame = cv::imread(kTargetMaster);
 
   TestType pipeline{0};
