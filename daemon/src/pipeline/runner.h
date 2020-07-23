@@ -4,6 +4,9 @@
 #include <memory>
 #include <opencv2/core/utility.hpp>
 
+#include "config/capture_config.h"
+#include "config/pipeline_config.h"
+#include "config/stream_config.h"
 #include "pipeline/pipeline.h"
 
 namespace deadeye {

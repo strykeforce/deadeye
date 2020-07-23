@@ -4,6 +4,8 @@
 
 #include <opencv2/imgproc.hpp>
 
+#include "pipeline/pipeline.h"
+
 using namespace deadeye;
 
 namespace {

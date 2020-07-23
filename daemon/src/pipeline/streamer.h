@@ -5,10 +5,12 @@
 #include <opencv2/core/mat.hpp>
 
 #include "config/capture_config.h"
+#include "config/stream_config.h"
 #include "link/target_data.h"
-#include "pipeline/pipeline.h"
 
 namespace deadeye {
+
+class Pipeline;
 
 class Streamer {
  public:
