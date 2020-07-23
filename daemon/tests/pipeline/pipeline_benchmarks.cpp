@@ -9,20 +9,18 @@ FilterConfig GetFilterAll(cv::Size size) {
                  {kSolidityMin + e, kSolidityMax},
                  {kAspectMin, kAspectMax - e}};
   f.frame_area = size.area();
-  REQUIRE(f.enabled);
-  REQUIRE(f.area_enabled);
-  REQUIRE(f.solidity_enabled);
-  REQUIRE(f.aspect_enabled);
+  REQUIRE(f.IsAreaEnabled());
+  REQUIRE(f.IsSolidityEnabled());
+  REQUIRE(f.IsAspectEnabled());
   return f;
 }
 
 FilterConfig GetFilterNone(cv::Size size) {
   FilterConfig f;
   f.frame_area = size.area();
-  REQUIRE_FALSE(f.enabled);
-  REQUIRE_FALSE(f.area_enabled);
-  REQUIRE_FALSE(f.solidity_enabled);
-  REQUIRE_FALSE(f.aspect_enabled);
+  REQUIRE_FALSE(f.IsAreaEnabled());
+  REQUIRE_FALSE(f.IsSolidityEnabled());
+  REQUIRE_FALSE(f.IsAspectEnabled());
   return f;
 }
 }  // namespace
