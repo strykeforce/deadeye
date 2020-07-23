@@ -13,6 +13,10 @@ using namespace deadeye;
 
 UprightRectPipeline::UprightRectPipeline(int inum) : AbstractPipeline{inum} {}
 
+void UprightRectPipeline::Configure(const CaptureConfig& config) {
+  center_ = config.OutputSize() / 2;
+}
+
 // Target is center of contour bounding box.
 TargetDataPtr UprightRectPipeline::ProcessTarget(Contours const& contours) {
   if (contours.empty())

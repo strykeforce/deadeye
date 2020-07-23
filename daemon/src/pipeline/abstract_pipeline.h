@@ -1,7 +1,6 @@
 #pragma once
 
 #include <opencv2/core/mat.hpp>
-#include <opencv2/videoio.hpp>
 
 #include "config/capture_config.h"
 #include "config/pipeline_config.h"
@@ -42,11 +41,6 @@ class AbstractPipeline : public Pipeline {
 
   CaptureConfig capture_config_;
   PipelineConfig pipeline_config_;
-
-  // remove?
-  cv::Point center_;
-  cv::Point2f center2f_;
-  double frame_area_;
 
  private:
   cv::Mat frame_;

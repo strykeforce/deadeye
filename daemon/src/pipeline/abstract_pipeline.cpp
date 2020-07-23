@@ -14,10 +14,6 @@ AbstractPipeline::AbstractPipeline(int inum)
  */
 void AbstractPipeline::Configure(const CaptureConfig& config) {
   capture_config_ = config;
-
-  center_ = cv::Point{config.output_width / 2, config.output_height / 2};
-  center2f_ = static_cast<cv::Point2f>(center_);
-  frame_area_ = config.output_height * config.output_width;
 }
 
 /**

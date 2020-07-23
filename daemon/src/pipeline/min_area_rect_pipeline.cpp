@@ -11,6 +11,10 @@ using namespace deadeye;
 
 MinAreaRectPipeline::MinAreaRectPipeline(int inum) : AbstractPipeline{inum} {}
 
+void MinAreaRectPipeline::Configure(const CaptureConfig& config) {
+  center2f_ = static_cast<cv::Point2f>(config.OutputSize() / 2);
+}
+
 // Target is center of contour bounding box.
 TargetDataPtr MinAreaRectPipeline::ProcessTarget(Contours const& contours) {
   if (contours.size() == 0)
