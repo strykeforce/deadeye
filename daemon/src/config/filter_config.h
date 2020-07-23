@@ -26,11 +26,6 @@ struct FilterConfig {
 
   int frame_area{0};
 
-  bool area_enabled{false};
-  bool solidity_enabled{false};
-  bool aspect_enabled{false};
-  bool enabled{false};
-
   /**
    * Default constructor.
    */
@@ -40,6 +35,16 @@ struct FilterConfig {
    * Constructor from member values.
    */
   FilterConfig(filter_t area, filter_t solidity, filter_t aspect);
+
+  bool IsAreaEnabled() const {
+    return area[0] != kAreaMin || area[1] != kAreaMax;
+  }
+  bool IsSolidityEnabled() const {
+    return solidity[0] != kSolidityMin || solidity[1] != kSolidityMax;
+  }
+  bool IsAspectEnabled() const {
+    return aspect[0] != kAspectMin || aspect[1] != kAspectMax;
+  }
 };
 
 void to_json(json& j, const FilterConfig& l);

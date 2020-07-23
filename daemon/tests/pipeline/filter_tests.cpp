@@ -11,7 +11,9 @@ TEST_CASE("pipeline filter tests", "[pipeline][filter]") {
   pipeline_config.filter.frame_area = frame.cols * frame.rows;
 
   SECTION("all disabled") {
-    REQUIRE_FALSE(pipeline_config.filter.enabled);
+    REQUIRE_FALSE(pipeline_config.filter.IsAreaEnabled());
+    REQUIRE_FALSE(pipeline_config.filter.IsSolidityEnabled());
+    REQUIRE_FALSE(pipeline_config.filter.IsAspectEnabled());
 
     pipeline.Configure(pipeline_config);
     pipeline.ProcessFrame(frame);
@@ -25,10 +27,9 @@ TEST_CASE("pipeline filter tests", "[pipeline][filter]") {
     filter.frame_area = frame.cols * frame.rows;
     pipeline_config.filter = filter;
 
-    REQUIRE(pipeline_config.filter.enabled);
-    REQUIRE(pipeline_config.filter.area_enabled);
-    REQUIRE(pipeline_config.filter.solidity_enabled);
-    REQUIRE(pipeline_config.filter.aspect_enabled);
+    REQUIRE(pipeline_config.filter.IsAreaEnabled());
+    REQUIRE(pipeline_config.filter.IsSolidityEnabled());
+    REQUIRE(pipeline_config.filter.IsAspectEnabled());
 
     pipeline.Configure(pipeline_config);
     pipeline.ProcessFrame(frame);
@@ -43,9 +44,9 @@ TEST_CASE("pipeline filter tests", "[pipeline][filter]") {
     filter.frame_area = frame.cols * frame.rows;
     pipeline_config.filter = filter;
 
-    REQUIRE(pipeline_config.filter.area_enabled);
-    REQUIRE_FALSE(pipeline_config.filter.solidity_enabled);
-    REQUIRE_FALSE(pipeline_config.filter.aspect_enabled);
+    REQUIRE(pipeline_config.filter.IsAreaEnabled());
+    REQUIRE_FALSE(pipeline_config.filter.IsSolidityEnabled());
+    REQUIRE_FALSE(pipeline_config.filter.IsAspectEnabled());
 
     pipeline.Configure(pipeline_config);
     pipeline.ProcessFrame(frame);
