@@ -48,7 +48,8 @@ TEMPLATE_TEST_CASE("BM001: ProcessFrame",
     };
     Contours contours = pipeline.GetContours();
     Contours filtered_contours = pipeline.GetFilteredContours();
-    REQUIRE(contours.size() == filtered_contours.size());
+    REQUIRE(contours.size() == kTargetMasterNumContours);
+    REQUIRE(contours == filtered_contours);
 
     // no filters
     pipeline_config.filter = GetFilterNone(frame.size());
@@ -60,7 +61,7 @@ TEMPLATE_TEST_CASE("BM001: ProcessFrame",
     };
     contours = pipeline.GetContours();
     filtered_contours = pipeline.GetFilteredContours();
-    REQUIRE(contours.size() == filtered_contours.size());
+    REQUIRE(contours == filtered_contours);
   }
 
   SECTION("960x540") {
