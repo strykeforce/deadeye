@@ -42,22 +42,18 @@ void Runner::Run() {
   spdlog::info("{}: starting", *pipeline_);
 
   // load capture config at start of run
-  int fps{0};
   pipeline_->Configure(capture_config_);
-  fps = capture_config_.frame_rate;
+  int fps = capture_config_.frame_rate;
   spdlog::debug("{}:{}", *pipeline_, capture_config_);
 
   // Set up streaming. CScore streaming will hang on connection if too many
   // connections are attempted, current workaround is for user to  disable and
   // reenable the stream to reset.
   Streamer streamer(pipeline_.get(), capture_config_.OutputSize());
+  bool stream_enabled{false};
 
   Link link{pipeline_->GetInum()};
-  cv::Scalar hsv_low, hsv_high;
-  FilterConfig filter;
   bool log_enabled = false;
-  unsigned int log_counter{0};
-  unsigned int sn{0};
 
   // start logger if used
   LoggerQueue log_queue;
@@ -66,14 +62,15 @@ void Runner::Run() {
                  Logger(DEADEYE_UNIT + std::to_string(pipeline_->GetInum()),
                         capture_config_, *pipeline_config_.readAccess(),
                         log_queue, cancel_));
+  unsigned int log_counter{0};
+  unsigned int sn{0};
+  int log_interval{0};
 
   // start capture
   GstreamerCapture capture{capture_config_};
+  cv::Mat frame;
 
   cv::TickMeter tm;
-  cv::Mat frame;
-  bool stream_enabled{false};
-  int log_interval{0};
 
   while (true) {  // Loop until pipeline cancelled
 
@@ -91,8 +88,6 @@ void Runner::Run() {
       pipeline_->Configure(*value);
       log_enabled = value->log.fps > 0;
       log_interval = log_enabled ? fps / value->log.fps : 0;
-      log_counter = log_interval;
-      spdlog::debug("{}:{}", *pipeline_, *value);
     }
 
     if (stream_config_ready_.load()) {
@@ -101,14 +96,15 @@ void Runner::Run() {
 
       streamer.Configure(*value);
       stream_enabled = value->StreamEnabled();
+      log_counter = log_interval;
+      spdlog::debug("{}:{}", *pipeline_, *value);
       spdlog::debug("{}:{} [{}]", *pipeline_, *value,
                     stream_enabled ? "enabled" : "disabled");
     }
 
     // Get new frame
-    if (!capture.Grab(frame)) {
+    if (!capture.Grab(frame))
       spdlog::critical("{} failed to grab frame", *pipeline_);
-    }
 
     // Process frame through pipeline
     TargetDataPtr target_data = pipeline_->ProcessFrame(frame);
