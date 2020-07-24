@@ -13,6 +13,7 @@ MinAreaRectPipeline::MinAreaRectPipeline(int inum) : AbstractPipeline{inum} {}
 
 void MinAreaRectPipeline::Configure(const CaptureConfig& config) {
   center2f_ = static_cast<cv::Point2f>(config.OutputSize() / 2);
+  capture_type_ = config.PipelineType();
 }
 
 // Target is center of contour bounding box.
@@ -26,6 +27,5 @@ TargetDataPtr MinAreaRectPipeline::ProcessTarget(Contours const& contours) {
 }
 
 std::string MinAreaRectPipeline::ToString() const {
-  assert(pipeline_type_ != "");
-  return fmt::format("MinAreaRectPipeline<{}, {}>", id_, pipeline_type_);
+  return fmt::format("MinAreaRectPipeline<{}, {}>", id_, capture_type_);
 }

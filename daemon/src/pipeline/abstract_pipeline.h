@@ -33,13 +33,10 @@ class AbstractPipeline : public Pipeline {
                               Contours& dest);
   virtual TargetDataPtr ProcessTarget(const Contours& contours);
 
-  std::string id_;
-  std::string pipeline_type_{"unknown"};
-
- protected:
   virtual std::string ToString() const override;
 
-  CaptureConfig capture_config_;
+  std::string id_;
+
   PipelineConfig pipeline_config_;
 
  private:
@@ -47,6 +44,7 @@ class AbstractPipeline : public Pipeline {
   cv::Mat hsv_threshold_output_;
   Contours find_contours_output_;
   Contours filter_contours_output_;
+  std::string capture_type_{"unknown"};
 };
 
 }  // namespace deadeye

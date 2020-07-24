@@ -15,5 +15,6 @@ class MinAreaRectPipeline : public AbstractPipeline {
 
  private:
   cv::Point2f center2f_;
+  std::string capture_type_{"unknown"};
 };
 }  // namespace deadeye

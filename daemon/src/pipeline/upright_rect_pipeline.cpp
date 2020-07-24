@@ -15,6 +15,7 @@ UprightRectPipeline::UprightRectPipeline(int inum) : AbstractPipeline{inum} {}
 
 void UprightRectPipeline::Configure(const CaptureConfig& config) {
   center_ = config.OutputSize() / 2;
+  capture_type_ = config.PipelineType();
 }
 
 // Target is center of contour bounding box.
@@ -28,6 +29,5 @@ TargetDataPtr UprightRectPipeline::ProcessTarget(Contours const& contours) {
 }
 
 std::string UprightRectPipeline::ToString() const {
-  assert(pipeline_type_ != "");
-  return fmt::format("UprightRectPipeline<{}, {}>", id_, pipeline_type_);
+  return fmt::format("UprightRectPipeline<{}, {}>", id_, capture_type_);
 }

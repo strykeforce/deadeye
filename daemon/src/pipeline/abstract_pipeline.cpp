@@ -13,7 +13,7 @@ AbstractPipeline::AbstractPipeline(int inum)
  * after pipeline restart.
  */
 void AbstractPipeline::Configure(const CaptureConfig& config) {
-  capture_config_ = config;
+  capture_type_ = config.PipelineType();
 }
 
 /**
@@ -48,6 +48,5 @@ TargetDataPtr AbstractPipeline::ProcessTarget(Contours const& contours) {
 }
 
 std::string AbstractPipeline::ToString() const {
-  assert(pipeline_type_ != "");
-  return fmt::format("AbstractPipeline<{}, {}>", id_, pipeline_type_);
+  return fmt::format("AbstractPipeline<{}, {}>", id_, capture_type_);
 }
