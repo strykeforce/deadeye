@@ -101,9 +101,8 @@ void Logger::operator()() {
       cv::Mat info{top.rows / 4, top.cols, CV_8UC3, cv::Scalar::all(255)};
 
       std::string text = fmt::format(
-          "CAPTURE: exp={} cap={}x{} out={}x{} seq={} elapsed={} msec",
-          capture_.exposure, capture_.capture_width, capture_.capture_height,
-          capture_.output_width, capture_.output_height, seq, elapsed.count());
+          "CAPTURE: exp={} cap={}x{} out={}x{} seq={} elapsed={} msec", 0, 0, 0,
+          capture_.width, capture_.height, seq, elapsed.count());
       int font = cv::FONT_HERSHEY_PLAIN;
       double font_scale = 1;
       int thickness = 1;

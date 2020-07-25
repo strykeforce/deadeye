@@ -11,8 +11,6 @@
 #include "config/filter_config.h"
 #include "config/log_config.h"
 
-using json = nlohmann::json;
-
 namespace {
 std::string onoff(bool state) { return state ? "(on)" : "(off)"; }
 }  // namespace
@@ -73,8 +71,8 @@ struct PipelineConfig {
   }
 };
 
-void to_json(json& j, const PipelineConfig& p);
-void from_json(const json& j, PipelineConfig& p);
+void to_json(nlohmann::json& j, const PipelineConfig& p);
+void from_json(const nlohmann::json& j, PipelineConfig& p);
 
 inline bool operator==(const PipelineConfig& lhs, const PipelineConfig& rhs) {
   return lhs.sn == rhs.sn && lhs.hue == rhs.hue && lhs.sat == rhs.sat &&

@@ -7,6 +7,7 @@ add_library(Deadeye_library
     ${CMAKE_CURRENT_BINARY_DIR}/deadeye_version.cpp
 )
 
+add_subdirectory(capture)
 add_subdirectory(config)
 add_subdirectory(hardware)
 add_subdirectory(link)

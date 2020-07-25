@@ -1,10 +1,10 @@
 #pragma once
 
+#include <catch2/catch.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
 
 #include "../data/test_data.h"
-#include "catch2/catch.hpp"
 #include "config/capture_config.h"
 #include "config/deadeye_config.h"
 #include "config/pipeline_config.h"

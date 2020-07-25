@@ -3,6 +3,7 @@
 #include "catch2/catch.hpp"
 
 using namespace deadeye;
+using json = nlohmann::json;
 
 TEST_CASE("StreamConfig equality", "[pipeline]") {
   StreamConfig sc1{0, "http://example.com", StreamConfig::View::none,

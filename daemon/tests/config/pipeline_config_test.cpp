@@ -6,6 +6,7 @@
 #include "config/capture_config.h"
 
 using namespace deadeye;
+using json = nlohmann::json;
 
 TEST_CASE("PipelineConfig HSV bound as array", "[pipeline]") {
   std::array<int, 3> ary{1, 2, 3};

@@ -2,6 +2,7 @@ add_executable(Deadeye_tests
   main.cpp
 )
 
+add_subdirectory(capture)
 add_subdirectory(config)
 add_subdirectory(link)
 add_subdirectory(pipeline)

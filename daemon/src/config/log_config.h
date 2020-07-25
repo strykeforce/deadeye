@@ -2,8 +2,6 @@
 #include <nlohmann/json.hpp>
 #include <string>
 
-using json = nlohmann::json;
-
 namespace deadeye {
 
 struct LogConfig {
@@ -27,8 +25,8 @@ struct LogConfig {
   LogConfig(std::string path, int fps, bool mount);
 };
 
-void to_json(json& j, const LogConfig& l);
-void from_json(const json& j, LogConfig& l);
+void to_json(nlohmann::json& j, const LogConfig& l);
+void from_json(const nlohmann::json& j, LogConfig& l);
 
 inline bool operator==(const LogConfig& lhs, const LogConfig& rhs) {
   return lhs.path == rhs.path && lhs.fps == rhs.fps && lhs.mount == rhs.mount;

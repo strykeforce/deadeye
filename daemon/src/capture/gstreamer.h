@@ -3,20 +3,18 @@
 #include <opencv2/core/types.hpp>
 #include <opencv2/videoio.hpp>
 
-#include "pipeline/capture.h"
+#include "capture/capture.h"
 
 namespace deadeye {
 
-class GstreamerCapture : public Capture {
+class Gstreamer : public Capture {
  public:
-  GstreamerCapture(CaptureConfig config);
-  virtual ~GstreamerCapture();
+  virtual ~Gstreamer();
 
   virtual bool Grab(cv::Mat& frame) override;
 
- private:
-  CaptureConfig config_;
+ protected:
   cv::VideoCapture cap_;
-  bool is_yuv_;
+  bool is_yuv_{false};
 };
 }  // namespace deadeye
