@@ -501,7 +501,7 @@ void Controller::InitializeNetworkTables() {
     table->PutBoolean(DE_BLINK, false);
 
     auto entry = nti.GetEntry(CaptureConfigEntryPath(i));
-    CaptureConfig cc{CaptureConfig::Type::test, 0, 0, 320, 180, 60, 0, 0.0};
+    CaptureConfig cc{CaptureType::test, 320, 180, 60, "{}"};
     json j = cc;
     entry.SetDefaultString(j.dump());
     entry.SetPersistent();

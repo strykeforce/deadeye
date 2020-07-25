@@ -4,8 +4,6 @@
 #include <nlohmann/json.hpp>
 #include <string>
 
-using json = nlohmann::json;
-
 namespace deadeye {
 
 struct LinkConfig {
@@ -33,8 +31,8 @@ struct LinkConfig {
   LinkConfig(std::shared_ptr<nt::Value> value);
 };
 
-void to_json(json& j, const LinkConfig& l);
-void from_json(const json& j, LinkConfig& l);
+void to_json(nlohmann::json& j, const LinkConfig& l);
+void from_json(const nlohmann::json& j, LinkConfig& l);
 
 inline bool operator==(const LinkConfig& lhs, const LinkConfig& rhs) {
   return lhs.address == rhs.address && lhs.port == rhs.port &&

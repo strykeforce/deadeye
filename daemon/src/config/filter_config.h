@@ -2,8 +2,6 @@
 #include <nlohmann/json.hpp>
 #include <string>
 
-using json = nlohmann::json;
-
 namespace deadeye {
 
 static constexpr double kAreaMin = 0.0;
@@ -47,8 +45,8 @@ struct FilterConfig {
   }
 };
 
-void to_json(json& j, const FilterConfig& l);
-void from_json(const json& j, FilterConfig& l);
+void to_json(nlohmann::json& j, const FilterConfig& l);
+void from_json(const nlohmann::json& j, FilterConfig& l);
 
 inline bool operator==(const FilterConfig& lhs, const FilterConfig& rhs) {
   return lhs.area == rhs.area && lhs.solidity == rhs.solidity &&

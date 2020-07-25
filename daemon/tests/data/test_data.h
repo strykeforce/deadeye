@@ -13,7 +13,7 @@ static constexpr int kTargetMasterNumContours = 17;
 static std::string kTargetMaster{DEADEYE_TEST_DATA "target.jpg"};
 
 static deadeye::CaptureConfig kTargetMasterCaptureConfig{
-    deadeye::CaptureConfig::Type::test, 1280, 720, 1280, 720, 120, 0, 0.1};
+    deadeye::CaptureType::test, 1280, 720, 120, "{}"};
 
 static deadeye::PipelineConfig kTargetMasterPipelineConfig{
     0,

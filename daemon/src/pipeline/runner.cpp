@@ -1,11 +1,12 @@
 #include "pipeline/runner.h"
 
 #include <future>
-// #include <opencv2/imgproc.hpp>
+#include <memory>
 
+#include "capture/capture.h"
+#include "capture/capture_factory.h"
 #include "config/deadeye_config.h"
 #include "link/link.h"
-#include "pipeline/gstreamer_capture.h"
 #include "pipeline/logger.h"
 #include "pipeline/streamer.h"
 
@@ -49,7 +50,7 @@ void Runner::Run() {
   // Set up streaming. CScore streaming will hang on connection if too many
   // connections are attempted, current workaround is for user to  disable and
   // reenable the stream to reset.
-  Streamer streamer(pipeline_.get(), capture_config_.OutputSize());
+  Streamer streamer(pipeline_.get(), capture_config_.Size());
   bool stream_enabled{false};
 
   Link link{pipeline_->GetInum()};
@@ -67,7 +68,7 @@ void Runner::Run() {
   int log_interval{0};
 
   // start capture
-  GstreamerCapture capture{capture_config_};
+  std::unique_ptr<Capture> capture = CreateCapture(capture_config_);
   cv::Mat frame;
 
   cv::TickMeter tm;
@@ -85,9 +86,11 @@ void Runner::Run() {
     if (pipeline_config_ready_.load()) {
       pipeline_config_ready_ = false;
       safe::ReadAccess<SafePipelineConfig> value{pipeline_config_};
-      pipeline_->Configure(*value);
-      log_enabled = value->log.fps > 0;
-      log_interval = log_enabled ? fps / value->log.fps : 0;
+      auto config = *value;
+      config.filter.frame_area = capture_config_.Size().area();
+      pipeline_->Configure(config);
+      log_enabled = config.log.fps > 0;
+      log_interval = log_enabled ? fps / config.log.fps : 0;
     }
 
     if (stream_config_ready_.load()) {
@@ -103,7 +106,7 @@ void Runner::Run() {
     }
 
     // Get new frame
-    if (!capture.Grab(frame))
+    if (!capture->Grab(frame))
       spdlog::critical("{} failed to grab frame", *pipeline_);
 
     // Process frame through pipeline

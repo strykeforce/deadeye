@@ -6,8 +6,6 @@
 #include <nlohmann/json.hpp>
 #include <string>
 
-using json = nlohmann::json;
-
 namespace deadeye {
 
 struct StreamConfig {
@@ -84,8 +82,8 @@ struct StreamConfig {
   }
 };
 
-void to_json(json& j, const StreamConfig& p);
-void from_json(const json& j, StreamConfig& p);
+void to_json(nlohmann::json& j, const StreamConfig& p);
+void from_json(const nlohmann::json& j, StreamConfig& p);
 
 inline bool operator==(const StreamConfig& lhs, const StreamConfig& rhs) {
   return lhs.view == rhs.view && lhs.contour == rhs.contour &&

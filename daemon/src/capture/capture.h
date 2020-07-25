@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <opencv2/core/types.hpp>
 
 #include "config/capture_config.h"

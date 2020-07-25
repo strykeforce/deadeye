@@ -1,9 +1,11 @@
 #include "config/link_config.h"
 
 #include <opencv2/core/mat.hpp>
+
 #include "catch2/catch.hpp"
 
 using namespace deadeye;
+using json = nlohmann::json;
 
 TEST_CASE("LinkConfig equality", "[link]") {
   LinkConfig lc1{"1234", 2767, true};

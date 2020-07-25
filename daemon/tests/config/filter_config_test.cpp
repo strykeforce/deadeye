@@ -5,6 +5,7 @@
 #include "catch2/catch.hpp"
 
 using namespace deadeye;
+using json = nlohmann::json;
 
 TEST_CASE("FilterConfig to JSON", "[pipeline]") {
   FilterConfig fc{{1.0, 2.0}, {2.5, 2.4}, {25.0, 25.1}};

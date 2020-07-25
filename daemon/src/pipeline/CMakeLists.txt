@@ -5,6 +5,5 @@ target_sources(Deadeye_library
   ${CMAKE_CURRENT_LIST_DIR}/min_area_rect_pipeline.cpp
   ${CMAKE_CURRENT_LIST_DIR}/logger.cpp
   ${CMAKE_CURRENT_LIST_DIR}/runner.cpp
-  ${CMAKE_CURRENT_LIST_DIR}/gstreamer_capture.cpp
   ${CMAKE_CURRENT_LIST_DIR}/streamer.cpp
 )

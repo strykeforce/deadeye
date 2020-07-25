@@ -14,7 +14,7 @@ using namespace deadeye;
 UprightRectPipeline::UprightRectPipeline(int inum) : AbstractPipeline{inum} {}
 
 void UprightRectPipeline::Configure(const CaptureConfig& config) {
-  center_ = config.OutputSize() / 2;
+  center_ = config.Size() / 2;
   capture_type_ = config.PipelineType();
 }
 

@@ -6,31 +6,24 @@
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <opencv2/core/types.hpp>
+#include <string>
 
-using json = nlohmann::json;
+#include "capture/capture_type.h"
 
 namespace deadeye {
 
 struct CaptureConfig {
-  enum class Type { autosrc, jetson, osx, test };
-
   static constexpr auto kTypeKey = "type";
-  static constexpr auto kCaptureWidthKey = "cw";
-  static constexpr auto kCaptureHeightKey = "ch";
-  static constexpr auto kOutputWidthKey = "ow";
-  static constexpr auto kOutputHeightKey = "oh";
+  static constexpr auto kWidthKey = "w";
+  static constexpr auto kHeightKey = "h";
   static constexpr auto kFrameRateKey = "fps";
-  static constexpr auto kFlipModeKey = "flip";
-  static constexpr auto kExposureKey = "exp";
+  static constexpr auto kConfigKey = "config";
 
-  Type type = Type::test;
-  int capture_width = 0;
-  int capture_height = 0;
-  int output_width = 0;
-  int output_height = 0;
+  CaptureType type = CaptureType::test;
+  int width = 0;
+  int height = 0;
   int frame_rate = 0;
-  int flip_mode = 0;
-  double exposure = 0.0;
+  nlohmann::json config = nlohmann::json::object();
 
   /**
    * Default constructor.
@@ -40,9 +33,8 @@ struct CaptureConfig {
   /**
    * Constructor from member values.
    */
-  CaptureConfig(Type type, int capture_width, int capture_height,
-                int output_width, int output_height, int frame_rate,
-                int flip_mode, double exposure);
+  CaptureConfig(CaptureType type, int width, int height, int frame_rate,
+                nlohmann::json config);
 
   /**
    * Constructor from NetworkTables.
@@ -50,55 +42,37 @@ struct CaptureConfig {
   CaptureConfig(std::shared_ptr<nt::Value> value);
 
   /*
-   * Get Jetson CSI Camera pipeline.
-   */
-  std::string Pipeline() const;
-
-  std::string PipelineType() const;
-
-  /*
-   * Get captured size of frame.
-   */
-  cv::Size CaptureSize() const;
-
-  /*
    * Get output size of frame.
    */
-  cv::Size OutputSize() const;
+  cv::Size Size() const;
+
+  /*
+   * Get string representation of capture type.
+   */
+  std::string PipelineType() const;
 
   template <typename OStream>
   friend OStream& operator<<(OStream& os, const CaptureConfig& cc) {
-    std::string output = fmt::format(
-        "CaptureConfig<type={}, cw={}, ch={}, ow={}, oh={}, fps={}, flip={}, "
-        "exp={}>",
-        cc.PipelineType(), cc.capture_width, cc.capture_height, cc.output_width,
-        cc.output_height, cc.frame_rate, cc.flip_mode, cc.exposure);
+    std::string output =
+        fmt::format("CaptureConfig<type={}, w={}, h={}, fps={}, config={}",
+                    cc.PipelineType(), cc.width, cc.height, cc.frame_rate,
+                    cc.config.dump());
     os << output;
     return os;
   }
 };
 
-void to_json(json& j, const CaptureConfig& cc);
-void from_json(const json& j, CaptureConfig& cc);
+void to_json(nlohmann::json& j, const CaptureConfig& cc);
+void from_json(const nlohmann::json& j, CaptureConfig& cc);
 
 inline bool operator==(const CaptureConfig& lhs, const CaptureConfig& rhs) {
-  return lhs.capture_width == rhs.capture_width &&
-         lhs.capture_height == rhs.capture_height &&
-         lhs.output_width == rhs.output_width &&
-         lhs.output_height == rhs.output_height &&
-         lhs.frame_rate == rhs.frame_rate && lhs.flip_mode == rhs.flip_mode &&
-         lhs.exposure == rhs.exposure;
+  return lhs.type == rhs.type && lhs.width == rhs.width &&
+         lhs.height == rhs.height && lhs.frame_rate == rhs.frame_rate &&
+         lhs.config == rhs.config;
 }
 
 inline bool operator!=(const CaptureConfig& lhs, const CaptureConfig& rhs) {
   return !(lhs == rhs);
 }
-
-NLOHMANN_JSON_SERIALIZE_ENUM(CaptureConfig::Type,
-                             {
-                                 {CaptureConfig::Type::jetson, "jetson"},
-                                 {CaptureConfig::Type::osx, "osx"},
-                                 {CaptureConfig::Type::test, "test"},
-                             })
 
 }  // namespace deadeye
