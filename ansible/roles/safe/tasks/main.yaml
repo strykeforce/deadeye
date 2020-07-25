@@ -1,7 +1,7 @@
 ---
 - name: Unarchive sources
   unarchive:
-    src: https://github.com/gabime/safe/archive/v{{ safe_version }}.tar.gz
+    src: https://github.com/LouisCharlesC/safe/archive/v{{ safe_version }}.tar.gz
     dest: /usr/local/src
     remote_src: true
   tags:
