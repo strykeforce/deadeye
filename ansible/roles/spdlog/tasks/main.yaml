@@ -1,39 +1,40 @@
 ---
 - name: Unarchive sources
   unarchive:
-    src: https://github.com/LouisCharlesC/safe/archive/v{{ safe_version }}.tar.gz
+    src: https://github.com/gabime/spdlog/archive/v{{ spdlog_version }}.tar.gz
     dest: /usr/local/src
     remote_src: true
   tags:
-    - safe
+    - spdlog
 
 - name: Create build directory
   file:
-    path: /usr/local/src/safe-{{ safe_version }}/build
+    path: /usr/local/src/spdlog-{{ spdlog_version }}/build
     state: directory
   tags:
-    - safe
+    - spdlog
 
 - name: Run cmake
   command:
-    chdir: /usr/local/src/safe-{{ safe_version }}/build
+    chdir: /usr/local/src/spdlog-{{ spdlog_version }}/build
     argv:
       - /usr/bin/cmake
       - -DCMAKE_BUILD_TYPE=Release
       - -DCMAKE_INSTALL_PREFIX=/usr/local
+      - -DSPDLOG_FMT_EXTERNAL=ON
       - -GNinja
       - ..
   tags:
-    - safe
+    - spdlog
     - build
     - cmake
 
 - name: Build and install
   command:
-    chdir: /usr/local/src/safe-{{ safe_version }}/build
+    chdir: /usr/local/src/spdlog-{{ spdlog_version }}/build
     argv:
       - /usr/bin/ninja
       - install
   tags:
-    - safe
+    - spdlog
     - build

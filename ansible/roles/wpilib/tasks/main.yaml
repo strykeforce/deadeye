@@ -21,6 +21,7 @@
       - /usr/bin/cmake
       - -DCMAKE_BUILD_TYPE=Release
       - -DCMAKE_INSTALL_PREFIX=/usr/local
+      - -DFLAT_INSTALL_WPILIB={{ "ON" if (ansible_distribution_release == "bionic" and ansible_architecture == "x86_64") else "OFF" }}
       - -DUSE_EXTERNAL_HAL=OFF
       - -DWITHOUT_ALLWPILIB=ON
       - -DWITHOUT_CSCORE=OFF
