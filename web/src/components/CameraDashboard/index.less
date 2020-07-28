@@ -1,0 +1,20 @@
+.camera-dash {
+  flex-wrap: nowrap;
+  display: flex;
+  justify-content: space-evenly;
+  padding-top: 50px;
+  padding-left: 50px;
+
+  @media only screen {
+    @media (max-width: 1024px) {
+      flex-wrap: wrap-reverse;
+    }
+  }
+
+  &__controls {
+    border: 0px solid white;
+  }
+  &__stream {
+    border: 0px solid white;
+  }
+}

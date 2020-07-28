@@ -1,0 +1,30 @@
+.camera-stream-controls {
+  display: flex;
+  width: 100%;
+  justify-content: space-evenly;
+  height: 100%;
+
+  &__group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+
+    & > span {
+      font-weight: bold;
+      color: rgba(255, 255, 255, 0.85);
+      border-bottom: 1px solid rgb(48, 48, 48);
+      text-align: center;
+      width: 100%;
+      padding-top: 10px;
+    }
+
+    & > div {
+      padding-top: 5px;
+    }
+  }
+
+  &__radio {
+    display: block !important;
+  }
+}
