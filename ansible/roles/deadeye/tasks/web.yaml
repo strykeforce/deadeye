@@ -21,12 +21,12 @@
 - name: Install admin packages based on package.json
   npm:
     ci: yes
-    path: "{{ deadeye_src }}/admin-web"
+    path: "{{ deadeye_src }}/web"
 
   # when: deadeye_repo is changed
 - name: Build and stage admin front-end
   command:
-    chdir: "{{ deadeye_src }}/admin-web"
+    chdir: "{{ deadeye_src }}/web"
     argv:
       - /usr/bin/npm
       - run

@@ -9,7 +9,7 @@
   tags:
     - deadeyed
 
-- import_tasks: admin-web.yaml
+- import_tasks: web.yaml
   tags:
     - admin
 
