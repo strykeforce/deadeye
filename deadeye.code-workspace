@@ -1,25 +1,33 @@
 {
-    "folders": [
-        {
-            "name": "Vision Daemon",
-            "path": "daemon"
-        },
-        {
-            "name": "Admin Server",
-            "path": "admin-server"
-        },
-        {
-            "name": "Admin Web",
-            "path": "admin-web"
-        },
-        {
-            "name": "Ansible",
-            "path": "ansible"
-        },
-        {
-            "name": "Documentation",
-            "path": "docs"
-        }
-    ],
-    "settings": {}
+  "folders": [
+    {
+      "name": "Vision Daemon",
+      "path": "daemon"
+    },
+    {
+      "name": "Admin Server",
+      "path": "admin-server"
+    },
+    {
+      "name": "Web",
+      "path": "web"
+    },
+    {
+      "name": "Client Library",
+      "path": "deadeye-java"
+    },
+    {
+      "name": "CLI",
+      "path": "cli"
+    },
+    {
+      "name": "Ansible",
+      "path": "ansible"
+    },
+    {
+      "name": "Documentation",
+      "path": "docs"
+    }
+  ],
+  "settings": {}
 }
