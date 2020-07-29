@@ -1,0 +1,27 @@
+.camera-dash {
+  flex-wrap: nowrap;
+  display: flex;
+  justify-content: space-evenly;
+  padding-top: 40px;
+  padding-left: 0px;
+
+  @media only screen {
+    @media (max-width: 1024px) {
+      flex-wrap: wrap-reverse;
+      padding-top: 10px;
+    }
+  }
+
+  &__controls {
+    border: 0px solid white;
+
+    @media only screen {
+      @media (max-width: 1024px) {
+        margin-top: 20px;
+      }
+    }
+  }
+  &__stream {
+    border: 0px solid white;
+  }
+}

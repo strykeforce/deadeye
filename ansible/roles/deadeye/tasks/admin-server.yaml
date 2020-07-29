@@ -19,9 +19,9 @@
     path: "{{ deadeye_src }}/admin-server/dist"
     state: absent
 
-- name: Link admin-web build files
+- name: Link web build files
   file:
-    src: "{{ deadeye_src }}/admin-web/build"
+    src: "{{ deadeye_src }}/web/build"
     dest: "{{ deadeye_src }}/admin-server/deadeye/assets"
     state: link
 

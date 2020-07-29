@@ -1,0 +1,34 @@
+---
+- name: Install curl
+  apt:
+    update_cache: no
+    name:
+      - curl
+
+- name: Install node source
+  shell:
+    cmd: curl -sL https://deb.nodesource.com/setup_{{ deadeye_node_version }} | sudo -E bash -
+    creates: /etc/apt/sources.list.d/nodesource.list
+  args:
+    warn: no
+
+- name: Install node and npm
+  apt:
+    update_cache: no
+    name:
+      - nodejs
+
+- name: Install admin packages based on package.json
+  npm:
+    ci: yes
+    path: "{{ deadeye_src }}/web"
+
+  # when: deadeye_repo is changed
+- name: Build and stage admin front-end
+  command:
+    chdir: "{{ deadeye_src }}/web"
+    argv:
+      - /usr/bin/npm
+      - run
+      - build
+  # when: deadeye_repo is changed
