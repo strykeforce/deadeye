@@ -32,7 +32,8 @@ const PageContainer = (props: Props) => {
     .sort();
 
   if (!selectedId && ids.length > 0) {
-    setSelectedId(ids[0]);
+    // setSelectedId(ids[0]);
+    setSelectedId("E0"); // FIXME
   }
 
   const content = selectedId ? (

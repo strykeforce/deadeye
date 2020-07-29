@@ -47,9 +47,9 @@ export interface LogConfig {
 
 export interface PipelineConfig {
   sn: number;
-  hue: number[];
-  sat: number[];
-  val: number[];
+  hue: [number, number];
+  sat: [number, number];
+  val: [number, number];
   filter: FilterConfig;
   log: LogConfig;
 }
