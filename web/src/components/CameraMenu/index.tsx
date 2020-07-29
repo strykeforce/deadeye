@@ -1,8 +1,8 @@
 import { VideoCameraOutlined } from "@ant-design/icons";
 import { Menu } from "antd";
 import React from "react";
+import "./camera-menu.less";
 import logo from "./deadeye.png";
-import "./index.less";
 
 type Props = {
   ids: string[];

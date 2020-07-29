@@ -1,6 +1,6 @@
 import React from "react";
 import { Table } from "antd";
-import { FilterConfig } from "../../../util/models";
+import { FilterConfig } from "../../common/models";
 // import "./index.less";
 
 type Props = {

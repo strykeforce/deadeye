@@ -1,6 +1,6 @@
 import { Table } from "antd";
 import React from "react";
-import { CaptureConfig } from "../../../util/models";
+import { CaptureConfig } from "../../common/models";
 // import "./index.less";
 
 type Props = {

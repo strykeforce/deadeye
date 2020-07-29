@@ -1,8 +1,8 @@
 import React from "react";
-import { Camera } from "../../util/models";
-import "./index.less";
+import { Camera } from "../../common/models";
 import CameraControls from "../CameraControls";
 import CameraStream from "../CameraStream";
+import "./camera-dashboard.less";
 
 type Props = {
   camera: Camera;

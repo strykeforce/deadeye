@@ -1,8 +1,8 @@
 import React from "react";
-import { StreamConfig } from "../../util/models";
-import Controls from "./Controls";
-import Image from "./Image";
-import "./index.less";
+import { StreamConfig } from "../../common/models";
+import "./camera-stream.less";
+import Controls from "./controls";
+import Image from "./image";
 
 type Props = {
   unit: string;

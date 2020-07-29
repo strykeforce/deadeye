@@ -1,10 +1,10 @@
 import { Layout, Typography } from "antd";
 import React, { useState } from "react";
-import { Camera, Id, Units } from "../../util/models";
+import { Camera, Id, Units } from "../../common/models";
 import CameraDashboard from "../CameraDashboard";
 import CameraHeader from "../CameraHeader";
 import CameraMenu from "../CameraMenu";
-import "./index.less";
+import "./page-container.less";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { Text, Link } = Typography;

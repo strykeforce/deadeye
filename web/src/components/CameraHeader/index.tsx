@@ -1,9 +1,9 @@
 import { Switch } from "antd";
 import { SwitchClickEventHandler } from "antd/lib/switch";
 import React from "react";
-import { enableCamera, enableLight } from "../../util/api";
-import { Camera } from "../../util/models";
-import "./index.less";
+import { enableCamera, enableLight } from "../../common/api";
+import { Camera } from "../../common/models";
+import "./camera-header.less";
 
 type Props = {
   camera: Camera;

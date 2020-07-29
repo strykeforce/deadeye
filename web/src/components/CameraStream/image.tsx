@@ -1,6 +1,6 @@
 import React from "react";
 import standBy from "./deadeye.png";
-import "./index.less";
+import "./camera-stream.less";
 
 interface Props {
   enabled: boolean;

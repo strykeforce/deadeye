@@ -1,9 +1,9 @@
 import { Radio } from "antd";
-import React from "react";
-import "./index.less";
 import { RadioChangeEvent } from "antd/lib/radio";
-import { configStream } from "../../../util/api";
-import { StreamConfig } from "../../../util/models";
+import React from "react";
+import { configStream } from "../../common/api";
+import { StreamConfig } from "../../common/models";
+import "./camera-stream.less";
 
 type Props = {
   unit: string;
