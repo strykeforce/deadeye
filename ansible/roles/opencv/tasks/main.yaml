@@ -9,7 +9,6 @@
       - pkg-config
       - libjpeg-dev
       - libtiff5-dev
-      - libjasper-dev
       - libpng-dev
       - libavcodec-dev
       - libavformat-dev
@@ -56,8 +55,8 @@
       - /usr/bin/cmake
       - -DCMAKE_BUILD_TYPE=Release
       - -DCMAKE_INSTALL_PREFIX=/usr/local
-      - -DENABLE_NEON=ON
-      - -DENABLE_VFPV3=ON
+      - -DENABLE_NEON={{ "ON" if ansible_architecture == "aarch64" else "OFF" }}
+      - -DENABLE_VFPV3={{ "ON" if ansible_architecture == "aarch64" else "OFF" }}
       - -DBUILD_TESTS=OFF
       - -DWITH_GSTREAMER=ON
       - -DWITH_GSTREAMER_0_10=OFF

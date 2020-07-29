@@ -33,6 +33,7 @@ deadeye:
     camera_2_pipeline:
     camera_3_pipeline:
     camera_4_pipeline:
+    install_opencv: false
 
 bootstrap:
   hosts:
