@@ -20,16 +20,13 @@ const FilterPane = (props: Props) => {
     const newFilter = Object.assign(filter, { [name]: value });
     const newConfig = Object.assign(config, newFilter);
     configPipeline(unit, inum, newConfig);
-    // console.debug(`name = ${name}, values = ${newConfig}`);
-    // console.debug(newConfig);
-    // console.debug(newConfig);
   };
 
   return (
     <>
       <Range
         name="Area"
-        max={1}
+        max={0.5}
         step={0.01}
         values={filter.area}
         onChange={onChange("area")}
@@ -43,7 +40,7 @@ const FilterPane = (props: Props) => {
       />
       <Range
         name="Aspect"
-        max={20}
+        max={10}
         step={0.01}
         values={filter.aspect}
         onChange={onChange("aspect")}
