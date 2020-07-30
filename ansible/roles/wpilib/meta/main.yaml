@@ -2,4 +2,4 @@
 dependencies:
   - role: common
   - role: opencv
-    when: ansible_lsb.id == "Raspbian"
+    when: install_opencv

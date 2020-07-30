@@ -1,50 +1,52 @@
 import React from "react";
-import { Table } from "antd";
-import { FilterConfig } from "../../common/models";
+import { PipelineConfig } from "../../common/models";
+import Range from "./range";
+import { configPipeline } from "../../common/api";
+
 // import "./index.less";
 
 type Props = {
-  config: FilterConfig;
+  unit: string;
+  inum: number;
+  config: PipelineConfig;
 };
 
 const FilterPane = (props: Props) => {
-  const { config } = props;
+  const { unit, inum, config } = props;
+  const { filter } = config;
 
-  const data = [
-    { key: "1", name: "Area", min: config.area[0], max: config.area[1] },
-    {
-      key: "2",
-      name: "Solidity",
-      min: config.solidity[0],
-      max: config.solidity[1],
-    },
-    {
-      key: "3",
-      name: "Aspect Ratio",
-      min: config.aspect[0],
-      max: config.aspect[1],
-    },
-  ];
+  const onChange = (name: string) => (value: [number, number] | undefined) => {
+    if (value === undefined) return;
+    const newFilter = Object.assign(filter, { [name]: value });
+    const newConfig = Object.assign(config, newFilter);
+    configPipeline(unit, inum, newConfig);
+  };
 
-  const columns = [
-    {
-      title: "Filter",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Min",
-      dataIndex: "min",
-      key: "min",
-    },
-    {
-      title: "Max",
-      dataIndex: "max",
-      key: "max",
-    },
-  ];
-
-  return <Table dataSource={data} columns={columns} pagination={false} />;
+  return (
+    <>
+      <Range
+        name="Area"
+        max={0.5}
+        step={0.01}
+        values={filter.area}
+        onChange={onChange("area")}
+      />
+      <Range
+        name="Solidity"
+        max={1}
+        step={0.01}
+        values={filter.solidity}
+        onChange={onChange("solidity")}
+      />
+      <Range
+        name="Aspect"
+        max={10}
+        step={0.01}
+        values={filter.aspect}
+        onChange={onChange("aspect")}
+      />
+    </>
+  );
 };
 
 export default FilterPane;

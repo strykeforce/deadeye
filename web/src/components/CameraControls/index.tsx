@@ -27,7 +27,11 @@ const CameraControls = (props: Props) => {
         />
       </TabPane>
       <TabPane tab="Filter" key="3">
-        <FilterPane config={camera.pipeline.filter} />
+        <FilterPane
+          unit={camera.unit}
+          inum={camera.inum}
+          config={camera.pipeline}
+        />
       </TabPane>
     </Tabs>
   );

@@ -7,7 +7,7 @@ After=network-online.target
 [Service]
 Environment=DEADEYE_NT_SERVER=10.27.67.2 SPDLOG_LEVEL=info
 EnvironmentFile=/etc/opt/deadeye/deadeye.conf
-ExecStartPre=/usr/bin/jetson_clocks
+ExecStartPre=/bin/bash -c 'if [[ -x /usr/bin/jetson_clocks ]]; then /usr/bin/jetson_clocks; fi'
 ExecStartPre=/bin/sh -c 'until ping -c1 $DEADEYE_NT_SERVER; do sleep 1; done;'
 ExecStart=/opt/deadeye/bin/deadeyed
 Restart=on-failure

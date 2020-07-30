@@ -14,4 +14,4 @@ deploy = "ansible-playbook -i inventory.yaml --vault-password-file=.vaultpw depl
 ansible = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3.8"

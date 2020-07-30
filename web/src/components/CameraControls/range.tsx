@@ -4,12 +4,15 @@ import "./camera-controls.less";
 
 type Props = {
   name: string;
+  min?: number;
+  max?: number;
+  step?: number;
   values: [number, number];
   onChange: (value: [number, number] | undefined) => void;
 };
 
 const Range = (props: Props) => {
-  const { name, values, onChange } = props;
+  const { name, min = 0, max = 255, step = 1, values, onChange } = props;
 
   const onMinChange = (value: string | number | undefined) => {
     const min = typeof value === "number" ? value : values[0];
@@ -28,8 +31,9 @@ const Range = (props: Props) => {
       </Col>
       <Col span={4}>
         <InputNumber
-          min={0}
-          max={255}
+          type="number"
+          min={min}
+          max={max}
           className="hsv-range__input"
           value={values[0]}
           onChange={onMinChange}
@@ -37,13 +41,20 @@ const Range = (props: Props) => {
       </Col>
 
       <Col span={13}>
-        <Slider min={0} max={255} range onChange={onChange} value={values} />
+        <Slider
+          min={min}
+          max={max}
+          step={step}
+          range
+          onChange={onChange}
+          value={values}
+        />
       </Col>
 
       <Col span={4}>
         <InputNumber
-          min={0}
-          max={255}
+          min={min}
+          max={max}
           className="hsv-range__input"
           value={values[1]}
           onChange={onMaxChange}
