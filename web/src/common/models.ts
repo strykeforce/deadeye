@@ -34,9 +34,9 @@ export interface CaptureConfig {
 }
 
 export interface FilterConfig {
-  area: number[];
-  aspect: number[];
-  solidity: number[];
+  area: [number, number];
+  aspect: [number, number];
+  solidity: [number, number];
 }
 
 export interface LogConfig {
