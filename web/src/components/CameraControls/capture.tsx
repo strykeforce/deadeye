@@ -1,7 +1,7 @@
 import { Select, Slider, Row, Col, InputNumber } from "antd";
 import React from "react";
 import { CaptureConfig } from "../../common/models";
-import { configCapture } from "../../common/api";
+import { configCapture, enableCamera } from "../../common/api";
 import "./camera-controls.less";
 
 type Props = { unit: string; inum: number; config: CaptureConfig };
@@ -40,6 +40,7 @@ const TypeSelect = (props: Props) => {
   const handleChange = (value: string) => {
     const newConfig = Object.assign(config, { type: value });
     configCapture(unit, inum, newConfig);
+    enableCamera(unit, inum, false);
   };
 
   return (
@@ -68,6 +69,7 @@ const DimensionSelect = (props: Props) => {
     const [w, h] = value.split("x", 2).map((n) => parseInt(n));
     const newConfig = Object.assign(config, { w: w, h: h });
     configCapture(unit, inum, newConfig);
+    enableCamera(unit, inum, false);
   };
 
   return (
@@ -93,6 +95,7 @@ const FpsSlider = (props: Props) => {
   const handleChange = (value: number) => {
     const newConfig = Object.assign(config, { fps: value });
     configCapture(unit, inum, newConfig);
+    enableCamera(unit, inum, false);
   };
 
   const marks = {
