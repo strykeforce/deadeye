@@ -15,9 +15,13 @@ const CameraControls = (props: Props) => {
   const { TabPane } = Tabs;
 
   return (
-    <Tabs className="camera-controls" defaultActiveKey="2">
+    <Tabs className="camera-controls" defaultActiveKey="1">
       <TabPane tab="Capture" key="1">
-        <CapturePane config={camera.capture} />
+        <CapturePane
+          unit={camera.unit}
+          inum={camera.inum}
+          config={camera.capture}
+        />
       </TabPane>
       <TabPane tab="Mask" key="2">
         <MaskPane

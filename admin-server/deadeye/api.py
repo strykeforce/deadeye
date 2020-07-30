@@ -19,6 +19,7 @@ class Api:
         self.socketio.on_event("message", self.handle_message)
         self.socketio.on_event("camera_control", self.handle_camera_control_event)
         self.socketio.on_event("light_control", self.handle_light_control_event)
+        self.socketio.on_event("capture_config", self.handle_capture_config_event)
         self.socketio.on_event("pipeline_config", self.handle_pipeline_config_event)
         self.socketio.on_event("stream_config", self.handle_stream_config_event)
         self.socketio.on_event("connect", self.handle_connect)
@@ -43,6 +44,15 @@ class Api:
         camera.light.enable(enabled)
         self.app.logger.debug(
             "unit: %s, camera: %s, light enabled: %s", unit.id, camera.id, enabled
+        )
+
+    def handle_capture_config_event(self, message):
+        unit = Unit.units[message["unit"]]
+        camera = unit.cameras[str(message["inum"])]
+        capture = message["capture"]
+        camera.set_capture(capture)
+        self.app.logger.debug(
+            "unit: %s, camera: %s, capture: %s", unit.id, camera.id, camera.pipeline
         )
 
     def handle_pipeline_config_event(self, message):

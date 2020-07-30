@@ -31,7 +31,6 @@ const Range = (props: Props) => {
       </Col>
       <Col span={4}>
         <InputNumber
-          type="number"
           min={min}
           max={max}
           className="hsv-range__input"
