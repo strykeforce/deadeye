@@ -4,11 +4,17 @@ import { configCapture, enableCamera } from "../../common/api";
 import { CaptureConfig } from "../../common/models";
 import "./camera-controls.less";
 import TestConfigSubPane from "./capture/test";
+import DebugPane from "./debug";
 
-type Props = { unit: string; inum: number; config: CaptureConfig };
+type Props = {
+  unit: string;
+  inum: number;
+  config: CaptureConfig;
+  debug?: boolean;
+};
 
 const CapturePane = (props: Props) => {
-  // const { unit, inum, config } = props;
+  const { debug = false } = props;
 
   const [hasRestartDisplayed, setRestartDisplayed] = useState(false);
 
@@ -25,29 +31,38 @@ const CapturePane = (props: Props) => {
   };
 
   return (
-    <Row>
-      <Col span={11}>
-        <Row>
+    <>
+      <Row>
+        <Col span={11}>
+          <Row>
+            <Col span={24}>
+              <TypeSelect {...props} onChange={displayRestartMessage} />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24}>
+              <DimensionSelect {...props} onChange={displayRestartMessage} />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24}>
+              <FpsSlider {...props} onChange={displayRestartMessage} />
+            </Col>
+          </Row>
+        </Col>
+        <Col span={2}></Col>
+        <Col span={11}>
+          <TestConfigSubPane {...props} onChange={displayRestartMessage} />
+        </Col>
+      </Row>
+      {debug && (
+        <Row style={{ paddingTop: "25px" }}>
           <Col span={24}>
-            <TypeSelect {...props} onChange={displayRestartMessage} />
+            <DebugPane {...props} section="capture" />
           </Col>
         </Row>
-        <Row>
-          <Col span={24}>
-            <DimensionSelect {...props} onChange={displayRestartMessage} />
-          </Col>
-        </Row>
-        <Row>
-          <Col span={24}>
-            <FpsSlider {...props} onChange={displayRestartMessage} />
-          </Col>
-        </Row>
-      </Col>
-      <Col span={2}></Col>
-      <Col span={11}>
-        <TestConfigSubPane {...props} onChange={displayRestartMessage} />
-      </Col>
-    </Row>
+      )}
+    </>
   );
 };
 
@@ -67,21 +82,23 @@ const TypeSelect = (props: CaptureControlProps) => {
   };
 
   return (
-    <Row className="capture-type">
-      <Col span={6} className="capture-type__label">
-        Type
-      </Col>
-      <Col span={18}>
-        <Select
-          dropdownMatchSelectWidth={false}
-          value={config.type}
-          onChange={handleChange}
-        >
-          <Option value="test">Test</Option>
-          <Option value="jetson">Jetson</Option>
-        </Select>
-      </Col>
-    </Row>
+    <>
+      <Row className="capture-type">
+        <Col span={6} className="capture-type__label">
+          Type
+        </Col>
+        <Col span={18}>
+          <Select
+            dropdownMatchSelectWidth={false}
+            value={config.type}
+            onChange={handleChange}
+          >
+            <Option value="test">Test</Option>
+            <Option value="jetson">Jetson</Option>
+          </Select>
+        </Col>
+      </Row>
+    </>
   );
 };
 
