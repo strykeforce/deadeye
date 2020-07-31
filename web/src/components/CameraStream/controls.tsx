@@ -19,7 +19,6 @@ const Controls = (props: Props) => {
   const handleChange = (name: string) => (event: RadioChangeEvent) => {
     const newConfig = Object.assign(config, { [name]: event.target.value });
     configStream(unit, inum, newConfig);
-    console.debug(`name = ${name} value = ${event.target.value}`);
   };
 
   return (

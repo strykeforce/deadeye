@@ -37,7 +37,7 @@ export const configCapture = (
 ): void => {
   const message = { unit, inum, capture };
   socket.emit("capture_config", message);
-  console.log(`configCapture: ${JSON.stringify(message)}`);
+  // console.log(`configCapture: ${JSON.stringify(message)}`);
 };
 
 export const configPipeline = (

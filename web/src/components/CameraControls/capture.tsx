@@ -1,46 +1,69 @@
-import { Select, Slider, Row, Col, InputNumber } from "antd";
-import React from "react";
-import { CaptureConfig } from "../../common/models";
+import { message, Col, Row, Select, Slider } from "antd";
+import React, { useState } from "react";
 import { configCapture, enableCamera } from "../../common/api";
+import { CaptureConfig } from "../../common/models";
 import "./camera-controls.less";
+import TestConfigSubPane from "./capture/test";
 
 type Props = { unit: string; inum: number; config: CaptureConfig };
 
 const CapturePane = (props: Props) => {
+  // const { unit, inum, config } = props;
+
+  const [hasRestartDisplayed, setRestartDisplayed] = useState(false);
+
+  const displayRestartMessage = () => {
+    if (!hasRestartDisplayed) {
+      message.warn({
+        content: "Restart camera capture for changes to take effect.",
+        style: {
+          marginTop: "10vh",
+        },
+      });
+      setRestartDisplayed(true);
+    }
+  };
+
   return (
-    <>
-      <Row>
-        <Col span={12}>
-          <TypeSelect {...props} />
-        </Col>
-        <Col span={12}></Col>
-      </Row>
-      <Row>
-        <Col span={12}>
-          <DimensionSelect {...props} />
-        </Col>
-        <Col span={12}></Col>
-      </Row>
-      <Row>
-        <Col span={12}>
-          <FpsSlider {...props} />
-        </Col>
-        <Col span={12}></Col>
-      </Row>
-    </>
+    <Row>
+      <Col span={11}>
+        <Row>
+          <Col span={24}>
+            <TypeSelect {...props} onChange={displayRestartMessage} />
+          </Col>
+        </Row>
+        <Row>
+          <Col span={24}>
+            <DimensionSelect {...props} onChange={displayRestartMessage} />
+          </Col>
+        </Row>
+        <Row>
+          <Col span={24}>
+            <FpsSlider {...props} onChange={displayRestartMessage} />
+          </Col>
+        </Row>
+      </Col>
+      <Col span={2}></Col>
+      <Col span={11}>
+        <TestConfigSubPane {...props} onChange={displayRestartMessage} />
+      </Col>
+    </Row>
   );
 };
 
 export default CapturePane;
 
-const TypeSelect = (props: Props) => {
-  const { unit, inum, config } = props;
+export type CaptureControlProps = Props & { onChange: () => void };
+
+const TypeSelect = (props: CaptureControlProps) => {
+  const { unit, inum, config, onChange: displayRestartMessage } = props;
   const { Option } = Select;
 
   const handleChange = (value: string) => {
     const newConfig = Object.assign(config, { type: value });
     configCapture(unit, inum, newConfig);
     enableCamera(unit, inum, false);
+    displayRestartMessage();
   };
 
   return (
@@ -49,7 +72,11 @@ const TypeSelect = (props: Props) => {
         Type
       </Col>
       <Col span={18}>
-        <Select value={config.type} onChange={handleChange}>
+        <Select
+          dropdownMatchSelectWidth={false}
+          value={config.type}
+          onChange={handleChange}
+        >
           <Option value="test">Test</Option>
           <Option value="jetson">Jetson</Option>
         </Select>
@@ -58,8 +85,8 @@ const TypeSelect = (props: Props) => {
   );
 };
 
-const DimensionSelect = (props: Props) => {
-  const { unit, inum, config } = props;
+const DimensionSelect = (props: CaptureControlProps) => {
+  const { unit, inum, config, onChange: displayRestartMessage } = props;
   const values = [config.w, config.h];
   const { Option } = Select;
 
@@ -70,6 +97,7 @@ const DimensionSelect = (props: Props) => {
     const newConfig = Object.assign(config, { w: w, h: h });
     configCapture(unit, inum, newConfig);
     enableCamera(unit, inum, false);
+    displayRestartMessage();
   };
 
   return (
@@ -89,13 +117,14 @@ const DimensionSelect = (props: Props) => {
   );
 };
 
-const FpsSlider = (props: Props) => {
-  const { unit, inum, config } = props;
+const FpsSlider = (props: CaptureControlProps) => {
+  const { unit, inum, config, onChange: displayRestartMessage } = props;
 
   const handleChange = (value: number) => {
     const newConfig = Object.assign(config, { fps: value });
     configCapture(unit, inum, newConfig);
     enableCamera(unit, inum, false);
+    displayRestartMessage();
   };
 
   const marks = {
@@ -117,6 +146,7 @@ const FpsSlider = (props: Props) => {
           max={120}
           step={null}
           marks={marks}
+          tooltipVisible={false}
           onChange={handleChange}
         />
       </Col>
