@@ -1,3 +1,5 @@
+@import "../../style/common.less";
+
 .camera-dash {
   flex-wrap: nowrap;
   display: flex;
@@ -6,8 +8,9 @@
   padding-left: 0px;
 
   @media only screen {
-    @media (max-width: 1024px) {
-      flex-wrap: wrap-reverse;
+    @media (max-width: @break-width) {
+      flex-direction: column-reverse;
+      align-items: center;
       padding-top: 10px;
     }
   }
@@ -16,7 +19,7 @@
     border: 0px solid white;
 
     @media only screen {
-      @media (max-width: 1024px) {
+      @media (max-width: @break-width) {
         margin-top: 20px;
       }
     }

@@ -1,10 +1,10 @@
 import { Tabs } from "antd";
 import React from "react";
 import { Camera } from "../../common/models";
-import CapturePane from "./capture";
-import FilterPane from "./filter";
+import CapturePane from "./capture-pane";
+import FilterPane from "./filter-pane";
 import "./camera-controls.less";
-import MaskPane from "./mask";
+import MaskPane from "./mask-pane";
 
 type Props = {
   camera: Camera;

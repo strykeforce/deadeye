@@ -2,7 +2,7 @@ import { Col, Input, Row, Select } from "antd";
 import React from "react";
 import { configCapture, enableCamera } from "../../../common/api";
 import "../camera-controls.less";
-import { CaptureControlProps } from "../capture";
+import { CaptureControlProps } from "../capture-pane";
 
 const TestConfigSubPane = (props: CaptureControlProps) => {
   return (
