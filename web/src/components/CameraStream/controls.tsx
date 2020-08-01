@@ -3,6 +3,7 @@ import { RadioChangeEvent } from "antd/lib/radio";
 import React from "react";
 import { configStream } from "../../common/api";
 import { StreamConfig } from "../../common/models";
+import { key } from "../../common/util";
 import "./camera-stream.less";
 
 type Props = {
@@ -30,7 +31,7 @@ const Controls = (props: Props) => {
             className={`${prefix}__radio`}
             value="none"
             onChange={handleChange("view")}
-            key={1}
+            key={key(unit, inum, 9)}
           >
             None
           </Radio>
@@ -38,7 +39,7 @@ const Controls = (props: Props) => {
             className={`${prefix}__radio`}
             value="original"
             onChange={handleChange("view")}
-            key={2}
+            key={key(unit, inum, 10)}
           >
             Original
           </Radio>
@@ -46,7 +47,7 @@ const Controls = (props: Props) => {
             className={`${prefix}__radio`}
             value="mask"
             onChange={handleChange("view")}
-            key={3}
+            key={key(unit, inum, 11)}
           >
             Mask
           </Radio>
@@ -60,7 +61,7 @@ const Controls = (props: Props) => {
             className={`${prefix}__radio`}
             value="none"
             onChange={handleChange("contour")}
-            key={4}
+            key={key(unit, inum, 12)}
           >
             None
           </Radio>
@@ -68,7 +69,7 @@ const Controls = (props: Props) => {
             className={`${prefix}__radio`}
             value="filter"
             onChange={handleChange("contour")}
-            key={5}
+            key={key(unit, inum, 13)}
           >
             Filtered
           </Radio>
@@ -76,7 +77,7 @@ const Controls = (props: Props) => {
             className={`${prefix}__radio`}
             value="all"
             onChange={handleChange("contour")}
-            key={6}
+            key={key(unit, inum, 14)}
           >
             All
           </Radio>

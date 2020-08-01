@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Camera, Units } from "../../common/models";
+import { Camera, Units, CaptureConfig } from "../../common/models";
 import Range from "./range";
 import { configPipeline } from "../../common/api";
 import { Typography } from "antd";
@@ -9,7 +9,12 @@ import { getCamera } from "../../common/util";
 
 // import "./index.less";
 
-type Props = { unit: string; inum: number; section: string };
+type Props = {
+  unit: string;
+  inum: number;
+  config: CaptureConfig;
+  section: string;
+};
 
 const DebugPane = (props: Props) => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -25,7 +30,7 @@ const DebugPane = (props: Props) => {
         },
         (error) => console.log(error)
       );
-  }, [props.unit, props.inum]);
+  }, [props.unit, props.inum, props.config]);
 
   if (!isLoaded) {
     return <div>Loading...</div>;

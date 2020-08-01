@@ -1,10 +1,13 @@
 import { Col, Input, Row, Select } from "antd";
 import React from "react";
 import { configCapture, enableCamera } from "../../../common/api";
+import { key } from "../../../common/util";
 import "../camera-controls.less";
 import { CaptureControlProps } from "../capture-pane";
 
 const TestConfigSubPane = (props: CaptureControlProps) => {
+  const { unit, inum } = props;
+
   return (
     <>
       <Row>
@@ -15,7 +18,7 @@ const TestConfigSubPane = (props: CaptureControlProps) => {
       <Row>
         <Col span={24}>
           <ColorSelect
-            key={`${props.unit}${props.inum}fg`}
+            key={key(unit, inum, 7)}
             {...props}
             name="foregroundColor"
           />
@@ -24,7 +27,7 @@ const TestConfigSubPane = (props: CaptureControlProps) => {
       <Row>
         <Col span={24}>
           <ColorSelect
-            key={`${props.unit}${props.inum}bg`}
+            key={key(unit, inum, 8)}
             {...props}
             name="backgroundColor"
           />
@@ -50,8 +53,8 @@ const PatternSelect = (props: CaptureControlProps) => {
   };
 
   return (
-    <Row className="test-pattern-type">
-      <Col span={12} className="test-pattern-type__label">
+    <Row className="capture-pane-control">
+      <Col span={12} className="capture-pane-control__label">
         Pattern
       </Col>
       <Col span={12}>
@@ -92,7 +95,7 @@ class ColorSelect extends React.Component<
     this.setState({ value: event.currentTarget.value });
   };
 
-  handlePressEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {};
+  // handlePressEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {};
 
   saveChanges = () => {
     const {
@@ -113,22 +116,15 @@ class ColorSelect extends React.Component<
 
   render() {
     return (
-      <Row className="test-pattern-color">
-        <Col span={12} className="test-pattern-color__label">
+      <Row className="capture-pane-control">
+        <Col span={12} className="capture-pane-control__label">
           {this.props.name === "foregroundColor"
             ? "Foreground Color"
             : "Background Color"}
         </Col>
         <Col span={12}>
           <Input
-            // defaultValue={`${unit}${inum}${name}`}
-            // defaultValue={
-            //   name === "foregroundColor"
-            //     ? options.foregroundColor
-            //     : options.backgroundColor
-            // }
             value={this.state.value}
-            // placeholder={name === "foregroundColor" ? "FFFFFF" : "000000"}
             maxLength={6}
             onChange={this.handleChange}
             onPressEnter={() => this.saveChanges()}

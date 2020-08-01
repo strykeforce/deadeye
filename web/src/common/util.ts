@@ -9,3 +9,6 @@ export const getCamera = (id: string, units: Units): Camera => {
   const c = id.charAt(1);
   return get([u, "cameras", c])(units);
 };
+
+export const key = (unit: string, inum: number, id: number) =>
+  `${unit}${inum}${id}`;

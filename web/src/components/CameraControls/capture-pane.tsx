@@ -1,8 +1,10 @@
-import { message, Col, Row, Select, Slider } from "antd";
+import { Col, message, Row, Select, Slider } from "antd";
 import React, { useState } from "react";
 import { configCapture, enableCamera } from "../../common/api";
 import { CaptureConfig } from "../../common/models";
+import { key } from "../../common/util";
 import "./camera-controls.less";
+import JetsonConfigSubPane from "./capture/jetson";
 import TestConfigSubPane from "./capture/test";
 import DebugPane from "./debug";
 
@@ -14,7 +16,10 @@ type Props = {
 };
 
 const CapturePane = (props: Props) => {
-  const { debug = false } = props;
+  const {
+    config: { type },
+    debug = false,
+  } = props;
 
   const [hasRestartDisplayed, setRestartDisplayed] = useState(false);
 
@@ -27,6 +32,21 @@ const CapturePane = (props: Props) => {
         },
       });
       setRestartDisplayed(true);
+    }
+  };
+
+  const subPane = () => {
+    switch (type) {
+      case "test":
+        return (
+          <TestConfigSubPane {...props} onChange={displayRestartMessage} />
+        );
+      case "jetson":
+        return (
+          <JetsonConfigSubPane {...props} onChange={displayRestartMessage} />
+        );
+      default:
+        return null;
     }
   };
 
@@ -51,9 +71,7 @@ const CapturePane = (props: Props) => {
           </Row>
         </Col>
         <Col span={2}></Col>
-        <Col span={11}>
-          <TestConfigSubPane {...props} onChange={displayRestartMessage} />
-        </Col>
+        <Col span={11}>{subPane()}</Col>
       </Row>
       {debug && (
         <Row style={{ paddingTop: "25px" }}>
@@ -83,8 +101,8 @@ const TypeSelect = (props: CaptureControlProps) => {
 
   return (
     <>
-      <Row className="capture-type">
-        <Col span={6} className="capture-type__label">
+      <Row className="capture-pane-control">
+        <Col span={6} className="capture-pane-control__label">
           Type
         </Col>
         <Col span={18}>
@@ -92,9 +110,10 @@ const TypeSelect = (props: CaptureControlProps) => {
             dropdownMatchSelectWidth={false}
             value={config.type}
             onChange={handleChange}
+            key={key(unit, inum, 4)}
           >
-            <Option value="test">Test</Option>
-            <Option value="jetson">Jetson</Option>
+            <Option value="test">Test Pattern</Option>
+            <Option value="jetson">Jetson Nano</Option>
           </Select>
         </Col>
       </Row>
@@ -118,16 +137,16 @@ const DimensionSelect = (props: CaptureControlProps) => {
   };
 
   return (
-    <Row className="frame-dimensions">
-      <Col span={6} className="frame-dimensions__label">
-        Size
+    <Row className="capture-pane-control">
+      <Col span={6} className="capture-pane-control__label">
+        Output
       </Col>
       <Col span={18}>
-        <Select value={type} onChange={handleChange}>
-          <Option value="1280x720">1280x720</Option>
-          <Option value="960x540">960x540</Option>
-          <Option value="640x360">640x360</Option>
-          <Option value="320x180">320x180</Option>
+        <Select value={type} onChange={handleChange} key={key(unit, inum, 5)}>
+          <Option value="1280x720">1280 x 720 px</Option>
+          <Option value="960x540">960 x 540 px</Option>
+          <Option value="640x360">640 x 360 px</Option>
+          <Option value="320x180">320 x 180 px</Option>
         </Select>
       </Col>
     </Row>
@@ -152,8 +171,8 @@ const FpsSlider = (props: CaptureControlProps) => {
   };
 
   return (
-    <Row className="capture-fps">
-      <Col span={6} className="capture-fps__label">
+    <Row className="capture-pane-control">
+      <Col span={6} className="capture-pane-control__label">
         FPS
       </Col>
       <Col span={18}>
