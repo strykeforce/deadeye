@@ -2,15 +2,30 @@
   width: 620px;
 }
 
-.hsv-range {
+.camera-controls__label-layout() {
+  padding-top: 6px;
+}
+
+.camera-controls__row-layout() {
   margin-bottom: 10px;
+}
+
+.hsv-range {
+  .camera-controls__row-layout();
 
   &__label {
-    padding-top: 6px;
+    .camera-controls__label-layout();
   }
 
   &__input {
     margin: 0 16px !important;
     width: 75px !important;
+  }
+}
+
+.capture-pane-control {
+  .camera-controls__row-layout();
+  &__label {
+    .camera-controls__label-layout();
   }
 }

@@ -1,5 +1,5 @@
 import io from "socket.io-client";
-import { PipelineConfig, StreamConfig } from "./models";
+import { CaptureConfig, PipelineConfig, StreamConfig } from "./models";
 
 let socket: SocketIOClient.Socket;
 
@@ -28,6 +28,16 @@ export const enableLight = (
 ): void => {
   const message = { unit, inum, enabled };
   socket.emit("light_control", message);
+};
+
+export const configCapture = (
+  unit: string,
+  inum: number,
+  capture: CaptureConfig
+): void => {
+  const message = { unit, inum, capture };
+  socket.emit("capture_config", message);
+  // console.log(`configCapture: ${JSON.stringify(message)}`);
 };
 
 export const configPipeline = (

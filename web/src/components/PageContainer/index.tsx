@@ -1,6 +1,7 @@
 import { Layout, Typography } from "antd";
 import React, { useState } from "react";
-import { Camera, Id, Units } from "../../common/models";
+import { Id, Units } from "../../common/models";
+import { getCamera } from "../../common/util";
 import CameraDashboard from "../CameraDashboard";
 import CameraHeader from "../CameraHeader";
 import CameraMenu from "../CameraMenu";
@@ -13,19 +14,9 @@ type Props = {
   units: Units;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const get = (p: string[]) => (o: any) =>
-  p.reduce((xs, x) => (xs && xs[x] ? xs[x] : null), o);
-
 const PageContainer = (props: Props) => {
   const { units } = props;
   const [selectedId, setSelectedId] = useState<Id>(undefined);
-
-  const getCamera = (id: string): Camera => {
-    const u = id.charAt(0);
-    const c = id.charAt(1);
-    return get([u, "cameras", c])(units);
-  };
 
   const ids = Object.values(units)
     .flatMap((u) => Object.values(u.cameras).map((c) => c.id))
@@ -37,11 +28,11 @@ const PageContainer = (props: Props) => {
   }
 
   const content = selectedId ? (
-    <CameraDashboard camera={getCamera(selectedId)} />
+    <CameraDashboard camera={getCamera(selectedId, units)} />
   ) : null;
 
   const header = selectedId ? (
-    <CameraHeader camera={getCamera(selectedId)} />
+    <CameraHeader camera={getCamera(selectedId, units)} />
   ) : null;
 
   return (

@@ -1,6 +1,6 @@
 import os
 import json
-from flask import Flask, render_template
+from flask import Flask, render_template, make_response
 from .models import Unit
 
 
@@ -20,6 +20,11 @@ def create_app():
 
     @app.route("/json")
     def json_dump():
-        return json.dumps(Unit.units, default=lambda o: o.__dict__)
+        r = make_response(json.dumps(Unit.units, default=lambda o: o.__dict__))
+        r.headers.add("Access-Control-Allow-Origin", "*")
+        r.headers.add('Access-Control-Allow-Headers', "*")
+        r.headers.add('Access-Control-Allow-Methods', "*")
+        r.mimetype = 'application/json'
+        return r
 
     return app

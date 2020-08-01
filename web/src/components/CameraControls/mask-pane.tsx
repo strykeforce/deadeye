@@ -18,7 +18,6 @@ const MaskPane = (props: Props) => {
     if (value === undefined) return;
     const newConfig = Object.assign(config, { [name]: value });
     configPipeline(unit, inum, newConfig);
-    // console.debug(`name = ${name} values = ${values}`);
   };
 
   return (

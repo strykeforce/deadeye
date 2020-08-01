@@ -59,6 +59,12 @@ class Camera:
         self.on = enabled
         Unit.api.refresh = True
 
+    def set_capture(self, capture):
+        capture_entry = self.table().getEntry("Capture")
+        capture_entry.setString(json.dumps(capture))
+        self.capture = capture
+        Unit.api.refresh = True
+
     def set_pipeline(self, pipeline):
         pipeline_entry = self.table().getEntry("Pipeline")
         pipeline_entry.setString(json.dumps(pipeline))

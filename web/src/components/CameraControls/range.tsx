@@ -23,7 +23,6 @@ const Range = (props: Props) => {
     const max = typeof value === "number" ? value : values[1];
     onChange([values[0], max]);
   };
-
   return (
     <Row className="hsv-range">
       <Col span={3} className="hsv-range__label">
@@ -31,7 +30,6 @@ const Range = (props: Props) => {
       </Col>
       <Col span={4}>
         <InputNumber
-          type="number"
           min={min}
           max={max}
           className="hsv-range__input"

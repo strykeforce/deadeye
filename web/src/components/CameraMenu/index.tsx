@@ -1,4 +1,4 @@
-import { VideoCameraOutlined } from "@ant-design/icons";
+import { VideoCameraOutlined, SettingOutlined } from "@ant-design/icons";
 import { Menu } from "antd";
 import React from "react";
 import "./camera-menu.less";
@@ -35,6 +35,7 @@ const CameraMenu = (props: Props) => {
         selectedKeys={selectedId ? [selectedId] : [ids[0]]}
       >
         {menuItems}
+        <Menu.Item key={ids.length + 1} icon={<SettingOutlined />}></Menu.Item>
       </Menu>
     </>
   );

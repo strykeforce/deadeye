@@ -1,10 +1,11 @@
 import { Tabs } from "antd";
 import React from "react";
 import { Camera } from "../../common/models";
-import CapturePane from "./capture";
-import FilterPane from "./filter";
+import { key } from "../../common/util";
 import "./camera-controls.less";
-import MaskPane from "./mask";
+import CapturePane from "./capture-pane";
+import FilterPane from "./filter-pane";
+import MaskPane from "./mask-pane";
 
 type Props = {
   camera: Camera;
@@ -15,18 +16,26 @@ const CameraControls = (props: Props) => {
   const { TabPane } = Tabs;
 
   return (
-    <Tabs className="camera-controls" defaultActiveKey="2">
-      <TabPane tab="Capture" key="1">
-        <CapturePane config={camera.capture} />
+    <Tabs
+      className="camera-controls"
+      defaultActiveKey={key(camera.unit, camera.inum, 1)}
+    >
+      <TabPane tab="Capture" key={key(camera.unit, camera.inum, 1)}>
+        <CapturePane
+          unit={camera.unit}
+          inum={camera.inum}
+          config={camera.capture}
+          debug={false}
+        />
       </TabPane>
-      <TabPane tab="Mask" key="2">
+      <TabPane tab="Mask" key={key(camera.unit, camera.inum, 2)}>
         <MaskPane
           unit={camera.unit}
           inum={camera.inum}
           config={camera.pipeline}
         />
       </TabPane>
-      <TabPane tab="Filter" key="3">
+      <TabPane tab="Filter" key={key(camera.unit, camera.inum, 3)}>
         <FilterPane
           unit={camera.unit}
           inum={camera.inum}

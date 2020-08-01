@@ -16,7 +16,6 @@ const CameraStream = (props: Props) => {
 
   const streamEnabled =
     enabled && (config.view !== "none" || config.contour !== "none");
-  console.debug(`streamEnabled = ${streamEnabled}`);
 
   return (
     <div className="camera-stream">

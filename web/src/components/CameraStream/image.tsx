@@ -9,7 +9,7 @@ interface Props {
 
 const Image = (props: Props) => {
   const { enabled, url } = props;
-  console.debug("Image render");
+
   return (
     <img
       src={enabled ? url : standBy}

@@ -45,7 +45,7 @@ std::string deadeye::NvArgusCameraPipeline(const CaptureConfig& config) {
                          gain_range, digital_gain_range, ae_lock, awb_lock);
 
   auto cap_width = j.value("captureWidth", 1280);
-  auto cap_height = j.value("captureWidth", 720);
+  auto cap_height = j.value("captureHeight", 720);
 
   auto cap_format_fmt =
       "video/x-raw(memory:NVMM),"
