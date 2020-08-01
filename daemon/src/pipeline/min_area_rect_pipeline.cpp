@@ -9,7 +9,8 @@
 
 using namespace deadeye;
 
-MinAreaRectPipeline::MinAreaRectPipeline(int inum) : AbstractPipeline{inum} {}
+MinAreaRectPipeline::MinAreaRectPipeline(int inum, std::string name)
+    : AbstractPipeline{inum, name} {}
 
 void MinAreaRectPipeline::Configure(const CaptureConfig& config) {
   center2f_ = static_cast<cv::Point2f>(config.Size() / 2);

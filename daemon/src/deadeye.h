@@ -7,31 +7,38 @@
 #include "pipeline/upright_rect_pipeline.h"
 
 #ifdef DEADEYE_CAMERA0_PIPELINE
-#define DE_P0 std::make_unique<DEADEYE_CAMERA0_PIPELINE>(0)
+#define DE_P0                                 \
+  std::make_unique<DEADEYE_CAMERA0_PIPELINE>( \
+      0, DE_STRINGIFY(DEADEYE_CAMERA0_PIPELINE))
 #else
 #define DE_P0 std::unique_ptr<Pipeline>(nullptr)
 #endif
 
 #ifdef DEADEYE_CAMERA1_PIPELINE
-#define DE_P1 std::make_unique<DEADEYE_CAMERA1_PIPELINE>(1)
+#define DE_P1                                 \
+  std::make_unique<DEADEYE_CAMERA1_PIPELINE>( \
+      1, DE_STRINGIFY(DEADEYE_CAMERA1_PIPELINE))
 #else
 #define DE_P1 std::unique_ptr<::deadeye::Pipeline>(nullptr)
 #endif
 
 #ifdef DEADEYE_CAMERA2_PIPELINE
-#define DE_P2 std::make_unique<DEADEYE_CAMERA2_PIPELINE>(2)
+#define DE_P2 \
+  std::make_unique<DEADEYE_CAMERA2_PIPELINE>(2, DEADEYE_CAMERA2_PIPELINE)
 #else
 #define DE_P2 std::unique_ptr<::deadeye::Pipeline>(nullptr)
 #endif
 
 #ifdef DEADEYE_CAMERA3_PIPELINE
-#define DE_P3 std::make_unique<DEADEYE_CAMERA3_PIPELINE>(3)
+#define DE_P3 \
+  std::make_unique<DEADEYE_CAMERA3_PIPELINE>(3, DEADEYE_CAMERA3_PIPELINE)
 #else
 #define DE_P3 std::unique_ptr<::deadeye::Pipeline>(nullptr)
 #endif
 
 #ifdef DEADEYE_CAMERA4_PIPELINE
-#define DE_P4 std::make_unique<DEADEYE_CAMERA4_PIPELINE>(4)
+#define DE_P4 \
+  std::make_unique<DEADEYE_CAMERA4_PIPELINE>(4, DEADEYE_CAMERA4_PIPELINE)
 #else
 #define DE_P4 std::unique_ptr<::deadeye::Pipeline>(nullptr)
 #endif

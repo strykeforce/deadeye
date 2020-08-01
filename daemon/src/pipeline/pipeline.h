@@ -17,12 +17,13 @@ using TargetDataPtr = std::unique_ptr<TargetData>;
 
 class Pipeline {
  public:
-  Pipeline(int inum) : inum_(inum) {}
+  Pipeline(int inum, std::string name) : inum_(inum), name_(name) {}
   virtual ~Pipeline() = default;
   Pipeline(const Pipeline&) = delete;
   Pipeline& operator=(const Pipeline&) = delete;
 
   int GetInum() const { return inum_; }
+  std::string GetName() const { return name_; }
 
   virtual cv::Mat GetMask() const = 0;
   virtual void Configure(const CaptureConfig& config) = 0;
@@ -42,5 +43,6 @@ class Pipeline {
  protected:
   virtual std::string ToString() const = 0;
   int inum_;
+  std::string name_;
 };
 }  // namespace deadeye

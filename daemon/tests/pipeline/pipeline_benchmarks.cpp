@@ -32,7 +32,8 @@ TEMPLATE_TEST_CASE("BM001: ProcessFrame",
                    AbstractPipeline, UprightRectPipeline, MinAreaRectPipeline) {
   cv::Mat frame = cv::imread(kTargetMaster);
 
-  std::unique_ptr<Pipeline> pipeline = std::make_unique<TestType>(0);
+  std::unique_ptr<Pipeline> pipeline =
+      std::make_unique<TestType>(0, "TestType");
 
   PipelineConfig pipeline_config{0,         {50, 90},       {0, 255},
                                  {70, 277}, FilterConfig(), LogConfig()};

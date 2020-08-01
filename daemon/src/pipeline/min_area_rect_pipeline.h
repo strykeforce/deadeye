@@ -4,7 +4,7 @@
 namespace deadeye {
 class MinAreaRectPipeline : public AbstractPipeline {
  public:
-  MinAreaRectPipeline(int inum);
+  MinAreaRectPipeline(int inum, std::string name);
 
   void Configure(const CaptureConfig& config) override;
 

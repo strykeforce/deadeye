@@ -8,11 +8,12 @@
 #define DEADEYE_UNIT DE_STRINGIFY(DEADEYE_UNIT_ID)
 
 #define DE_DEADEYE_TABLE "/Deadeye"
-#define DE_CONFIG "/Config"
 #define DE_CAPTURE "/Capture"
+#define DE_CONFIG "/Config"
+#define DE_INFO "/Info"
+#define DE_LIGHTS "/Light"
 #define DE_PIPELINE "/Pipeline"
 #define DE_STREAM "/Stream"
-#define DE_LIGHTS "/Light"
 #define DE_CONTROL_TABLE DE_DEADEYE_TABLE "/" DEADEYE_UNIT
 #define DE_CONFIG_TABLE DE_DEADEYE_TABLE "/" DEADEYE_UNIT
 
@@ -31,6 +32,7 @@
 #define DE_CAPTURE_CONFIG_ENTRY(inum) DE_CONFIG_TABLE "/" inum DE_CAPTURE
 #define DE_PIPELINE_CONFIG_ENTRY(inum) DE_CONFIG_TABLE "/" inum DE_PIPELINE
 #define DE_STREAM_CONFIG_ENTRY(inum) DE_CONFIG_TABLE "/" inum DE_STREAM
+#define DE_INFO_ENTRY(inum) DE_CONFIG_TABLE "/" inum DE_INFO
 #define DE_CONFIG_ENTRY DE_DEADEYE_TABLE DE_CONFIG
 
 #define CLIENT_PORT DEADEYE_CLIENT_PORT
@@ -43,6 +45,7 @@ std::string LightsControlTablePath(int inum);
 std::string CaptureConfigEntryPath(int inum);
 std::string PipelineConfigEntryPath(int inum);
 std::string StreamConfigEntryPath(int inum);
+std::string InfoEntryPath(int inum);
 
 static const cv::Size kStreamSize{320, 240};
 }  // namespace deadeye

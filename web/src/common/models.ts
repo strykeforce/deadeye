@@ -23,6 +23,12 @@ export interface Camera {
   capture: CaptureConfig;
   pipeline: PipelineConfig;
   stream: StreamConfig;
+  info: CameraInfo;
+}
+
+export interface CameraInfo {
+  pipeline: { name: string };
+  version: string;
 }
 
 export interface CaptureConfig {

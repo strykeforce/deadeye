@@ -11,7 +11,7 @@ namespace deadeye {
 
 class AbstractPipeline : public Pipeline {
  public:
-  AbstractPipeline(int inum);
+  AbstractPipeline(int inum, std::string name);
 
   void Configure(const CaptureConfig& config) override;
   void Configure(const PipelineConfig& config) override;

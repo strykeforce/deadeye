@@ -1,10 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Camera, Units, CaptureConfig } from "../../common/models";
-import Range from "./range";
-import { configPipeline } from "../../common/api";
-import { Typography } from "antd";
+import React, { useEffect, useState } from "react";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { dark } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import { CaptureConfig, Units } from "../../common/models";
 import { getCamera } from "../../common/util";
 
 // import "./index.less";
