@@ -1,4 +1,4 @@
-import { Col, InputNumber, Row, Select, Space } from "antd";
+import { Col, InputNumber, Row, Select } from "antd";
 import React from "react";
 import { configCapture, enableCamera } from "../../../common/api";
 import { key } from "../../../common/util";

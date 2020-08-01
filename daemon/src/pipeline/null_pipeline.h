@@ -8,7 +8,8 @@ namespace deadeye {
 class NullPipeline : public Pipeline {
  public:
   NullPipeline(int inum)
-      : Pipeline{inum}, id_{DEADEYE_UNIT + std::to_string(inum_)} {}
+      : Pipeline{inum, "NullPipeline"},
+        id_{DEADEYE_UNIT + std::to_string(inum_)} {}
 
   virtual void Configure(CaptureConfig const& config) override {}
   virtual void Configure(PipelineConfig const& config) override {}

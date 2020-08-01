@@ -20,15 +20,26 @@ const CameraHeader = (props: Props) => {
     enableLight(camera.unit, camera.inum, checked);
   };
 
+  const name = camera.info.pipeline.name;
+
   return (
     <div className="camera-header">
-      <span className="camera-header__title">{camera.id}</span>
-      <div className="camera-header__switch">
-        <Switch checked={camera.on} onClick={handleCameraChange} />
+      <span className="camera-header__title">
+        {camera.id} <span>{name.substring(name.lastIndexOf("::") + 2)}</span>
+      </span>
+
+      <div>
+        <Switch
+          className="camera-header__switch"
+          checked={camera.on}
+          onClick={handleCameraChange}
+        />
         <span className="camera-header__label">Enabled</span>
-      </div>
-      <div className="camera-header__switch">
-        <Switch checked={camera.light.on} onClick={handleLightChange} />
+        <Switch
+          className="camera-header__switch"
+          checked={camera.light.on}
+          onClick={handleLightChange}
+        />
         <span className="camera-header__label">Lights</span>
       </div>
     </div>

@@ -5,8 +5,8 @@
 
 using namespace deadeye;
 
-AbstractPipeline::AbstractPipeline(int inum)
-    : Pipeline{inum}, id_(DEADEYE_UNIT + std::to_string(inum)) {}
+AbstractPipeline::AbstractPipeline(int inum, std::string name)
+    : Pipeline{inum, name}, id_(DEADEYE_UNIT + std::to_string(inum)) {}
 
 /**
  * Configure handles changes to capture settings and only takes effect

@@ -21,3 +21,7 @@ std::string deadeye::PipelineConfigEntryPath(int inum) {
 std::string deadeye::StreamConfigEntryPath(int inum) {
   return fmt::format("{}/{}{}", DE_CONFIG_TABLE, inum, DE_STREAM);
 }
+
+std::string deadeye::InfoEntryPath(int inum) {
+  return fmt::format("{}/{}{}", DE_CONFIG_TABLE, inum, DE_INFO);
+}

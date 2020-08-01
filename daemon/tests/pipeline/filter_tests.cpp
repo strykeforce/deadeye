@@ -5,7 +5,7 @@ using namespace deadeye;
 TEST_CASE("pipeline filter tests", "[pipeline][filter]") {
   cv::Mat frame = cv::imread(kTargetMaster);
 
-  AbstractPipeline pipeline{0};
+  AbstractPipeline pipeline{0, "AbstractPipeline"};
   pipeline.Configure(kTargetMasterCaptureConfig);
   PipelineConfig pipeline_config{kTargetMasterPipelineConfig};
   pipeline_config.filter.frame_area = frame.cols * frame.rows;

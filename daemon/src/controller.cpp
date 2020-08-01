@@ -535,6 +535,14 @@ void Controller::InitializeCamera() {
   PipelineConfig pc{nti.GetEntry(PipelineConfigEntryPath(inum)).GetValue()};
   StreamConfig sc{nti.GetEntry(StreamConfigEntryPath(inum)).GetValue()};
   Camera<inum>::Initialize(cc, pc, sc);
+
+  json j;
+  j["pipeline"]["name"] = Camera<inum>::GetPipeline()->GetName();
+  j["version"] = GetDeadeyeVersion();
+  j["logging"] = false;
+  auto entry = nti.GetEntry(InfoEntryPath(inum));
+  entry.SetString(j.dump());
+
   spdlog::debug("Camera<{}{}> initialized", DEADEYE_UNIT, inum);
 }
 
