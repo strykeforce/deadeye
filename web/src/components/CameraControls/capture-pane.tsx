@@ -7,6 +7,7 @@ import "./camera-controls.less";
 import JetsonConfigSubPane from "./capture/jetson";
 import TestConfigSubPane from "./capture/test";
 import DebugPane from "./debug";
+import UploadConfigSubPane from "./capture/upload";
 
 type Props = {
   unit: string;
@@ -28,7 +29,7 @@ const CapturePane = (props: Props) => {
       message.warn({
         content: "Restart camera capture for changes to take effect.",
         style: {
-          marginTop: "10vh",
+          marginTop: "8vh",
         },
       });
       setRestartDisplayed(true);
@@ -44,6 +45,10 @@ const CapturePane = (props: Props) => {
       case "jetson":
         return (
           <JetsonConfigSubPane {...props} onChange={displayRestartMessage} />
+        );
+      case "file":
+        return (
+          <UploadConfigSubPane {...props} onChange={displayRestartMessage} />
         );
       default:
         return null;
@@ -114,6 +119,7 @@ const TypeSelect = (props: CaptureControlProps) => {
           >
             <Option value="test">Test Pattern</Option>
             <Option value="jetson">Jetson Nano</Option>
+            <Option value="file">Image Upload</Option>
           </Select>
         </Col>
       </Row>
