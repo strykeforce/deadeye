@@ -4,6 +4,7 @@
 
 #include "capture/capture.h"
 #include "capture/capture_type.h"
+#include "capture/image_file.h"
 #include "capture/nv_argus_camera.h"
 #include "capture/video_test.h"
 
@@ -14,6 +15,8 @@ static std::unique_ptr<Capture> CreateCapture(const CaptureConfig& config) {
       return std::make_unique<VideoTest>(config);
     case CaptureType::jetson:
       return std::make_unique<NvArgusCamera>(config);
+    case CaptureType::file:
+      return std::make_unique<ImageFile>(config);
 
     default:
       spdlog::critical("CreateCapture: unimplemented type: {}",

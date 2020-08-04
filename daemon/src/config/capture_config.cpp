@@ -27,14 +27,14 @@ CaptureConfig::CaptureConfig(std::shared_ptr<nt::Value> value) {
 
 std::string CaptureConfig::PipelineType() const {
   switch (type) {
-    case CaptureType::autosrc:
-      return "auto";
     case CaptureType::jetson:
       return "jetson";
-    case CaptureType::osx:
-      return "osx";
     case CaptureType::test:
       return "test";
+    case CaptureType::file:
+      return "file";
+    default:
+      return "UNKNOWN";
   }
   return "";
 }

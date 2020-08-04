@@ -22,6 +22,7 @@ class Api:
         self.socketio.on_event("capture_config", self.handle_capture_config_event)
         self.socketio.on_event("pipeline_config", self.handle_pipeline_config_event)
         self.socketio.on_event("stream_config", self.handle_stream_config_event)
+        self.socketio.on_event("image_upload", self.handle_image_upload_event)
         self.socketio.on_event("connect", self.handle_connect)
         self.running = True
 
@@ -69,6 +70,19 @@ class Api:
         camera = unit.cameras[str(message["inum"])]
         stream = message["stream"]
         camera.set_stream(stream)
+        self.app.logger.debug(
+            "unit: %s, camera: %s, stream: %s", unit.id, camera.id, camera.stream
+        )
+
+    def handle_image_upload_event(self, message):
+        unit = Unit.units[message["unit"]]
+        camera = unit.cameras[str(message["inum"])]
+        filename = message["image"]
+        path = os.path.join(os.environ["DEADEYE_UPLOAD_DIR"], filename)
+        capture = camera.capture
+        capture["config"]["image"] = path
+        self.app.logger.debug(f"CAPTURE: {capture}")
+        camera.set_capture(capture)
         self.app.logger.debug(
             "unit: %s, camera: %s, stream: %s", unit.id, camera.id, camera.stream
         )

@@ -37,7 +37,7 @@ export const configCapture = (
 ): void => {
   const message = { unit, inum, capture };
   socket.emit("capture_config", message);
-  // console.log(`configCapture: ${JSON.stringify(message)}`);
+  console.log(`configCapture: ${JSON.stringify(message)}`);
 };
 
 export const configPipeline = (
@@ -60,4 +60,14 @@ export const configStream = (
   const message = { unit, inum, stream };
   socket.emit("stream_config", message);
   // console.log(`configStream: ${JSON.stringify(message)}`);
+};
+
+export const configImageUpload = (
+  unit: string,
+  inum: number,
+  upload: string
+): void => {
+  const message = { unit, inum, image: upload };
+  socket.emit("image_upload", message);
+  console.log(`configImageUpload: ${JSON.stringify(message)}`);
 };
