@@ -50,6 +50,9 @@ const UploadControl = (props: CaptureControlProps) => {
     }
   };
 
+  const url =
+    "http://" + document.domain + ":" + window.location.port + "/upload";
+
   return (
     <>
       <Row className="capture-pane-control">
@@ -58,7 +61,7 @@ const UploadControl = (props: CaptureControlProps) => {
         </Col>
         <Col span={12} className="capture-pane-control__control--left">
           <Upload
-            action="http://localhost:5000/upload"
+            action={url}
             accept="image/*"
             name="image"
             showUploadList={false}

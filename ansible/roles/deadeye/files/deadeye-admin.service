@@ -6,6 +6,7 @@ After=deadeye-daemon.service
 [Service]
 Environment=DEADEYE_NT_SERVER=10.27.67.2
 Environment=VIRTUAL_ENV=/opt/deadeye FLASK_ENV=production
+Environment=DEADEYE_UPLOAD_DIR=/var/opt/deadeye
 EnvironmentFile=/etc/opt/deadeye/deadeye.conf
 ExecStart=/opt/deadeye/bin/python -m deadeye
 Restart=on-failure
