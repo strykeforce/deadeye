@@ -10,7 +10,6 @@
 
 using namespace deadeye;
 using json = nlohmann::json;
-namespace fs = std::filesystem;
 
 ImageFile::ImageFile(const CaptureConfig& config)
     : size_{config.width, config.height}, fps_{config.frame_rate} {
@@ -18,12 +17,7 @@ ImageFile::ImageFile(const CaptureConfig& config)
   if (!j.is_object()) j = json::object();
 
   auto image_path = j.value("image", "");
-  fs::path image{image_path};
-  if (!fs::exists(image)) {
-    LoadInvalidSource(image);
-    return;
-  }
-  LoadSource(image);
+  LoadSource(image_path);
 }
 
 bool ImageFile::Grab(cv::Mat& frame) {
@@ -33,16 +27,18 @@ bool ImageFile::Grab(cv::Mat& frame) {
   return true;
 }
 
-void ImageFile::LoadInvalidSource(const fs::path& path) {
+void ImageFile::LoadInvalidSource(const std::string& path) {
   src_ = cv::Mat::zeros(size_, CV_8UC3);
-  std::string text = fmt::format("ERROR LOADING: {}", path.filename());
+  auto sep = path.rfind("/");
+  auto file = sep != std::string::npos ? path.substr(sep + 1) : path;
+  std::string text = fmt::format("ERROR LOADING: {}", file);
   int scale = size_.width / 320;
   auto position = cv::Point(0, size_.height / 2);
   cv::putText(src_, text, position, cv::FONT_HERSHEY_PLAIN, scale,
               cv::Scalar::all(255), scale);
 }
 
-void ImageFile::LoadSource(const fs::path& path) {
+void ImageFile::LoadSource(const std::string& path) {
   auto image = cv::imread(path);
   if (image.empty()) {
     LoadInvalidSource(path);

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <filesystem>
 #include <opencv2/core/mat.hpp>
 
 #include "capture/capture.h"
@@ -20,7 +19,7 @@ class ImageFile : public Capture {
   cv::Size size_;
   int fps_;
 
-  void LoadInvalidSource(const std::filesystem::path& path);
-  void LoadSource(const std::filesystem::path& path);
+  void LoadInvalidSource(const std::string& path);
+  void LoadSource(const std::string& path);
 };
 }  // namespace deadeye
