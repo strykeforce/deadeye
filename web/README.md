@@ -51,3 +51,5 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 - TestConfigSubPane: ID-7, ID-8
 - CameraStream: ID-9 - ID-14
 - JetsonConfigSubPane: ID-15 - ID-19
+- CameraControls: ID-20
+- LogPane ID-21
