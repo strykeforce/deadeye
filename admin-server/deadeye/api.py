@@ -27,7 +27,8 @@ class Api:
         self.running = True
 
     def handle_message(self, message):
-        self.app.logger.debug("received message: " + str(message))
+        self.refresh = True
+        self.app.logger.info("received message: " + str(message))
 
     def handle_camera_control_event(self, message):
         unit = Unit.units[message["unit"]]
