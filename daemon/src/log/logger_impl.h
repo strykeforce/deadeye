@@ -7,6 +7,8 @@
 
 namespace deadeye {
 
+namespace logger {
+
 struct LogEntry {
   LogEntry() = default;
 
@@ -21,13 +23,29 @@ struct LogEntry {
   std::unique_ptr<TargetData> target;
 };
 
-using LoggerQueue = moodycamel::BlockingReaderWriterQueue<deadeye::LogEntry>;
+using LoggerQueue =
+    moodycamel::BlockingReaderWriterQueue<deadeye::logger::LogEntry>;
 
 class LoggerImpl {
  public:
+  LoggerImpl(std::string id, LogConfig config, LoggerQueue& queue,
+             std::atomic<bool>& cancel);
   virtual ~LoggerImpl() {}
 
-  virtual void log() = 0;
+  virtual void Run() = 0;
+
+ protected:
+  std::string id_;
+  bool enabled_;
+  std::string template_;
+  std::atomic<bool>& cancel_;
+  LoggerQueue& queue_;
+
+ private:
+  bool CheckMount(const LogConfig& config);
+  bool CheckDir(const LogConfig& config);
+  static int enable_count_;
 };
+}  // namespace logger
 
 }  // namespace deadeye

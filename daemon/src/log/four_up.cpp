@@ -1,9 +1,7 @@
 #include "log/four_up.h"
 
-#include <dirent.h>
 #include <fmt/core.h>
 #include <spdlog/spdlog.h>
-#include <sys/stat.h>
 
 #include <cstring>
 #include <nlohmann/json.hpp>
@@ -12,34 +10,25 @@
 
 #include "pipeline/pipeline_ops.h"
 
-using namespace deadeye;
+using namespace deadeye::logger;
 using json = nlohmann::json;
 
 namespace {
 static const cv::Size kFrameSize{640, 360};
 }
 
-int FourUp::enable_count_{0};
-
 FourUp::FourUp(std::string id, CaptureConfig capture_config,
-               PipelineConfig pipeline_config, LoggerQueue& queue,
-               std::atomic<bool>& cancel)
-    : id_(id),
-      enabled_(pipeline_config.log.fps > 0 && CheckMount(pipeline_config.log) &&
-               CheckDir(pipeline_config.log)),
+               PipelineConfig pipeline_config, LogConfig log_config,
+               LoggerQueue& queue, std::atomic<bool>& cancel)
+    : LoggerImpl(id, log_config, queue, cancel),
       capture_(capture_config),
       hsv_low_(pipeline_config.HsvLow()),
       hsv_high_(pipeline_config.HsvHigh()),
-      filter_(pipeline_config.filter),
-      queue_(queue),
-      cancel_(cancel) {
+      filter_(pipeline_config.filter) {
   // disable logging if filesystem checks fail
-  FourUp::enable_count_++;
-  template_ = fmt::format("{}/{{}}/{}-{{}}.jpg", pipeline_config.log.path,
-                          FourUp::enable_count_);
 }
 
-void FourUp::log() {
+void FourUp::Run() {
   int seq = 1;
   LogEntry entry;
   if (enabled_)
@@ -144,68 +133,4 @@ void FourUp::log() {
     seq++;
   }
   spdlog::debug("FourUp<{}>: task exited", id_);
-}
-
-bool FourUp::CheckMount(const LogConfig& config) {
-  struct stat mnt;
-  struct stat parent;
-
-  // check mount point
-  if (stat(config.path.c_str(), &mnt)) {
-    spdlog::error("FourUp<{}>: failed to stat {}: {}", id_, config.path,
-                  std::strerror(errno));
-    return false;
-  }
-
-  // ...and its parent
-  std::string parent_path = config.path + "/..";
-  if (stat(parent_path.c_str(), &parent)) {
-    spdlog::error("FourUp<{}>: failed to stat {}: {}", id_, parent_path,
-                  std::strerror(errno));
-    return false;
-  }
-
-  // compare st_dev fields, if equal then both belong to same filesystem
-  bool mounted = mnt.st_dev != parent.st_dev;
-  if (mounted == config.mount) {
-    spdlog::debug("FourUp<{}>: {} is a mounted filesystem", id_, config.path);
-    return true;
-  } else {
-    spdlog::error("FourUp<{}>: {} has mounted filesystem is {}, expected {}",
-                  id_, config.path, mounted, config.mount);
-    return false;
-  }
-}
-
-bool FourUp::CheckDir(const LogConfig& config) {
-  // verify base path is dir
-  DIR* dir = opendir(config.path.c_str());
-  if (dir) {
-    closedir(dir);
-  } else if (ENOENT == errno) {
-    spdlog::error("FourUp<{}>: {} does not exist", id_, config.path);
-    return false;
-  } else {
-    spdlog::error("FourUp<{}>: failed to opendir {}: {}", id_, config.path,
-                  std::strerror(errno));
-    return false;
-  }
-
-  std::string path = fmt::format("{}/{}", config.path, id_);
-  dir = opendir(path.c_str());
-  if (dir) {
-    closedir(dir);
-  } else if (ENOENT == errno) {
-    spdlog::info("FourUp<{}>: making directory {}", id_, path);
-    if (mkdir(path.c_str(), 0777)) {
-      spdlog::error("FourUp<{}>: failed to mkdir {}: {}", id_, path,
-                    std::strerror(errno));
-      return false;
-    }
-  } else {
-    spdlog::error("FourUp<{}>: failed to opendir {}: {}", id_, path,
-                  std::strerror(errno));
-    return false;
-  }
-  return true;
 }

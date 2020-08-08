@@ -26,7 +26,6 @@ const CameraControls = (props: Props) => {
           unit={camera.unit}
           inum={camera.inum}
           config={camera.capture}
-          debug={false}
         />
       </TabPane>
       <TabPane tab="Mask" key={key(camera.unit, camera.inum, 2)}>

@@ -44,7 +44,7 @@ You can learn more in the [Create React App documentation](https://facebook.gith
 To learn React, check out the [React documentation](https://reactjs.org/).
 
 ## Manual React Keys
-  
+
 - CameraControls: ID-1 - ID-3
 - CapturePane: ID-4, ID-5
 - JetsonConfigSubPane: ID-6
@@ -52,4 +52,4 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 - CameraStream: ID-9 - ID-14
 - JetsonConfigSubPane: ID-15 - ID-19
 - CameraControls: ID-20
-- LogPane ID-21
+- LogPane ID-21 - ID-22

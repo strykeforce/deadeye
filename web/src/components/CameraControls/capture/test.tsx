@@ -17,7 +17,7 @@ const TestConfigSubPane = (props: CaptureControlProps) => {
       </Row>
       <Row>
         <Col span={24}>
-          <ColorSelect
+          <ColorInput
             key={key(unit, inum, 7)}
             {...props}
             name="foregroundColor"
@@ -26,7 +26,7 @@ const TestConfigSubPane = (props: CaptureControlProps) => {
       </Row>
       <Row>
         <Col span={24}>
-          <ColorSelect
+          <ColorInput
             key={key(unit, inum, 8)}
             {...props}
             name="backgroundColor"
@@ -74,7 +74,7 @@ const PatternSelect = (props: CaptureControlProps) => {
 
 type ColorSelectProps = CaptureControlProps & { name: string };
 
-class ColorSelect extends React.Component<
+class ColorInput extends React.Component<
   ColorSelectProps,
   { value: string | undefined }
 > {

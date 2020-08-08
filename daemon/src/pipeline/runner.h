@@ -21,10 +21,10 @@ class Runner {
   void SetPipeline(std::unique_ptr<Pipeline> pipeline);
   Pipeline* GetPipeline();
 
-  void Configure(CaptureConfig config);
-  void Configure(PipelineConfig const& config);
-  void Configure(StreamConfig const& config);
-  void Configure(LogConfig const& config);
+  void Configure(const CaptureConfig& config);
+  void Configure(const LogConfig& config);
+  void Configure(const PipelineConfig& config);
+  void Configure(const StreamConfig& config);
 
   void Run();
   void Stop();
@@ -37,6 +37,7 @@ class Runner {
   std::atomic<bool> cancel_{false};
 
   CaptureConfig capture_config_;
+  LogConfig log_config_;
   SafeStreamConfig stream_config_;
   std::atomic<bool> stream_config_ready_{false};
   SafePipelineConfig pipeline_config_;

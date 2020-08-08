@@ -46,6 +46,7 @@ export interface FilterConfig {
 }
 
 export interface LogConfig {
+  type: string;
   path: string;
   fps: number;
   mount: boolean;
