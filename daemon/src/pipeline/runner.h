@@ -5,6 +5,7 @@
 #include <opencv2/core/utility.hpp>
 
 #include "config/capture_config.h"
+#include "config/log_config.h"
 #include "config/pipeline_config.h"
 #include "config/stream_config.h"
 #include "pipeline/pipeline.h"
@@ -23,6 +24,7 @@ class Runner {
   void Configure(CaptureConfig config);
   void Configure(PipelineConfig const& config);
   void Configure(StreamConfig const& config);
+  void Configure(LogConfig const& config);
 
   void Run();
   void Stop();

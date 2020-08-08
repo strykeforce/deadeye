@@ -1,4 +1,4 @@
-#include "pipeline/logger.h"
+#include "log/four_up.h"
 
 #include <dirent.h>
 #include <fmt/core.h>
@@ -19,15 +19,9 @@ namespace {
 static const cv::Size kFrameSize{640, 360};
 }
 
-int Logger::enable_count_{0};
+int FourUp::enable_count_{0};
 
-LogEntry::LogEntry(cv::Mat const frame, Contours filtered_contours,
-                   TargetDataPtr target)
-    : frame(frame.clone()),
-      filtered_contours(filtered_contours),
-      target(std::move(target)) {}
-
-Logger::Logger(std::string id, CaptureConfig capture_config,
+FourUp::FourUp(std::string id, CaptureConfig capture_config,
                PipelineConfig pipeline_config, LoggerQueue& queue,
                std::atomic<bool>& cancel)
     : id_(id),
@@ -37,23 +31,22 @@ Logger::Logger(std::string id, CaptureConfig capture_config,
       hsv_low_(pipeline_config.HsvLow()),
       hsv_high_(pipeline_config.HsvHigh()),
       filter_(pipeline_config.filter),
-
       queue_(queue),
       cancel_(cancel) {
   // disable logging if filesystem checks fail
-  Logger::enable_count_++;
+  FourUp::enable_count_++;
   template_ = fmt::format("{}/{{}}/{}-{{}}.jpg", pipeline_config.log.path,
-                          Logger::enable_count_);
+                          FourUp::enable_count_);
 }
 
-void Logger::operator()() {
+void FourUp::log() {
   int seq = 1;
   LogEntry entry;
   if (enabled_)
-    spdlog::info("Logger<{}>: logging to {}", id_,
+    spdlog::info("FourUp<{}>: logging to {}", id_,
                  fmt::format(template_, id_, "nnn"));
   else
-    spdlog::warn("Logger<{}>: logging disabled", id_);
+    spdlog::warn("FourUp<{}>: logging disabled", id_);
 
   while (!cancel_.load()) {
     if (!queue_.wait_dequeue_timed(entry, std::chrono::milliseconds(100))) {
@@ -141,25 +134,25 @@ void Logger::operator()() {
 
       cv::imwrite(path, output);
     } catch (const cv::Exception& ex) {
-      spdlog::error("Logger<{}>: write exception: {}", id_, ex.what());
+      spdlog::error("FourUp<{}>: write exception: {}", id_, ex.what());
     }
-    spdlog::trace("Logger<{}>: wrote image to {}", id_, path);
+    spdlog::trace("FourUp<{}>: wrote image to {}", id_, path);
 
     if (queue_.size_approx() > 0)
-      spdlog::warn("Logger<{}>: queue filling: {}", id_, queue_.size_approx());
+      spdlog::warn("FourUp<{}>: queue filling: {}", id_, queue_.size_approx());
 
     seq++;
   }
-  spdlog::trace("Logger<{}>: task exited", id_);
+  spdlog::debug("FourUp<{}>: task exited", id_);
 }
 
-bool Logger::CheckMount(const LogConfig& config) {
+bool FourUp::CheckMount(const LogConfig& config) {
   struct stat mnt;
   struct stat parent;
 
   // check mount point
   if (stat(config.path.c_str(), &mnt)) {
-    spdlog::error("Logger<{}>: failed to stat {}: {}", id_, config.path,
+    spdlog::error("FourUp<{}>: failed to stat {}: {}", id_, config.path,
                   std::strerror(errno));
     return false;
   }
@@ -167,7 +160,7 @@ bool Logger::CheckMount(const LogConfig& config) {
   // ...and its parent
   std::string parent_path = config.path + "/..";
   if (stat(parent_path.c_str(), &parent)) {
-    spdlog::error("Logger<{}>: failed to stat {}: {}", id_, parent_path,
+    spdlog::error("FourUp<{}>: failed to stat {}: {}", id_, parent_path,
                   std::strerror(errno));
     return false;
   }
@@ -175,25 +168,25 @@ bool Logger::CheckMount(const LogConfig& config) {
   // compare st_dev fields, if equal then both belong to same filesystem
   bool mounted = mnt.st_dev != parent.st_dev;
   if (mounted == config.mount) {
-    spdlog::debug("Logger<{}>: {} is a mounted filesystem", id_, config.path);
+    spdlog::debug("FourUp<{}>: {} is a mounted filesystem", id_, config.path);
     return true;
   } else {
-    spdlog::error("Logger<{}>: {} has mounted filesystem is {}, expected {}",
+    spdlog::error("FourUp<{}>: {} has mounted filesystem is {}, expected {}",
                   id_, config.path, mounted, config.mount);
     return false;
   }
 }
 
-bool Logger::CheckDir(const LogConfig& config) {
+bool FourUp::CheckDir(const LogConfig& config) {
   // verify base path is dir
   DIR* dir = opendir(config.path.c_str());
   if (dir) {
     closedir(dir);
   } else if (ENOENT == errno) {
-    spdlog::error("Logger<{}>: {} does not exist", id_, config.path);
+    spdlog::error("FourUp<{}>: {} does not exist", id_, config.path);
     return false;
   } else {
-    spdlog::error("Logger<{}>: failed to opendir {}: {}", id_, config.path,
+    spdlog::error("FourUp<{}>: failed to opendir {}: {}", id_, config.path,
                   std::strerror(errno));
     return false;
   }
@@ -203,14 +196,14 @@ bool Logger::CheckDir(const LogConfig& config) {
   if (dir) {
     closedir(dir);
   } else if (ENOENT == errno) {
-    spdlog::info("Logger<{}>: making directory {}", id_, path);
+    spdlog::info("FourUp<{}>: making directory {}", id_, path);
     if (mkdir(path.c_str(), 0777)) {
-      spdlog::error("Logger<{}>: failed to mkdir {}: {}", id_, path,
+      spdlog::error("FourUp<{}>: failed to mkdir {}: {}", id_, path,
                     std::strerror(errno));
       return false;
     }
   } else {
-    spdlog::error("Logger<{}>: failed to opendir {}: {}", id_, path,
+    spdlog::error("FourUp<{}>: failed to opendir {}: {}", id_, path,
                   std::strerror(errno));
     return false;
   }

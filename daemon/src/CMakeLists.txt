@@ -11,6 +11,7 @@ add_subdirectory(capture)
 add_subdirectory(config)
 add_subdirectory(hardware)
 add_subdirectory(link)
+add_subdirectory(log)
 add_subdirectory(pipeline)
 add_library(Deadeye::library ALIAS Deadeye_library)
 set_target_properties(Deadeye_library PROPERTIES

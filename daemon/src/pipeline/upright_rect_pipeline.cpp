@@ -20,7 +20,7 @@ void UprightRectPipeline::Configure(const CaptureConfig& config) {
 }
 
 // Target is center of contour bounding box.
-TargetDataPtr UprightRectPipeline::ProcessTarget(Contours const& contours) {
+std::unique_ptr<TargetData> UprightRectPipeline::ProcessTarget(Contours const& contours) {
   if (contours.empty())
     return std::make_unique<UprightTargetData>(id_, 0, false,
                                                cv::Rect{0, 0, 0, 0}, center_);

@@ -1,37 +1,22 @@
 #pragma once
 
-#include <readerwriterqueue/readerwriterqueue.h>
-
 #include <atomic>
 #include <chrono>
-#include <opencv2/core/mat.hpp>
 #include <string>
 
 #include "config/capture_config.h"
 #include "config/pipeline_config.h"
 #include "link/target_data.h"
-#include "pipeline/pipeline.h"  // for Contours
+#include "log/logger_impl.h"
 
 namespace deadeye {
 
-struct LogEntry {
-  LogEntry() = default;
-  LogEntry(cv::Mat const frame, Contours filtered_contours,
-           TargetDataPtr target);
-
-  cv::Mat frame;
-  Contours filtered_contours;
-  TargetDataPtr target;
-};
-
-using LoggerQueue = moodycamel::BlockingReaderWriterQueue<LogEntry>;
-
-class Logger {
+class FourUp : public LoggerImpl {
  public:
-  Logger(std::string id, CaptureConfig capture_config,
+  FourUp(std::string id, CaptureConfig capture_config,
          PipelineConfig pipeline_config, LoggerQueue& queue,
          std::atomic<bool>& cancel);
-  void operator()();
+  void log() override;
 
  private:
   bool CheckMount(const LogConfig& config);

@@ -2,6 +2,10 @@
 
 #include <fmt/core.h>
 
+std::string deadeye::CameraId(int inum) {
+  return DEADEYE_UNIT + std::to_string(inum);
+}
+
 std::string deadeye::CameraControlTablePath(int inum) {
   return fmt::format("{}/{}", DE_CONTROL_TABLE, inum);
 }

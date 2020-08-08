@@ -1,13 +1,15 @@
 #include "pipeline/runner.h"
 
-#include <future>
+#include <spdlog/spdlog.h>
+
 #include <memory>
+#include <opencv2/core/mat.hpp>
 
 #include "capture/capture.h"
 #include "capture/capture_factory.h"
 #include "config/deadeye_config.h"
 #include "link/link.h"
-#include "pipeline/logger.h"
+#include "log/logger.h"
 #include "pipeline/streamer.h"
 
 using namespace deadeye;
@@ -54,15 +56,18 @@ void Runner::Run() {
   bool stream_enabled{false};
 
   Link link{pipeline_->GetInum()};
-  bool log_enabled = false;
+  bool log_enabled = pipeline_config_.readAccess()->log.fps > 0;
 
-  // start logger if used
-  LoggerQueue log_queue;
-  auto lfuture =
-      std::async(std::launch::async,
-                 Logger(DEADEYE_UNIT + std::to_string(pipeline_->GetInum()),
-                        capture_config_, *pipeline_config_.readAccess(),
-                        log_queue, cancel_));
+  std::unique_ptr<Logger> logger = nullptr;
+  if (log_enabled) {
+    logger.reset(new Logger(CameraId(pipeline_->GetInum()), capture_config_,
+                            *pipeline_config_.readAccess()));
+    logger->Run();
+    spdlog::info("{}: logging enabled", *pipeline_);
+  } else {
+    spdlog::warn("{}: logging disabled", *pipeline_);
+  }
+
   unsigned int log_counter{0};
   unsigned int sn{0};
   int log_interval{0};
@@ -77,6 +82,7 @@ void Runner::Run() {
 
     if (cancel_.load()) {
       LogTickMeter(tm);
+      if (log_enabled) logger->Stop();
       return;
     }
 
@@ -89,7 +95,6 @@ void Runner::Run() {
       auto config = *value;
       config.filter.frame_area = capture_config_.Size().area();
       pipeline_->Configure(config);
-      log_enabled = config.log.fps > 0;
       log_interval = log_enabled ? fps / config.log.fps : 0;
     }
 
@@ -110,7 +115,7 @@ void Runner::Run() {
       spdlog::critical("{} failed to grab frame", *pipeline_);
 
     // Process frame through pipeline
-    TargetDataPtr target_data = pipeline_->ProcessFrame(frame);
+    std::unique_ptr<TargetData> target_data = pipeline_->ProcessFrame(frame);
     target_data->serial = sn++;
 
     // Send target data to client
@@ -120,8 +125,8 @@ void Runner::Run() {
 
     // Log frame if neccessary
     if (log_enabled && --log_counter == 0) {
-      log_queue.enqueue(LogEntry{frame, pipeline_->GetFilteredContours(),
-                                 std::move(target_data)});
+      logger->Log(frame, pipeline_->GetFilteredContours(),
+                  std::move(target_data));
       log_counter = log_interval;
     }
 
