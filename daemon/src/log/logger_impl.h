@@ -12,7 +12,7 @@ struct LogEntry {
 
   LogEntry(cv::Mat const frame, Contours filtered_contours,
            std::unique_ptr<TargetData> target)
-      : frame{frame.clone()},
+      : frame{frame},
         filtered_contours{filtered_contours},
         target{std::move(target)} {}
 

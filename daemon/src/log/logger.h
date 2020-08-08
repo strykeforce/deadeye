@@ -27,13 +27,14 @@ class Logger {
 
   void Log(cv::Mat const frame, Contours filtered_contours,
            std::unique_ptr<TargetData> target) {
-    queue_.enqueue(LogEntry{frame, filtered_contours, std::move(target)});
+    queue_.enqueue(
+        LogEntry{frame.clone(), filtered_contours, std::move(target)});
   }
 
   void Stop() {
     cancel_ = true;
     future_.wait();
-    spdlog::debug("Logger::Stop stopped async logging task);
+    spdlog::debug("Logger::Stop stopped async logging task");
   }
 
  private:
