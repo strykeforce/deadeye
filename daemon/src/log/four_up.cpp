@@ -56,10 +56,14 @@ void FourUp::Run() {
     auto path = fmt::format(template_, id_, seq);
     try {
       cv::cvtColor(mask, mask, cv::COLOR_GRAY2BGR);
-      cv::Mat mat_array[] = {entry.frame, mask, cv::Mat()};
+
+      cv::Mat vrule{entry.frame.rows, 1, CV_8UC3, cv::Scalar::all(255)};
+      // three mats concatenated horizontally, leave space for four mats
+      // concatenated vertically below
+      cv::Mat mat_array[] = {entry.frame, vrule, mask, cv::Mat()};
 
       cv::Mat top;
-      cv::hconcat(mat_array, 2, top);
+      cv::hconcat(mat_array, 3, top);
 
       cv::Mat gray;
       cv::cvtColor(entry.frame, gray, cv::COLOR_BGR2GRAY);
@@ -72,12 +76,13 @@ void FourUp::Run() {
       cv::drawContours(black, contours, -1, cv::Scalar(255, 0, 240), 2);
 
       mat_array[0] = black;
-      mat_array[1] = gray;
+      mat_array[2] = gray;
       cv::Mat bottom;
-      cv::hconcat(mat_array, 2, bottom);
+      cv::hconcat(mat_array, 3, bottom);
 
       cv::Mat output;
-      // cv::Mat info{top.rows / 4, top.cols, CV_8UC3, cv::Scalar::all(255)};
+      // info panel prints well at this size, scale up or down as needed
+      // for frame size.
       cv::Mat info{90, 1280, CV_8UC3, cv::Scalar::all(255)};
 
       std::string text = fmt::format(
@@ -87,7 +92,6 @@ void FourUp::Run() {
       double font_scale = 1;
       int thickness = 1;
       int baseline = 0;
-      // cv::getTextSize(text, font, font_scale, thickness, &baseline);
       baseline = info.rows / 4;
 
       cv::Point text_org{2, baseline - 5};
@@ -119,10 +123,12 @@ void FourUp::Run() {
           info, info, info_size,
           info.rows < info_size.height ? cv::INTER_CUBIC : cv::INTER_AREA);
 
+      cv::Mat hrule{1, top.cols, CV_8UC3, cv::Scalar::all(255)};
       mat_array[0] = top;
-      mat_array[1] = bottom;
-      mat_array[2] = info;
-      cv::vconcat(mat_array, 3, output);
+      mat_array[1] = hrule;
+      mat_array[2] = bottom;
+      mat_array[3] = info;
+      cv::vconcat(mat_array, 4, output);
 
       cv::imwrite(path, output);
     } catch (const cv::Exception& ex) {
