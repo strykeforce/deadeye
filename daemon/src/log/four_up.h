@@ -25,9 +25,7 @@ class FourUp : public LoggerImpl {
   cv::Scalar hsv_high_;
   FilterConfig filter_;
 
-  std::chrono::high_resolution_clock::time_point begin_{
-      std::chrono::high_resolution_clock::now()};
+  std::chrono::high_resolution_clock::time_point begin_;
 };
 }  // namespace logger
-
 }  // namespace deadeye

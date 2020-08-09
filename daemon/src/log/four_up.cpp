@@ -37,6 +37,8 @@ void FourUp::Run() {
   else
     spdlog::warn("FourUp<{}>: logging disabled", id_);
 
+  begin_ = std::chrono::high_resolution_clock::now();
+
   while (!cancel_.load()) {
     if (!queue_.wait_dequeue_timed(entry, std::chrono::milliseconds(100))) {
       continue;
@@ -53,11 +55,6 @@ void FourUp::Run() {
 
     auto path = fmt::format(template_, id_, seq);
     try {
-      if (entry.frame.cols > kFrameSize.width) {
-        cv::resize(entry.frame, entry.frame, kFrameSize, 0, 0, cv::INTER_AREA);
-        cv::resize(mask, mask, kFrameSize, 0, 0, cv::INTER_AREA);
-      }
-
       cv::cvtColor(mask, mask, cv::COLOR_GRAY2BGR);
       cv::Mat mat_array[] = {entry.frame, mask, cv::Mat()};
 
@@ -80,7 +77,8 @@ void FourUp::Run() {
       cv::hconcat(mat_array, 2, bottom);
 
       cv::Mat output;
-      cv::Mat info{top.rows / 4, top.cols, CV_8UC3, cv::Scalar::all(255)};
+      // cv::Mat info{top.rows / 4, top.cols, CV_8UC3, cv::Scalar::all(255)};
+      cv::Mat info{90, 1280, CV_8UC3, cv::Scalar::all(255)};
 
       std::string text = fmt::format(
           "CAPTURE: exp={} cap={}x{} out={}x{} seq={} elapsed={} msec", 0, 0, 0,
@@ -115,6 +113,11 @@ void FourUp::Run() {
 
       cv::putText(info, text, text_org, font, font_scale, cv::Scalar::all(0),
                   thickness, cv::LINE_8);
+
+      cv::Size info_size{top.cols, static_cast<int>(std::round(top.rows / 4))};
+      cv::resize(
+          info, info, info_size,
+          info.rows < info_size.height ? cv::INTER_CUBIC : cv::INTER_AREA);
 
       mat_array[0] = top;
       mat_array[1] = bottom;
