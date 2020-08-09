@@ -7,6 +7,7 @@
 #include <nlohmann/json.hpp>
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
+#include <sstream>
 
 #include "pipeline/pipeline_ops.h"
 
@@ -21,11 +22,17 @@ FourUp::FourUp(std::string id, CaptureConfig capture_config,
                PipelineConfig pipeline_config, LogConfig log_config,
                LoggerQueue& queue, std::atomic<bool>& cancel)
     : LoggerImpl(id, log_config, queue, cancel),
-      capture_(capture_config),
+      width_(capture_config.width),
+      height_(capture_config.height),
       hsv_low_(pipeline_config.HsvLow()),
       hsv_high_(pipeline_config.HsvHigh()),
       filter_(pipeline_config.filter) {
-  // disable logging if filesystem checks fail
+  std::stringstream buf;
+  json conf = capture_config.config;
+  for (auto it = conf.begin(); it != conf.end(); ++it) {
+    buf << it.key() << "=" << it.value() << " ";
+  }
+  capture_ = buf.str();
 }
 
 void FourUp::Run() {
@@ -80,49 +87,15 @@ void FourUp::Run() {
       cv::Mat bottom;
       cv::hconcat(mat_array, 3, bottom);
 
-      cv::Mat output;
-      // info panel prints well at this size, scale up or down as needed
-      // for frame size.
-      cv::Mat info{90, 1280, CV_8UC3, cv::Scalar::all(255)};
-
-      std::string text = fmt::format(
-          "CAPTURE: exp={} cap={}x{} out={}x{} seq={} elapsed={} msec", 0, 0, 0,
-          capture_.width, capture_.height, seq, elapsed.count());
-      int font = cv::FONT_HERSHEY_PLAIN;
-      double font_scale = 1;
-      int thickness = 1;
-      int baseline = 0;
-      baseline = info.rows / 4;
-
-      cv::Point text_org{2, baseline - 5};
-
-      cv::putText(info, text, text_org, font, font_scale, cv::Scalar::all(0),
-                  thickness, cv::LINE_8);
-      text_org += cv::Point(0, baseline);
-
-      text = fmt::format(
-          "PIPELINE: hue=[{:.0f}, {:.0f}] sat=[{:.0f}, {:.0f}] "
-          "val=[{:.0f}, {:.0f}] area=[{:.2f}, {:.2f}], solidity=[{:.2f}, "
-          "{:.2f}], aspect=[{:.2f}, {:.2f}], contours={}/{}",
-          hsv_low_[0], hsv_high_[0], hsv_low_[1], hsv_high_[1], hsv_low_[2],
-          hsv_high_[2], filter_.area[0], filter_.area[1], filter_.solidity[0],
-          filter_.solidity[1], filter_.aspect[0], filter_.aspect[1],
-          entry.filtered_contours.size(), contours.size());
-
-      cv::putText(info, text, text_org, font, font_scale, cv::Scalar::all(0),
-                  thickness, cv::LINE_8);
-      text_org += cv::Point(0, baseline);
-
-      text = fmt::format("TARGET: {}", entry.target->ToString());
-
-      cv::putText(info, text, text_org, font, font_scale, cv::Scalar::all(0),
-                  thickness, cv::LINE_8);
-
+      cv::Mat info =
+          InfoPane(entry, contours, seq, static_cast<int>(elapsed.count()));
+      // fit info pane to four-up
       cv::Size info_size{top.cols, static_cast<int>(std::round(top.rows / 4))};
       cv::resize(
           info, info, info_size,
           info.rows < info_size.height ? cv::INTER_CUBIC : cv::INTER_AREA);
 
+      cv::Mat output;
       cv::Mat hrule{1, top.cols, CV_8UC3, cv::Scalar::all(255)};
       mat_array[0] = top;
       mat_array[1] = hrule;
@@ -142,4 +115,50 @@ void FourUp::Run() {
     seq++;
   }
   spdlog::debug("FourUp<{}>: task exited", id_);
+}
+
+cv::Mat FourUp::InfoPane(const LogEntry& entry, const Contours& contours,
+                         int seq, int elapsed) {
+  // info panel prints well at this size, scale up or down as needed
+  // for frame size.
+  cv::Mat info{90, 1280, CV_8UC3, cv::Scalar::all(255)};
+
+  int font = cv::FONT_HERSHEY_PLAIN;
+  double font_scale = 1;
+  int thickness = 1;
+  int baseline = info.rows / 4;
+  cv::Point text_org{2, baseline - 5};
+
+  std::string text = fmt::format("FRAME: size={}x{} seq={} elapsed={} msec",
+                                 width_, height_, seq, elapsed);
+
+  cv::putText(info, text, text_org, font, font_scale, cv::Scalar::all(0),
+              thickness, cv::LINE_8);
+  text_org += cv::Point(0, baseline);
+
+  text = fmt::format("CAPTURE: {}", capture_);
+
+  cv::putText(info, text, text_org, font, font_scale, cv::Scalar::all(0),
+              thickness, cv::LINE_8);
+  text_org += cv::Point(0, baseline);
+
+  text = fmt::format(
+      "PIPELINE: hue=[{:.0f}, {:.0f}] sat=[{:.0f}, {:.0f}] "
+      "val=[{:.0f}, {:.0f}] area=[{:.2f}, {:.2f}], solidity=[{:.2f}, "
+      "{:.2f}], aspect=[{:.2f}, {:.2f}], contours={}/{}",
+      hsv_low_[0], hsv_high_[0], hsv_low_[1], hsv_high_[1], hsv_low_[2],
+      hsv_high_[2], filter_.area[0], filter_.area[1], filter_.solidity[0],
+      filter_.solidity[1], filter_.aspect[0], filter_.aspect[1],
+      entry.filtered_contours.size(), contours.size());
+
+  cv::putText(info, text, text_org, font, font_scale, cv::Scalar::all(0),
+              thickness, cv::LINE_8);
+  text_org += cv::Point(0, baseline);
+
+  text = fmt::format("TARGET: {}", entry.target->ToString());
+
+  cv::putText(info, text, text_org, font, font_scale, cv::Scalar::all(0),
+              thickness, cv::LINE_8);
+
+  return info;
 }

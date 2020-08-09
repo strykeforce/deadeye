@@ -20,7 +20,12 @@ class FourUp : public LoggerImpl {
   void Run() override;
 
  private:
-  CaptureConfig capture_;
+  cv::Mat InfoPane(const LogEntry& entry, const Contours& contours, int seq,
+                   int elapsed);
+
+  std::string capture_;
+  int width_;
+  int height_;
   cv::Scalar hsv_low_;
   cv::Scalar hsv_high_;
   FilterConfig filter_;
