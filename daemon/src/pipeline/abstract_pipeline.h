@@ -26,12 +26,12 @@ class AbstractPipeline : public Pipeline {
     return filter_contours_output_;
   }
 
-  virtual TargetDataPtr ProcessFrame(const cv::Mat& frame) override;
+  virtual std::unique_ptr<TargetData> ProcessFrame(const cv::Mat& frame) override;
 
  protected:
   virtual void FilterContours(const FilterConfig& filter, const Contours& src,
                               Contours& dest);
-  virtual TargetDataPtr ProcessTarget(const Contours& contours);
+  virtual std::unique_ptr<TargetData> ProcessTarget(const Contours& contours);
 
   virtual std::string ToString() const override;
 

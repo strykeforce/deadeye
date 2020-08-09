@@ -1,13 +1,15 @@
 #include "pipeline/runner.h"
 
-#include <future>
+#include <spdlog/spdlog.h>
+
 #include <memory>
+#include <opencv2/core/mat.hpp>
 
 #include "capture/capture.h"
 #include "capture/capture_factory.h"
 #include "config/deadeye_config.h"
 #include "link/link.h"
-#include "pipeline/logger.h"
+#include "log/logger.h"
 #include "pipeline/streamer.h"
 
 using namespace deadeye;
@@ -18,15 +20,20 @@ void Runner::SetPipeline(std::unique_ptr<Pipeline> pipeline) {
 
 Pipeline* Runner::GetPipeline() { return pipeline_.get(); }
 
-void Runner::Configure(CaptureConfig config) { capture_config_ = config; }
+void Runner::Configure(const CaptureConfig& config) {
+  capture_config_ = config;
+}
 
-void Runner::Configure(PipelineConfig const& config) {
+void Runner::Configure(const LogConfig& config) { log_config_ = config; }
+
+void Runner::Configure(const PipelineConfig& config) {
   safe::WriteAccess<SafePipelineConfig> value{pipeline_config_};
   *value = config;
+  Configure(value->log);
   pipeline_config_ready_ = true;
 }
 
-void Runner::Configure(StreamConfig const& config) {
+void Runner::Configure(const StreamConfig& config) {
   safe::WriteAccess<SafeStreamConfig> value{stream_config_};
   *value = config;
   stream_config_ready_ = true;
@@ -54,18 +61,21 @@ void Runner::Run() {
   bool stream_enabled{false};
 
   Link link{pipeline_->GetInum()};
-  bool log_enabled = false;
+  bool log_enabled = log_config_.fps > 0;
 
-  // start logger if used
-  LoggerQueue log_queue;
-  auto lfuture =
-      std::async(std::launch::async,
-                 Logger(DEADEYE_UNIT + std::to_string(pipeline_->GetInum()),
-                        capture_config_, *pipeline_config_.readAccess(),
-                        log_queue, cancel_));
-  unsigned int log_counter{0};
-  unsigned int sn{0};
-  int log_interval{0};
+  std::unique_ptr<Logger> logger = nullptr;
+  if (log_enabled) {
+    logger.reset(new Logger(CameraId(pipeline_->GetInum()), capture_config_,
+                            *pipeline_config_.readAccess(), log_config_));
+    logger->Run();
+    spdlog::info("{}: logging enabled", *pipeline_);
+  } else {
+    spdlog::warn("{}: logging disabled", *pipeline_);
+  }
+
+  int log_interval = log_enabled ? fps / log_config_.fps : 0;
+  int log_counter = log_interval;
+  int sn = 0;
 
   // start capture
   std::unique_ptr<Capture> capture = CreateCapture(capture_config_);
@@ -77,6 +87,7 @@ void Runner::Run() {
 
     if (cancel_.load()) {
       LogTickMeter(tm);
+      if (log_enabled) logger->Stop();
       return;
     }
 
@@ -89,8 +100,6 @@ void Runner::Run() {
       auto config = *value;
       config.filter.frame_area = capture_config_.Size().area();
       pipeline_->Configure(config);
-      log_enabled = config.log.fps > 0;
-      log_interval = log_enabled ? fps / config.log.fps : 0;
     }
 
     if (stream_config_ready_.load()) {
@@ -99,7 +108,6 @@ void Runner::Run() {
 
       streamer.Configure(*value);
       stream_enabled = value->StreamEnabled();
-      log_counter = log_interval;
       spdlog::debug("{}:{}", *pipeline_, *value);
       spdlog::debug("{}:{} [{}]", *pipeline_, *value,
                     stream_enabled ? "enabled" : "disabled");
@@ -110,7 +118,7 @@ void Runner::Run() {
       spdlog::critical("{} failed to grab frame", *pipeline_);
 
     // Process frame through pipeline
-    TargetDataPtr target_data = pipeline_->ProcessFrame(frame);
+    std::unique_ptr<TargetData> target_data = pipeline_->ProcessFrame(frame);
     target_data->serial = sn++;
 
     // Send target data to client
@@ -120,8 +128,8 @@ void Runner::Run() {
 
     // Log frame if neccessary
     if (log_enabled && --log_counter == 0) {
-      log_queue.enqueue(LogEntry{frame, pipeline_->GetFilteredContours(),
-                                 std::move(target_data)});
+      logger->Log(frame, pipeline_->GetFilteredContours(),
+                  std::move(target_data));
       log_counter = log_interval;
     }
 

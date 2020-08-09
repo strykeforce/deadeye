@@ -6,6 +6,7 @@ import "./camera-controls.less";
 import CapturePane from "./capture-pane";
 import FilterPane from "./filter-pane";
 import MaskPane from "./mask-pane";
+import LogPane from "./log-pane";
 
 type Props = {
   camera: Camera;
@@ -25,7 +26,6 @@ const CameraControls = (props: Props) => {
           unit={camera.unit}
           inum={camera.inum}
           config={camera.capture}
-          debug={false}
         />
       </TabPane>
       <TabPane tab="Mask" key={key(camera.unit, camera.inum, 2)}>
@@ -41,6 +41,13 @@ const CameraControls = (props: Props) => {
           inum={camera.inum}
           config={camera.pipeline}
         />
+      </TabPane>
+      <TabPane tab="Log" key={key(camera.unit, camera.inum, 20)}>
+        <LogPane
+          unit={camera.unit}
+          inum={camera.inum}
+          config={camera.pipeline}
+        ></LogPane>
       </TabPane>
     </Tabs>
   );

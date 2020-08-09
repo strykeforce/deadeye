@@ -26,7 +26,8 @@ void AbstractPipeline::Configure(PipelineConfig const& config) {
 /**
  * Process a frame and return target data.
  */
-TargetDataPtr AbstractPipeline::ProcessFrame(cv::Mat const& frame) {
+std::unique_ptr<TargetData> AbstractPipeline::ProcessFrame(
+    cv::Mat const& frame) {
   frame_ = frame;
   MaskFrame(frame_, hsv_threshold_output_, pipeline_config_.HsvLow(),
             pipeline_config_.HsvHigh());
@@ -34,7 +35,8 @@ TargetDataPtr AbstractPipeline::ProcessFrame(cv::Mat const& frame) {
 
   FilterContours(pipeline_config_.filter, find_contours_output_,
                  filter_contours_output_);
-  TargetDataPtr target_data = ProcessTarget(filter_contours_output_);
+  std::unique_ptr<TargetData> target_data =
+      ProcessTarget(filter_contours_output_);
   return std::move(target_data);
 }
 
@@ -43,7 +45,8 @@ void AbstractPipeline::FilterContours(FilterConfig const& filter,
   GeometricContoursFilter(filter, src, dest);
 }
 
-TargetDataPtr AbstractPipeline::ProcessTarget(Contours const& contours) {
+std::unique_ptr<TargetData> AbstractPipeline::ProcessTarget(
+    Contours const& contours) {
   return std::make_unique<TargetData>(id_, 0, false);
 }
 

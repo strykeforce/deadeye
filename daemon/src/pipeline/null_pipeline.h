@@ -18,7 +18,8 @@ class NullPipeline : public Pipeline {
   virtual Contours GetContours() const override { return Contours{}; }
   virtual Contours GetFilteredContours() const override { return Contours{}; }
 
-  virtual TargetDataPtr ProcessFrame(cv::Mat const& frame) override {
+  virtual std::unique_ptr<TargetData> ProcessFrame(
+      cv::Mat const& frame) override {
     return std::make_unique<TargetData>(id_, 0, false);
   };
 

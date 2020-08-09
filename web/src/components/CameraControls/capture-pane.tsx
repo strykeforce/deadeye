@@ -13,14 +13,14 @@ type Props = {
   unit: string;
   inum: number;
   config: CaptureConfig;
-  debug?: boolean;
 };
 
 const CapturePane = (props: Props) => {
   const {
     config: { type },
-    debug = false,
   } = props;
+
+  const debug = false;
 
   const [hasRestartDisplayed, setRestartDisplayed] = useState(false);
 

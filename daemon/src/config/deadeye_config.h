@@ -40,6 +40,7 @@
 #define NT_SERVER DE_STRINGIFY(DEADEYE_NT_SERVER)
 
 namespace deadeye {
+std::string CameraId(int inum);
 std::string CameraControlTablePath(int inum);
 std::string LightsControlTablePath(int inum);
 std::string CaptureConfigEntryPath(int inum);

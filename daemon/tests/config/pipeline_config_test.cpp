@@ -70,7 +70,7 @@ TEST_CASE("PipelineConfig from JSON", "[pipeline]") {
   REQUIRE(pc.val[0] == 8);
   REQUIRE(pc.val[1] == 10);
   REQUIRE(pc.filter == FilterConfig({0.0, 1.0}, {4.0, 5.0}, {2.0, 3.0}));
-  REQUIRE(pc.log == LogConfig("/foo", 1, true));
+  REQUIRE(pc.log == LogConfig(LogType::four_up, "/foo", 1, true));
 }
 
 TEST_CASE("LogConfig has sane defaults", "[pipeline]") {

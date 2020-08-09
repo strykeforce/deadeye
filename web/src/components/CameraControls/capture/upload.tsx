@@ -2,13 +2,9 @@ import { UploadOutlined } from "@ant-design/icons";
 import { Button, Col, message, Row, Upload } from "antd";
 import { UploadChangeParam } from "antd/es/upload";
 import React from "react";
+import { configImageUpload, enableCamera } from "../../../common/api";
 import "../camera-controls.less";
 import { CaptureControlProps } from "../capture-pane";
-import {
-  configCapture,
-  enableCamera,
-  configImageUpload,
-} from "../../../common/api";
 
 const UploadConfigSubPane = (props: CaptureControlProps) => {
   return (

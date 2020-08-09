@@ -13,7 +13,6 @@
 namespace deadeye {
 
 using Contours = std::vector<std::vector<cv::Point>>;
-using TargetDataPtr = std::unique_ptr<TargetData>;
 
 class Pipeline {
  public:
@@ -32,7 +31,7 @@ class Pipeline {
   virtual Contours GetContours() const = 0;
   virtual Contours GetFilteredContours() const = 0;
 
-  virtual TargetDataPtr ProcessFrame(const cv::Mat& frame) = 0;
+  virtual std::unique_ptr<TargetData> ProcessFrame(const cv::Mat& frame) = 0;
 
   template <typename OStream>
   friend OStream& operator<<(OStream& os, const Pipeline& p) {

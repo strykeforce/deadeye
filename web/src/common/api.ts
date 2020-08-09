@@ -12,6 +12,8 @@ export const close = (): void => {
   socket.close();
 };
 
+export const sendMessage = (msg: string) => socket.emit("message", msg);
+
 export const enableCamera = (
   unit: string,
   inum: number,

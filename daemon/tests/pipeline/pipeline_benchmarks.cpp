@@ -139,7 +139,7 @@ TEMPLATE_TEST_CASE("BM001: ProcessFrame",
   stream_config.contour = StreamConfig::Contour::all;
   pipeline->Configure(stream_config);
 
-  TargetDataPtr target_data =
+  std::unique_ptr<TargetData> target_data =
       std::make_unique<TargetData>(DEADEYE_UNIT + std::to_string(0), 0, false);
 
   cv::Mat preview;

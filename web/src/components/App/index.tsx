@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { close, subscribe } from "../../common/api";
+import { close, subscribe, sendMessage } from "../../common/api";
 import PageContainer from "../PageContainer";
 import "./app.less";
 
@@ -14,6 +14,15 @@ const App = () => {
     subscribe(handleUnitsChange);
     return () => close();
   }, []);
+
+  // If admin server connects to NetworkTables when we subscribe, the "message"
+  // API handler will force a refresh, ensuring our cameras are displayed.
+  useEffect(() => {
+    setTimeout(() => {
+      sendMessage("ohai");
+    }, 500);
+  }, []);
+
   return <PageContainer units={units} />;
 };
 

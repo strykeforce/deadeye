@@ -18,7 +18,7 @@ const FilterPane = (props: Props) => {
   const onChange = (name: string) => (value: [number, number] | undefined) => {
     if (value === undefined) return;
     const newFilter = Object.assign(filter, { [name]: value });
-    const newConfig = Object.assign(config, newFilter);
+    const newConfig = Object.assign(config, { filter: newFilter });
     configPipeline(unit, inum, newConfig);
   };
 
