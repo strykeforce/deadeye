@@ -28,7 +28,7 @@ struct LinkConfig {
   /**
    * Constructor from NetworkTables value.
    */
-  LinkConfig(std::shared_ptr<nt::Value> value);
+  LinkConfig(const nlohmann::json& j);
 };
 
 void to_json(nlohmann::json& j, const LinkConfig& l);

@@ -8,15 +8,8 @@ using json = nlohmann::json;
 
 namespace deadeye {
 struct UprightTargetData : public TargetData {
-  static const char* kTLX;
-  static const char* kTLY;
-  static const char* kBRX;
-  static const char* kBRY;
-  static const char* kXKey;
-  static const char* kYKey;
-
   cv::Rect bb;
-  cv::Point offset;
+  cv::Point center;
   UprightTargetData(std::string id, int sn, bool valid, cv::Rect bb,
                     cv::Point center);
 

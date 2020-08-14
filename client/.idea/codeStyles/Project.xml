@@ -1,0 +1,24 @@
+<component name="ProjectCodeStyleConfiguration">
+  <code_scheme name="Project" version="173">
+    <editorconfig>
+      <option name="ENABLED" value="false" />
+    </editorconfig>
+    <codeStyleSettings language="JAVA">
+      <option name="RIGHT_MARGIN" value="100" />
+      <option name="SPACE_BEFORE_COLON" value="false" />
+      <option name="SPACE_AFTER_COLON" value="false" />
+      <arrangement>
+        <groups>
+          <group>
+            <type>GETTERS_AND_SETTERS</type>
+            <order>KEEP</order>
+          </group>
+          <group>
+            <type>DEPENDENT_METHODS</type>
+            <order>BREADTH_FIRST</order>
+          </group>
+        </groups>
+      </arrangement>
+    </codeStyleSettings>
+  </code_scheme>
+</component>

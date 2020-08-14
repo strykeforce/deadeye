@@ -8,17 +8,16 @@ using namespace deadeye;
 TEST_CASE("TargetData to JSON", "[link]") {
   TargetData td{"Z1", 1, true};
 
-  json expected = R"({"id":"Z1","sn":1,"valid":true})"_json;
+  json expected = R"({"id":"Z1","sn":1,"v":true})"_json;
   json j = json::parse(td.Dump());
   REQUIRE(j == expected);
 }
 
-TEST_CASE("CenterTargetData to JSON", "[link]") {
+TEST_CASE("UprightTargetData to JSON", "[link]") {
   UprightTargetData td{"Z1", 1, true, cv::Rect{0, 0, 100, 100},
                        cv::Point{50, 50}};
 
-  json expected =
-      R"({"id":"Z1","sn":1,"valid":true,"x":0,"y":0,"bx":100,"by":100,"tx":0,"ty":0})"_json;
+  json expected = R"({"d":[0,0,100,100,50,50],"id":"Z1","sn":1,"v":true})"_json;
   json j = json::parse(td.Dump());
   REQUIRE(j == expected);
 }

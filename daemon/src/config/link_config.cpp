@@ -8,8 +8,7 @@ LinkConfig::LinkConfig() {}
 LinkConfig::LinkConfig(std::string address, int port, bool enabled)
     : address(address), port(port), enabled(enabled) {}
 
-LinkConfig::LinkConfig(std::shared_ptr<nt::Value> value) {
-  auto j = json::parse(value->GetString().str());
+LinkConfig::LinkConfig(const nlohmann::json& j) {
   j.at(LinkConfig::kAddressKey).get_to(address);
   j.at(LinkConfig::kPortKey).get_to(port);
   j.at(LinkConfig::kEnabledKey).get_to(enabled);

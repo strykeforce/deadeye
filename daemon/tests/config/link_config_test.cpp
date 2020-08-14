@@ -42,7 +42,6 @@ TEST_CASE("LinkConfig to JSON", "[link]") {
 TEST_CASE("LinkConfig New", "[link]") {
   LinkConfig expected{"2767", 7, true};
   json j = expected;
-  auto val = nt::Value::MakeString(j.dump());
-  auto lc = LinkConfig{val};
+  auto lc = LinkConfig{j};
   REQUIRE(lc == expected);
 }

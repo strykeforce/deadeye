@@ -5,7 +5,8 @@ using json = nlohmann::json;
 
 const char* TargetData::kIdKey{"id"};
 const char* TargetData::kSerialKey{"sn"};
-const char* TargetData::kValidKey{"valid"};
+const char* TargetData::kValidKey{"v"};
+const char* TargetData::kDataKey{"d"};
 
 TargetData::TargetData(std::string id, int serial, bool valid)
     : id(id), serial(serial), valid(valid) {}
