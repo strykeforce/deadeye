@@ -3,9 +3,12 @@
  */
 package org.strykeforce.deadeye;
 
+import com.squareup.moshi.JsonAdapter;
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -23,6 +26,11 @@ class DeadeyeTest {
     static void afterAll() {
         nti.stopLocal();
         nti.close();
+    }
+
+    @AfterEach
+    void tearDown() {
+        nti.deleteAllEntries();
     }
 
 
@@ -65,11 +73,23 @@ class DeadeyeTest {
     }
 
     @Test
-    void hasInfo() {
-        Deadeye deadeye = new Deadeye("Z0", nti);
-        assertFalse(deadeye.hasInfo());
+    void testGetInfo() {
+        Deadeye.Info expected =
+                new Deadeye.Info(false, "TestPipeline", "1.0.0");
         NetworkTable table = nti.getTable(Link.DEADEYE_TABLE + "/Z/0");
-        table.getEntry("Info").setString("{}");
-        assertTrue(deadeye.hasInfo());
+        NetworkTableEntry entry = table.getEntry("Info");
+        JsonAdapter<Deadeye.Info> jsonAdapter = Deadeye.getInfoJsonAdapter();
+        entry.setString(jsonAdapter.toJson(expected));
+
+        Deadeye deadeye = new Deadeye("Z0", nti);
+        Deadeye.Info actual = deadeye.getInfo();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testGetNoInfo() {
+        Deadeye deadeye = new Deadeye("Z0", nti);
+        Deadeye.Info actual = deadeye.getInfo();
+        assertNull(actual);
     }
 }

@@ -20,7 +20,7 @@ const CameraHeader = (props: Props) => {
     enableLight(camera.unit, camera.inum, checked);
   };
 
-  const name = camera.info.pipeline.name;
+  const name = camera.info.pipeline;
 
   return (
     <div className="camera-header">

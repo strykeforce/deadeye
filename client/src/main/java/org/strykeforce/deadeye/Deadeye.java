@@ -1,10 +1,16 @@
 package org.strykeforce.deadeye;
 
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -12,6 +18,8 @@ import java.util.regex.Pattern;
  * camera and to receive target data.
  */
 public class Deadeye {
+
+    static final Logger logger = LoggerFactory.getLogger(Deadeye.class);
 
     private final NetworkTable table;
     private final Link link;
@@ -97,13 +105,20 @@ public class Deadeye {
 
     @Nullable
     public Info getInfo() {
-        if (!hasInfo()) return null;
-        String info = table.getEntry("Info").getString("{}");
-        return null;
+        String json = table.getEntry("Info").getString("");
+        JsonAdapter<Info> jsonAdapter = getInfoJsonAdapter();
+        Info info = null;
+        try {
+            info = jsonAdapter.fromJson(json);
+        } catch (IOException e) {
+            logger.error("error reading Info", e);
+        }
+        return info;
     }
 
-    public boolean hasInfo() {
-        return table.containsKey("Info");
+    static JsonAdapter<Info> getInfoJsonAdapter() {
+        Moshi moshi = new Moshi.Builder().build();
+        return moshi.adapter(Info.class);
     }
 
     static class Info {
@@ -115,6 +130,30 @@ public class Deadeye {
             this.logging = logging;
             this.pipeline = pipeline;
             this.version = version;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Info info = (Info) o;
+            return logging == info.logging &&
+                    pipeline.equals(info.pipeline) &&
+                    version.equals(info.version);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(logging, pipeline, version);
+        }
+
+        @Override
+        public String toString() {
+            return "Info{" +
+                    "logging=" + logging +
+                    ", pipeline='" + pipeline + '\'' +
+                    ", version='" + version + '\'' +
+                    '}';
         }
     }
 }
