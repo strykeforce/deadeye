@@ -47,9 +47,9 @@ class DeadeyeTest {
         assertFalse(table.getEntry("On").getBoolean(false), "On");
         assertFalse(table.getEntry("Off").getBoolean(false), "Off");
         deadeye.setEnabled(true);
-        assertTrue(table.getEntry("On").getBoolean(false),"On");
+        assertTrue(table.getEntry("On").getBoolean(false), "On");
         deadeye.setEnabled(false);
-        assertTrue(table.getEntry("Off").getBoolean(true),"Off");
+        assertTrue(table.getEntry("Off").getBoolean(true), "Off");
     }
 
     @Test
@@ -59,9 +59,9 @@ class DeadeyeTest {
         assertFalse(table.getEntry("On").getBoolean(false), "On");
         assertFalse(table.getEntry("Off").getBoolean(false), "Off");
         deadeye.setLightEnabled(true);
-        assertTrue(table.getEntry("On").getBoolean(false),"On");
+        assertTrue(table.getEntry("On").getBoolean(false), "On");
         deadeye.setLightEnabled(false);
-        assertTrue(table.getEntry("Off").getBoolean(true),"Off");
+        assertTrue(table.getEntry("Off").getBoolean(true), "Off");
     }
 
     @Test

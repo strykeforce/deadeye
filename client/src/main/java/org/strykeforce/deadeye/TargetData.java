@@ -1,6 +1,5 @@
 package org.strykeforce.deadeye;
 
-import com.squareup.moshi.JsonEncodingException;
 import com.squareup.moshi.JsonReader;
 import okio.BufferedSource;
 
@@ -26,7 +25,7 @@ public class TargetData {
         int serial = -1;
         boolean valid = false;
 
-            reader.beginObject();
+        reader.beginObject();
         while (reader.hasNext()) {
             switch (reader.selectName(OPTIONS)) {
                 case 0:
@@ -52,11 +51,11 @@ public class TargetData {
 
     @Override
     public boolean equals(Object o) {
-        if (this==o) return true;
-        if (o==null || getClass()!=o.getClass()) return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         TargetData that = (TargetData) o;
-        return serial==that.serial &&
-                valid==that.valid &&
+        return serial == that.serial &&
+                valid == that.valid &&
                 id.equals(that.id);
     }
 

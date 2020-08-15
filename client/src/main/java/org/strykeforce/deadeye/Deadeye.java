@@ -95,15 +95,15 @@ public class Deadeye {
         return id;
     }
 
-    public boolean hasInfo() {
-        return table.containsKey("Info");
-    }
-
     @Nullable
     public Info getInfo() {
         if (!hasInfo()) return null;
         String info = table.getEntry("Info").getString("{}");
         return null;
+    }
+
+    public boolean hasInfo() {
+        return table.containsKey("Info");
     }
 
     static class Info {

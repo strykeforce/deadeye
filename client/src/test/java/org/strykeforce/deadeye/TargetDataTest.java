@@ -1,6 +1,5 @@
 package org.strykeforce.deadeye;
 
-import com.squareup.moshi.JsonReader;
 import okio.Buffer;
 import org.junit.jupiter.api.Test;
 

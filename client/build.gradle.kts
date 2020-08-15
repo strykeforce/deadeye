@@ -37,6 +37,12 @@ java {
     targetCompatibility = JavaVersion.VERSION_11
 }
 
+allprojects {
+    tasks.withType(JavaCompile::class.java).all {
+        options.compilerArgs.add("-Xlint:unchecked")
+    }
+}
+
 val test by tasks.getting(Test::class) {
     // Use junit platform for unit tests
     useJUnitPlatform()

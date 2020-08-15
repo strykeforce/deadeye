@@ -1,21 +1,21 @@
 package org.strykeforce.deadeye;
 
-import com.squareup.moshi.JsonReader;
-import com.squareup.moshi.JsonWriter;
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
+import com.squareup.moshi.Types;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import okio.Buffer;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -56,13 +56,11 @@ class Link {
                 .collect(Collectors.toList());
     }
 
-    @NotNull
-    List<Config> getConfigs(@NotNull NetworkTable deadeyeTable) throws IOException {
+    static List<Config> getConfigs(@NotNull NetworkTable deadeyeTable) throws IOException {
         NetworkTableEntry linkEntry = deadeyeTable.getEntry(LINK_ENTRY);
-        Buffer buffer = new Buffer();
-        buffer.writeUtf8(linkEntry.getString("[]"));
-        JsonReader reader = JsonReader.of(buffer);
-        return Config.readConfigs(reader);
+        String json = linkEntry.getString("[]");
+        JsonAdapter<List<Config>> jsonAdapter = getConfigJsonAdapter();
+        return jsonAdapter.fromJson(json);
     }
 
     static boolean hasLinkAddresses(@NotNull List<InetAddress> addresses, @NotNull List<Config> configs) throws IOException {
@@ -86,20 +84,17 @@ class Link {
     }
 
     static void saveConfigs(@NotNull NetworkTable deadeyeTable, @NotNull List<Config> configs) throws IOException {
-        Buffer buffer = new Buffer();
-        JsonWriter writer = JsonWriter.of(buffer);
+        JsonAdapter<List<Config>> jsonAdapter = getConfigJsonAdapter();
+        deadeyeTable.getEntry(LINK_ENTRY).setString(jsonAdapter.toJson(configs));
+    }
 
-        writer.beginArray();
-        for (Config config : configs) {
-            config.writeJson(writer);
-        }
-        writer.endArray();
-
-        deadeyeTable.getEntry(LINK_ENTRY).setString(buffer.readUtf8());
+    private static JsonAdapter<List<Config>> getConfigJsonAdapter() {
+        Moshi moshi = new Moshi.Builder().build();
+        Type type = Types.newParameterizedType(List.class, Config.class);
+        return moshi.adapter(type);
     }
 
     static class Config {
-        private static final JsonReader.Options OPTIONS = JsonReader.Options.of("address", "port", "enabled");
         private final String address;
         private final int port;
         private final boolean enabled;
@@ -108,54 +103,6 @@ class Link {
             this.address = address;
             this.port = port;
             this.enabled = enabled;
-        }
-
-        @NotNull
-        static List<Config> readConfigs(@NotNull JsonReader reader) throws IOException {
-            List<Config> configs = new ArrayList<>();
-            reader.beginArray();
-            while (reader.hasNext())
-                configs.add(Config.of(reader));
-            reader.endArray();
-            return configs;
-        }
-
-        @NotNull
-        static Config of(@NotNull JsonReader reader) throws IOException {
-            String address = null;
-            int port = -1;
-            boolean enabled = false;
-            reader.beginObject();
-            while (reader.hasNext()) {
-                switch (reader.selectName(OPTIONS)) {
-                    case 0:
-                        address = reader.nextString();
-                        break;
-                    case 1:
-                        port = reader.nextInt();
-                        break;
-                    case 2:
-                        enabled = reader.nextBoolean();
-                        break;
-                    case -1:
-                        reader.skipName();
-                        reader.skipValue();
-                        break;
-                    default:
-                        throw new IllegalStateException("Unexpected value: " + reader.selectName(OPTIONS));
-                }
-            }
-            reader.endObject();
-            assert address != null;
-            return new Config(address, port, enabled);
-        }
-
-        void writeJson(@NotNull JsonWriter writer) throws IOException {
-            writer.beginObject();
-            writer.name("address").value(address);
-            writer.name("port").value(port);
-            writer.name("enabled").value(enabled);
-            writer.endObject();
         }
 
         @Override
