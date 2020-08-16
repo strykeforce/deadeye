@@ -15,24 +15,24 @@ class TargetDataTest {
         buffer.writeUtf8("{\"id\":\"Z1\",\"sn\":1,\"v\":true}");
 
         TargetData exp = new TargetData("Z1", 1, true);
-        TargetDataJsonAdapter targetDataJsonAdapter = new TargetDataJsonAdapter();
-        TargetData td = targetDataJsonAdapter.fromJson(buffer);
+        @SuppressWarnings("unchecked") DeadeyeJsonAdapter<TargetData> jsonAdapter = new TargetData().getJsonAdapter();
+        TargetData td = jsonAdapter.fromJson(buffer);
         assertEquals(exp, td);
 
         buffer.writeUtf8("{\"foo\":\"bar\",\"id\":\"Z1\",\"d\":[1,2],\"sn\":2,\"v\":true}");
         exp = new TargetData("Z1", 2, true);
-        td = targetDataJsonAdapter.fromJson(buffer);
+        td = jsonAdapter.fromJson(buffer);
         assertEquals(exp, td);
     }
 
     @Test
     void testTargetDataSerialization() throws IOException {
         TargetData expected = new TargetData("Z1", 1, true);
-        TargetDataJsonAdapter targetDataJsonAdapter = new TargetDataJsonAdapter();
-        String json = targetDataJsonAdapter.toJson(expected);
+        @SuppressWarnings("unchecked") DeadeyeJsonAdapter<TargetData> jsonAdapter = new TargetData().getJsonAdapter();
+        String json = jsonAdapter.toJson(expected);
         Buffer buffer = new Buffer();
         buffer.writeUtf8(json);
-        TargetData td = targetDataJsonAdapter.fromJson(buffer);
+        TargetData td = jsonAdapter.fromJson(buffer);
         assertEquals(expected, td);
     }
 
@@ -45,7 +45,8 @@ class TargetDataTest {
         Point br = new Point(3, 4);
         Point c = new Point(5, 6);
         UprightRectTargetData exp = new UprightRectTargetData("Z1", 3, true, tl, br, c);
-        JsonAdapter<UprightRectTargetData> jsonAdapter = new UprightRectTargetDataJsonAdapter();
+        @SuppressWarnings("unchecked") DeadeyeJsonAdapter<UprightRectTargetData> jsonAdapter =
+                new UprightRectTargetData().getJsonAdapter();
         UprightRectTargetData td = jsonAdapter.fromJson(buffer);
         assertEquals(exp, td);
 
@@ -67,7 +68,8 @@ class TargetDataTest {
         Point c = new Point(5, 6);
         UprightRectTargetData expected = new UprightRectTargetData("Z1", 3, true, tl, br, c);
 
-        UprightRectTargetDataJsonAdapter jsonAdapter = new UprightRectTargetDataJsonAdapter();
+        @SuppressWarnings("unchecked") DeadeyeJsonAdapter<UprightRectTargetData> jsonAdapter =
+                new UprightRectTargetData().getJsonAdapter();
         String json = jsonAdapter.toJson(expected);
         Buffer buffer = new Buffer();
         buffer.writeUtf8(json);

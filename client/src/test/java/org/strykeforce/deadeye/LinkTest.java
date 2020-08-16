@@ -97,9 +97,14 @@ class LinkTest {
 
         List<Link.Config> configs = getConfigs();
 
-        assertEquals(2, configs.size());
-        assertEquals(DEFAULT, configs.get(0));
-        assertNotEquals(DEFAULT, configs.get(1));
+        // tests when adding own config
+//        assertEquals(2, configs.size());
+//        assertEquals(DEFAULT, configs.get(0));
+//        assertNotEquals(DEFAULT, configs.get(1));
+
+        // tests when replacing with own config
+        assertEquals(1, configs.size());
+        assertNotEquals(DEFAULT, configs.get(0));
     }
 
 

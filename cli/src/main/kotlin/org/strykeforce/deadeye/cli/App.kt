@@ -10,7 +10,6 @@ import edu.wpi.first.networktables.NetworkTableInstance
 import mu.KotlinLogging
 import org.strykeforce.deadeye.Deadeye
 import org.strykeforce.deadeye.TargetData
-import org.strykeforce.deadeye.TargetDataJsonAdapter
 import java.util.concurrent.CountDownLatch
 
 private val logger = KotlinLogging.logger {}
@@ -34,7 +33,7 @@ class App : CliktCommand() {
 class Enable : CliktCommand() {
     private val id by argument()
     override fun run() {
-        val camera = Deadeye<TargetData>(id, TargetDataJsonAdapter())
+        val camera = Deadeye<TargetData>(id, TargetData::class.java)
         camera.enabled = true
     }
 }
@@ -42,7 +41,7 @@ class Enable : CliktCommand() {
 class Disable : CliktCommand() {
     private val id by argument()
     override fun run() {
-        val camera = Deadeye<TargetData>(id, TargetDataJsonAdapter())
+        val camera = Deadeye<TargetData>(id, TargetData::class.java)
         camera.enabled = false
     }
 }
