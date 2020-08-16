@@ -15,13 +15,25 @@ class TargetDataTest {
         buffer.writeUtf8("{\"id\":\"Z1\",\"sn\":1,\"v\":true}");
 
         TargetData exp = new TargetData("Z1", 1, true);
-        TargetData td = TargetData.of(buffer);
+        TargetDataJsonAdapter targetDataJsonAdapter = new TargetDataJsonAdapter();
+        TargetData td = targetDataJsonAdapter.fromJson(buffer);
         assertEquals(exp, td);
 
         buffer.writeUtf8("{\"foo\":\"bar\",\"id\":\"Z1\",\"d\":[1,2],\"sn\":2,\"v\":true}");
         exp = new TargetData("Z1", 2, true);
-        td = TargetData.of(buffer);
+        td = targetDataJsonAdapter.fromJson(buffer);
         assertEquals(exp, td);
+    }
+
+    @Test
+    void testTargetDataSerialization() throws IOException {
+        TargetData expected = new TargetData("Z1", 1, true);
+        TargetDataJsonAdapter targetDataJsonAdapter = new TargetDataJsonAdapter();
+        String json = targetDataJsonAdapter.toJson(expected);
+        Buffer buffer = new Buffer();
+        buffer.writeUtf8(json);
+        TargetData td = targetDataJsonAdapter.fromJson(buffer);
+        assertEquals(expected, td);
     }
 
     @Test
@@ -33,7 +45,8 @@ class TargetDataTest {
         Point br = new Point(3, 4);
         Point c = new Point(5, 6);
         UprightRectTargetData exp = new UprightRectTargetData("Z1", 3, true, tl, br, c);
-        UprightRectTargetData td = UprightRectTargetData.of(buffer);
+        JsonAdapter<UprightRectTargetData> jsonAdapter = new UprightRectTargetDataJsonAdapter();
+        UprightRectTargetData td = jsonAdapter.fromJson(buffer);
         assertEquals(exp, td);
 
         buffer.writeUtf8("{\"id\":\"Z1\",\"d\":[7,8,9,10,11,12],\"sn\":4,\"v\":true, \"foo\":99}");
@@ -42,8 +55,26 @@ class TargetDataTest {
         br = new Point(9, 10);
         c = new Point(11, 12);
         exp = new UprightRectTargetData("Z1", 4, true, tl, br, c);
-        td = UprightRectTargetData.of(buffer);
-        assertEquals(exp, td);
 
+        td = jsonAdapter.fromJson(buffer);
+        assertEquals(exp, td);
     }
+
+    @Test
+    void testUprightRectTargetDataSerialization() throws IOException {
+        Point tl = new Point(1, 2);
+        Point br = new Point(3, 4);
+        Point c = new Point(5, 6);
+        UprightRectTargetData expected = new UprightRectTargetData("Z1", 3, true, tl, br, c);
+
+        UprightRectTargetDataJsonAdapter jsonAdapter = new UprightRectTargetDataJsonAdapter();
+        String json = jsonAdapter.toJson(expected);
+        Buffer buffer = new Buffer();
+        buffer.writeUtf8(json);
+
+        UprightRectTargetData td = jsonAdapter.fromJson(buffer);
+        assertEquals(expected, td);
+    }
+
+
 }

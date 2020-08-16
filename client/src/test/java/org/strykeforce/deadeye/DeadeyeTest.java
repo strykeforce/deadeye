@@ -3,14 +3,21 @@
  */
 package org.strykeforce.deadeye;
 
-import com.squareup.moshi.JsonAdapter;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import okio.Buffer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -36,22 +43,23 @@ class DeadeyeTest {
 
     @Test
     void testId() {
-        assertDoesNotThrow(() -> new Deadeye("A0", nti));
-        assertDoesNotThrow(() -> new Deadeye("a0", nti));
-        assertThrows(IllegalArgumentException.class, () -> new Deadeye("", nti));
-        assertThrows(IllegalArgumentException.class, () -> new Deadeye("A", nti));
-        assertThrows(IllegalArgumentException.class, () -> new Deadeye("0", nti));
-        assertThrows(IllegalArgumentException.class, () -> new Deadeye("A00", nti));
-        assertThrows(IllegalArgumentException.class, () -> new Deadeye("A5", nti));
+        JsonAdapter<TargetData> jsonAdapter = new TargetDataJsonAdapter();
+        assertDoesNotThrow(() -> new Deadeye<>("A0", jsonAdapter, nti));
+        assertDoesNotThrow(() -> new Deadeye<>("a0", jsonAdapter, nti));
+        assertThrows(IllegalArgumentException.class, () -> new Deadeye<>("", jsonAdapter, nti));
+        assertThrows(IllegalArgumentException.class, () -> new Deadeye<>("A", jsonAdapter, nti));
+        assertThrows(IllegalArgumentException.class, () -> new Deadeye<>("0", jsonAdapter, nti));
+        assertThrows(IllegalArgumentException.class, () -> new Deadeye<>("A00", jsonAdapter, nti));
+        assertThrows(IllegalArgumentException.class, () -> new Deadeye<>("A5", jsonAdapter, nti));
 
-        Deadeye deadeye = new Deadeye("a1", nti);
+        Deadeye<TargetData> deadeye = new Deadeye<>("a1", jsonAdapter, nti);
         assertEquals("A1", deadeye.getId());
     }
 
     @Test
     void testEnabled() {
         NetworkTable table = nti.getTable(Link.DEADEYE_TABLE + "/Z/0");
-        Deadeye deadeye = new Deadeye("Z0", nti);
+        Deadeye<TargetData> deadeye = new Deadeye<>("Z0", new TargetDataJsonAdapter(), nti);
         assertFalse(table.getEntry("On").getBoolean(false), "On");
         assertFalse(table.getEntry("Off").getBoolean(false), "Off");
         deadeye.setEnabled(true);
@@ -63,7 +71,7 @@ class DeadeyeTest {
     @Test
     void testLightEnabled() {
         NetworkTable table = nti.getTable(Link.DEADEYE_TABLE + "/Z/0/Light");
-        Deadeye deadeye = new Deadeye("Z0", nti);
+        Deadeye<TargetData> deadeye = new Deadeye<>("Z0", new TargetDataJsonAdapter(), nti);
         assertFalse(table.getEntry("On").getBoolean(false), "On");
         assertFalse(table.getEntry("Off").getBoolean(false), "Off");
         deadeye.setLightEnabled(true);
@@ -78,18 +86,90 @@ class DeadeyeTest {
                 new Deadeye.Info(false, "TestPipeline", "1.0.0");
         NetworkTable table = nti.getTable(Link.DEADEYE_TABLE + "/Z/0");
         NetworkTableEntry entry = table.getEntry("Info");
-        JsonAdapter<Deadeye.Info> jsonAdapter = Deadeye.getInfoJsonAdapter();
+        com.squareup.moshi.JsonAdapter<Deadeye.Info> jsonAdapter = Deadeye.getInfoJsonAdapter();
         entry.setString(jsonAdapter.toJson(expected));
 
-        Deadeye deadeye = new Deadeye("Z0", nti);
+        Deadeye<TargetData> deadeye = new Deadeye<>("Z0", new TargetDataJsonAdapter(), nti);
         Deadeye.Info actual = deadeye.getInfo();
         assertEquals(expected, actual);
     }
 
     @Test
     void testGetNoInfo() {
-        Deadeye deadeye = new Deadeye("Z0", nti);
+        Deadeye<TargetData> deadeye = new Deadeye<>("Z0", new TargetDataJsonAdapter(), nti);
         Deadeye.Info actual = deadeye.getInfo();
         assertNull(actual);
+    }
+
+    @Test
+    void testTargetDataListener() throws IOException, InterruptedException {
+        TargetData expected = new TargetData("Z1", 2767, true);
+        TargetDataJsonAdapter jsonAdapter = new TargetDataJsonAdapter();
+
+        Buffer buffer = new Buffer();
+        buffer.writeUtf8(jsonAdapter.toJson(expected));
+        CountDownLatch latch = new CountDownLatch(1);
+
+        Deadeye<TargetData> deadeye = new Deadeye<>("Z1", jsonAdapter, nti);
+        deadeye.setTargetDataListener(td -> {
+            assertEquals(expected, td);
+            latch.countDown();
+        });
+        Link link = deadeye.getLink();
+        link.sendTest("Z1", buffer);
+
+        assertEquals(expected, deadeye.getTargetData());
+        assertTrue(latch.await(1, TimeUnit.SECONDS), "timed out");
+    }
+
+    @Test
+    void testUprightRectTargetDataListener() throws IOException, InterruptedException {
+        Point tl = new Point(1, 2);
+        Point br = new Point(3, 4);
+        Point c = new Point(5, 6);
+        UprightRectTargetData expected = new UprightRectTargetData("Z2", 3, true, tl, br, c);
+        UprightRectTargetDataJsonAdapter jsonAdapter = new UprightRectTargetDataJsonAdapter();
+
+        Buffer buffer = new Buffer();
+        buffer.writeUtf8(jsonAdapter.toJson(expected));
+        CountDownLatch latch = new CountDownLatch(1);
+
+        Deadeye<UprightRectTargetData> deadeye = new Deadeye<>("Z2", jsonAdapter, nti);
+        deadeye.setTargetDataListener(td -> {
+            assertEquals(expected, td);
+            latch.countDown();
+        });
+        Link link = deadeye.getLink();
+        link.sendTest("Z2", buffer);
+
+        assertEquals(expected, deadeye.getTargetData());
+        assertTrue(latch.await(1, TimeUnit.SECONDS), "timed out");
+    }
+
+    @Test
+    void testLinkThread() throws IOException, InterruptedException {
+        TargetData expected = new TargetData("Z3", 2767, true);
+        TargetDataJsonAdapter jsonAdapter = new TargetDataJsonAdapter();
+        Deadeye<TargetData> deadeye = new Deadeye<>("Z3", jsonAdapter);
+        String json = jsonAdapter.toJson(expected);
+        String payload = "Z3" + json;
+
+        int counts = 100;
+        CountDownLatch latch = new CountDownLatch(counts);
+
+        deadeye.setTargetDataListener(data -> {
+            assertEquals(expected, data);
+            latch.countDown();
+        });
+
+        DatagramPacket packet =
+                new DatagramPacket(payload.getBytes(), payload.getBytes().length, InetAddress.getLoopbackAddress(), Link.PORT);
+        DatagramSocket socket = new DatagramSocket();
+        for (int i = 0; i < counts; i++) {
+            socket.send(packet);
+            Thread.sleep(5);
+        }
+
+        assertTrue(latch.await(1, TimeUnit.SECONDS), "CountDownLatch timeout");
     }
 }

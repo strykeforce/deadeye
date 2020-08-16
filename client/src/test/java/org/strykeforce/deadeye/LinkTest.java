@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.InetAddress;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,11 +39,11 @@ class LinkTest {
     }
 
     @BeforeEach
-    void setUp() throws IOException {
+    void setUp() {
         Moshi moshi = new Moshi.Builder().build();
         Type type = Types.newParameterizedType(List.class, Link.Config.class);
         JsonAdapter<List<Link.Config>> jsonAdapter = moshi.adapter(type);
-        List<Link.Config> configs = Arrays.asList(DEFAULT);
+        List<Link.Config> configs = Collections.singletonList(DEFAULT);
         NetworkTable deadeyeTable = nti.getTable(DEADEYE_TABLE);
         entry = deadeyeTable.getEntry(LINK_ENTRY);
         entry.setString(jsonAdapter.toJson(configs));
@@ -91,7 +91,8 @@ class LinkTest {
 
     @Test
     void testAddOwnLinkEntry() throws IOException {
-        // adds link config with this computer's IP address
+        // side effect adds link config with this computer's IP address
+        @SuppressWarnings("unused")
         Link link = new Link(nti);
 
         List<Link.Config> configs = getConfigs();
@@ -100,4 +101,6 @@ class LinkTest {
         assertEquals(DEFAULT, configs.get(0));
         assertNotEquals(DEFAULT, configs.get(1));
     }
+
+
 }

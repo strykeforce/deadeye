@@ -1,52 +1,24 @@
 package org.strykeforce.deadeye;
 
 import com.squareup.moshi.JsonReader;
+import com.squareup.moshi.JsonWriter;
+import okio.Buffer;
 import okio.BufferedSource;
 
 import java.io.IOException;
 import java.util.Objects;
 
 public class TargetData {
-    private static final JsonReader.Options OPTIONS = JsonReader.Options.of("id", "sn", "v");
 
-    private final String id;
-    private final int serial;
-    private final boolean valid;
+
+    public final String id;
+    public final int serial;
+    public final boolean valid;
 
     public TargetData(String id, int serial, boolean valid) {
         this.id = id;
         this.serial = serial;
         this.valid = valid;
-    }
-
-    public static TargetData of(BufferedSource source) throws IOException {
-        JsonReader reader = JsonReader.of(source);
-        String id = null;
-        int serial = -1;
-        boolean valid = false;
-
-        reader.beginObject();
-        while (reader.hasNext()) {
-            switch (reader.selectName(OPTIONS)) {
-                case 0:
-                    id = reader.nextString();
-                    break;
-                case 1:
-                    serial = reader.nextInt();
-                    break;
-                case 2:
-                    valid = reader.nextBoolean();
-                    break;
-                case -1:
-                    reader.skipName();
-                    reader.skipValue();
-                    break;
-                default:
-                    throw new IllegalStateException("Unexpected value: " + reader.selectName(OPTIONS));
-            }
-        }
-        reader.endObject();
-        return new TargetData(id, serial, valid);
     }
 
     @Override

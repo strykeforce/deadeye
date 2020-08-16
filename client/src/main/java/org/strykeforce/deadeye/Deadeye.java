@@ -1,9 +1,9 @@
 package org.strykeforce.deadeye;
 
-import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import okio.BufferedSource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -17,22 +17,25 @@ import java.util.regex.Pattern;
  * Represents a connection to a Deadeye camera. It provides methods to configure and control the
  * camera and to receive target data.
  */
-public class Deadeye {
+@SuppressWarnings("unused")
+public class Deadeye<T extends TargetData> implements TargetDataHandler {
 
     static final Logger logger = LoggerFactory.getLogger(Deadeye.class);
-
+    private static Link link;
     private final NetworkTable table;
-    private final Link link;
     private final String id;
-
+    private final org.strykeforce.deadeye.JsonAdapter<T> jsonAdapter;
+    private TargetDataListener<T> targetDataListener;
+    private T targetData;
 
     /**
      * Initialize a connection to a Deadeye camera.
      *
-     * @param id the camera id.
+     * @param id          the camera id.
+     * @param jsonAdapter
      */
-    public Deadeye(String id) {
-        this(id, NetworkTableInstance.getDefault());
+    public Deadeye(String id, org.strykeforce.deadeye.JsonAdapter<T> jsonAdapter) {
+        this(id, jsonAdapter, NetworkTableInstance.getDefault());
     }
 
     /**
@@ -40,16 +43,69 @@ public class Deadeye {
      * primarily used for testing.
      *
      * @param id                   the camera id.
-     * @param networkTableInstance the NetworkTables instance
+     * @param jsonAdapter          JsonAdaptor to convert JSON to/from TargetData type
+     * @param nti the NetworkTables instance
      */
-    public Deadeye(String id, NetworkTableInstance networkTableInstance) {
-        link = new Link(networkTableInstance);
-        if (!Pattern.matches("^[A-Za-z][0-4]$", id))
+    public Deadeye(String id, org.strykeforce.deadeye.JsonAdapter<T> jsonAdapter, NetworkTableInstance nti) {
+        if (!Pattern.matches("^[A-Za-z][0-4]$", id)) {
             throw new IllegalArgumentException(id);
+        }
+
+        if (link == null) {
+            synchronized (Link.class) {
+                if (link == null)
+                    link = new Link(nti);
+            }
+        }
+
+        link.addTargetDataHandler(id, this);
+        this.jsonAdapter = jsonAdapter;
         this.id = id.toUpperCase();
+
         char unit = this.id.charAt(0);
         char inum = this.id.charAt(1);
-        table = networkTableInstance.getTable(Link.DEADEYE_TABLE + "/" + unit + "/" + inum);
+        table = nti.getTable(Link.DEADEYE_TABLE + "/" + unit + "/" + inum);
+
+        if (!link.isAlive()) {
+            synchronized (Link.class) {
+                if (!link.isAlive())
+                    link.start();
+            }
+        }
+    }
+
+    /**
+     * Call this listener with target data each time update packets are received from Deadeye daemon.
+     *
+     * @param targetDataListener class to receive target data
+     */
+    public void setTargetDataListener(TargetDataListener<T> targetDataListener) {
+        this.targetDataListener = targetDataListener;
+    }
+
+    /**
+     * Get TargetDataListener.
+     * @return the TargetDataListener.
+     */
+    public TargetDataListener<T> getTargetDataListener() {
+        return targetDataListener;
+    }
+
+    @Override
+    public void handleTargetData(BufferedSource source) throws IOException {
+        targetData = jsonAdapter.fromJson(source);
+        if (targetDataListener != null)
+            targetDataListener.onTargetData(targetData);
+    }
+
+
+    /**
+     * Get the most recent target data.
+     *
+     * @return the last valid target data update.
+     */
+    public T getTargetData() {
+        return targetData;
     }
 
     /**
@@ -106,7 +162,7 @@ public class Deadeye {
     @Nullable
     public Info getInfo() {
         String json = table.getEntry("Info").getString("");
-        JsonAdapter<Info> jsonAdapter = getInfoJsonAdapter();
+        com.squareup.moshi.JsonAdapter<Info> jsonAdapter = getInfoJsonAdapter();
         Info info = null;
         try {
             info = jsonAdapter.fromJson(json);
@@ -116,9 +172,13 @@ public class Deadeye {
         return info;
     }
 
-    static JsonAdapter<Info> getInfoJsonAdapter() {
+    static com.squareup.moshi.JsonAdapter<Info> getInfoJsonAdapter() {
         Moshi moshi = new Moshi.Builder().build();
         return moshi.adapter(Info.class);
+    }
+
+    Link getLink() {
+        return link;
     }
 
     static class Info {

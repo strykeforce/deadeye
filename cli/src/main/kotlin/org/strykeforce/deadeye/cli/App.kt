@@ -6,12 +6,11 @@ import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
-import com.squareup.moshi.JsonWriter
-import com.squareup.moshi.Moshi
 import edu.wpi.first.networktables.NetworkTableInstance
 import mu.KotlinLogging
-import okio.Buffer
-import org.strykeforce.deadeye.*
+import org.strykeforce.deadeye.Deadeye
+import org.strykeforce.deadeye.TargetData
+import org.strykeforce.deadeye.TargetDataJsonAdapter
 import java.util.concurrent.CountDownLatch
 
 private val logger = KotlinLogging.logger {}
@@ -35,7 +34,7 @@ class App : CliktCommand() {
 class Enable : CliktCommand() {
     private val id by argument()
     override fun run() {
-        val camera = Deadeye(id)
+        val camera = Deadeye<TargetData>(id, TargetDataJsonAdapter())
         camera.enabled = true
     }
 }
@@ -43,7 +42,7 @@ class Enable : CliktCommand() {
 class Disable : CliktCommand() {
     private val id by argument()
     override fun run() {
-        val camera = Deadeye(id)
+        val camera = Deadeye<TargetData>(id, TargetDataJsonAdapter())
         camera.enabled = false
     }
 }
@@ -60,7 +59,7 @@ class Disable : CliktCommand() {
 //}
 
 //fun main(args: Array<String>) = App().subcommands(Enable(), Disable(), Dump(), Watch()).main(args)
-fun main(args: Array<String>) = App().subcommands(Enable(), Disable()).main(args)
+fun main(args: Array<String>) = App().subcommands(Enable(), Disable(), Watch()).main(args)
 
 //fun <T : TargetData> Camera<T>.toJson(writer: JsonWriter) {
 //    val moshi = Moshi.Builder().build()

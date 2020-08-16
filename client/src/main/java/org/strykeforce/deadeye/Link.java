@@ -6,26 +6,33 @@ import com.squareup.moshi.Types;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import okio.Buffer;
+import okio.BufferedSource;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
+import java.net.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-class Link {
+class Link extends Thread {
     static final String DEADEYE_TABLE = "/Deadeye";
     static final String LINK_ENTRY = "Link";
+    static final int PORT = 5800;
 
     static final Logger logger = LoggerFactory.getLogger(Link.class);
+
+    private final Map<String, TargetDataHandler> deadeyeCache = new HashMap<>();
+    private final byte[] bytes = new byte[512];
+    private final Buffer buffer = new Buffer();
+    private final DatagramPacket packet = new DatagramPacket(bytes, bytes.length);
 
     Link(NetworkTableInstance networkTableInstance) {
         NetworkTable deadeyeTable = networkTableInstance.getTable(DEADEYE_TABLE);
@@ -33,17 +40,20 @@ class Link {
         try {
             List<InetAddress> ownAddresses = getOwnInetAddresses();
             List<Config> configs = getConfigs(deadeyeTable);
-            if (!hasLinkAddresses(ownAddresses, configs)) {
+//            if (!hasLinkAddresses(ownAddresses, configs)) {
                 logger.debug("Link config does not contains own address: {}", ownAddresses);
                 InetAddress address = getOwnAddress(ownAddresses);
-                addAddress(address, configs);
+                replaceAddress(address, configs);
+//                addAddress(address, configs);
                 saveConfigs(deadeyeTable, configs);
-            } else {
-                logger.debug("Link config contains own address: {}", ownAddresses);
-            }
+//            } else {
+//                logger.debug("Link config contains own address: {}", ownAddresses);
+//            }
         } catch (IOException e) {
             logger.error("unable to initialize Link", e);
         }
+        setName("Link");
+        setDaemon(true);
     }
 
     @NotNull
@@ -63,6 +73,19 @@ class Link {
         return jsonAdapter.fromJson(json);
     }
 
+    static InetAddress getOwnAddress(List<InetAddress> addresses) {
+        if (addresses.size()!=1)
+            throw new RuntimeException("Multiple Inet Addresses: " + addresses);
+        return addresses.get(0);
+    }
+
+    static void replaceAddress(@NotNull InetAddress address, @NotNull List<Config> configs) {
+        Config newConfig = new Config(address.getHostAddress(), 5800, true);
+        configs.clear();
+        configs.add(newConfig);
+        logger.info("replaced configs with: {}", newConfig);
+    }
+
     static boolean hasLinkAddresses(@NotNull List<InetAddress> addresses, @NotNull List<Config> configs) throws IOException {
         for (Config config : configs) {
             InetAddress address = InetAddress.getByName(config.address);
@@ -71,19 +94,13 @@ class Link {
         return false;
     }
 
-    static InetAddress getOwnAddress(List<InetAddress> addresses) {
-        if (addresses.size() != 1)
-            throw new RuntimeException("Multiple Inet Addresses: " + addresses);
-        return addresses.get(0);
-    }
-
     static void addAddress(@NotNull InetAddress address, @NotNull List<Config> configs) {
         Config newConfig = new Config(address.getHostAddress(), 5800, true);
         configs.add(newConfig);
         logger.info("added Link config: {}", newConfig);
     }
 
-    static void saveConfigs(@NotNull NetworkTable deadeyeTable, @NotNull List<Config> configs) throws IOException {
+    static void saveConfigs(@NotNull NetworkTable deadeyeTable, @NotNull List<Config> configs) {
         JsonAdapter<List<Config>> jsonAdapter = getConfigJsonAdapter();
         deadeyeTable.getEntry(LINK_ENTRY).setString(jsonAdapter.toJson(configs));
     }
@@ -92,6 +109,34 @@ class Link {
         Moshi moshi = new Moshi.Builder().build();
         Type type = Types.newParameterizedType(List.class, Config.class);
         return moshi.adapter(type);
+    }
+
+    @Override
+    public void run() {
+        try {
+            DatagramSocket socket = new DatagramSocket(PORT);
+            //noinspection InfiniteLoopStatement
+            while (true) {
+                socket.receive(packet);
+                String id = new String(packet.getData(), 0, 2);
+                buffer.write(packet.getData(), 2, packet.getLength() - 2);
+                TargetDataHandler handler = deadeyeCache.get(id);
+                if (handler!=null)
+                    handler.handleTargetData(buffer);
+                else
+                    logger.warn("unrecognized target data id: {}", id);
+            }
+        } catch (IOException e) {
+            logger.error("Deadeye target data receive thread", e);
+        }
+    }
+
+    synchronized void addTargetDataHandler(String id, TargetDataHandler handler) {
+        deadeyeCache.put(id, handler);
+    }
+
+    void sendTest(String id, BufferedSource source) throws IOException {
+        deadeyeCache.get(id).handleTargetData(source);
     }
 
     static class Config {
@@ -107,11 +152,11 @@ class Link {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (this==o) return true;
+            if (o==null || getClass()!=o.getClass()) return false;
             Config config = (Config) o;
-            return port == config.port &&
-                    enabled == config.enabled &&
+            return port==config.port &&
+                    enabled==config.enabled &&
                     address.equals(config.address);
         }
 
