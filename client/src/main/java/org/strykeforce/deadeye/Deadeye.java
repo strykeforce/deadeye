@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -18,35 +20,36 @@ import java.util.regex.Pattern;
  * camera and to receive target data.
  */
 @SuppressWarnings("unused")
-public class Deadeye<T extends TargetData> implements TargetDataHandler {
+public class Deadeye<T extends TargetData> {
 
     static final Logger logger = LoggerFactory.getLogger(Deadeye.class);
     private static Link link;
     private final NetworkTable table;
     private final String id;
-    private final org.strykeforce.deadeye.JsonAdapter<T> jsonAdapter;
+    private final DeadeyeJsonAdapter<T> jsonAdapter;
     private TargetDataListener<T> targetDataListener;
     private T targetData;
 
     /**
      * Initialize a connection to a Deadeye camera.
      *
-     * @param id          the camera id.
-     * @param jsonAdapter
+     * @param id  the camera id.
+     * @param cls the appropriate TargetData (or subclass) class object
      */
-    public Deadeye(String id, org.strykeforce.deadeye.JsonAdapter<T> jsonAdapter) {
-        this(id, jsonAdapter, NetworkTableInstance.getDefault());
+    public Deadeye(String id, Class<T> cls) {
+        this(id, cls, NetworkTableInstance.getDefault());
     }
 
     /**
      * Initialize a connection to a Deadeye camera using a specified NetworkTables instance. This is
      * primarily used for testing.
      *
-     * @param id                   the camera id.
-     * @param jsonAdapter          JsonAdaptor to convert JSON to/from TargetData type
-     * @param nti the NetworkTables instance
+     * @param id  the camera id.
+     * @param cls the appropriate TargetData (or subclass) class object
+     * @param nti the NetworkTables instance to connect through
      */
-    public Deadeye(String id, org.strykeforce.deadeye.JsonAdapter<T> jsonAdapter, NetworkTableInstance nti) {
+    @SuppressWarnings("unchecked")
+    public Deadeye(String id, Class<T> cls, NetworkTableInstance nti) {
         if (!Pattern.matches("^[A-Za-z][0-4]$", id)) {
             throw new IllegalArgumentException(id);
         }
@@ -59,7 +62,6 @@ public class Deadeye<T extends TargetData> implements TargetDataHandler {
         }
 
         link.addTargetDataHandler(id, this);
-        this.jsonAdapter = jsonAdapter;
         this.id = id.toUpperCase();
 
         char unit = this.id.charAt(0);
@@ -72,6 +74,24 @@ public class Deadeye<T extends TargetData> implements TargetDataHandler {
                     link.start();
             }
         }
+
+        try {
+            Constructor<T> constructor = cls.getConstructor();
+            T targetData = constructor.newInstance();
+            jsonAdapter = targetData.getJsonAdapter();
+        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            logger.error("Unable to initialize target data", e);
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    /**
+     * Get TargetDataListener.
+     *
+     * @return the TargetDataListener.
+     */
+    public TargetDataListener<T> getTargetDataListener() {
+        return targetDataListener;
     }
 
     /**
@@ -83,15 +103,6 @@ public class Deadeye<T extends TargetData> implements TargetDataHandler {
         this.targetDataListener = targetDataListener;
     }
 
-    /**
-     * Get TargetDataListener.
-     * @return the TargetDataListener.
-     */
-    public TargetDataListener<T> getTargetDataListener() {
-        return targetDataListener;
-    }
-
-    @Override
     public void handleTargetData(BufferedSource source) throws IOException {
         targetData = jsonAdapter.fromJson(source);
         if (targetDataListener != null)

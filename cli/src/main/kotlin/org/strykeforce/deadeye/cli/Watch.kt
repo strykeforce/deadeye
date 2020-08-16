@@ -12,7 +12,6 @@ import org.jline.terminal.TerminalBuilder
 import org.jline.utils.InfoCmp
 import org.strykeforce.deadeye.Deadeye
 import org.strykeforce.deadeye.TargetData
-import org.strykeforce.deadeye.TargetDataJsonAdapter
 import org.strykeforce.deadeye.TargetDataListener
 import kotlin.concurrent.timer
 
@@ -28,7 +27,7 @@ class Watch : CliktCommand() {
         println(ansi().fgBrightBlue().a("id  serial  tgt   fps  drop"))
         println(ansi().a("===========================").reset())
 
-        val watchers = ids.map { Deadeye<TargetData>(it, TargetDataJsonAdapter()) }.map(::Watcher)
+        val watchers = ids.map { Deadeye<TargetData>(it, TargetData::class.java) }.map(::Watcher)
         repeat(watchers.size + 1) { println() }
 
         val timer = timer(period = 250) {

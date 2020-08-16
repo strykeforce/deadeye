@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+@SuppressWarnings({"unused", "rawtypes"})
 class Link extends Thread {
     static final String DEADEYE_TABLE = "/Deadeye";
     static final String LINK_ENTRY = "Link";
@@ -29,7 +30,7 @@ class Link extends Thread {
 
     static final Logger logger = LoggerFactory.getLogger(Link.class);
 
-    private final Map<String, TargetDataHandler> deadeyeCache = new HashMap<>();
+    private final Map<String, Deadeye> deadeyeCache = new HashMap<>();
     private final byte[] bytes = new byte[512];
     private final Buffer buffer = new Buffer();
     private final DatagramPacket packet = new DatagramPacket(bytes, bytes.length);
@@ -120,7 +121,7 @@ class Link extends Thread {
                 socket.receive(packet);
                 String id = new String(packet.getData(), 0, 2);
                 buffer.write(packet.getData(), 2, packet.getLength() - 2);
-                TargetDataHandler handler = deadeyeCache.get(id);
+                Deadeye handler = deadeyeCache.get(id);
                 if (handler!=null)
                     handler.handleTargetData(buffer);
                 else
@@ -131,7 +132,7 @@ class Link extends Thread {
         }
     }
 
-    synchronized void addTargetDataHandler(String id, TargetDataHandler handler) {
+    synchronized void addTargetDataHandler(String id, Deadeye handler) {
         deadeyeCache.put(id, handler);
     }
 
