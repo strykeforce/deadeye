@@ -1,6 +1,6 @@
 plugins {
   // Apply the Kotlin JVM plugin to add support for Kotlin.
-  id("org.jetbrains.kotlin.jvm") version "1.3.61"
+  id("org.jetbrains.kotlin.jvm") version "1.3.72"
   // Apply the application plugin to add support for building a CLI application.
   application
   idea
@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-  val wpiVersion = "2020.1.2"
+  val wpiVersion = "2020.3.2"
   implementation("org.strykeforce:deadeye:20.0.0")
   implementation("ch.qos.logback:logback-classic:1.2.3")
   implementation("io.dropwizard.metrics:metrics-core:4.+")
@@ -25,6 +25,9 @@ dependencies {
   implementation("org.fusesource.jansi:jansi:1.18")
   implementation("com.github.ajalt:clikt:2.3.0")
   implementation ("com.squareup.moshi:moshi:1.9.2")
+  implementation("org.slf4j:slf4j-api:1.7.30")
+  implementation("io.github.microutils:kotlin-logging:1.8.3")
+  implementation("ch.qos.logback:logback-core:1.2.3")
 
 
   // Align versions of all Kotlin components

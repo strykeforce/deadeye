@@ -18,10 +18,11 @@ using namespace deadeye;
 Link::Link(int inum) : id_(DEADEYE_UNIT + std::to_string(inum)) {
   LinkConfig link_config = GetConfig();
   enabled_ = link_config.enabled;
-  if (!enabled_) {
-    spdlog::warn("Link<{}> is disabled", id_);
-    return;
-  };
+  spdlog::log(enabled_ ? spdlog::level::info : spdlog::level::warn,
+              "Link<{}>: {}:{} {}", id_, link_config.address, link_config.port,
+              enabled_ ? "[enabled]" : "[disabled]");
+
+  if (!enabled_) return;
 
   fd_ = socket(AF_INET, SOCK_DGRAM, 0);
   if (fd_ == -1)
@@ -35,7 +36,7 @@ Link::Link(int inum) : id_(DEADEYE_UNIT + std::to_string(inum)) {
   if (connect(fd_, (sockaddr*)&addr, sizeof(addr)) == -1)
     spdlog::critical("Link<{}> connect error: {}", id_, strerror(errno));
 
-  spdlog::info("Link<{}> connected to {}:{}", id_, link_config.address,
+  spdlog::info("Link<{}> connecting to {}:{}", id_, link_config.address,
                link_config.port);
 }
 
@@ -47,7 +48,9 @@ Link::~Link() {
 
 LinkConfig Link::GetConfig() {
   auto nti = nt::NetworkTableInstance(nt::GetDefaultInstance());
-  return LinkConfig{nti.GetEntry(DE_CONFIG_ENTRY).GetValue()};
+  auto js = nti.GetEntry(DE_LINK_ENTRY).GetString("[]");
+  auto j = json::parse(js);
+  return LinkConfig{j[0]};  // TODO: configure all links in list
 }
 
 void Link::Send(TargetData* const td) const {
@@ -56,4 +59,12 @@ void Link::Send(TargetData* const td) const {
   std::string msg = id_ + td->Dump();
   if (send(fd_, msg.data(), msg.size(), 0) == -1)
     spdlog::error("Link<{}> send error: {}", id_, strerror(errno));
+}
+
+void Link::Init(nt::NetworkTableInstance& nti) {
+  auto entry = nti.GetEntry(DE_LINK_ENTRY);
+  LinkConfig lc{CLIENT_ADDRESS, CLIENT_PORT, true};
+  json j = {lc};
+  entry.SetDefaultString(j.dump());
+  entry.SetPersistent();
 }

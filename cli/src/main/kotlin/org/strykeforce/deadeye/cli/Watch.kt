@@ -2,19 +2,18 @@ package org.strykeforce.deadeye.cli
 
 import com.codahale.metrics.Meter
 import com.codahale.metrics.MetricRegistry
-import com.github.ajalt.clikt.core.BadParameterValue
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.arguments.multiple
-import com.squareup.moshi.Moshi
 import org.fusesource.jansi.Ansi.Attribute.INTENSITY_FAINT
 import org.fusesource.jansi.Ansi.ansi
 import org.fusesource.jansi.AnsiConsole
 import org.jline.terminal.TerminalBuilder
 import org.jline.utils.InfoCmp
-import org.strykeforce.deadeye.*
-import java.net.Socket
-import java.net.URL
+import org.strykeforce.deadeye.Deadeye
+import org.strykeforce.deadeye.TargetData
+import org.strykeforce.deadeye.TargetDataJsonAdapter
+import org.strykeforce.deadeye.TargetDataListener
 import kotlin.concurrent.timer
 
 private val metrics = MetricRegistry()
@@ -25,18 +24,11 @@ class Watch : CliktCommand() {
 
     override fun run() {
         AnsiConsole.systemInstall()
-        val prevLink = Deadeye.config
-        val stream = try {
-            Deadeye.getCamera<TargetData>(ids.first()).stream
-        } catch (e: Exception) {
-            throw BadParameterValue("Camera ${ids.first()} not found")
-        }
-        Deadeye.config = stream.toLink()
         println()
         println(ansi().fgBrightBlue().a("id  serial  tgt   fps  drop"))
         println(ansi().a("===========================").reset())
 
-        val watchers = ids.map { Deadeye.getCamera<TargetData>(it) }.map(::Watcher)
+        val watchers = ids.map { Deadeye<TargetData>(it, TargetDataJsonAdapter()) }.map(::Watcher)
         repeat(watchers.size + 1) { println() }
 
         val timer = timer(period = 250) {
@@ -53,34 +45,32 @@ class Watch : CliktCommand() {
         watchers.forEach { it.camera.enabled = false }
         timer.cancel()
 
-        Deadeye.config = prevLink
         terminal.close()
         AnsiConsole.systemUninstall()
     }
 }
 
-class Watcher(val camera: Camera<TargetData>) : TargetDataListener {
+class Watcher(val camera: Deadeye<TargetData>) : TargetDataListener<TargetData> {
 
     init {
         camera.targetDataListener = this
         camera.enabled = true
-        camera.jsonAdapter = TargetDataJsonAdapter(Moshi.Builder().build())
     }
 
-    private var td = TargetData()
+    private var td = TargetData("Z0", 0, false)
     private var dropped = 0
     private val fpsMeter: Meter by lazy { metrics.meter(camera.id) }
 
 
     override fun onTargetData(data: TargetData) {
-        if (data.sn - td.sn > 1) dropped += data.sn - td.sn
+        if (data.serial - td.serial > 1) dropped += data.serial - td.serial
         td = data
         fpsMeter.mark()
     }
 
     fun output() {
         val id = ansi().fgBrightBlue().a(td.id).reset()
-        val sn = ansi().a(INTENSITY_FAINT).a(td.sn.toString().padStart(6)).reset()
+        val sn = ansi().a(INTENSITY_FAINT).a(td.serial.toString().padStart(6)).reset()
         val valid = if (td.valid) ansi().fgBrightGreen().a("Y").reset() else ansi().fgBrightRed().a("N").reset()
         val fps = ansi().fgBrightYellow().a("%5.1f".format(fpsMeter.oneMinuteRate)).reset()
         val d =
@@ -89,8 +79,4 @@ class Watcher(val camera: Camera<TargetData>) : TargetDataListener {
                 .reset()
         println("$id  $sn   $valid $fps  $d")
     }
-}
-
-fun Camera.Stream.toLink(): Deadeye.Config = Socket(URL(this.url).host, 22).use {
-    Deadeye.Config(it.localAddress.hostAddress, 5800, true)
 }

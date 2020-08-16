@@ -1,4 +1,6 @@
 #pragma once
+#include <networktables/NetworkTableInstance.h>
+
 #include <string>
 
 #include "link/target_data.h"
@@ -15,6 +17,8 @@ class Link {
   Link& operator=(const Link&) = delete;
 
   void Send(TargetData* const td) const;  // Caller retains ownership
+
+  static void Init(nt::NetworkTableInstance& nti);
 
  private:
   bool enabled_;

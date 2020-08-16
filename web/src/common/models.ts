@@ -27,7 +27,7 @@ export interface Camera {
 }
 
 export interface CameraInfo {
-  pipeline: { name: string };
+  pipeline: string;
   version: string;
 }
 

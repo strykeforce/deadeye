@@ -9,6 +9,7 @@ struct TargetData {
   static const char* kIdKey;
   static const char* kSerialKey;
   static const char* kValidKey;
+  static const char* kDataKey;
 
   std::string id;
   int serial;

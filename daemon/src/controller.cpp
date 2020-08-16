@@ -13,11 +13,11 @@
 
 #include "config/deadeye_config.h"
 #include "config/deadeye_version.h"
-#include "config/link_config.h"
 #include "config/pipeline_config.h"
 #include "config/stream_config.h"
 #include "hardware/camera.h"
 #include "hardware/lights.h"
+#include "link/link.h"
 #include "pipeline/null_pipeline.h"
 
 // forward declaration
@@ -404,7 +404,7 @@ void Controller::Run() {
           break;
         }
 
-        case hash(DE_CONFIG_ENTRY):
+        case hash(DE_LINK_ENTRY):
           spdlog::debug("Deadeye: {}", entry.value);
           break;
 
@@ -519,11 +519,7 @@ void Controller::InitializeNetworkTables() {
     entry.SetString(j.dump());
   }
 
-  auto entry = nti.GetEntry(DE_CONFIG_ENTRY);
-  LinkConfig lc{CLIENT_ADDRESS, CLIENT_PORT, true};
-  json j = lc;
-  entry.SetDefaultString(j.dump());
-  entry.SetPersistent();
+  Link::Init(nti);
 }
 
 template <int inum>
@@ -537,11 +533,12 @@ void Controller::InitializeCamera() {
   Camera<inum>::Initialize(cc, pc, sc);
 
   json j;
-  j["pipeline"]["name"] = Camera<inum>::GetPipeline()->GetName();
+  j["pipeline"] = Camera<inum>::GetPipeline()->GetName();
   j["version"] = GetDeadeyeVersion();
   j["logging"] = false;
   auto entry = nti.GetEntry(InfoEntryPath(inum));
   entry.SetString(j.dump());
+  entry.ClearPersistent();
 
   spdlog::debug("Camera<{}{}> initialized", DEADEYE_UNIT, inum);
 }

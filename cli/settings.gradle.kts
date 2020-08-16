@@ -8,4 +8,4 @@
  */
 
 rootProject.name = "deadeye-cli"
-includeBuild("../deadeye-java")
+includeBuild("../client")
