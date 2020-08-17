@@ -1,5 +1,6 @@
 package org.strykeforce.deadeye;
 
+import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -165,15 +166,25 @@ public class Deadeye<T extends TargetData> {
             light.getEntry("Off").setBoolean(true);
     }
 
+    /**
+     * Get the configured pipeline ID.
+     *
+     * @return the pipeline ID.
+     */
     @NotNull
     public String getId() {
         return id;
     }
 
+    /**
+     * Get information about the pipeline.
+     *
+     * @return the pipeline information.
+     */
     @Nullable
     public Info getInfo() {
         String json = table.getEntry("Info").getString("");
-        com.squareup.moshi.JsonAdapter<Info> jsonAdapter = getInfoJsonAdapter();
+        JsonAdapter<Info> jsonAdapter = getInfoJsonAdapter();
         Info info = null;
         try {
             info = jsonAdapter.fromJson(json);
@@ -183,7 +194,7 @@ public class Deadeye<T extends TargetData> {
         return info;
     }
 
-    static com.squareup.moshi.JsonAdapter<Info> getInfoJsonAdapter() {
+    static JsonAdapter<Info> getInfoJsonAdapter() {
         Moshi moshi = new Moshi.Builder().build();
         return moshi.adapter(Info.class);
     }
