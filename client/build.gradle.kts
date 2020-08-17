@@ -1,11 +1,11 @@
-
 plugins {
     `idea`
     `java-library`
+    `maven-publish`
 }
 
 group = "org.strykeforce"
-version = "20.0.0"
+version = "20.8.0"
 
 repositories {
     jcenter()
@@ -52,5 +52,36 @@ idea {
     module {
         isDownloadJavadoc = true
         isDownloadSources = true
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            url = uri("s3://maven.strykeforce.org/repo")
+            credentials(AwsCredentials::class) {
+                accessKey = System.getenv("STRYKEFORCE_AWS_KEY")
+                secretKey = System.getenv("STRYKEFORCE_AWS_SECRET")
+            }
+        }
+    }
+
+    publications {
+        create<MavenPublication>("deadeye") {
+            from(components["java"])
+
+            pom {
+                name.set("Deadeye Client Library")
+                description.set("Java client library for Stryke Force FRC Vision System")
+                url.set("https://github.com/strykeforce/deadeye")
+
+                licenses {
+                    license {
+                        name.set("MIT License")
+                        url.set("https://github.com/strykeforce/deadeye/blob/master/LICENSE")
+                    }
+                }
+            }
+        }
     }
 }
