@@ -154,7 +154,6 @@ const MountCheckbox = (props: Props) => {
     const newLog = Object.assign(log, { mount: value });
     const newConfig = Object.assign(config, { log: newLog });
     configPipeline(unit, inum, newConfig);
-    console.debug(newConfig);
   };
 
   return (

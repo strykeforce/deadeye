@@ -4,40 +4,42 @@ import React from "react";
 import { enableCamera, enableLight } from "../../common/api";
 import { Camera } from "../../common/models";
 import "./camera-header.less";
+import { RouteComponentProps } from "@reach/router";
 
-type Props = {
-  camera: Camera;
-};
+interface Props extends RouteComponentProps {
+  camera?: Camera;
+}
 
 const CameraHeader = (props: Props) => {
   const { camera } = props;
 
   const handleCameraChange: SwitchClickEventHandler = (checked) => {
-    enableCamera(camera.unit, camera.inum, checked);
+    if (camera) enableCamera(camera.unit, camera.inum, checked);
   };
 
   const handleLightChange: SwitchClickEventHandler = (checked) => {
-    enableLight(camera.unit, camera.inum, checked);
+    if (camera) enableLight(camera.unit, camera.inum, checked);
   };
 
-  const name = camera.info.pipeline;
+  const name = camera ? camera.info.pipeline : "::Unknown";
 
   return (
     <div className="camera-header">
-      <span className="camera-header__title">
-        {camera.id} <span>{name.substring(name.lastIndexOf("::") + 2)}</span>
-      </span>
-
+      {camera && (
+        <span className="camera-header__title">
+          {camera.id} <span>{name.substring(name.lastIndexOf("::") + 2)}</span>
+        </span>
+      )}
       <div>
         <Switch
           className="camera-header__switch"
-          checked={camera.on}
+          checked={camera && camera.on}
           onClick={handleCameraChange}
         />
         <span className="camera-header__label">Enabled</span>
         <Switch
           className="camera-header__switch"
-          checked={camera.light.on}
+          checked={camera && camera.light.on}
           onClick={handleLightChange}
         />
         <span className="camera-header__label">Lights</span>

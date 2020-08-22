@@ -6,47 +6,26 @@ import CameraDashboard from "../CameraDashboard";
 import CameraHeader from "../CameraHeader";
 import CameraMenu from "../CameraMenu";
 import "./page-container.less";
+import { Router, RouteComponentProps } from "@reach/router";
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Footer, Sider } = Layout;
 const { Text, Link } = Typography;
 
-type Props = {
-  units: Units;
-};
+interface Props extends RouteComponentProps {
+  ids?: string[];
+  children: React.ReactNode;
+}
 
 const PageContainer = (props: Props) => {
-  const { units } = props;
-  const [selectedId, setSelectedId] = useState<Id>(undefined);
-
-  const ids = Object.values(units)
-    .flatMap((u) => Object.values(u.cameras).map((c) => c.id))
-    .sort();
-
-  if (!selectedId && ids.length > 0) {
-    // setSelectedId(ids[0]);
-    setSelectedId("E0"); // FIXME
-  }
-
-  const content = selectedId ? (
-    <CameraDashboard camera={getCamera(selectedId, units)} />
-  ) : null;
-
-  const header = selectedId ? (
-    <CameraHeader camera={getCamera(selectedId, units)} />
-  ) : null;
+  const { ids, children } = props;
 
   return (
     <Layout className="page">
       <Sider className="page__sider" width={100}>
-        <CameraMenu
-          ids={ids}
-          selectedId={selectedId}
-          onClick={(id) => setSelectedId(id)}
-        />
+        <CameraMenu ids={ids} />
       </Sider>
       <Layout>
-        <Header className="page__header">{header}</Header>
-        <Content className="page__content">{content}</Content>
+        {children}
         <Footer className="page__footer">
           <MadeWithLove />
         </Footer>

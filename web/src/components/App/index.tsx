@@ -1,10 +1,13 @@
+import { Router } from "@reach/router";
 import React, { useEffect, useState } from "react";
-import { close, subscribe, sendMessage } from "../../common/api";
-import PageContainer from "../PageContainer";
+import { close, sendMessage, subscribe } from "../../common/api";
+import { Units } from "../../common/models";
+import CameraPage from "../../pages/CameraPage";
+import DefaultPage from "../../pages/DefaultPage";
 import "./app.less";
 
 const App = () => {
-  const [units, setUnits] = useState({});
+  const [units, setUnits] = useState<Units>();
 
   useEffect(() => {
     const handleUnitsChange = (units: string): void => {
@@ -23,7 +26,14 @@ const App = () => {
     }, 500);
   }, []);
 
-  return <PageContainer units={units} />;
+  console.debug(units);
+
+  return (
+    <Router>
+      <DefaultPage units={units} default />
+      {units && <CameraPage path="/id/:id" units={units} />}
+    </Router>
+  );
 };
 
 export default App;
