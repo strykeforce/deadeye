@@ -1,32 +1,41 @@
-import { RouteComponentProps } from "@reach/router";
-import { Layout } from "antd";
+import { RouteComponentProps, navigate } from "@reach/router";
+import { Layout, Spin } from "antd";
 import React from "react";
 import CameraHeader from "../../components/CameraHeader";
 import PageContainer from "../../components/PageContainer";
 import { Units } from "../../common/models";
+import { getIds } from "../../common/util";
 
 const { Header, Content } = Layout;
 
 interface Props extends RouteComponentProps {
+  id?: string;
   units?: Units;
 }
 
 const DefaultPage = (props: Props) => {
-  const { units } = props;
+  const { id, units } = props;
 
-  const ids = units
-    ? Object.values(units)
-        .flatMap((u) => Object.values(u.cameras).map((c) => c.id))
-        .sort()
-    : undefined;
+  const ids = getIds(units);
+
+  if (ids.length > 0 && !ids.includes(id ? id : "")) {
+    const route = `/id/${ids[0]}`;
+    console.debug(`route = ${route}`);
+    navigate(route);
+    return null;
+  }
 
   return (
-    <PageContainer ids={ids}>
-      <Header className="page__header">
-        <CameraHeader />
-      </Header>
-      <Content className="page__content">Loading...</Content>
-    </PageContainer>
+    <div
+      style={{
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translateX(-50%) translateY(-50%)",
+      }}
+    >
+      <Spin size="large" />
+    </div>
   );
 };
 

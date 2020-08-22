@@ -10,5 +10,14 @@ export const getCamera = (id: string, units: Units): Camera => {
   return get([u, "cameras", c])(units);
 };
 
+export const getIds = (units?: Units) => {
+  if (units) {
+    return Object.values(units)
+      .flatMap((u) => Object.values(u.cameras).map((c) => c.id))
+      .sort();
+  }
+  return [];
+};
+
 export const key = (unit: string, inum: number, id: number) =>
   `${unit}${inum}${id}`;

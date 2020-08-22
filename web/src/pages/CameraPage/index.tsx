@@ -1,11 +1,11 @@
-import { RouteComponentProps, Redirect, useNavigate } from "@reach/router";
-import { Units } from "../../common/models";
-import PageContainer from "../../components/PageContainer";
-import React, { useState } from "react";
+import { RouteComponentProps, useNavigate } from "@reach/router";
 import { Layout } from "antd";
+import React from "react";
+import { Units } from "../../common/models";
+import { getCamera, getIds } from "../../common/util";
 import CameraDashboard from "../../components/CameraDashboard";
-import { getCamera } from "../../common/util";
 import CameraHeader from "../../components/CameraHeader";
+import PageContainer from "../../components/PageContainer";
 
 const { Header, Content } = Layout;
 
@@ -18,9 +18,7 @@ const CameraPage = (props: Props) => {
   const { units, id } = props;
   const navigate = useNavigate();
 
-  const ids = Object.values(units)
-    .flatMap((u) => Object.values(u.cameras).map((c) => c.id))
-    .sort();
+  const ids = getIds(units);
 
   const selectedId = id ? id : ids[0];
 
@@ -34,7 +32,7 @@ const CameraPage = (props: Props) => {
   const camera = getCamera(selectedId, units);
 
   return (
-    <PageContainer ids={ids}>
+    <PageContainer id={selectedId} ids={ids}>
       <Header className="page__header">
         <CameraHeader camera={camera} />
       </Header>
