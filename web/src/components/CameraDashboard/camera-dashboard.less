@@ -4,14 +4,14 @@
   flex-wrap: nowrap;
   display: flex;
   justify-content: space-evenly;
-  padding-top: 40px;
-  padding-left: 0px;
+  padding-top: @dash-top-padding;
+  padding-left: @dash-left-padding;
 
   @media only screen {
     @media (max-width: @break-width) {
       flex-direction: column-reverse;
       align-items: center;
-      padding-top: 10px;
+      padding-top: @break-top-padding;
     }
   }
 
@@ -20,10 +20,11 @@
 
     @media only screen {
       @media (max-width: @break-width) {
-        margin-top: 20px;
+        margin-top: @break-controls-top-margin;
       }
     }
   }
+
   &__stream {
     border: 0px solid white;
   }

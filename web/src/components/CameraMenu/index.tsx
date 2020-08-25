@@ -1,23 +1,31 @@
-import { VideoCameraOutlined, SettingOutlined } from "@ant-design/icons";
+import { SettingOutlined, VideoCameraOutlined } from "@ant-design/icons";
+import { useNavigate } from "@reach/router";
 import { Menu } from "antd";
-import React from "react";
+import React, { useState } from "react";
+import { Id } from "../../common/models";
 import "./camera-menu.less";
 import logo from "./deadeye.png";
 
 type Props = {
+  id?: string;
   ids: string[];
-  selectedId: string | undefined;
-  onClick: (id: string) => void;
 };
 
 const CameraMenu = (props: Props) => {
-  const { ids, selectedId, onClick } = props;
+  const { id, ids } = props;
+  const [selectedId, setSelectedId] = useState<Id>(id);
+  const navigate = useNavigate();
+
+  const handleClick = (id: string) => {
+    setSelectedId(id);
+    navigate(`/id/${id}`);
+  };
 
   const menuItems = ids.map((id) => (
     <Menu.Item
       key={id}
       icon={<VideoCameraOutlined />}
-      onClick={() => onClick(id)}
+      onClick={() => handleClick(id)}
     >
       {id}
     </Menu.Item>
@@ -32,10 +40,14 @@ const CameraMenu = (props: Props) => {
         className="camera-menu"
         theme="dark"
         mode="inline"
-        selectedKeys={selectedId ? [selectedId] : [ids[0]]}
+        selectedKeys={selectedId ? [selectedId] : undefined}
       >
         {menuItems}
-        <Menu.Item key={ids.length + 1} icon={<SettingOutlined />}></Menu.Item>
+        <Menu.Item
+          key="settings"
+          icon={<SettingOutlined />}
+          onClick={() => navigate("/settings")}
+        ></Menu.Item>
       </Menu>
     </>
   );

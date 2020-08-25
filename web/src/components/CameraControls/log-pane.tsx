@@ -1,11 +1,10 @@
+import { Checkbox, Col, Input, Row, Select, Slider } from "antd";
+import { CheckboxChangeEvent } from "antd/es/checkbox";
 import React, { useState } from "react";
-import { PipelineConfig } from "../../common/models";
-import Range from "./range";
 import { configPipeline } from "../../common/api";
-import { Col, Row, Select, Checkbox, Input, Slider } from "antd";
+import { PipelineConfig } from "../../common/models";
 import { key } from "../../common/util";
 import DebugPane from "./debug";
-import { CheckboxChangeEvent } from "antd/es/checkbox";
 
 // import "./index.less";
 
@@ -155,7 +154,6 @@ const MountCheckbox = (props: Props) => {
     const newLog = Object.assign(log, { mount: value });
     const newConfig = Object.assign(config, { log: newLog });
     configPipeline(unit, inum, newConfig);
-    console.debug(newConfig);
   };
 
   return (
