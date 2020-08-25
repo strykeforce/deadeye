@@ -11,8 +11,9 @@ def create_app():
     app.config.from_mapping(SECRET_KEY="dev")
 
     # pylint: disable=unused-variable
-    @app.route("/")
-    def index():
+    @app.route("/", defaults={"path": ""})
+    @app.route("/<path:path>")
+    def index(path):
         return render_template("index.html")
 
     @app.route("/manifest.json")
