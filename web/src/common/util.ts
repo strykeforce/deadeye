@@ -1,6 +1,6 @@
 import { Camera, Units } from "./models";
 
-export const messageOffset = "11vh";
+export const messageOffset = "60px";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const get = (p: string[]) => (o: any) =>
