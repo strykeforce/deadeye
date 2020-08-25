@@ -4,7 +4,7 @@ import json
 import os
 import sys
 from networktables import NetworkTables
-from .models import Unit
+from .models import Unit, Link
 
 
 class Api:
@@ -12,7 +12,8 @@ class Api:
         self.app = app
         self.socketio = SocketIO(app=app)
         self.thread = None  # background thread for client model refresh
-        self.refresh = False  # background thread broadcasts changes when True
+        self.refresh_units = False  # background thread broadcasts changes when True
+        self.refresh_link = False
         self.thread_lock = Lock()
         self.nt_connecting = False
         self.nt_connected = False
@@ -24,10 +25,14 @@ class Api:
         self.socketio.on_event("stream_config", self.handle_stream_config_event)
         self.socketio.on_event("image_upload", self.handle_image_upload_event)
         self.socketio.on_event("connect", self.handle_connect)
+
+        self.link = None
+        self.socketio.on_event("link_config", self.handle_link_config_event)
+        self.socketio.on_event("link_refresh", self.handle_link_refresh_event)
         self.running = True
 
     def handle_message(self, message):
-        self.refresh = True
+        self.refresh_units = True
         self.app.logger.info("received message: " + str(message))
 
     def handle_camera_control_event(self, message):
@@ -88,6 +93,15 @@ class Api:
             "unit: %s, camera: %s, stream: %s", unit.id, camera.id, camera.stream
         )
 
+    def handle_link_refresh_event(self, message):
+        self.app.logger.debug("Link refresh event")
+        self.refresh_link = True
+
+    def handle_link_config_event(self, message):
+        link = message["link"]
+        self.link.set_entries(link)
+        self.app.logger.debug("link: %s", link)
+
     def handle_connect(self):
         self.app.logger.debug("client connected")
         if not self.nt_connected and not self.nt_connecting:
@@ -106,7 +120,7 @@ class Api:
                 )
                 self.app.logger.debug("started model refresh thread")
 
-        self.refresh = self.nt_connected
+        self.refresh_units = self.nt_connected
 
     def nt_connection_listener(self, is_connected, info):
         self.nt_connected = is_connected
@@ -120,15 +134,23 @@ class Api:
         self.app.logger.debug("Initializing Deadeye Units")
         with self.app.app_context():
             Unit.init(self)
+            self.link = Link(self)
         self.app.logger.debug("Connected = %s, info = %s", is_connected, info)
 
     def background_thread(self, app):
         while self.running:
-            if self.refresh:
-                self.app.logger.debug("model refresh available")
+            if self.refresh_units:
+                self.app.logger.debug("units refresh available")
                 self.socketio.emit(
                     "refresh", json.dumps(Unit.units, default=lambda o: o.__dict__)
                 )
-                self.refresh = False
+                self.refresh_units = False
+            if self.refresh_link:
+                self.app.logger.debug("link refresh available")
+                self.socketio.emit(
+                    "link", json.dumps(self.link.entries, default=lambda o: o.__dict__)
+                )
+                self.refresh_link = False
+
             self.socketio.sleep(0.250)
         self.app.logger.warn("Exit model refresh thread")

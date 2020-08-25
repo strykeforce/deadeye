@@ -12,9 +12,10 @@ type Props = {
   camera: Camera;
 };
 
+const { TabPane } = Tabs;
+
 const CameraControls = (props: Props) => {
   const { camera } = props;
-  const { TabPane } = Tabs;
 
   return (
     <Tabs

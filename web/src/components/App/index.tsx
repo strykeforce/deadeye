@@ -1,10 +1,11 @@
 import { Router } from "@reach/router";
 import React, { useEffect, useState } from "react";
-import { close, sendMessage, subscribe } from "../../common/api";
+import { close, sendMessage, subscribeToUnitUpdates } from "../../common/api";
 import { Units } from "../../common/models";
 import CameraPage from "../../pages/CameraPage";
 import DefaultPage from "../../pages/DefaultPage";
 import "./app.less";
+import SettingsPage from "../../pages/SettingsPage";
 
 const App = () => {
   const [units, setUnits] = useState<Units>();
@@ -14,7 +15,7 @@ const App = () => {
       setUnits(JSON.parse(units));
     };
 
-    subscribe(handleUnitsChange);
+    subscribeToUnitUpdates(handleUnitsChange);
     return () => close();
   }, []);
 
@@ -28,10 +29,20 @@ const App = () => {
 
   console.debug(units);
 
+  let unitPages;
+  if (units) {
+    unitPages = (
+      <>
+        <CameraPage path="/id/:id" units={units} />
+        <SettingsPage path="/settings" units={units} />
+      </>
+    );
+  }
+
   return (
     <Router>
       <DefaultPage units={units} default />
-      {units && <CameraPage path="/id/:id" units={units} />}
+      {unitPages}
     </Router>
   );
 };

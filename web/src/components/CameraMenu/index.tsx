@@ -31,7 +31,6 @@ const CameraMenu = (props: Props) => {
     </Menu.Item>
   ));
 
-  console.debug(`id = ${id}, selectedId = ${selectedId}`);
   return (
     <>
       <div className="camera-menu__logo">
@@ -44,7 +43,11 @@ const CameraMenu = (props: Props) => {
         selectedKeys={selectedId ? [selectedId] : undefined}
       >
         {menuItems}
-        <Menu.Item key="settings" icon={<SettingOutlined />}></Menu.Item>
+        <Menu.Item
+          key="settings"
+          icon={<SettingOutlined />}
+          onClick={() => navigate("/settings")}
+        ></Menu.Item>
       </Menu>
     </>
   );

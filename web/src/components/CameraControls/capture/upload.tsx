@@ -5,6 +5,7 @@ import React from "react";
 import { configImageUpload, enableCamera } from "../../../common/api";
 import "../camera-controls.less";
 import { CaptureControlProps } from "../capture-pane";
+import { messageOffset } from "../../../common/util";
 
 const UploadConfigSubPane = (props: CaptureControlProps) => {
   return (
@@ -33,14 +34,14 @@ const UploadControl = (props: CaptureControlProps) => {
       message.success({
         content: `${info.file.name} file uploaded successfully`,
         style: {
-          marginTop: "8vh",
+          marginTop: messageOffset,
         },
       });
     } else if (info.file.status === "error") {
       message.error({
         content: `${info.file.name} file upload failed.`,
         style: {
-          marginTop: "8vh",
+          marginTop: messageOffset,
         },
       });
     }

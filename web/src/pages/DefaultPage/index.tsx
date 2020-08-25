@@ -1,12 +1,8 @@
-import { RouteComponentProps, navigate } from "@reach/router";
-import { Layout, Spin } from "antd";
+import { navigate, RouteComponentProps } from "@reach/router";
+import { Spin } from "antd";
 import React from "react";
-import CameraHeader from "../../components/CameraHeader";
-import PageContainer from "../../components/PageContainer";
 import { Units } from "../../common/models";
 import { getIds } from "../../common/util";
-
-const { Header, Content } = Layout;
 
 interface Props extends RouteComponentProps {
   id?: string;

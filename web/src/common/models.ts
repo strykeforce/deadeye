@@ -77,3 +77,9 @@ export interface PanelProps {
   units: Units;
   selectedId: string;
 }
+
+export interface Link {
+  address: string;
+  port: number;
+  enabled: boolean;
+}

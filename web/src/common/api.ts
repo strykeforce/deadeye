@@ -1,16 +1,38 @@
 import io from "socket.io-client";
-import { CaptureConfig, PipelineConfig, StreamConfig } from "./models";
+import { CaptureConfig, PipelineConfig, StreamConfig, Link } from "./models";
 
-let socket: SocketIOClient.Socket;
+const socket = io("http://" + document.domain + ":" + window.location.port);
 
-export const subscribe = (handleUnitsChange: (units: string) => void): void => {
-  socket = io("http://" + document.domain + ":" + window.location.port);
+socket.on("connect_error", (error: object) => {
+  console.error(error);
+});
+
+socket.on("error", (error: object) => {
+  console.error(error);
+});
+
+export const subscribeToUnitUpdates = (
+  handleUnitsChange: (units: string) => void
+): void => {
   socket.on("refresh", (data: string) => handleUnitsChange(data));
+};
+
+export const subscribeToLinkUpdates = (
+  handleLinksChange: (units: string) => void
+): void => {
+  socket.on("link", (data: string) => handleLinksChange(data));
+};
+
+export const unsubscribeFromLinkUpdates = () => {
+  socket.off("link");
 };
 
 export const close = (): void => {
   socket.close();
+  console.log("closed IO socket");
 };
+
+export const refreshLink = () => socket.emit("link_refresh", "pls");
 
 export const sendMessage = (msg: string) => socket.emit("message", msg);
 
@@ -39,7 +61,7 @@ export const configCapture = (
 ): void => {
   const message = { unit, inum, capture };
   socket.emit("capture_config", message);
-  console.log(`configCapture: ${JSON.stringify(message)}`);
+  // console.log(`configCapture: ${JSON.stringify(message)}`);
 };
 
 export const configPipeline = (
@@ -71,5 +93,11 @@ export const configImageUpload = (
 ): void => {
   const message = { unit, inum, image: upload };
   socket.emit("image_upload", message);
-  console.log(`configImageUpload: ${JSON.stringify(message)}`);
+  // console.log(`configImageUpload: ${JSON.stringify(message)}`);
+};
+
+export const configLink = (link: Link[]) => {
+  const message = { link };
+  socket.emit("link_config", message);
+  console.log(`configLink: ${JSON.stringify(message)}`);
 };

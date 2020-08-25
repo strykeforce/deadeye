@@ -2,12 +2,12 @@ import { Col, message, Row, Select, Slider } from "antd";
 import React, { useState } from "react";
 import { configCapture, enableCamera } from "../../common/api";
 import { CaptureConfig } from "../../common/models";
-import { key } from "../../common/util";
+import { key, messageOffset } from "../../common/util";
 import "./camera-controls.less";
 import JetsonConfigSubPane from "./capture/jetson";
 import TestConfigSubPane from "./capture/test";
-import DebugPane from "./debug";
 import UploadConfigSubPane from "./capture/upload";
+import DebugPane from "./debug";
 
 type Props = {
   unit: string;
@@ -29,7 +29,7 @@ const CapturePane = (props: Props) => {
       message.warn({
         content: "Restart camera capture for changes to take effect.",
         style: {
-          marginTop: "8vh",
+          marginTop: messageOffset,
         },
       });
       setRestartDisplayed(true);
