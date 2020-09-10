@@ -454,14 +454,22 @@ void Controller::StartNetworkTables() {
       },
       0, UINT_MAX);
 
+  char* env_nt_server = std::getenv("DEADEYE_NT_SERVER");
+  const char* nt_server = env_nt_server ? env_nt_server : NT_SERVER;
+
+  // create own NT server if DEADEYE_NT_SERVER=127.0.0.1
+  if (std::strncmp("127.0.0.1", nt_server, 15) == 0) {
+    spdlog::info("Starting local NetworkTables server");
+    nt::StartServer(inst_, "network_tables.ini", nt_server, NT_DEFAULT_PORT);
+    return;
+  }
+
+  // else connect to server at DEADEYE_NT_SERVER and wait for connection
   std::promise<void> barrier;
   std::future<void> barrier_future = barrier.get_future();
 
   auto conn_listener = nt::AddConnectionListener(
       inst_, [&](auto event) mutable { barrier.set_value(); }, true);
-
-  char* env_nt_server = std::getenv("DEADEYE_NT_SERVER");
-  const char* nt_server = env_nt_server ? env_nt_server : NT_SERVER;
 
   spdlog::info("Starting NetworkTables client connecting to {}", nt_server);
   nt::StartClient(inst_, nt_server, NT_DEFAULT_PORT);
