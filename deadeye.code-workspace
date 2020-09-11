@@ -14,7 +14,7 @@
     },
     {
       "name": "Client Library",
-      "path": "deadeye-java"
+      "path": "client"
     },
     {
       "name": "CLI",
