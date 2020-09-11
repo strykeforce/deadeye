@@ -10,24 +10,24 @@
 
 - name: Install pip packages
   pip:
-    requirements: "{{ deadeye_src }}/admin-server/requirements.txt"
+    requirements: "{{ deadeye_src }}/admin/requirements.txt"
     virtualenv: /opt/deadeye
     virtualenv_python: python3
 
 - name: Clean admin dist dir
   file:
-    path: "{{ deadeye_src }}/admin-server/dist"
+    path: "{{ deadeye_src }}/admin/dist"
     state: absent
 
 - name: Link web build files
   file:
     src: "{{ deadeye_src }}/web/build"
-    dest: "{{ deadeye_src }}/admin-server/deadeye/assets"
+    dest: "{{ deadeye_src }}/admin/deadeye/assets"
     state: link
 
 - name: Build installation archive
   command:
-    chdir: "{{ deadeye_src }}/admin-server"
+    chdir: "{{ deadeye_src }}/admin"
     argv:
       - /usr/bin/python3
       - setup.py
@@ -37,7 +37,7 @@
   pip:
     virtualenv: /opt/deadeye
     virtualenv_python: python3
-    name: file://{{ deadeye_src }}/admin-server/dist/deadeye-{{ deadeye_version }}.tar.gz
+    name: file://{{ deadeye_src }}/admin/dist/deadeye-{{ deadeye_version }}.tar.gz
     state: latest
   tags: foo
 

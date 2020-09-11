@@ -1,4 +1,0 @@
-[NetworkTables Storage 3.0]
-string "/Deadeye/Config"="{\"address\":\"10.27.67.2\",\"enabled\":false,\"port\":5800}"
-string "/Deadeye/E/0/Capture"="{\"ch\":0,\"cw\":0,\"exp\":0.0,\"flip\":0,\"fps\":60,\"oh\":180,\"ow\":320,\"type\":\"test\"}"
-string "/Deadeye/E/0/Pipeline"="{\"filter\": {\"area\": [0, 1], \"aspect\": [0, 20], \"fullness\": [0, 1]}, \"hue\": [120, 255], \"log\": {\"fps\": 0, \"mount\": true, \"path\": \"/var/opt/deadeye\"}, \"sat\": [0, 255], \"sn\": 1, \"val\": [0, 255]}"
