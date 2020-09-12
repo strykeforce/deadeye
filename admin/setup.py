@@ -11,5 +11,6 @@ setup(
     entry_points="""
         [console_scripts]
         deadeye-server=deadeye.scripts.server:main
+        deadeye=deadeye.scripts.cli:main
     """,
 )
