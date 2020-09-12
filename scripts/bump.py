@@ -58,7 +58,7 @@ class Version:
 
     def update_admin(self):
         """ Bump setup.py version."""
-        setup = self.deadeye_dir / "admin-server" / "setup.py"
+        setup = self.deadeye_dir / "admin" / "setup.py"
 
         with open(setup, "r") as file:
             lines = file.readlines()

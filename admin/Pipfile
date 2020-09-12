@@ -3,20 +3,18 @@ name = "pypi"
 url = "https://pypi.org/simple"
 verify_ssl = true
 
-[scripts]
-server = "python ./deadeye/server/main.py"
-
 [dev-packages]
 black = "*"
 pylint = "*"
 rope = "*"
-deadeye = {editable = true,path = "."}
+deadeye = {editable = true, path = "."}
 
 [packages]
 flask-socketio = "*"
 pynetworktables = "*"
 eventlet = "*"
 flask = "*"
+click = "*"
 
 [requires]
 python_version = "3.8"

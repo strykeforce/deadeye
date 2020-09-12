@@ -6,4 +6,4 @@ This is a vision system for FRC robots, designed to be run on a vision coprocess
 
 - [Vision Daemon](./daemon/) - C++ vision capture and processing pipeline.
 - [Admin Web UI](./admin-web) - React web interface to manage Deadeye vision system.
-- [Admin Server](./admin-server/) - Python web service to connect admin web UI to vision daemon back-end.
+- [Admin Server and Tools](./admin/) - Python web service to connect admin web UI to vision daemon back-end.

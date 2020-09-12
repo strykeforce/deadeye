@@ -5,8 +5,8 @@
       "path": "daemon"
     },
     {
-      "name": "Admin Server",
-      "path": "admin-server"
+      "name": "Admin Server and Tool",
+      "path": "admin"
     },
     {
       "name": "Web",

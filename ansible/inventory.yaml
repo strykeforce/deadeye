@@ -3,28 +3,30 @@ deadeye:
   hosts:
     deadeye-a:
       ansible_host: deadeye-a.local
-      ansible_user: deadeye
       deadeye_unit: A
       camera_0_pipeline: deadeye::MinAreaRectPipeline
     deadeye-b:
       ansible_host: deadeye-b.local
-      ansible_user: jeff
       deadeye_unit: B
       camera_0_pipeline: deadeye::DefaultPipeline
       camera_1_pipeline: deadeye::DefaultPipeline
     deadeye-c:
       ansible_host: deadeye-c.local
-      ansible_user: deadeye
       deadeye_unit: C
       camera_0_pipeline: deadeye::MinAreaRectPipeline
       camera_1_pipeline: deadeye::UprightRectPipeline
     deadeye-d:
       ansible_host: deadeye-d.local
-      ansible_user: deadeye
       deadeye_unit: D
       camera_0_pipeline: deadeye::MinAreaRectPipeline
+    deadeye-t:
+      ansible_host: deadeye-t.local
+      deadeye_unit: T
+      camera_0_pipeline: deadeye::MinAreaRectPipeline
+      install_opencv: true
   vars:
     ansible_python_interpreter: /usr/bin/python3
+    ansible_user: deadeye
     ansible_become: true
     build_user: root
     build_type: Release
