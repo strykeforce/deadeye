@@ -1,33 +1,9 @@
 ---
 - name: Set jhh authorized keys
   authorized_key:
-    user: '{{ build_user }}'
+    user: "{{ build_user }}"
     state: present
     key: https://github.com/jhh.keys
-
-- name: Copy private deploy key
-  copy:
-    src: '{{ item.name }}'
-    dest: '/root/.ssh/'
-    owner: '{{ build_user }}'
-    group: '{{ build_user }}'
-    mode: '{{ item.mode }}'
-  loop:
-    - { name: 'id_deadeye', mode: 600 }
-    - { name: 'id_deadeye.pub', mode: 664 }
-
-- name: Configure ssh to use deploy key
-  blockinfile:
-    path: '/root/.ssh/config'
-    create: true
-    owner: '{{ build_user }}'
-    group: '{{ build_user }}'
-    mode: 0600
-    block: |
-      Host github.com
-        User git
-        IdentityFile "/root/.ssh/id_deadeye"
-        IdentitiesOnly yes
 
 - name: Install git
   apt:
@@ -37,8 +13,6 @@
 
 - name: Clone repo
   git:
-    repo: '{{ deadeye_repo }}'
-    dest: '{{ deadeye_src }}'
-    accept_hostkey: true
-    key_file: '/root/.ssh/id_deadeye'
+    repo: "{{ deadeye_repo }}"
+    dest: "{{ deadeye_src }}"
   register: deadeye_repo

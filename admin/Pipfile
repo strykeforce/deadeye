@@ -15,6 +15,7 @@ pynetworktables = "*"
 eventlet = "*"
 flask = "*"
 click = "*"
+ansible = "*"
 
 [requires]
 python_version = "3.8"

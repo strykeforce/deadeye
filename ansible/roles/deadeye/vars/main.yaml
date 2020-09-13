@@ -1,6 +1,6 @@
 ---
 deadeye_version: 20.3.0 # updated by scripts/bump.py
-deadeye_repo: git@github.com:strykeforce/deadeye.git
+deadeye_repo: https://github.com/strykeforce/deadeye.git
 deadeye_src: /opt/deadeye/src
 deadeye_conf: /etc/opt/deadeye
 deadeye_mount: /var/opt/deadeye
