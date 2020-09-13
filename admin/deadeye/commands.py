@@ -91,7 +91,7 @@ def upgrade(ctx):
     run(
         ctx,
         [
-            "ansible-playbook",
+            f"{BIN_DIR}/ansible-playbook",
             "--connection=local",
             "--inventory=inventory.yaml",
             f"--limit={hostname}",
