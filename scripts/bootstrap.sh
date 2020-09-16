@@ -42,6 +42,7 @@ function install_deadeye_cli() {
 	[[ ! -e /usr/local/bin/deadeye ]] && ln -s $DEADEYE/bin/deadeye /usr/local/bin/
 	echo
 	echo "Finish installation: deadeye update --provision"
+	echo
 }
 
 if [ "$EUID" -ne 0 ]

@@ -56,6 +56,7 @@ def status(ctx):
         [
             "/bin/systemctl",
             "status",
+            "--no-pager",
             DAEMON_SERVICE,
             ADMIN_SERVICE,
             SHUTDOWN_SERVICE,
