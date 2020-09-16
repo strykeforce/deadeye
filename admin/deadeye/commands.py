@@ -24,10 +24,12 @@ def cli(ctx, verbose):
     pass
 
 
-def run(ctx, args):
+def run(ctx, args, quit=True):
     if ctx.obj["VERBOSE"]:
         click.echo(f"{click.style('command', bold=True)}: {' '.join(args)}")
-    sys.exit(subprocess.run(args).returncode)
+    if quit:
+        sys.exit(subprocess.run(args).returncode)
+    subprocess.run(args)
 
 
 @cli.command()
@@ -79,10 +81,7 @@ def restart(ctx):
     )
 
 
-@cli.command()
-@click.pass_context
-def upgrade(ctx):
-    "Upgrade Deadeye to latest version."
+def run_playbook(ctx, playbook, quit=True):
     os.chdir(ANSIBLE_DIR)
     if os.getenv("DEADEYE_MODE") == "development":
         os.chdir("/home/deadeye/deadeye/ansible")
@@ -95,6 +94,17 @@ def upgrade(ctx):
             "--connection=local",
             "--inventory=inventory.yaml",
             f"--limit={hostname}",
-            "deploy.yaml",
+            f"{playbook}.yaml",
         ],
+        quit,
     )
+
+
+@cli.command()
+@click.option("--provision", is_flag=True, help="Install prequisites before update.")
+@click.pass_context
+def update(ctx, provision):
+    "Update Deadeye to latest version."
+    if provision:
+        run_playbook(ctx, "provision", quit=False)
+    run_playbook(ctx, "deploy")
