@@ -14,8 +14,7 @@ TEST_CASE("TargetData to JSON", "[link]") {
 }
 
 TEST_CASE("UprightTargetData to JSON", "[link]") {
-  UprightTargetData td{"Z1", 1, true, cv::Rect{0, 0, 100, 100},
-                       cv::Point{50, 50}};
+  UprightTargetData td{"Z1", 1, true, cv::Rect{0, 0, 100, 100}};
 
   json expected = R"({"d":[0,0,100,100,50,50],"id":"Z1","sn":1,"v":true})"_json;
   json j = json::parse(td.Dump());
@@ -25,7 +24,6 @@ TEST_CASE("UprightTargetData to JSON", "[link]") {
 // 320x180 test pattern hue = [90, 90]
 TEST_CASE("Offset test - Cyan", "[link") {
   cv::Rect bb{cv::Point{91, 30}, cv::Point{137, 150}};
-  cv::Point center{160, 90};
-  UprightTargetData td{"Z1", 1, true, bb, center};
+  UprightTargetData td{"Z1", 1, true, bb};
   REQUIRE(td.bb == bb);
 }

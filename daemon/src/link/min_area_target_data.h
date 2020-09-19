@@ -8,6 +8,7 @@ using json = nlohmann::json;
 
 namespace deadeye {
 struct MinAreaTargetData : public TargetData {
+  /*
   static const char* kBLX;
   static const char* kBLY;
   static const char* kTLX;
@@ -21,13 +22,14 @@ struct MinAreaTargetData : public TargetData {
   static const char* kWKey;
   static const char* kHKey;
   static const char* kAngleKey;
+  */
 
   cv::RotatedRect rect;
-  cv::Point2f offset;
+  cv::Point center;
   cv::Point2f corners[4];
 
   MinAreaTargetData(std::string id, int sn, bool valid, cv::RotatedRect rect,
-                    cv::Point2f center);
+                    cv::Point center);
 
   void DrawMarkers(cv::Mat& preview) const override;
   std::string Dump() const override;

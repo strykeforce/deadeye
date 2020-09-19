@@ -15,7 +15,8 @@ class TargetDataTest {
         buffer.writeUtf8("{\"id\":\"Z1\",\"sn\":1,\"v\":true}");
 
         TargetData exp = new TargetData("Z1", 1, true);
-        @SuppressWarnings("unchecked") DeadeyeJsonAdapter<TargetData> jsonAdapter = new TargetData().getJsonAdapter();
+        @SuppressWarnings("unchecked") DeadeyeJsonAdapter<TargetData> jsonAdapter =
+                new TargetData().getJsonAdapter();
         TargetData td = jsonAdapter.fromJson(buffer);
         assertEquals(exp, td);
 
@@ -28,7 +29,8 @@ class TargetDataTest {
     @Test
     void testTargetDataSerialization() throws IOException {
         TargetData expected = new TargetData("Z1", 1, true);
-        @SuppressWarnings("unchecked") DeadeyeJsonAdapter<TargetData> jsonAdapter = new TargetData().getJsonAdapter();
+        @SuppressWarnings("unchecked") DeadeyeJsonAdapter<TargetData> jsonAdapter =
+                new TargetData().getJsonAdapter();
         String json = jsonAdapter.toJson(expected);
         Buffer buffer = new Buffer();
         buffer.writeUtf8(json);
@@ -75,6 +77,56 @@ class TargetDataTest {
         buffer.writeUtf8(json);
 
         UprightRectTargetData td = jsonAdapter.fromJson(buffer);
+        assertEquals(expected, td);
+    }
+
+    @Test
+    void testMinAreaRectTargetDataDeserialization() throws IOException {
+        Buffer buffer = new Buffer();
+        buffer.writeUtf8("{\"id\":\"Z1\",\"d\":[1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0,11.0," +
+                "12.0,13.0],\"sn\":3,\"v\":true}");
+
+        double angle = 1;
+        Point2D center = new Point2D(2, 3);
+        double height = 4;
+        double width = 5;
+        Point2D[] points = new Point2D[]{
+                new Point2D(6, 7),
+                new Point2D(8, 9),
+                new Point2D(10, 11),
+                new Point2D(12, 13),
+        };
+        MinAreaRectTargetData exp = new MinAreaRectTargetData("Z1", 3, true, angle, center, width,
+                height, points);
+        @SuppressWarnings("unchecked") DeadeyeJsonAdapter<MinAreaRectTargetData> jsonAdapter =
+                new MinAreaRectTargetData().getJsonAdapter();
+        MinAreaRectTargetData td = jsonAdapter.fromJson(buffer);
+        assertEquals(exp, td);
+    }
+
+    @Test
+    void testMinAreaRectTargetDataSerialization() throws IOException {
+        double angle = 1;
+        Point2D center = new Point2D(2, 3);
+        double height = 4;
+        double width = 5;
+        Point2D[] points = new Point2D[]{
+                new Point2D(6, 7),
+                new Point2D(8, 9),
+                new Point2D(10, 11),
+                new Point2D(12, 13),
+        };
+        MinAreaRectTargetData expected = new MinAreaRectTargetData("Z1", 3, true, angle, center,
+                width,
+                height, points);
+
+        @SuppressWarnings("unchecked") DeadeyeJsonAdapter<MinAreaRectTargetData> jsonAdapter =
+                new MinAreaRectTargetData().getJsonAdapter();
+        String json = jsonAdapter.toJson(expected);
+        Buffer buffer = new Buffer();
+        buffer.writeUtf8(json);
+
+        MinAreaRectTargetData td = jsonAdapter.fromJson(buffer);
         assertEquals(expected, td);
     }
 

@@ -2,11 +2,11 @@ package org.strykeforce.deadeye;
 
 import java.util.Objects;
 
-public final class Point {
-    final int x;
-    final int y;
+public final class Point2D {
+    final double x;
+    final double y;
 
-    public Point(int x, int y) {
+    public Point2D(double x, double y) {
         this.x = x;
         this.y = y;
     }
@@ -29,7 +29,7 @@ public final class Point {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Point point = (Point) o;
+        Point2D point = (Point2D) o;
         return x == point.x && y == point.y;
     }
 

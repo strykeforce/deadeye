@@ -13,25 +13,29 @@ public class UprightRectTargetData extends TargetData {
 
     static final int DATA_LENGTH = 6;
 
+    /**
+     * Bounding box top-left corner point.
+     */
     final Point topLeft;
+    /**
+     * Bounding box bottom-right corner point.
+     */
     final Point bottomRight;
+    /**
+     * Bounding box center.
+     */
     final Point center;
 
     public UprightRectTargetData() {
-        this(null, 0, false, null, null, null);
+        this("", 0, false, new Point(0, 0), new Point(0, 0), new Point(0, 0));
     }
 
-    public UprightRectTargetData(String id, int serial, boolean valid, Point topLeft, Point bottomRight, Point center) {
+    public UprightRectTargetData(String id, int serial, boolean valid, Point topLeft,
+                                 Point bottomRight, Point center) {
         super(id, serial, valid);
         this.topLeft = topLeft;
         this.bottomRight = bottomRight;
         this.center = center;
-    }
-
-    @Override
-    @SuppressWarnings("rawtypes")
-    public DeadeyeJsonAdapter getJsonAdapter() {
-        return new JsonAdapterImpl();
     }
 
     public int area() {
@@ -44,6 +48,12 @@ public class UprightRectTargetData extends TargetData {
 
     public int height() {
         return bottomRight.y - topLeft.y;
+    }
+
+    @Override
+    @SuppressWarnings("rawtypes")
+    public DeadeyeJsonAdapter getJsonAdapter() {
+        return new JsonAdapterImpl();
     }
 
     @Override
@@ -67,14 +77,15 @@ public class UprightRectTargetData extends TargetData {
         return "UprightRectTargetData{" +
                 "topLeft=" + topLeft +
                 ", bottomRight=" + bottomRight +
-                ", offset=" + center +
+                ", center=" + center +
                 "} " + super.toString();
     }
 
     private static class JsonAdapterImpl implements DeadeyeJsonAdapter<UprightRectTargetData> {
 
-        //json d field: bb.tl().x, bb.tl().y, bb.br().x, bb.br().y, center.x, center.y
-        private static final JsonReader.Options OPTIONS = JsonReader.Options.of("id", "sn", "v", "d");
+        // json d field: bb.tl().x, bb.tl().y, bb.br().x, bb.br().y, center.x, center.y
+        private static final JsonReader.Options OPTIONS = JsonReader.Options.of("id", "sn", "v",
+                "d");
 
         @Override
         public UprightRectTargetData fromJson(BufferedSource source) throws IOException {
