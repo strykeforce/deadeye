@@ -63,8 +63,8 @@ class Version:
         with open(setup, "r") as file:
             lines = file.readlines()
 
-        assert lines[4].startswith("    version=")
-        lines[4] = f'    version="{self.version()}",  # updated by scripts/bump.py\n'
+        assert lines[5].startswith("    version=")
+        lines[5] = f'    version="{self.version()}",  # updated by scripts/bump.py\n'
 
         with open(setup, "w") as file:
             file.writelines(lines)
