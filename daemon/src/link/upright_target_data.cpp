@@ -8,12 +8,11 @@ using namespace deadeye;
 using json = nlohmann::json;
 
 UprightTargetData::UprightTargetData(std::string id, int sn, bool valid,
-                                     cv::Rect bb, cv::Point center)
-    : TargetData{id, sn, valid}, bb(bb), center(center) {}
+                                     cv::Rect bb)
+    : TargetData{id, sn, valid}, bb(bb), center((bb.tl() + bb.br()) / 2) {}
 
 void UprightTargetData::DrawMarkers(cv::Mat& preview) const {
-  cv::Point target = (bb.tl() + bb.br()) / 2;
-  cv::drawMarker(preview, target, cv::Scalar::all(255));
+  cv::drawMarker(preview, center, cv::Scalar::all(255));
   cv::rectangle(preview, bb, cv::Scalar(255, 0, 0));
 }
 
