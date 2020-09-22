@@ -24,6 +24,7 @@ deadeye:
       deadeye_unit: H
       camera_0_pipeline: deadeye::UprightRectPipeline
       camera_1_pipeline: deadeye::MinAreaRectPipeline
+      install_opencv: true
     deadeye-t:
       ansible_host: deadeye-t.local
       deadeye_unit: T
