@@ -125,6 +125,9 @@ class Api:
     def nt_connection_listener(self, is_connected, info):
         self.nt_connected = is_connected
         self.nt_connecting = not is_connected
+        if not is_connected:
+            self.app.logger.debug("Not connected, returning")
+            return
         root = NetworkTables.getGlobalTable()
         if not root.containsSubTable("Deadeye"):
             self.app.logger.fatal("Deadeye subtable missing from Network Tables")
