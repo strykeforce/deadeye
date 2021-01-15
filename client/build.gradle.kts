@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "org.strykeforce"
-version = "20.8.0"
+version = "20.8.3"
 
 repositories {
     jcenter()
@@ -35,6 +35,8 @@ dependencies {
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
+    withSourcesJar()
+    withJavadocJar()
 }
 
 allprojects {

@@ -3,8 +3,8 @@ package org.strykeforce.deadeye;
 import java.util.Objects;
 
 public final class Point2D {
-    final double x;
-    final double y;
+    public final double x;
+    public final double y;
 
     public Point2D(double x, double y) {
         this.x = x;

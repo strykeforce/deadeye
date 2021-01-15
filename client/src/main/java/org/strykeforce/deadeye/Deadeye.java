@@ -78,7 +78,7 @@ public class Deadeye<T extends TargetData> {
 
         try {
             Constructor<T> constructor = cls.getConstructor();
-            T targetData = constructor.newInstance();
+            targetData = constructor.newInstance();
             jsonAdapter = targetData.getJsonAdapter();
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             logger.error("Unable to initialize target data", e);

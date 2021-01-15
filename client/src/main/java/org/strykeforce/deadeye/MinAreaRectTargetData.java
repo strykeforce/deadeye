@@ -16,23 +16,23 @@ public class MinAreaRectTargetData extends TargetData {
     /**
      * Angle of OpenCV rotated rectangle.
      */
-    final double angle;
+    public final double angle;
     /**
      * Center of OpenCV rotated rectangle.
      */
-    final Point2D center;
+    public final Point2D center;
     /**
      * Width of OpenCV rotated rectangle.
      */
-    final double width;
+    public final double width;
     /**
      * Height of OpenCV rotated rectangle.
      */
-    final double height;
+    public final double height;
     /**
      * Vertices of OpenCV rotated rectangle.
      */
-    final Point2D[] points;
+    public final Point2D[] points;
 
     public MinAreaRectTargetData() {
         this("", 0, false, 0, new Point2D(0, 0), 0, 0, new Point2D[0]);

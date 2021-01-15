@@ -16,15 +16,15 @@ public class UprightRectTargetData extends TargetData {
     /**
      * Bounding box top-left corner point.
      */
-    final Point topLeft;
+    public final Point topLeft;
     /**
      * Bounding box bottom-right corner point.
      */
-    final Point bottomRight;
+    public final Point bottomRight;
     /**
      * Bounding box center.
      */
-    final Point center;
+    public final Point center;
 
     public UprightRectTargetData() {
         this("", 0, false, new Point(0, 0), new Point(0, 0), new Point(0, 0));
