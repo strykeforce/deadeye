@@ -4,9 +4,9 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [scripts]
-bootstrap = "echo ansible-playbook -i inventory.yaml bootstrap.yaml -e hostname=<inventory host>"
-provision = "ansible-playbook -i inventory.yaml --vault-password-file=.vaultpw provision.yaml"
+bootstrap = "echo ansible-playbook -i inventory.yaml bootstrap.yaml -e hostname=<inventory host>" 
 deploy = "ansible-playbook -i inventory.yaml --vault-password-file=.vaultpw deploy.yaml" # -l deadeye-b
+provision = "ansible-playbook -i inventory.yaml --vault-password-file=.vaultpw provision.yaml" 
 
 [dev-packages]
 
@@ -14,4 +14,4 @@ deploy = "ansible-playbook -i inventory.yaml --vault-password-file=.vaultpw depl
 ansible = "*"
 
 [requires]
-python_version = "3.8"
+python_version = "3.9"

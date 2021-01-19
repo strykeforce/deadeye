@@ -2,21 +2,21 @@
 deadeye:
   hosts:
     deadeye-a:
-      ansible_host: deadeye-a.local
+      ansible_host: deadeye-a
       deadeye_unit: A
       camera_0_pipeline: deadeye::MinAreaRectPipeline
     deadeye-b:
-      ansible_host: deadeye-b.local
+      ansible_host: deadeye-b
       deadeye_unit: B
       camera_0_pipeline: deadeye::DefaultPipeline
       camera_1_pipeline: deadeye::DefaultPipeline
     deadeye-c:
-      ansible_host: deadeye-c.local
+      ansible_host: deadeye-c
       deadeye_unit: C
       camera_0_pipeline: deadeye::MinAreaRectPipeline
       camera_1_pipeline: deadeye::UprightRectPipeline
     deadeye-d:
-      ansible_host: deadeye-d.local
+      ansible_host: deadeye-d
       deadeye_unit: D
       camera_0_pipeline: deadeye::MinAreaRectPipeline
     deadeye-h:
