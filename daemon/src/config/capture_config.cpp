@@ -33,6 +33,8 @@ std::string CaptureConfig::PipelineType() const {
       return "test";
     case CaptureType::file:
       return "file";
+    case CaptureType::usb:
+      return "usb";
     default:
       return "UNKNOWN";
   }
