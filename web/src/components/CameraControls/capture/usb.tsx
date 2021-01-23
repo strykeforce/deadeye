@@ -1,4 +1,4 @@
-import { Col, Input, Row, Select } from "antd";
+import { Col, Input, Row } from "antd";
 import React, { useState } from "react";
 import { configCapture, enableCamera } from "../../../common/api";
 import { key } from "../../../common/util";
