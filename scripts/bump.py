@@ -37,9 +37,12 @@ class Version:
 
     def bump_major(self):
         self.major_vers = self.major_vers + 1
+        self.minor_vers = 0
+        self.patch_vers = 0
 
     def bump_minor(self):
         self.minor_vers = self.minor_vers + 1
+        self.patch_vers = 0
 
     def bump_patch(self):
         self.patch_vers = self.patch_vers + 1
