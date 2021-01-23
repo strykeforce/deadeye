@@ -1,7 +1,7 @@
 ---
 - name: Unarchive sources
   unarchive:
-    src: https://github.com/jhh/readerwriterqueue/archive/v{{ readerwriterqueue_version }}.tar.gz
+    src: https://github.com/cameron314/readerwriterqueue/archive/v{{ readerwriterqueue_version }}.tar.gz
     dest: /usr/local/src
     remote_src: true
   tags:
