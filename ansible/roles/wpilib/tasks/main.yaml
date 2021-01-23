@@ -21,11 +21,16 @@
       - /usr/bin/cmake
       - -DCMAKE_BUILD_TYPE=Release
       - -DCMAKE_INSTALL_PREFIX=/usr/local
+      - -DWITH_JAVA=OFF
+      - -DWITH_CSCORE=ON
+      - -DWITH_WPIMATH=OFF
+      - -DWITH_WPILIB=OFF
+      - -DWITH_OLD_COMMANDS=OFF
+      - -DWITH_EXAMPLES=OFF
+      - -DWITH_TESTS=OFF
+      - -DWITH_GUI=OFF
+      - -DWITH_SIMULATION_MODULES=OFF
       - -DFLAT_INSTALL_WPILIB={{ "ON" if (ansible_architecture == "x86_64") else "OFF" }}
-      - -DUSE_EXTERNAL_HAL=OFF
-      - -DWITHOUT_ALLWPILIB=ON
-      - -DWITHOUT_CSCORE=OFF
-      - -DWITHOUT_JAVA=ON
       - -GNinja
       - ..
   environment:
