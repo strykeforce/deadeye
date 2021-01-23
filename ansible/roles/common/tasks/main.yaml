@@ -12,5 +12,6 @@
       - build-essential
       - cmake
       - ninja-build
+      - curl
   tags:
     - common
