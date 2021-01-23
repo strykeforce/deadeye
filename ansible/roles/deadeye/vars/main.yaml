@@ -4,5 +4,4 @@ deadeye_repo: https://github.com/strykeforce/deadeye.git
 deadeye_src: /opt/deadeye/src
 deadeye_conf: /etc/opt/deadeye
 deadeye_mount: /var/opt/deadeye
-deadeye_node_version: 13.x
 deadeye_build_tests: OFF
