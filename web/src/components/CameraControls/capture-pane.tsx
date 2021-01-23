@@ -136,7 +136,7 @@ const DimensionSelect = (props: CaptureControlProps) => {
   const values = [config.w, config.h];
   const { Option } = Select;
 
-  const type = `${values[0]}x${values[1]}`;
+  const dims = `${values[0]}x${values[1]}`;
 
   const handleChange = (value: string) => {
     const [w, h] = value.split("x", 2).map((n) => parseInt(n));
@@ -146,17 +146,33 @@ const DimensionSelect = (props: CaptureControlProps) => {
     displayRestartMessage();
   };
 
+  let options;
+  if (config.type === "usb") {
+    options = (
+      <>
+        <Option value="640x480">640 x 480 px</Option>
+        <Option value="640x360">640 x 360 px</Option>
+      </>
+    );
+  } else {
+    options = (
+      <>
+        <Option value="1280x720">1280 x 720 px</Option>
+        <Option value="960x540">960 x 540 px</Option>
+        <Option value="640x360">640 x 360 px</Option>
+        <Option value="320x180">320 x 180 px</Option>
+      </>
+    );
+  }
+
   return (
     <Row className="capture-pane-control">
       <Col span={6} className="capture-pane-control__label">
         Output
       </Col>
       <Col span={18}>
-        <Select value={type} onChange={handleChange} key={key(unit, inum, 5)}>
-          <Option value="1280x720">1280 x 720 px</Option>
-          <Option value="960x540">960 x 540 px</Option>
-          <Option value="640x360">640 x 360 px</Option>
-          <Option value="320x180">320 x 180 px</Option>
+        <Select value={dims} onChange={handleChange} key={key(unit, inum, 5)}>
+          {options}
         </Select>
       </Col>
     </Row>
