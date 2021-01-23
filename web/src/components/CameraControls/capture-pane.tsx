@@ -7,6 +7,7 @@ import "./camera-controls.less";
 import JetsonConfigSubPane from "./capture/jetson";
 import TestConfigSubPane from "./capture/test";
 import UploadConfigSubPane from "./capture/upload";
+import UsbConfigSubPane from "./capture/usb";
 import DebugPane from "./debug";
 
 type Props = {
@@ -50,6 +51,8 @@ const CapturePane = (props: Props) => {
         return (
           <UploadConfigSubPane {...props} onChange={displayRestartMessage} />
         );
+      case "usb":
+        return <UsbConfigSubPane {...props} onChange={displayRestartMessage} />;
       default:
         return null;
     }
@@ -119,6 +122,7 @@ const TypeSelect = (props: CaptureControlProps) => {
           >
             <Option value="test">Test Pattern</Option>
             <Option value="jetson">Jetson Nano</Option>
+            <Option value="usb">USB Camera</Option>
             <Option value="file">Image Upload</Option>
           </Select>
         </Col>
