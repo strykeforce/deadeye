@@ -36,7 +36,7 @@ const MadeWithLove = () => (
     <Link type="secondary" target="_blank" href="https://www.strykeforce.org/">
       Stryke Force
     </Link>
-    {" © 2020"}
+    {" © 2020-2021"}
   </Text>
 );
 
