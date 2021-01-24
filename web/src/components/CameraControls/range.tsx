@@ -1,4 +1,5 @@
 import { Slider, InputNumber, Row, Col } from "antd";
+import { InputNumberProps } from "antd/lib/input-number";
 import React from "react";
 import "./camera-controls.less";
 
@@ -14,12 +15,12 @@ type Props = {
 const Range = (props: Props) => {
   const { name, min = 0, max = 255, step = 1, values, onChange } = props;
 
-  const onMinChange = (value: string | number | undefined) => {
+  const onMinChange = (value: string | number | null | undefined) => {
     const min = typeof value === "number" ? value : values[0];
     onChange([min, values[1]]);
   };
 
-  const onMaxChange = (value: string | number | undefined) => {
+  const onMaxChange = (value: string | number | null | undefined) => {
     const max = typeof value === "number" ? value : values[1];
     onChange([values[0], max]);
   };
