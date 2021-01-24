@@ -132,7 +132,7 @@ const Float = (props: FloatProps) => {
       break;
   }
 
-  const handleChange = (value: string | number | undefined) => {
+  const handleChange = (value: string | number | null | undefined) => {
     let val = Number(value);
     if (val > max) {
       val = max;
@@ -196,7 +196,7 @@ const GainRange = (props: GainRangeProps) => {
   };
 
   const handleChange = (which: "lower" | "upper") => (
-    value: string | number | undefined
+    value: string | number | null | undefined
   ) => {
     let n = Number(value);
     if (which === "lower") {
