@@ -19,8 +19,24 @@ UsbCsCore::UsbCsCore(const CaptureConfig& config) {
   auto info = camera.GetInfo();
   spdlog::info("UsbCsCore: camera={}, device={}", info.name, info.path);
 
-  //   auto json = camera.GetConfigJson();
-  //   spdlog::debug("UsbCsCore: {}", json);
+  auto brightness = j.value("brightness", camera.GetBrightness());  // 0 - 100
+  camera.SetBrightness(brightness);
+
+  auto ae_lock = j.value("aeLock", true);  // auto exposure
+  if (ae_lock) {
+    camera.SetExposureAuto();
+  } else {
+    auto exposure = j.value("exposure", 25);  // 0 - 100
+    camera.SetExposureManual(exposure);
+  }
+
+  auto awb_lock = j.value("awbLock", true);  // auto white balance
+  if (awb_lock) {
+    camera.SetWhiteBalanceAuto();
+  } else {
+    auto wb = j.value("wbTemp", 5'000);  // 2,000 - 10,000
+    camera.SetWhiteBalanceManual(wb);
+  }
 
   cv_sink_.SetSource(camera);
 }
