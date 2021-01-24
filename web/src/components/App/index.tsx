@@ -27,7 +27,7 @@ const App = () => {
     }, 500);
   }, []);
 
-  console.debug(units);
+  // console.debug(units);
 
   let unitPages;
   if (units) {
