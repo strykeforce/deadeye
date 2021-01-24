@@ -1,5 +1,4 @@
 import { Slider, InputNumber, Row, Col } from "antd";
-import { InputNumberProps } from "antd/lib/input-number";
 import React from "react";
 import "./camera-controls.less";
 
