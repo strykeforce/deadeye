@@ -51,7 +51,7 @@ set(DEADEYE_CLIENT_ADDRESS "10.27.67.2" CACHE STRING "Deadeye client address")
 set(DEADEYE_CLIENT_PORT "5800" CACHE STRING "Deadeye client port")
 
 # Camera Pipelines
-set(DEADEYE_CAMERA0_PIPELINE "deadeye::DefaultPipeline" CACHE STRING "Camera 0 Pipeline class")
+set(DEADEYE_CAMERA0_PIPELINE "deadeye::UprightRectPipeline" CACHE STRING "Camera 0 Pipeline class")
 set(DEADEYE_CAMERA1_PIPELINE "" CACHE STRING "Camera 1 Pipeline class")
 set(DEADEYE_CAMERA2_PIPELINE "" CACHE STRING "Camera 2 Pipeline class")
 set(DEADEYE_CAMERA3_PIPELINE "" CACHE STRING "Camera 3 Pipeline class")
