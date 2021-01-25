@@ -76,8 +76,6 @@ def restart(ctx):
             "restart",
             DAEMON_SERVICE,
             ADMIN_SERVICE,
-            SHUTDOWN_SERVICE,
-            MOUNT_SERVICE,
         ],
     )
 
