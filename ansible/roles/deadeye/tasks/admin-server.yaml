@@ -29,7 +29,7 @@
   command:
     chdir: "{{ deadeye_src }}/admin"
     argv:
-      - /usr/bin/python3
+      - /opt/deadeye/bin/python3
       - setup.py
       - sdist
 
