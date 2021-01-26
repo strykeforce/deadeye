@@ -29,6 +29,7 @@ const DefaultPage = (props: Props) => {
         left: "50%",
         transform: "translateX(-50%) translateY(-50%)",
       }}
+      data-testid="default-page"
     >
       <Spin size="large" />
     </div>

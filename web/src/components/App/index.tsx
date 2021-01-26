@@ -29,15 +29,12 @@ const App = () => {
 
   // console.debug(units);
 
-  let unitPages;
-  if (units) {
-    unitPages = (
-      <>
-        <CameraPage path="/id/:id" units={units} />
-        <SettingsPage path="/settings" units={units} />
-      </>
-    );
-  }
+  const unitPages = units ? (
+    <>
+      <CameraPage path="/id/:id" units={units} />
+      <SettingsPage path="/settings" units={units} />
+    </>
+  ) : null;
 
   return (
     <Router>
