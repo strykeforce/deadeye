@@ -3,20 +3,22 @@ from threading import Lock
 import json
 import os
 import sys
-from networktables import NetworkTables
+
 from .models import Unit, Link
+from .nt_connection import NetworkTablesConnection
 
 
 class Api:
     def __init__(self, app):
         self.app = app
-        self.socketio = SocketIO(app=app)
+        self.socketio = SocketIO(app=app, logger=False, engineio_logger=False)
         self.thread = None  # background thread for client model refresh
         self.refresh_units = False  # background thread broadcasts changes when True
         self.refresh_link = False
         self.thread_lock = Lock()
-        self.nt_connecting = False
-        self.nt_connected = False
+        self.nt = NetworkTablesConnection(self)
+
+        self.socketio.on_event("connect", self.handle_connect)
         self.socketio.on_event("message", self.handle_message)
         self.socketio.on_event("camera_control", self.handle_camera_control_event)
         self.socketio.on_event("light_control", self.handle_light_control_event)
@@ -24,7 +26,6 @@ class Api:
         self.socketio.on_event("pipeline_config", self.handle_pipeline_config_event)
         self.socketio.on_event("stream_config", self.handle_stream_config_event)
         self.socketio.on_event("image_upload", self.handle_image_upload_event)
-        self.socketio.on_event("connect", self.handle_connect)
 
         self.link = None
         self.socketio.on_event("link_config", self.handle_link_config_event)
@@ -103,15 +104,21 @@ class Api:
         self.app.logger.debug("link: %s", link)
 
     def handle_connect(self):
-        self.app.logger.debug("client connected")
-        if not self.nt_connected and not self.nt_connecting:
-            self.nt_connecting = True
-            nt_server = os.environ["DEADEYE_NT_SERVER"]
-            self.app.logger.debug("connecting to NetworkTables at %s...", nt_server)
-            NetworkTables.initialize(server=nt_server)
-            NetworkTables.addConnectionListener(
-                self.nt_connection_listener, immediateNotify=True
-            )
+        self.app.logger.debug("web client connected")
+
+        def connection_callback(is_connected):
+            self.running = is_connected
+
+            if not is_connected:
+                self.app.logger.error("API callback: connection failed")
+                return
+
+            self.app.logger.info("initializing Deadeye Units")
+            with self.app.app_context():
+                Unit.init(self)
+                self.link = Link(self)
+
+        self.nt.connect(connection_callback)
 
         with self.thread_lock:
             if self.thread is None:
@@ -120,25 +127,7 @@ class Api:
                 )
                 self.app.logger.debug("started model refresh thread")
 
-        self.refresh_units = self.nt_connected
-
-    def nt_connection_listener(self, is_connected, info):
-        self.nt_connected = is_connected
-        self.nt_connecting = not is_connected
-        if not is_connected:
-            self.app.logger.debug("Not connected, returning")
-            return
-        root = NetworkTables.getGlobalTable()
-        if not root.containsSubTable("Deadeye"):
-            self.app.logger.fatal("Deadeye subtable missing from Network Tables")
-            NetworkTables.shutdown()
-            self.running = False
-            return
-        self.app.logger.debug("Initializing Deadeye Units")
-        with self.app.app_context():
-            Unit.init(self)
-            self.link = Link(self)
-        self.app.logger.debug("Connected = %s, info = %s", is_connected, info)
+        self.refresh_units = self.nt.connected
 
     def background_thread(self, app):
         while self.running:

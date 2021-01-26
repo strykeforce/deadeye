@@ -192,4 +192,3 @@ class Link:
         entry.setString(json.dumps(message))
         self.entries = message
         self.api.refresh_link = True
-

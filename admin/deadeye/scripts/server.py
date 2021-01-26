@@ -7,8 +7,10 @@ from deadeye import create_app
 from deadeye.api import Api
 
 
+logging.basicConfig(level=logging.WARN)
+
+
 def main():
-    logging.basicConfig(level=logging.WARN)
     logging.getLogger("deadeye").setLevel(
         logging.INFO
         if "FLASK_ENV" in os.environ and os.environ["FLASK_ENV"] == "production"
