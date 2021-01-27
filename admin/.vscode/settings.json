@@ -9,5 +9,6 @@
     "**/__pycache__": true,
     "deadeye.egg-info": true,
   },
-  "python.formatting.provider": "black"
+  "python.formatting.provider": "black",
+  "python.linting.enabled": true
 }

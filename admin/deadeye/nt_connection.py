@@ -12,17 +12,18 @@ class NetworkTablesConnection:
     def connect(self, callback):
         if self.connected or self.connecting:
             self.logger.warn(
-                "connect: connecting=%b, connected=%b",
+                "connect: connecting=%r, connected=%r",
                 self.connecting,
                 self.connected,
             )
             return
 
         def connection_listener(is_connected, info):
-            self.nt_connected = is_connected
-            self.nt_connecting = not is_connected
+            self.connecting = False
+            self.connected = is_connected
+
             if not is_connected:
-                self.app.logger.debug("not connected, returning")
+                self.logger.debug("disconnected from NT server")
                 return
 
             root = NetworkTables.getGlobalTable()
