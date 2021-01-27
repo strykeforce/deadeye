@@ -15,19 +15,20 @@ interface Props extends RouteComponentProps {
 }
 
 const CameraPage = (props: Props) => {
-  const { units, id } = props;
+  const units = props.units;
+  const id = String(props.id);
+
   const navigate = useNavigate();
 
   const ids = getIds(units);
+  console.debug(ids);
 
-  const selectedId = id ? id : ids[0];
-
-  if (!ids.includes(selectedId)) {
-    const route = `/id/${ids[0]}`;
-    console.debug(`route = ${route}`);
-    navigate(route);
-    return null;
+  if (ids.length === 0) {
+    console.warn("no camera ids, navigating to /");
+    navigate("/");
   }
+
+  const selectedId = ids.includes(id) ? id : ids[0];
 
   const camera = getCamera(selectedId, units);
 
