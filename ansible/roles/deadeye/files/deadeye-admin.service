@@ -5,6 +5,7 @@ After=deadeye-daemon.service
 
 [Service]
 Environment=DEADEYE_NT_SERVER=10.27.67.2
+Environment=DEADEYE_NT_WAIT_MS=500
 Environment=DEADEYE_ADMIN_PORT=80
 Environment=FLASK_ENV=production
 Environment=DEADEYE_UPLOAD_DIR=/var/opt/deadeye

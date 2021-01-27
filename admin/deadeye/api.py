@@ -119,7 +119,8 @@ class Api:
         while self.running:
             if self.load_units:
                 self.load_units = False
-                self.socketio.sleep(0.500)  # wait for NT to populate
+                wait_sec = int(os.environ["DEADEYE_NT_WAIT_MS"]) / 1000
+                self.socketio.sleep(wait_sec)  # wait for NT to populate
                 self.app.logger.info("initializing Deadeye Units")
                 with self.app.app_context():
                     Unit.init(self)
