@@ -14,9 +14,11 @@ const DefaultPage = (props: Props) => {
 
   const ids = getIds(units);
 
-  if (ids.length > 0 && !ids.includes(id ? id : "")) {
-    const route = `/id/${ids[0]}`;
-    console.debug(`route = ${route}`);
+  if (ids.length > 0) {
+    const route = ids.includes(String(id)) ? `/id/${id}` : `/id/${ids[0]}`;
+    console.info(
+      `default page: route = ${route}, id=${id}, ids=${JSON.stringify(ids)}`
+    );
     navigate(route);
     return null;
   }
@@ -29,6 +31,7 @@ const DefaultPage = (props: Props) => {
         left: "50%",
         transform: "translateX(-50%) translateY(-50%)",
       }}
+      data-testid="default-page"
     >
       <Spin size="large" />
     </div>

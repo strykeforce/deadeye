@@ -16,8 +16,10 @@ class Unit:
             try:
                 cam = Camera(unit_id, inum)
                 self.cameras[inum] = cam
-            except:
-                current_app.logger.error("error loading Camera %s%s", unit_id, inum)
+            except Exception as e:
+                current_app.logger.error(
+                    "error loading Camera %s%s: %s", unit_id, inum, e
+                )
 
     @classmethod
     def init(cls, api):
@@ -40,16 +42,21 @@ class Camera:
         self.inum = int(inum)
         self.id = f"{unit_id}{inum}"
         self.light = Light(self)
-        control_table = self.table()
-        self.on = control_table.getBoolean("On", False)
-        self.error = control_table.getBoolean("Error", False)
-        self.capture = json.loads(control_table.getString("Capture", ""))
-        self.pipeline = json.loads(control_table.getString("Pipeline", ""))
-        self.stream = json.loads(control_table.getString("Stream", ""))
-        self.info = json.loads(control_table.getString("Info", ""))
-        control_table.addEntryListenerEx(
+        self.on = self.table().getBoolean("On", False)
+        self.error = self.table().getBoolean("Error", False)
+        self.capture = self.load_json("Capture")
+        self.pipeline = self.load_json("Pipeline")
+        self.stream = self.load_json("Stream")
+        self.info = self.load_json("Info")
+        self.table().addEntryListenerEx(
             self.entry_listener, NetworkTablesInstance.NotifyFlags.UPDATE
         )
+
+    def load_json(self, key):
+        try:
+            return json.loads(self.table().getString(key, ""))
+        except json.JSONDecodeError as err:
+            raise ValueError(f"Camera {key}: {err}")
 
     def enable(self, enabled):
         if self.on == enabled:
@@ -82,7 +89,7 @@ class Camera:
         return NetworkTables.getTable(f"/Deadeye/{self.unit}/{self.inum}")
 
     def entry_listener(self, table, key, value, is_new):
-        del is_new  # unused
+        del is_new, table  # unused
         if not value:
             return
 
@@ -139,7 +146,7 @@ class Light:
         Unit.api.refresh_units = True
 
     def entry_listener(self, table, key, value, is_new):
-        del is_new  # unused
+        del is_new, table  # unused
         if not value:
             return
 
@@ -175,7 +182,7 @@ class Link:
         )
 
     def entry_listener(self, table, key, value, is_new):
-        del is_new  # unused
+        del is_new, table  # unused
         if not value:
             return
 
@@ -192,4 +199,3 @@ class Link:
         entry.setString(json.dumps(message))
         self.entries = message
         self.api.refresh_link = True
-

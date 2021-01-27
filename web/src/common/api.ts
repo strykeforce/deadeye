@@ -29,7 +29,7 @@ export const unsubscribeFromLinkUpdates = () => {
 
 export const close = (): void => {
   socket.close();
-  console.log("closed IO socket");
+  console.debug("closed socket.io connection");
 };
 
 export const refreshLink = () => socket.emit("link_refresh", "pls");
