@@ -5,11 +5,11 @@ deadeye:
       ansible_host: deadeye-a
       deadeye_unit: A
       camera_0_pipeline: deadeye::MinAreaRectPipeline
+      camera_1_pipeline: deadeye::UprightRectPipeline
     deadeye-b:
       ansible_host: deadeye-b
       deadeye_unit: B
-      camera_0_pipeline: deadeye::DefaultPipeline
-      camera_1_pipeline: deadeye::DefaultPipeline
+      camera_0_pipeline: deadeye::UprightRectPipeline
     deadeye-c:
       ansible_host: deadeye-c
       deadeye_unit: C
