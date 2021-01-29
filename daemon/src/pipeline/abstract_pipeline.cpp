@@ -36,7 +36,7 @@ std::unique_ptr<TargetData> AbstractPipeline::ProcessFrame(
   FilterContours(pipeline_config_.filter, find_contours_output_,
                  filter_contours_output_);
   std::unique_ptr<TargetData> target_data =
-      ProcessTarget(filter_contours_output_);
+      ProcessContours(filter_contours_output_);
   return std::move(target_data);
 }
 
@@ -45,7 +45,7 @@ void AbstractPipeline::FilterContours(FilterConfig const& filter,
   GeometricContoursFilter(filter, src, dest);
 }
 
-std::unique_ptr<TargetData> AbstractPipeline::ProcessTarget(
+std::unique_ptr<TargetData> AbstractPipeline::ProcessContours(
     Contours const& contours) {
   return std::make_unique<TargetData>(id_, 0, false);
 }

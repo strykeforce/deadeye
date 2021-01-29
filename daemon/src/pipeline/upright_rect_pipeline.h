@@ -8,7 +8,7 @@ class UprightRectPipeline : public AbstractPipeline {
 
   void Configure(const CaptureConfig& config) override;
 
-  std::unique_ptr<TargetData> ProcessTarget(Contours const& contours) final;
+  std::unique_ptr<TargetData> ProcessContours(Contours const& contours) final;
 
  protected:
   std::string ToString() const final;
