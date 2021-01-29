@@ -146,12 +146,22 @@ const DimensionSelect = (props: CaptureControlProps) => {
     displayRestartMessage();
   };
 
-  let options;
+  let options; // FIXME: make this a json config file
   if (config.type === "usb") {
     options = (
       <>
         <Option value="640x480">640 x 480 px</Option>
         <Option value="640x360">640 x 360 px</Option>
+      </>
+    );
+  } else if (config.type === "file") {
+    options = (
+      <>
+        <Option value="1280x720">1280 x 720 px</Option>
+        <Option value="960x540">960 x 540 px</Option>
+        <Option value="640x480">640 x 480 px</Option>
+        <Option value="640x360">640 x 360 px</Option>
+        <Option value="320x180">320 x 180 px</Option>
       </>
     );
   } else {
