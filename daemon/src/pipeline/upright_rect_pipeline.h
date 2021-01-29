@@ -14,7 +14,6 @@ class UprightRectPipeline : public AbstractPipeline {
   std::string ToString() const final;
 
  private:
-  cv::Point center_;
   std::string capture_type_{"unknown"};
 };
 }  // namespace deadeye
