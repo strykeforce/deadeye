@@ -7,22 +7,6 @@
 using namespace deadeye;
 using json = nlohmann::json;
 
-/*
-const char* MinAreaTargetData::kBLX{"blx"};
-const char* MinAreaTargetData::kBLY{"bly"};
-const char* MinAreaTargetData::kTLX{"tlx"};
-const char* MinAreaTargetData::kTLY{"tly"};
-const char* MinAreaTargetData::kTRX{"trx"};
-const char* MinAreaTargetData::kTRY{"try"};
-const char* MinAreaTargetData::kBRX{"brx"};
-const char* MinAreaTargetData::kBRY{"bry"};
-const char* MinAreaTargetData::kXKey{"x"};
-const char* MinAreaTargetData::kYKey{"y"};
-const char* MinAreaTargetData::kWKey{"w"};
-const char* MinAreaTargetData::kHKey{"h"};
-const char* MinAreaTargetData::kAngleKey{"a"};
-*/
-
 MinAreaTargetData::MinAreaTargetData(std::string id, int sn, bool valid,
                                      cv::RotatedRect rect, cv::Point center)
     : TargetData{id, sn, valid}, rect(rect), center(center) {

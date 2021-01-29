@@ -18,7 +18,7 @@ void MinAreaRectPipeline::Configure(const CaptureConfig& config) {
 }
 
 // Target is center of contour bounding box.
-std::unique_ptr<TargetData> MinAreaRectPipeline::ProcessTarget(
+std::unique_ptr<TargetData> MinAreaRectPipeline::ProcessContours(
     Contours const& contours) {
   if (contours.size() == 0)
     return std::make_unique<MinAreaTargetData>(id_, 0, false, cv::RotatedRect(),

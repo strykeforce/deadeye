@@ -7,17 +7,16 @@
 using json = nlohmann::json;
 
 namespace deadeye {
-struct MinAreaTargetData : public TargetData {
-  cv::RotatedRect rect;
-  cv::Point center;
-  cv::Point2f corners[4];
+using TargetList = std::vector<std::array<int, 5>>;
 
-  MinAreaTargetData(std::string id, int sn, bool valid, cv::RotatedRect rect,
-                    cv::Point center);
+struct TargetListTargetData : public TargetData {
+  TargetList targets;
+
+  TargetListTargetData(const std::string id, const int sn, const bool valid,
+                       const TargetList& targets);
 
   void DrawMarkers(cv::Mat& preview) const override;
   std::string Dump() const override;
   std::string ToString() const override;
 };
 }  // namespace deadeye
-   //

@@ -4,6 +4,7 @@
 #include "controller.h"
 #include "log.h"
 #include "pipeline/min_area_rect_pipeline.h"
+#include "pipeline/target_list_pipeline.h"
 #include "pipeline/upright_rect_pipeline.h"
 
 #ifdef DEADEYE_CAMERA0_PIPELINE

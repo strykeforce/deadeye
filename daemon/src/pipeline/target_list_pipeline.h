@@ -2,9 +2,9 @@
 #include "pipeline/abstract_pipeline.h"
 
 namespace deadeye {
-class UprightRectPipeline : public AbstractPipeline {
+class TargetListPipeline : public AbstractPipeline {
  public:
-  UprightRectPipeline(int inum, std::string name);
+  TargetListPipeline(int inum, std::string name);
 
   void Configure(const CaptureConfig& config) override;
 
