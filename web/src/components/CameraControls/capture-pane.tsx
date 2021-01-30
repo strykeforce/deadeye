@@ -131,6 +131,32 @@ const TypeSelect = (props: CaptureControlProps) => {
   );
 };
 
+const DIMENSIONS = {
+  usb: [
+    [640, 480],
+    [640, 360],
+  ],
+  file: [
+    [1280, 720],
+    [960, 540],
+    [640, 480],
+    [640, 360],
+    [320, 180],
+  ],
+  test: [
+    [1280, 720],
+    [960, 540],
+    [640, 360],
+    [320, 180],
+  ],
+  jetson: [
+    [1280, 720],
+    [960, 540],
+    [640, 360],
+    [320, 180],
+  ],
+};
+
 const DimensionSelect = (props: CaptureControlProps) => {
   const { unit, inum, config, onChange: displayRestartMessage } = props;
   const values = [config.w, config.h];
@@ -146,34 +172,16 @@ const DimensionSelect = (props: CaptureControlProps) => {
     displayRestartMessage();
   };
 
-  let options; // FIXME: make this a json config file
-  if (config.type === "usb") {
-    options = (
-      <>
-        <Option value="640x480">640 x 480 px</Option>
-        <Option value="640x360">640 x 360 px</Option>
-      </>
-    );
-  } else if (config.type === "file") {
-    options = (
-      <>
-        <Option value="1280x720">1280 x 720 px</Option>
-        <Option value="960x540">960 x 540 px</Option>
-        <Option value="640x480">640 x 480 px</Option>
-        <Option value="640x360">640 x 360 px</Option>
-        <Option value="320x180">320 x 180 px</Option>
-      </>
-    );
-  } else {
-    options = (
-      <>
-        <Option value="1280x720">1280 x 720 px</Option>
-        <Option value="960x540">960 x 540 px</Option>
-        <Option value="640x360">640 x 360 px</Option>
-        <Option value="320x180">320 x 180 px</Option>
-      </>
-    );
-  }
+  const options = DIMENSIONS[config.type as keyof typeof DIMENSIONS].map(
+    (dims) => {
+      const key = `${dims[0]}x${dims[1]}`;
+      return (
+        <Option value={key} key={key}>
+          {dims[0]} x {dims[1]} ppx
+        </Option>
+      );
+    }
+  );
 
   return (
     <Row className="capture-pane-control">

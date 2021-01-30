@@ -21,7 +21,6 @@ const CameraPage = (props: Props) => {
   const navigate = useNavigate();
 
   const ids = getIds(units);
-  console.debug(ids);
 
   if (ids.length === 0) {
     console.warn("no camera ids, navigating to /");
