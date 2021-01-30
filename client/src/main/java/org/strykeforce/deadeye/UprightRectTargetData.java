@@ -2,11 +2,11 @@ package org.strykeforce.deadeye;
 
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.JsonWriter;
-import okio.Buffer;
-import okio.BufferedSource;
-
 import java.io.IOException;
 import java.util.Objects;
+import okio.Buffer;
+import okio.BufferedSource;
+import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
 public class UprightRectTargetData extends TargetData {
@@ -14,32 +14,40 @@ public class UprightRectTargetData extends TargetData {
   static final int DATA_LENGTH = 6;
 
   /** Bounding box top-left corner point. */
-  public final Point topLeft;
+  @NotNull public final Point topLeft;
   /** Bounding box bottom-right corner point. */
-  public final Point bottomRight;
+  @NotNull public final Point bottomRight;
   /** Bounding box center. */
-  public final Point center;
+  @NotNull public final Point center;
 
   public UprightRectTargetData() {
     this("", 0, false, new Point(0, 0), new Point(0, 0), new Point(0, 0));
   }
 
   public UprightRectTargetData(
-      String id, int serial, boolean valid, Point topLeft, Point bottomRight, Point center) {
+      @NotNull String id,
+      int serial,
+      boolean valid,
+      @NotNull Point topLeft,
+      @NotNull Point bottomRight,
+      @NotNull Point center) {
     super(id, serial, valid);
     this.topLeft = topLeft;
     this.bottomRight = bottomRight;
     this.center = center;
   }
 
+  /** Returns bounding box area. */
   public int area() {
     return width() * height();
   }
 
+  /** Returns width of bounding box. */
   public int width() {
     return bottomRight.x - topLeft.x;
   }
 
+  /** Returns height of bounding box. */
   public int height() {
     return bottomRight.y - topLeft.y;
   }
@@ -122,7 +130,8 @@ public class UprightRectTargetData extends TargetData {
       Point topLeft = new Point(data[0], data[1]);
       Point bottomRight = new Point(data[2], data[3]);
       Point center = new Point(data[4], data[5]);
-      return new UprightRectTargetData(id, serial, valid, topLeft, bottomRight, center);
+      return new UprightRectTargetData(
+          Objects.requireNonNull(id), serial, valid, topLeft, bottomRight, center);
     }
 
     @Override

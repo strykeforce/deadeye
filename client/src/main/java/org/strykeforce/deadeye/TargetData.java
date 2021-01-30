@@ -2,24 +2,27 @@ package org.strykeforce.deadeye;
 
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.JsonWriter;
-import okio.Buffer;
-import okio.BufferedSource;
-
 import java.io.IOException;
 import java.util.Objects;
+import okio.Buffer;
+import okio.BufferedSource;
+import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
 public class TargetData {
 
-  public final String id;
+  /** Deadeye unit ID. */
+  @NotNull public final String id;
+  /** Serial number of target data message. */
   public final int serial;
+  /** True if target data is valid. */
   public final boolean valid;
 
   public TargetData() {
     this(null, 0, false);
   }
 
-  public TargetData(String id, int serial, boolean valid) {
+  public TargetData(@NotNull String id, int serial, boolean valid) {
     this.id = id;
     this.serial = serial;
     this.valid = valid;

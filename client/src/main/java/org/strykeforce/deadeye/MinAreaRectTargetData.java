@@ -2,12 +2,12 @@ package org.strykeforce.deadeye;
 
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.JsonWriter;
-import okio.Buffer;
-import okio.BufferedSource;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
+import okio.Buffer;
+import okio.BufferedSource;
+import org.jetbrains.annotations.NotNull;
 
 public class MinAreaRectTargetData extends TargetData {
 
@@ -16,27 +16,27 @@ public class MinAreaRectTargetData extends TargetData {
   /** Angle of OpenCV rotated rectangle. */
   public final double angle;
   /** Center of OpenCV rotated rectangle. */
-  public final Point2D center;
+  @NotNull public final Point2D center;
   /** Width of OpenCV rotated rectangle. */
   public final double width;
   /** Height of OpenCV rotated rectangle. */
   public final double height;
   /** Vertices of OpenCV rotated rectangle. */
-  public final Point2D[] points;
+  @NotNull public final Point2D[] points;
 
   public MinAreaRectTargetData() {
     this("", 0, false, 0, new Point2D(0, 0), 0, 0, new Point2D[0]);
   }
 
   public MinAreaRectTargetData(
-      String id,
+      @NotNull String id,
       int serial,
       boolean valid,
       double angle,
-      Point2D center,
+      @NotNull Point2D center,
       double width,
       double height,
-      Point2D[] points) {
+      @NotNull Point2D[] points) {
     super(id, serial, valid);
     this.angle = angle;
     this.center = center;
