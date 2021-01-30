@@ -85,6 +85,19 @@ class Version:
         with open(ans, "w") as file:
             file.writelines(lines)
 
+    def update_client(self):
+        """ Bump Java client library version. """
+        gradle = self.deadeye_dir / "client" / "build.gradle.kts"
+
+        with open(gradle, "r") as file:
+            lines = file.readlines()
+
+        assert lines[7].startswith("version = ")
+        lines[7] = f'version = "{self.version()}" // updated by scripts/bump.py\n'
+
+        with open(gradle, "w") as file:
+            file.writelines(lines)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Bump Deadeye to specified version.")
@@ -104,5 +117,6 @@ if __name__ == "__main__":
     version.update_daemon()
     version.update_admin()
     version.update_ansible()
+    version.update_client()
 
     print(f"Updated version to {version.version()}")
