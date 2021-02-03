@@ -13,8 +13,8 @@ Deadeye is a computer vision system developed by `Stryke Force Team 2767 <https:
    :caption: Getting Started
 
    introduction
-   installation
-   deployment
+   Jetson Nano Installation <installation>
+   Software Installation <deployment>
    configuration
 
 .. toctree::
