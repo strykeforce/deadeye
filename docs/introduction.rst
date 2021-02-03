@@ -5,7 +5,9 @@
 Introduction
 ************
 
-Deadeye consists of software and hardware that together provide a vision processing system for FRC robots. The main system components are identified in the block diagram below. In addition to the main vision processing pipeline shown in red, we have an adminstration dashboard in blue, and miscellaneous services in yellow.  
+Deadeye consists of software and hardware that together provide a vision processing system for FRC robots. The main system components are identified in the block diagram below. In addition to the main vision processing pipeline shown in red, we have an adminstration dashboard in blue, and miscellaneous services in yellow. 
+
+This documentation assumes a |JETSON|_ is being used as the vision coprocessor.
 
 .. figure:: images/block-diagram.svg
    :width: 80%
@@ -16,26 +18,26 @@ Deadeye consists of software and hardware that together provide a vision process
 Software
 ========
 
-The Deadeye system has several components that run on the Jetson Nano, client roboRIO and web browser. They communicate over the network and require a running `NetworkTables <https://docs.wpilib.org/en/stable/docs/software/networktables/>`_ server.
+The Deadeye system has several components that run on a vision coprocessor, client roboRIO and web browser. They communicate over the network and require a running |NT|_ server.
 
 **deadeye-daemon**
-    The main vision processing process running on the Jetson Nano that manages up to five cameras and associated target processing pipelines. Each running instance is identified by a unit ID: A, B, C...
+    The main vision processing process running on the vision coprocessor that manages up to five cameras and associated target processing pipelines. Each running instance is identified by a unit ID: A, B, C...
     
-    Communication is via NetworkTables for configuration and control to **deadeye-admin** and **deadeye-java** client and via UDP to **deadeye-java** client that uses streaming targeting data. It also provides an on-demand camera video stream directly to **deadeye-web** over TCP.
+    Communication is via |NT| for configuration and control to **deadeye-admin** and **deadeye-java** client and via UDP to **deadeye-java** client that uses streaming targeting data. It also provides an on-demand camera video stream directly to **deadeye-web** over TCP.
 
     It runs as a systemd service named ``deadeye-daemon.service``.
 
-**deadeye-java**
+**deadeye-client**
     Java libary used by FRC roboRIO robot code to control and communicate with **deadeye-daemon**.
     
-    Communication to other components is via NetworkTables for configuration and control and to **deadeye-daemon** directly via UDP for streaming target data.
+    Communication to other components is via |NT| for configuration and control and to **deadeye-daemon** directly via UDP for streaming target data.
 
     To include this client library in your robot program, download `deadeye.json <http://maven.strykeforce.org/deadeye.json>`_ and place in your program's ``vendordeps`` directory.
 
 **deadeye-admin**
-    A Python web service running on the Jetson Nano that is the backend for the web-based administration dashboard, **deadeye-web**, that configures and controls **deadeye-daemon**.
+    A Python web service running on the |NANO| that is the backend for the web-based administration dashboard, **deadeye-web**, that configures and controls **deadeye-daemon**.
     
-    Communication with **deadeye-daemon** is via NetworkTables and with **deadeye-web** over websockets.
+    Communication with **deadeye-daemon** is via |NT| and with **deadeye-web** over websockets.
 
     It runs as a systemd service named ``deadeye-admin.service``.
 
@@ -44,22 +46,22 @@ The Deadeye system has several components that run on the Jetson Nano, client ro
     
     It communicates with **deadeye-admin** over websockets and streams camera video directly from **deadeye-deadeye** over TCP.
 
-    It can be loaded by connecting with a web browser to Jetson Nano port 5000, for example, http://10.27.67.10:5000/.
+    It can be loaded by connecting with a web browser to |NANO| port 5000, for example, http://10.27.67.10:5000/.
 
 **deadeye-shutdown**
-    A background service running on the Jetson Nano that watches for a shutdown button press and performs a clean shutdown if it pressed for three or more seconds.
+    A background service running on the |NANO| that watches for a shutdown button press and performs a clean shutdown if it pressed for three or more seconds.
 
     It runs as a systemd service named ``deadeye-shutdown.service``.
 
 Hardware
 ========
 
-Deadeye software is designed to interact with cameras, lights and a shutdown switch attached to the Jetson Nano.
+Deadeye software is designed to interact with cameras, lights and a shutdown switch attached to the |NANO|.
 
 Camera
 ------
 
-Any camera(s) supported by the Jetson Nano can be used. Deadeye supports up to five attached cameras per unit. Our default camera is a `Raspberry Pi Camera Module V2 <https://www.raspberrypi.org/products/camera-module-v2/>`_ connected to the Jetson Nano ``J13 camera connector``.
+Any camera(s) `supported <https://developer.nvidia.com/embedded/jetson-partner-supported-cameras>`_ by the |NANO| can be used. Deadeye supports up to five attached cameras per unit. Our default camera is a `Raspberry Pi Camera Module V2 <https://www.raspberrypi.org/products/camera-module-v2/>`_ connected to the |NANO| ``J13 camera connector``.
 
 Lights
 ------
