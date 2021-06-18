@@ -13,9 +13,9 @@ repositories {
 }
 
 dependencies {
-    val wpiVersion = "2021.2.1"
+    val wpiVersion = "2021.3.1"
     val slf4jVersion = "1.7.30"
-    val junitVersion = "5.7.0"
+    val junitVersion = "5.7.2"
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation("com.squareup.moshi:moshi:1.11.0")
     implementation("edu.wpi.first.ntcore:ntcore-java:$wpiVersion")
