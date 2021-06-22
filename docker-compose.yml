@@ -1,0 +1,10 @@
+version: "3.4"
+
+services:
+  daemon:
+    image: deadeye-daemon
+    build: ./daemon
+    ports:
+      - "5805:5805"
+    volumes:
+      - ~/Downloads:/opt/images
