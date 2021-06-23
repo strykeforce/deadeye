@@ -113,6 +113,9 @@ std::string first_rfc1918() {
 }
 
 std::string stream_url(int inum) {
+  if (std::getenv("DEADEYE_DOCKER")) {
+    return "/stream.mjpg";
+  }
   return fmt::format("http://{}:{}/stream.mjpg", first_rfc1918(), 5805 + inum);
 }
 

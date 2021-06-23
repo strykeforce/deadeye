@@ -3,32 +3,35 @@ cmake_minimum_required(VERSION 3.10)
 include(version.cmake)
 project(Deadeye LANGUAGES CXX VERSION ${Deadeye_VER})
 
-find_package(Git REQUIRED)
+if(EXISTS .git)
+    find_package(Git REQUIRED)
 
-execute_process(
-    COMMAND ${GIT_EXECUTABLE} rev-list -1 HEAD -- ${CMAKE_CURRENT_SOURCE_DIR}/version.cmake
-    RESULT_VARIABLE result
-    OUTPUT_VARIABLE lastChangeHash
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-)
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE} rev-list -1 HEAD -- ${CMAKE_CURRENT_SOURCE_DIR}/version.cmake
+        RESULT_VARIABLE result
+        OUTPUT_VARIABLE lastChangeHash
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
 
-if(result)
-    message(FATAL_ERROR "Failed to get hash of last change: ${result}")
-endif()
+    if(result)
+        message(FATAL_ERROR "Failed to get hash of last change: ${result}")
+    endif()
 
-execute_process(
-    COMMAND ${GIT_EXECUTABLE} rev-list ${lastChangeHash}..HEAD
-    RESULT_VARIABLE result
-    OUTPUT_VARIABLE hashList
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-)
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE} rev-list ${lastChangeHash}..HEAD
+        RESULT_VARIABLE result
+        OUTPUT_VARIABLE hashList
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
 
-if(result)
-    message(FATAL_ERROR "Failed to get list of git hashes: ${result}")
-endif()
+    if(result)
+        message(FATAL_ERROR "Failed to get list of git hashes: ${result}")
+    endif()
 
-string(REGEX REPLACE "[\n\r]+" ";" hashList "${hashList}")
-list(LENGTH hashList Deadeye_COMMITS_SINCE_VERSION_CHANGE)
+    string(REGEX REPLACE "[\n\r]+" ";" hashList "${hashList}")
+    list(LENGTH hashList Deadeye_COMMITS_SINCE_VERSION_CHANGE)
+endif(EXISTS .git)
+
 
 if(NOT CMAKE_CROSSCOMPILING)
     enable_testing()

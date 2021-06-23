@@ -11,7 +11,9 @@ from .nt_connection import NetworkTablesConnection
 class Api:
     def __init__(self, app):
         self.app = app
-        self.socketio = SocketIO(app=app, logger=False, engineio_logger=False)
+        self.socketio = SocketIO(
+            app=app, cors_allowed_origins="*", logger=False, engineio_logger=False
+        )
         self.thread = None  # background thread for client model refresh
         self.load_units = False
         self.refresh_units = False  # background thread broadcasts changes when True
