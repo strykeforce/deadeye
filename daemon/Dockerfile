@@ -1,6 +1,7 @@
 # syntax=docker/dockerfile:1
 
 FROM ubuntu:18.04
+LABEL maintainer “Jeff Hutchison <jeff@j3ff.io>”
 
 WORKDIR /opt/build
 
@@ -206,7 +207,7 @@ RUN cmake \
     -D CMAKE_BUILD_TYPE=Debug \
     -D DEADEYE_BUILD_TESTS=ON \
     -D DEADEYE_UNIT_ID=E \
-    -D DEADEYE_NT_SERVER=192.168.1.11 \
+    -D DEADEYE_NT_SERVER=10.27.67.2 \
     -D DEADEYE_CAMERA0_PIPELINE=deadeye::UprightRectPipeline \
     /opt/deadeye \
     && make -j$(nproc)
