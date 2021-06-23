@@ -17,7 +17,7 @@
     "@types/react-syntax-highlighter": "^13.5.0",
     "@types/socket.io-client": "^1.4.35",
     "antd": "^4.10.3",
-    "classnames": "github:JedWatson/classnames#master",
+    "classnames": "^2.3.1",
     "craco-less": "^1.17.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
@@ -51,7 +51,7 @@
   "devDependencies": {
     "npm-check": "^5.9.2"
   },
-  "jest" : {
+  "jest": {
     "transformIgnorePatterns": [
       "/node_modules/(?!react-syntax-highlighter)"
     ]
