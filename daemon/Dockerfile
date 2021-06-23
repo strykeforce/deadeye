@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 FROM ubuntu:18.04
-LABEL maintainer “Jeff Hutchison <jeff@j3ff.io>”
+LABEL maintainer=“jeff@j3ff.io”
 
 WORKDIR /opt/build
 

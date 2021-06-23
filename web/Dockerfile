@@ -1,7 +1,9 @@
 # syntax=docker/dockerfile:1
 
+
 # build environment
 FROM node:14-alpine as build
+LABEL maintainer=“jeff@j3ff.io”
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json ./

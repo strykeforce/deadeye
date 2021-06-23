@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 FROM python:3.8-buster
-LABEL maintainer “Jeff Hutchison <jeff@j3ff.io>”
+LABEL maintainer=“jeff@j3ff.io”
 
 WORKDIR /app
 
