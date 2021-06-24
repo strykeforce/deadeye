@@ -1,8 +1,6 @@
+IMAGE_NAME := deadeye-web
 
-IMAGE_NAME := deadeye-cpp-base
-BUILD_LOG := /opt/build.log
-
-.PHONY: build
+.PHONY: build clean symlinks requirements install
 
 build:
 	docker build $(EXTRA_BUILD_ARGS) -t $(NS)/$(IMAGE_NAME):latest -t $(NS)/$(IMAGE_NAME):$(VERSION) -f Dockerfile .
@@ -10,6 +8,3 @@ build:
 push: build
 	docker push $(NS)/$(IMAGE_NAME):latest
 	docker push $(NS)/$(IMAGE_NAME):$(VERSION)
-
-logs:
-	docker run --rm $(NS)/$(IMAGE_NAME):$(VERSION) cat $(BUILD_LOG)
