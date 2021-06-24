@@ -1,5 +1,6 @@
 # pylint: disable=no-member
 import json
+from urllib.parse import urlparse, parse_qs
 from networktables import NetworkTables, NetworkTablesInstance
 from flask import current_app
 
@@ -80,6 +81,11 @@ class Camera:
         Unit.api.refresh_units = True
 
     def set_stream(self, stream):
+        r = urlparse(stream["url"])
+        s = int(parse_qs(r.query)["s"][0])
+        r = r._replace(query=f"s={s+1}")
+        stream["url"] = r.geturl()
+        current_app.logger.debug("URL = %s", r.geturl())
         stream_entry = self.table().getEntry("Stream")
         stream_entry.setString(json.dumps(stream))
         self.stream = stream

@@ -10,5 +10,6 @@
     "deadeye.egg-info": true,
   },
   "python.formatting.provider": "black",
-  "python.linting.enabled": true
+  "python.linting.enabled": true,
+  "python.pythonPath": "/Users/jeff/.local/share/virtualenvs/admin-A458Rhhq/bin/python"
 }
