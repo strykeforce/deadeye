@@ -26,5 +26,9 @@ WORKDIR /app
 COPY --from=build /build/src/deadeyed /app/
 VOLUME [ "/opt/images" ]
 EXPOSE 5805/tcp
+EXPOSE 5806/tcp
+EXPOSE 5807/tcp
+EXPOSE 5808/tcp
+EXPOSE 5809/tcp
 
 CMD ["./deadeyed"]
