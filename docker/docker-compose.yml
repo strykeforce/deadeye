@@ -9,18 +9,20 @@ volumes:
 
 services:
   daemon:
-    image: deadeye-daemon
-    build: ./daemon
+    image: j3ff/deadeye-daemon
     ports:
-      - "5805:5805"
+      - 5805:5805
+      - 5806:5806
+      - 5807:5807
+      - 5808:5808
+      - 5809:5809
     volumes:
       - upload_data:/upload
     environment: *common-environment
   admin:
-    image: deadeye-admin
-    build: ./admin
+    image: j3ff/deadeye-admin
     ports:
-      - "5000:5000"
+      - 5000:5000
     volumes:
       - upload_data:/upload
     environment:
@@ -31,7 +33,6 @@ services:
       DEADEYE_NT_WAIT_MS: 500
       DEADEYE_UPLOAD_DIR: /upload
   web:
-    image: deadeye-web
-    build: ./web
+    image: j3ff/deadeye-web
     ports:
-      - "8080:80"
+      - 8080:80

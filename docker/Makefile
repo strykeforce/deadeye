@@ -1,4 +1,5 @@
-
+NS ?= j3ff
+VERSION ?= $(shell git rev-parse --short HEAD)
 IMAGE_NAME := deadeye-cpp-base
 BUILD_LOG := /opt/build.log
 

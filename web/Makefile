@@ -1,3 +1,5 @@
+NS ?= j3ff
+VERSION ?= $(shell git rev-parse --short HEAD)
 IMAGE_NAME := deadeye-web
 
 .PHONY: build clean symlinks requirements install
