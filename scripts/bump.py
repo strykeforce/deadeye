@@ -72,6 +72,17 @@ class Version:
         with open(pyproject, "w") as file:
             file.writelines(lines)
 
+        mod_init = self.deadeye_dir / "admin" / "deadeye" / "__init__.py"
+
+        with open(mod_init, "r") as file:
+            lines = file.readlines()
+
+        assert lines[0].startswith("__version__ = ")
+        lines[0] = f'__version__ = "{self.version()}"  # updated by scripts/bump.py\n'
+
+        with open(mod_init, "w") as file:
+            file.writelines(lines)
+
     def update_ansible(self):
         """Bump ansible vars version."""
         ans = self.deadeye_dir / "ansible" / "roles" / "deadeye" / "vars" / "main.yaml"
