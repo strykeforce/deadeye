@@ -1,8 +1,10 @@
 # pylint: disable=no-member
 import json
-from urllib.parse import urlparse, parse_qs
-from networktables import NetworkTables, NetworkTablesInstance
+import time
+from urllib.parse import urlparse
+
 from flask import current_app
+from networktables import NetworkTables, NetworkTablesInstance
 
 
 class Unit:
@@ -82,10 +84,8 @@ class Camera:
 
     def set_stream(self, stream):
         r = urlparse(stream["url"])
-        s = int(parse_qs(r.query)["s"][0])
-        r = r._replace(query=f"s={s+1}")
+        r = r._replace(query=f"s={time.monotonic_ns()}")
         stream["url"] = r.geturl()
-        current_app.logger.debug("URL = %s", r.geturl())
         stream_entry = self.table().getEntry("Stream")
         stream_entry.setString(json.dumps(stream))
         self.stream = stream
