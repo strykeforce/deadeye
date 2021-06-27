@@ -3,6 +3,7 @@ import json
 from flask import Flask, render_template, make_response, request, jsonify
 from werkzeug.utils import secure_filename
 from .models import Unit
+from .settings import DEADEYE_UPLOAD_DIR
 
 
 def create_app():
@@ -46,7 +47,7 @@ def create_app():
                 return jsonify(success=False), 500
             if image and allowed_file(image.filename):
                 filename = secure_filename(image.filename)
-                path = os.path.join(os.environ["DEADEYE_UPLOAD_DIR"], filename)
+                path = os.path.join(DEADEYE_UPLOAD_DIR, filename)
                 image.save(path)
                 app.logger.info(f"uploaded image: {path}")
                 return jsonify(success=True)
