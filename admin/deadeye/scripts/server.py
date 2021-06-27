@@ -3,7 +3,7 @@ This script is used to start the admin server app.
 """
 import logging
 
-from deadeye import create_app
+from deadeye.app import create_app
 from deadeye.api import Api
 from deadeye.settings import DEADEYE_ADMIN_PORT, DEADEYE_LOGGING
 
