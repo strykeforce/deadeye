@@ -1,11 +1,12 @@
-from flask_socketio import SocketIO
-from threading import Lock
 import json
 import os
-import sys
+from threading import Lock
 
-from .models import Unit, Link
+from flask_socketio import SocketIO
+
+from .models import Link, Unit
 from .nt_connection import NetworkTablesConnection
+from .settings import DEADEYE_NT_WAIT_MS, DEADEYE_UPLOAD_DIR
 
 
 class Api:
@@ -80,7 +81,7 @@ class Api:
         unit = Unit.units[message["unit"]]
         camera = unit.cameras[str(message["inum"])]
         filename = message["image"]
-        path = os.path.join(os.environ["DEADEYE_UPLOAD_DIR"], filename)
+        path = os.path.join(DEADEYE_UPLOAD_DIR, filename)
         capture = camera.capture
         capture["config"]["image"] = path
         self.app.logger.debug(f"CAPTURE: {capture}")
@@ -121,7 +122,7 @@ class Api:
         while self.running:
             if self.load_units:
                 self.load_units = False
-                wait_sec = int(os.environ["DEADEYE_NT_WAIT_MS"]) / 1000
+                wait_sec = DEADEYE_NT_WAIT_MS / 1000
                 self.socketio.sleep(wait_sec)  # wait for NT to populate
                 self.app.logger.info("initializing Deadeye Units")
                 with self.app.app_context():

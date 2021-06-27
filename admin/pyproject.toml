@@ -1,3 +1,29 @@
+[tool.poetry]
+authors = ["Jeff Hutchison <jeff@jeffhutchison.com>"]
+description = "Deadeye admin console back-end"
+license = "MIT"
+name = "deadeye"
+version = "21.1.0"  # updated by scripts/bump.py
+
+[tool.poetry.scripts]
+deadeye = "deadeye.scripts.cli:main"
+deadeye-server = "deadeye.scripts.server:main"
+
+[tool.poetry.dependencies]
+ansible = "~4.1.0"
+click = "~8.0.1"
+eventlet = "~0.31.0"
+flask = "~2.0.1"
+flask-socketio = "~5.1.0"
+pynetworktables = "~2021.0.0"
+python = "^3.9"
+python-dotenv = "^0.18.0"
+
+[tool.poetry.dev-dependencies]
+black = "*"
+pylint = "*"
+rope = "*"
+
 [build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta:__legacy__"
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=1.0.0"]

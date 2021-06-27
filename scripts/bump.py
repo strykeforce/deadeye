@@ -2,8 +2,8 @@
 """Manage Deadeye version."""
 
 import argparse
-from pathlib import Path
 import re
+from pathlib import Path
 
 
 def displaymatch(match):
@@ -48,7 +48,7 @@ class Version:
         self.patch_vers = self.patch_vers + 1
 
     def update_daemon(self):
-        """ Bump cmake version file."""
+        """Bump cmake version file."""
         cmake = self.deadeye_dir / "daemon" / "version.cmake"
 
         with open(cmake, "r") as file:
@@ -60,20 +60,20 @@ class Version:
             file.writelines(lines)
 
     def update_admin(self):
-        """ Bump setup.py version."""
-        setup = self.deadeye_dir / "admin" / "setup.py"
+        """Bump setup.py version."""
+        pyproject = self.deadeye_dir / "admin" / "pyproject.toml"
 
-        with open(setup, "r") as file:
+        with open(pyproject, "r") as file:
             lines = file.readlines()
 
-        assert lines[5].startswith("    version=")
-        lines[5] = f'    version="{self.version()}",  # updated by scripts/bump.py\n'
+        assert lines[5].startswith("version = ")
+        lines[5] = f'version = "{self.version()}"  # updated by scripts/bump.py\n'
 
-        with open(setup, "w") as file:
+        with open(pyproject, "w") as file:
             file.writelines(lines)
 
     def update_ansible(self):
-        """ Bump ansible vars version."""
+        """Bump ansible vars version."""
         ans = self.deadeye_dir / "ansible" / "roles" / "deadeye" / "vars" / "main.yaml"
 
         with open(ans, "r") as file:
@@ -86,7 +86,7 @@ class Version:
             file.writelines(lines)
 
     def update_client(self):
-        """ Bump Java client library version. """
+        """Bump Java client library version."""
         gradle = self.deadeye_dir / "client" / "build.gradle.kts"
 
         with open(gradle, "r") as file:
