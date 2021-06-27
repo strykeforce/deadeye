@@ -3,7 +3,7 @@ authors = ["Jeff Hutchison <jeff@jeffhutchison.com>"]
 description = "Deadeye admin console back-end"
 license = "MIT"
 name = "deadeye"
-version = "21.0.0"  # updated by scripts/bump.py
+version = "21.1.0"  # updated by scripts/bump.py
 
 [tool.poetry.scripts]
 deadeye = "deadeye.scripts.cli:main"

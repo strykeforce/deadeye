@@ -1,11 +1,12 @@
 NS ?= j3ff
 VERSION ?= $(shell git rev-parse --short HEAD)
 IMAGE_NAME := deadeye-admin
+WHEEL := deadeye-$(shell poetry version -s)-py3-none-any.whl
 
 .PHONY: build push run clean wheel
 
 build: requirements.txt wheel
-	docker build $(EXTRA_BUILD_ARGS) -t $(NS)/$(IMAGE_NAME):latest -t $(NS)/$(IMAGE_NAME):$(VERSION) .
+	docker build --build-arg wheel=$(WHEEL) -t $(NS)/$(IMAGE_NAME):latest -t $(NS)/$(IMAGE_NAME):$(VERSION) .
 
 push: build
 	docker push $(NS)/$(IMAGE_NAME):latest
