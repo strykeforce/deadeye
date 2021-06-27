@@ -82,7 +82,7 @@ def restart(ctx):
 
 def run_playbook(ctx, playbook, quit=True):
     os.chdir(ANSIBLE_DIR)
-    if os.getenv("DEADEYE_MODE") == "development":
+    if os.environ["DEADEYE_MODE"] == "development":
         os.chdir("/home/deadeye/deadeye/ansible")
 
     hostname = socket.gethostname()
