@@ -11,7 +11,6 @@ MOUNT_SERVICE = "var-opt-deadeye.mount"
 
 DEADEYE_DIR = "/opt/deadeye"
 BIN_DIR = f"{DEADEYE_DIR}/bin"
-ANSIBLE_DIR = f"{DEADEYE_DIR}/src/ansible"
 
 
 @click.group()
@@ -78,32 +77,3 @@ def restart(ctx):
             ADMIN_SERVICE,
         ],
     )
-
-
-def run_playbook(ctx, playbook, quit=True):
-    os.chdir(ANSIBLE_DIR)
-    if os.environ["DEADEYE_MODE"] == "development":
-        os.chdir("/home/deadeye/deadeye/ansible")
-
-    hostname = socket.gethostname()
-    run(
-        ctx,
-        [
-            f"{BIN_DIR}/ansible-playbook",
-            "--connection=local",
-            "--inventory=inventory.yaml",
-            f"--limit={hostname}",
-            f"{playbook}.yaml",
-        ],
-        quit,
-    )
-
-
-@cli.command()
-@click.option("--provision", is_flag=True, help="Install prequisites before update.")
-@click.pass_context
-def update(ctx, provision):
-    "Update Deadeye to latest version."
-    if provision:
-        run_playbook(ctx, "provision", quit=False)
-    run_playbook(ctx, "deploy")
