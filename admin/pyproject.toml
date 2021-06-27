@@ -10,7 +10,6 @@ deadeye = "deadeye.scripts.cli:main"
 deadeye-server = "deadeye.scripts.server:main"
 
 [tool.poetry.dependencies]
-ansible = "~4.1.0"
 click = "~8.0.1"
 eventlet = "~0.31.0"
 flask = "~2.0.1"
