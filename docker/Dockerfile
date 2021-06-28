@@ -84,9 +84,9 @@ RUN wget https://github.com/wpilibsuite/allwpilib/archive/v${WPILIB_VERSION}.zip
     && cmake \
     -D CMAKE_BUILD_TYPE=Release \
     -D CMAKE_INSTALL_PREFIX=/usr/local \
-    -D FLAT_INSTALL_WPILIB=ON \
     -D WITH_CSCORE=ON \
     -D WITH_EXAMPLES=OFF \
+    -D WITH_FLAT_INSTALL=OFF \
     -D WITH_GUI=OFF \
     -D WITH_JAVA=OFF \
     -D WITH_OLD_COMMANDS=OFF \
