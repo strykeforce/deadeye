@@ -14,10 +14,14 @@ ARG SAFE_VERSION="1.0.1"
 ARG READERWRITERQUEUE_VERSION="1.0.5"
 ARG TINYFSM_VERSION="0.3.3"
 ARG CATCH2_VERSION="2.13.6"
+ARG LIBGPIOD_VERSION="1.4.5"
 ARG BUILD_LOG=/opt/build.log
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+    autoconf \
+    autoconf-archive \
+    automake \
     build-essential \
     ca-certificates \
     cmake \
@@ -39,6 +43,7 @@ RUN apt-get update \
     libsystemd-dev \
     libtbb-dev \
     libtbb2 \
+    libtool \
     pkg-config \
     unzip \
     wget \
@@ -177,7 +182,6 @@ RUN wget  https://github.com/jhh/tinyfsm/archive/v${TINYFSM_VERSION}.zip -O tiny
     && rm -rf /opt/build/* \
     && rm -rf /opt/tinyfsm-${TINYFSM_VERSION}
 
-
 RUN wget  https://github.com/catchorg/Catch2/archive/v${CATCH2_VERSION}.zip -O catch.zip \
     && unzip catch.zip -d /opt \
     && rm -rf catch.zip \
@@ -191,3 +195,15 @@ RUN wget  https://github.com/catchorg/Catch2/archive/v${CATCH2_VERSION}.zip -O c
     && make install \
     && rm -rf /opt/build/* \
     && rm -rf /opt/Catch2-${CATCH2_VERSION} 
+
+RUN wget https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/snapshot/libgpiod-${LIBGPIOD_VERSION}.tar.gz \
+    && tar -C /opt -xzf libgpiod-${LIBGPIOD_VERSION}.tar.gz \
+    && rm -f libgpiod-${LIBGPIOD_VERSION}.tar.gz \
+    && cd /opt/libgpiod-${LIBGPIOD_VERSION} \
+    && ./autogen.sh --enable-tools=no --prefix=/usr/local \
+    && make install \
+    && cd ./bindings/cxx \
+    && make install \
+    && /sbin/ldconfig \
+    && rm -rf /opt/libgpiod-${LIBGPIOD_VERSION}
+
