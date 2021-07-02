@@ -1,12 +1,19 @@
-NS ?= j3ff
+NS      ?= j3ff
 VERSION ?= $(shell git rev-parse --short HEAD)
-IMAGE_NAME := deadeye-web
+IMAGE   := deadeye-web
 
-.PHONY: build clean symlinks requirements install
+.PHONY: build
+build: .built
 
-build:
-	docker build $(EXTRA_BUILD_ARGS) -t $(NS)/$(IMAGE_NAME):latest -t $(NS)/$(IMAGE_NAME):$(VERSION) -f Dockerfile .
+.built: Dockerfile package-lock.json nginx/nginx.conf
+	docker build -t $(NS)/$(IMAGE):latest -t $(NS)/$(IMAGE):$(VERSION) .
+	docker inspect -f '{{.Id}}' $(NS)/$(IMAGE):latest > $@
 
+.PHONY: push
 push: build
-	docker push $(NS)/$(IMAGE_NAME):latest
-	docker push $(NS)/$(IMAGE_NAME):$(VERSION)
+	docker push $(NS)/$(IMAGE):latest
+	docker push $(NS)/$(IMAGE):$(VERSION)
+
+.PHONY: clean
+clean:
+	rm -rf node_modules *.log* .built*

@@ -1,28 +1,37 @@
-NS ?= j3ff
+IMAGE   := deadeye-admin
+NS      ?= j3ff
 VERSION ?= $(shell git rev-parse --short HEAD)
-IMAGE_NAME := deadeye-admin
-WHEEL := deadeye-$(shell poetry version -s)-py3-none-any.whl
+WHEEL   := deadeye-$(shell poetry version -s)-py3-none-any.whl
 
-.PHONY: build push run clean wheel
+.PHONY: build
+build: .built
 
-build: requirements.txt wheel
-	docker build --build-arg wheel=$(WHEEL) -t $(NS)/$(IMAGE_NAME):latest -t $(NS)/$(IMAGE_NAME):$(VERSION) .
+.built: Dockerfile requirements.txt .built_wheel
+	docker build --build-arg wheel=$(WHEEL) -t $(NS)/$(IMAGE):latest -t $(NS)/$(IMAGE):$(VERSION) .
+	docker inspect -f '{{.Id}}' $(NS)/$(IMAGE):latest > $@
 
+.PHONY: push
 push: build
-	docker push $(NS)/$(IMAGE_NAME):latest
-	docker push $(NS)/$(IMAGE_NAME):$(VERSION)
+	docker push $(NS)/$(IMAGE):latest
+	docker push $(NS)/$(IMAGE):$(VERSION)
 
+.PHONY: run
 run:
 	# poetry run $(shell poetry env info -p)/bin/deadeye-server 2>&1 | grep -Ev '^(127|\()'
-	docker run -it --rm --name $(IMAGE_NAME) -p 5000:5000 --env-file .env $(NS)/$(IMAGE_NAME)
+	docker run -it --rm --name $(IMAGE) -p 5000:5000 --env-file .env $(NS)/$(IMAGE)
 
+.PHONY: clean
 clean:
-	rm -rf dist && rm -rf *.log*
+	rm -rf dist *.log* .built*
 
-wheel:
+.PHONY: wheel
+wheel: .built_wheel
+
+.built_wheel: dist/$(WHEEL)
+	poetry version -s > $@
+
+dist/$(WHEEL):
 	poetry build --format wheel
 
 requirements.txt: poetry.lock
 	poetry export -f requirements.txt --output requirements.txt
-
-
