@@ -7,9 +7,11 @@ x-common-environment: &common-environment
 volumes:
   upload_data:
 
+
 services:
   daemon:
     image: j3ff/deadeye-daemon
+    privileged: true
     ports:
       - 5805:5805
       - 5806:5806
@@ -18,6 +20,9 @@ services:
       - 5809:5809
     volumes:
       - upload_data:/upload
+      - /tmp/argus_socket:/tmp/argus_socket
+    devices:
+      - /dev/gpiochip0
     environment: *common-environment
   admin:
     image: j3ff/deadeye-admin
