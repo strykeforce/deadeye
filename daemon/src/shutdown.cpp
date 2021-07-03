@@ -1,8 +1,8 @@
-#include "log.h"
-
 #include <chrono>
 #include <gpiod.hpp>
 #include <thread>
+
+#include "log.h"
 
 int main() {
   using namespace std::chrono_literals;
