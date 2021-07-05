@@ -1,0 +1,9 @@
+[Unit]
+Description=Deadeye System Shutdown Daemon
+SuccessAction=poweroff-force
+
+[Service]
+ExecStart=/usr/local/sbin/shutdownd
+
+[Install]
+WantedBy=multi-user.target
