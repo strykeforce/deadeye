@@ -9,9 +9,9 @@
     - "{{ deadeye_mount }}"
 
 - name: Copy optional config file
-  ansible.builtin.copy:
-    src: deadeye.conf
-    dest: "{{ deadeye_conf }}"
+  ansible.builtin.template:
+    src: deadeye.conf.j2
+    dest: "{{ deadeye_conf }}/deadeye.conf"
     mode: 0664
     force: false
 

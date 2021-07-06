@@ -1,4 +1,6 @@
+#include <sys/reboot.h>
 #include <systemd/sd-bus.h>
+#include <unistd.h>
 
 #include <chrono>
 #include <cstring>
@@ -12,11 +14,17 @@
 
 #include "log.h"
 
+int do_normal_shutdown();
+int do_fast_shutdown();
+
 int main() {
   using namespace std::chrono_literals;
   using namespace gpiod;
 
   deadeye::log::Configure("shutdown");
+
+  bool fast_shutdown = std::getenv("DEADEYE_FAST_SHUTDOWN") != nullptr;
+  spdlog::info("Fast shutdown enabled: {}", fast_shutdown);
 
   spdlog::info("Configuring GPIO line.");
   chip c{"gpiochip0", chip::OPEN_BY_NAME};
@@ -28,7 +36,6 @@ int main() {
   spdlog::info("Waiting for shutdown button press...");
   while (true) {
     int input = line.get_value();
-    spdlog::debug("input={}", input);
     if (input)
       count++;
     else
@@ -36,25 +43,38 @@ int main() {
 
     if (count == 3) {
       spdlog::info("Shutdown button triggered shutdown");
-      sd_bus* bus = NULL;
-      int r = sd_bus_open_system(&bus);
-      if (r != 0) {
-        spdlog::error("Error getting default system bus: {}", std::strerror(r));
-        return EXIT_FAILURE;
-      }
-
-      sd_bus_error error = SD_BUS_ERROR_NULL;
-      spdlog::info("Got default system bus");
-      spdlog::info("Calling {}", MEMBER);
-
-      r = sd_bus_call_method(bus, DESTINATION, PATH, INTERFACE, MEMBER, &error,
-                             NULL, "b", 0);
-
-      return EXIT_SUCCESS;
+      if (fast_shutdown) return do_fast_shutdown();
+      return do_normal_shutdown();
     }
 
     std::this_thread::sleep_for(1s);
   }
 
   return EXIT_FAILURE;
+}
+
+int do_normal_shutdown() {
+  spdlog::info("Performing normal shutdown");
+  sd_bus* bus = NULL;
+  int r = sd_bus_open_system(&bus);
+  if (r != 0) {
+    spdlog::error("Error getting default system bus: {}", std::strerror(r));
+    return EXIT_FAILURE;
+  }
+
+  sd_bus_error error = SD_BUS_ERROR_NULL;
+  spdlog::info("Got default system bus");
+  spdlog::info("Calling {}", MEMBER);
+
+  r = sd_bus_call_method(bus, DESTINATION, PATH, INTERFACE, MEMBER, &error,
+                         NULL, "b", 0);
+
+  return EXIT_SUCCESS;
+}
+
+int do_fast_shutdown() {
+  spdlog::info("Performing fast shutdown");
+  sync();
+  reboot(RB_POWER_OFF);
+  return EXIT_SUCCESS;
 }
