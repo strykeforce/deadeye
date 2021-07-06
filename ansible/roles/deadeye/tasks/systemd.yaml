@@ -1,56 +1,66 @@
 ---
 - name: Create directories
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     mode: 0775
   loop:
-    - "{{ deadeye_conf }}"
+    - "{{ deadeye_conf_dir }}"
     - "{{ deadeye_mount }}"
 
 - name: Copy optional config file
-  copy:
+  ansible.builtin.copy:
     src: deadeye.conf
     dest: "{{ deadeye_conf }}"
     mode: 0664
-    force: no
+    force: false
 
 - name: Copy common systemd unit files
-  copy:
+  ansible.builtin.template:
     src: "{{ item }}"
-    dest: /etc/systemd/system/
+    dest: /etc/systemd/system/{{ item | basename | regex_replace('\.j2$', '') }}
     mode: 0664
   loop:
-    - deadeye-admin.service
-    - deadeye-daemon.service
+    - deadeye-admin.service.j2
+    - deadeye-daemon.service.j2
 
 - name: Copy Nano systemd unit files
-  copy:
+  ansible.builtin.template:
     src: "{{ item }}"
-    dest: /etc/systemd/system/
+    dest: /etc/systemd/system/{{ item | basename | regex_replace('\.j2$', '') }}
     mode: 0664
   loop:
-    - deadeye-shutdown.service
-    - var-opt-deadeye.mount
+    - deadeye-shutdown.service.j2
+    - var-opt-deadeye.mount.j2
   when: ansible_architecture == "aarch64"
 
 - name: Enable common systemd services
-  systemd:
+  ansible.builtin.systemd:
     name: "{{ item.name }}"
-    enabled: yes
-    state: "{{ item.state }}"
-    daemon_reload: yes
+    enabled: true
+    # state: "{{ item.state }}"
+    daemon_reload: true
   loop:
-    - { name: "deadeye-daemon.service", state: "restarted" }
-    - { name: "deadeye-admin.service", state: "restarted" }
+    - { name: "deadeye-daemon.service", state: "started" }
+    - { name: "deadeye-admin.service", state: "started" }
+    - { name: "nginx.service", state: "started" }
 
 - name: Enable Nano systemd services
-  systemd:
+  ansible.builtin.systemd:
     name: "{{ item.name }}"
-    enabled: yes
-    state: "{{ item.state }}"
-    daemon_reload: yes
+    enabled: true
+    # state: "{{ item.state }}"
+    daemon_reload: true
   loop:
     - { name: "deadeye-shutdown.service", state: "started" }
     - { name: "var-opt-deadeye.mount", state: "started" }
   when: ansible_architecture == "aarch64"
+
+- name: Reboot host and wait for it to restart
+  ansible.builtin.reboot:
+    msg: "Reboot initiated by Ansible"
+    connect_timeout: 5
+    reboot_timeout: 600
+    pre_reboot_delay: 0
+    post_reboot_delay: 30
+    test_command: whoami

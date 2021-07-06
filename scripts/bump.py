@@ -60,7 +60,7 @@ class Version:
             file.writelines(lines)
 
     def update_admin(self):
-        """Bump setup.py version."""
+        """Bump pyproject.toml version."""
         pyproject = self.deadeye_dir / "admin" / "pyproject.toml"
 
         with open(pyproject, "r") as file:
