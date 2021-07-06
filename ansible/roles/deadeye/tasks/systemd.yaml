@@ -5,7 +5,7 @@
     state: directory
     mode: 0775
   loop:
-    - "{{ deadeye_conf }}"
+    - "{{ deadeye_conf_dir }}"
     - "{{ deadeye_mount }}"
 
 - name: Copy optional config file
@@ -13,43 +13,44 @@
     src: deadeye.conf
     dest: "{{ deadeye_conf }}"
     mode: 0664
-    force: no
+    force: false
 
 - name: Copy common systemd unit files
-  copy:
+  ansible.builtin.template:
     src: "{{ item }}"
-    dest: /etc/systemd/system/
+    dest: /etc/systemd/system/{{ item | basename | regex_replace('\.j2$', '') }}
     mode: 0664
   loop:
-    - deadeye-admin.service
-    - deadeye-daemon.service
+    - deadeye-admin.service.j2
+    - deadeye-daemon.service.j2
 
 - name: Copy Nano systemd unit files
-  copy:
+  ansible.builtin.template:
     src: "{{ item }}"
-    dest: /etc/systemd/system/
+    dest: /etc/systemd/system/{{ item | basename | regex_replace('\.j2$', '') }}
     mode: 0664
   loop:
-    - deadeye-shutdown.service
-    - var-opt-deadeye.mount
+    - deadeye-shutdown.service.j2
+    - var-opt-deadeye.mount.j2
   when: ansible_architecture == "aarch64"
 
 - name: Enable common systemd services
   systemd:
     name: "{{ item.name }}"
-    enabled: yes
+    enabled: true
     state: "{{ item.state }}"
-    daemon_reload: yes
+    daemon_reload: true
   loop:
     - { name: "deadeye-daemon.service", state: "restarted" }
     - { name: "deadeye-admin.service", state: "restarted" }
+    - { name: "nginx.service", state: "started" }
 
 - name: Enable Nano systemd services
   systemd:
     name: "{{ item.name }}"
-    enabled: yes
+    enabled: true
     state: "{{ item.state }}"
-    daemon_reload: yes
+    daemon_reload: true
   loop:
     - { name: "deadeye-shutdown.service", state: "started" }
     - { name: "var-opt-deadeye.mount", state: "started" }

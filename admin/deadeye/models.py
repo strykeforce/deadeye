@@ -84,7 +84,7 @@ class Camera:
 
     def set_stream(self, stream):
         r = urlparse(stream["url"])
-        r = r._replace(query=f"s={time.monotonic_ns()}")
+        r = r._replace(query=f"s={int(time.monotonic() * 1000)}")
         stream["url"] = r.geturl()
         stream_entry = self.table().getEntry("Stream")
         stream_entry.setString(json.dumps(stream))

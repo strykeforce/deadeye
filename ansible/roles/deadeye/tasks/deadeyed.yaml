@@ -1,7 +1,7 @@
 ---
 - name: Install build prereqs
   apt:
-    update_cache: no
+    update_cache: false
     name:
       - cmake-curses-gui
       - pkg-config
@@ -30,9 +30,9 @@
       - -DDEADEYE_CAMERA3_PIPELINE={{ camera_3_pipeline }}
       - -DDEADEYE_CAMERA4_PIPELINE={{ camera_4_pipeline }}
       - ../daemon
-  environment:
-    LDFLAGS: -latomic
-    CXXFLAGS: -Wno-psabi
+  # environment:
+  #   LDFLAGS: -latomic
+  #   CXXFLAGS: -Wno-psabi
 
 - name: Build and Install
   command:

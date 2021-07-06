@@ -34,4 +34,4 @@ dist/$(WHEEL):
 	poetry build --format wheel
 
 requirements.txt: poetry.lock
-	poetry export -f requirements.txt --output requirements.txt
+	poetry export --format requirements.txt --without-hashes --output requirements.txt

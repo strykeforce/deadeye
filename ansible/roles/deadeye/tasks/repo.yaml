@@ -7,7 +7,7 @@
 
 - name: Install git
   apt:
-    update_cache: no
+    update_cache: false
     name:
       - git
 

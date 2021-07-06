@@ -1,16 +1,18 @@
 [tool.poetry]
+authors = ["Jeff Hutchison <jeff@jeffhutchison.com>"]
+description = "Deadeye provisioning Ansible playbooks"
+license = "MIT"
 name = "deadeye-ansible"
 version = "0.1.0"
-description = "Deadeye provisioning Ansible playbooks"
-authors = ["Jeff Hutchison <jeff@jeffhutchison.com>"]
-license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.9"
 ansible = "*"
+ansible-lint = {extras = ["yamllint"], version = "^5.0.12"}
+python = "^3.9.6"
+#python = "^3.6.12"
 
 [tool.poetry.dev-dependencies]
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=1.0.0"]

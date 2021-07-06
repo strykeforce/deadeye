@@ -1,10 +1,35 @@
 ---
+- name: Install nginx
+  apt:
+    update_cache: false
+    name:
+      - nginx
+
+- name: Remove default Nginx config
+  ansible.builtin.file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: Install Nginx config
+  ansible.builtin.template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/conf.d/nginx.conf
+    mode: 0640
+
+- name: Remove previous build
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "{{ deadeye_src }}/web/build/"
+    - "{{ deadeye_src }}/web/node_modules/"
+    - "{{ nginx_html }}"
+
 - name: Install admin packages based on package.json
   npm:
-    ci: yes
+    ci: true
     path: "{{ deadeye_src }}/web"
 
-  # when: deadeye_repo is changed
 - name: Build and stage admin front-end
   command:
     chdir: "{{ deadeye_src }}/web"
@@ -12,4 +37,17 @@
       - /usr/bin/npm
       - run
       - build
-  # when: deadeye_repo is changed
+
+- name: Create HTML dir
+  ansible.builtin.file:
+    path: "{{ nginx_html }}"
+    state: directory
+    mode: 0775
+
+- name: Copy admin front-end to HTML dir
+  ansible.builtin.copy:
+    src: "{{ deadeye_src }}/web/build/"
+    dest: "{{ nginx_html }}"
+    mode: preserve
+    # directory_mode: 0775
+    remote_src: true

@@ -11,7 +11,7 @@
 
 - import_tasks: web.yaml
   tags:
-    - admin
+    - web
 
 - import_tasks: admin-server.yaml
   tags:
