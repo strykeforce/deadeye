@@ -21,22 +21,31 @@
     path: "{{ item }}"
     state: absent
   loop:
-    - "{{ deadeye_src }}/web/build/"
-    - "{{ deadeye_src }}/web/node_modules/"
-    - "{{ nginx_html }}"
+    - "{{ playbook_dir }}/../web/build/"
+    - "{{ playbook_dir }}/../web/node_modules/"
+  delegate_to: localhost
 
 - name: Install admin packages based on package.json
-  npm:
-    ci: true
-    path: "{{ deadeye_src }}/web"
-
-- name: Build and stage admin front-end
-  command:
-    chdir: "{{ deadeye_src }}/web"
+  ansible.builtin.command:
+    chdir: "{{ playbook_dir }}/../web"
     argv:
-      - /usr/bin/npm
+      - npm
+      - ci
+  delegate_to: localhost
+
+- name: Build admin front-end
+  ansible.builtin.command:
+    chdir: "{{ playbook_dir }}/../web"
+    argv:
+      - npm
       - run
       - build
+  delegate_to: localhost
+
+- name: Remove HTML dir
+  ansible.builtin.file:
+    path: "{{ nginx_html }}"
+    state: absent
 
 - name: Create HTML dir
   ansible.builtin.file:
@@ -46,8 +55,6 @@
 
 - name: Copy admin front-end to HTML dir
   ansible.builtin.copy:
-    src: "{{ deadeye_src }}/web/build/"
+    src: "{{ playbook_dir }}/../web/build/"
     dest: "{{ nginx_html }}"
     mode: preserve
-    # directory_mode: 0775
-    remote_src: true
