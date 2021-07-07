@@ -45,8 +45,7 @@ static constexpr unsigned int hash(const char* str, int h = 0) {
  * Constructor for Controller.
  */
 Controller::Controller(PipelinesPtr pipelines) {
-  spdlog::info("Deadeye {}, commits since last version change: {}",
-               GetDeadeyeVersion(), GetDeadeyeCommitsSinceVersionChange());
+  spdlog::info("Deadeye {}", GetDeadeyeVersion());
 
   assert(pipelines);
 
