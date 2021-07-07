@@ -11,7 +11,7 @@
 - name: Copy optional config file
   ansible.builtin.template:
     src: deadeye.conf.j2
-    dest: "{{ deadeye_conf }}/deadeye.conf"
+    dest: "{{ deadeye_conf }}"
     mode: 0664
     force: false
 
