@@ -51,6 +51,7 @@ void FourUp::Run() {
       continue;
     }
     if (!enabled_) continue;  // throw away if logged by upstream while disabled
+    spdlog::trace("FourUp<{}>: received frame: {}", id_, entry.target->serial);
 
     auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
         std::chrono::high_resolution_clock::now() - begin_);
