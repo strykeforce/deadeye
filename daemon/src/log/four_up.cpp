@@ -51,6 +51,7 @@ void FourUp::Run() {
       continue;
     }
     if (!enabled_) continue;  // throw away if logged by upstream while disabled
+
     spdlog::trace("FourUp<{}>: received frame: {}", id_, entry.target->serial);
 
     auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -78,6 +79,9 @@ void FourUp::Run() {
       cv::cvtColor(gray, gray, cv::COLOR_GRAY2BGR);
       cv::drawContours(gray, entry.filtered_contours, -1,
                        cv::Scalar(255, 0, 240), 2);
+
+      spdlog::trace("FourUp<{}>: draw target markers: {}", id_,
+                    entry.target->serial);
       entry.target->DrawMarkers(gray);
 
       cv::Mat black{entry.frame.size(), CV_8UC3, cv::Scalar::all(0)};
@@ -104,6 +108,7 @@ void FourUp::Run() {
       mat_array[3] = info;
       cv::vconcat(mat_array, 4, output);
 
+      spdlog::trace("FourUp<{}>: write image: {}", id_, entry.target->serial);
       cv::imwrite(path, output);
     } catch (const cv::Exception& ex) {
       spdlog::error("FourUp<{}>: write exception: {}", id_, ex.what());
