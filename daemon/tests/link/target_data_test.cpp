@@ -1,6 +1,7 @@
 #include <opencv2/core/types.hpp>
 
 #include "catch2/catch.hpp"
+#include "link/min_area_target_data.h"
 #include "link/target_list_target_data.h"
 #include "link/upright_target_data.h"
 
@@ -20,6 +21,30 @@ TEST_CASE("UprightTargetData to JSON", "[link]") {
   json expected = R"({"d":[0,0,100,100,50,50],"id":"Z1","sn":1,"v":true})"_json;
   json j = json::parse(td.Dump());
   REQUIRE(j == expected);
+}
+
+TEST_CASE("MinAreaTargetData to JSON", "[link]") {
+  cv::Point center = cv::Point2f(100, 100);
+
+  MinAreaTargetData td{"Z1", 1, true,
+                       cv::RotatedRect(center, cv::Size2f(100, 50), 0), center};
+
+  json expected =
+      R"({"d":[0.0,100.0,100.0,50.0,100.0,50.0,125.0,50.0,75.0,150.0,75.0,150.0,125.0],"id":"Z1","sn":1,"v":true})"_json;
+  json j = json::parse(td.Dump());
+  REQUIRE(j == expected);
+}
+
+TEST_CASE("MinAreaTargetData to String", "[link]") {
+  cv::Point center{100, 100};
+
+  MinAreaTargetData td{"Z1", 1, true,
+                       cv::RotatedRect(center, cv::Size2f(100, 50), 0), center};
+
+  std::string expected =
+      R"(id=Z1 sn=1 val=true bl=(50.0,125.0) tl=(50.0,75.0) tr=(150.0,75.0) br=(150.0,125.0) ctr=(100,100) w=100.0 h=50.0 a=0.0)";
+
+  REQUIRE(td.ToString() == expected);
 }
 
 TEST_CASE("TargetListTargetData to JSON", "[link]") {
