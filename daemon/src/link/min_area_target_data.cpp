@@ -55,7 +55,7 @@ std::string MinAreaTargetData::ToString() const {
   return fmt::format(
       "id={} sn={} val={} bl=({:.1f},{:.1f}) tl=({:.1f},{:.1f}) "
       "tr=({:.1f},{:.1f}) br=({:.1f},{:.1f}) "
-      "ctr=({:.1f},{:.1f}) w={:.1f} h={:.1f} a={:.1f}",
+      "ctr=({},{}) w={:.1f} h={:.1f} a={:.1f}",
       id, serial, valid, corners[0].x, corners[0].y, corners[1].x, corners[1].y,
       corners[2].x, corners[2].y, corners[3].x, corners[3].y, center.x,
       center.y, rect.size.width, rect.size.height, rect.angle);
