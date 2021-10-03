@@ -5,6 +5,7 @@ After=deadeye-daemon.service
 
 [Service]
 Environment=DEADEYE_NT_SERVER={{ deadeye_nt_server }}
+Environment=DEADEYE_NT_PORT=1735
 Environment=DEADEYE_NT_WAIT_MS=500
 Environment=DEADEYE_ADMIN_PORT=5000
 Environment=FLASK_ENV=production
