@@ -31,7 +31,7 @@ class NetworkTablesConnection:
 
             root = NetworkTables.getGlobalTable()
             if not root.containsSubTable("Deadeye"):
-                self.app.logger.fatal("Deadeye subtable missing from Network Tables")
+                self.logger.fatal("Deadeye subtable missing from Network Tables")
                 NetworkTables.shutdown()
                 callback(False)
                 return
