@@ -1,5 +1,5 @@
 ---
-deadeye_version: 21.1.1 # updated by scripts/bump.py
+deadeye_version: 21.2.0 # updated by scripts/bump.py
 deadeye_repo: https://github.com/strykeforce/deadeye.git
 deadeye_src: /opt/deadeye/src
 deadeye_conf_dir: /etc/opt/deadeye
