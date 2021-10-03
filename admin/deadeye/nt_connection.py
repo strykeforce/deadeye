@@ -44,7 +44,7 @@ class NetworkTablesConnection:
             callback(True)
 
         self.connecting = True
-        self.logger.debug("connecting to NT server at %s:%i", DEADEYE_NT_SERVER, DEADEYE_NT_PORT)
+        self.logger.info("connecting to NT server at %s:%i", DEADEYE_NT_SERVER, DEADEYE_NT_PORT)
 
         # NetworkTables.initialize(server=DEADEYE_NT_SERVER)
         NetworkTables.startClient((DEADEYE_NT_SERVER, DEADEYE_NT_PORT))
