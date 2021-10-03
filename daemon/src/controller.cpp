@@ -456,10 +456,14 @@ void Controller::StartNetworkTables() {
   char* env_nt_server = std::getenv("DEADEYE_NT_SERVER");
   const char* nt_server = env_nt_server ? env_nt_server : NT_SERVER;
 
+  char* env_nt_port = std::getenv("DEADEYE_NT_PORT");
+  const unsigned int nt_port =
+    env_nt_port ? static_cast<unsigned int>(std::stoi(env_nt_port)) : NT_DEFAULT_PORT;
+
   // create own NT server if DEADEYE_NT_SERVER=127.0.0.1
   if (std::strncmp("127.0.0.1", nt_server, 15) == 0) {
     spdlog::info("Starting local NetworkTables server");
-    nt::StartServer(inst_, "network_tables.ini", nt_server, NT_DEFAULT_PORT);
+    nt::StartServer(inst_, "network_tables.ini", nt_server, nt_port);
     return;
   }
 
@@ -471,7 +475,7 @@ void Controller::StartNetworkTables() {
       inst_, [&](auto event) mutable { barrier.set_value(); }, true);
 
   spdlog::info("Starting NetworkTables client connecting to {}", nt_server);
-  nt::StartClient(inst_, nt_server, NT_DEFAULT_PORT);
+  nt::StartClient(inst_, nt_server, nt_port);
 
   spdlog::debug("Waiting for connection...");
   barrier_future.wait();
