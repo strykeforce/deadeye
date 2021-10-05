@@ -32,8 +32,6 @@ The Deadeye system has several components that run on a vision coprocessor, clie
     
     Communication to other components is via |NT| for configuration and control and to **deadeye-daemon** directly via UDP for streaming target data.
 
-    To include this client library in your robot program, download `deadeye.json <http://maven.strykeforce.org/deadeye.json>`_ and place in your program's ``vendordeps`` directory.
-
 **deadeye-admin**
     A Python web service running on the |NANO| that is the backend for the web-based administration dashboard, **deadeye-web**, that configures and controls **deadeye-daemon**.
     
