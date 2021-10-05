@@ -7,6 +7,10 @@ work on either a robot or the `robot simulator
 <https://docs.wpilib.org/en/latest/docs/software/wpilib-tools/robot-simulation/index.html>`_
 available on your development workstation.
 
+In this example, we'll upload this target `test image <_images/target.jpg>`_ to
+Deadeye. To make things interesting, this image includes extra retro-reflective
+tape reflections ("noise") that will need to be filtered out to isolate the target
+correctly.
 
 .. figure:: images/target.jpg
    :align: center
@@ -14,20 +18,20 @@ available on your development workstation.
 
    test target image
 
-   In this example, we'll upload this target `test image <_images/target.jpg>`_ to Deadeye.
-
-
-.. spacer
-
-Pipeline
-========
+Configure Pipeline
+==================
 
 This example assumes you have a Deadeye unit configured with the
 ``UprightRectPipeline`` and you can access its admin dashboard from your
 browser.
 
-Capture
--------
+.. note:: The quickstart pipeline tuning process outline below is good enough
+   for our single target test image. Real-world usage requires more careful
+   tuning that takes into account varying field positions and lighting
+   conditions.
+
+Image Capture
+-------------
 
 Start by using :menuselection:`Capture --> Type --> Image Upload` dashboard
 option to upload a `test image <_images/target.jpg>`_ of a target.
@@ -36,8 +40,8 @@ option to upload a `test image <_images/target.jpg>`_ of a target.
    :width: 100%
    :align: center
 
-Mask
-----
+Mask Target
+-----------
 
 .. TODO: make these glossary terms
 
@@ -62,7 +66,7 @@ interested in.
 
 We use a specific green-colored light to illuminate the target so we can filter
 out other colors by adjusting the :menuselection:`Mask --> Hue` lower and upper
-bounds until target pixels just start to disappear.
+bounds until just before the target pixels start to disappear.
 
 .. figure:: images/dash-mask-hue.png
    :width: 100%
@@ -81,8 +85,38 @@ reflected target mask.
 
    Mask Value lower bound set to 65.
 
-Installation
-============
+Filter Contours
+---------------
+
+Our masked test target image contains spurious contours that need to be
+filtered out. Set :menuselection:`Preview --> Contours --> Filtered` and
+adjust the filters until you just have a single contour around the target left.
+
+.. note:: When tuning filters for an actual robot, some of the filter
+   parameters may be affected by camera viewing angle and distance as the robot
+   moves around the field. Be sure to test thoroughly!
+
+.. figure:: images/dash-filter.png
+   :width: 100%
+   :align: center
+
+   Contour aspect ratio and solidity filters adjusted.
+
+Pipeline Logging
+----------------
+
+Logging can be enabled in the dashboard to assist troubleshooting during
+competitions. Here's an example of logging output from the pipeline we just
+configured.
+
+.. figure:: images/1-1.jpg
+   :width: 100%
+   :align: center
+
+   Deadeye pipeline *four-up* logging output.
+
+Configure Robot Project
+=======================
 
 Deadeye provides a Java client library that can be used to control and receive
 data from a Deadeye unit.
