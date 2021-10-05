@@ -1,12 +1,46 @@
-*******************
-Java Client Library
-*******************
+**********
+Quickstart
+**********
+
+This section gets you started using Deadeye with a FRC robot program. It will
+work on either a robot or the `robot simulator
+<https://docs.wpilib.org/en/latest/docs/software/wpilib-tools/robot-simulation/index.html>`_
+available on your development workstation.
+
+
+.. figure:: images/target.jpg
+   :align: center
+   :width: 60%
+
+   test target image
+
+   In this example, we'll upload this target `test image <_images/target.jpg>`_ to Deadeye.
+
+
+.. spacer
+
+This example assumes you have a Deadeye unit configured with the
+``UprightRectPipeline`` and you can access its web admin dashboard from your
+development workstation.
+
+Pipeline
+========
+
+We'll start by using the *Image Upload* feature of the Deadeye web admin
+dashboard to upload a `test image <_images/target.jpg>`_ of a target.
+
+.. image:: images/dash-img-upload.png
+   :width: 100%
+   :align: center
+
+Installation
+============
 
 Deadeye provides a Java client library that can be used to control and receive
 data from a Deadeye unit.
 
-Installation
-============
+Subsection
+----------
 
 For FRC robot projects, use the Deadeye client library `deadeye.json
 <http://maven.strykeforce.org/deadeye.json>`_ vendordeps file.
