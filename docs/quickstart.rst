@@ -19,19 +19,67 @@ available on your development workstation.
 
 .. spacer
 
-This example assumes you have a Deadeye unit configured with the
-``UprightRectPipeline`` and you can access its web admin dashboard from your
-development workstation.
-
 Pipeline
 ========
 
-We'll start by using the *Image Upload* feature of the Deadeye web admin
-dashboard to upload a `test image <_images/target.jpg>`_ of a target.
+This example assumes you have a Deadeye unit configured with the
+``UprightRectPipeline`` and you can access its admin dashboard from your
+browser.
+
+Capture
+-------
+
+Start by using :menuselection:`Capture --> Type --> Image Upload` dashboard
+option to upload a `test image <_images/target.jpg>`_ of a target.
 
 .. image:: images/dash-img-upload.png
    :width: 100%
    :align: center
+
+Mask
+----
+
+.. TODO: make these glossary terms
+
+Aquire *contours* that surround target reflections by adjusting the pipeline
+*mask* parameters. 
+
+.. note:: You can make the *hue*, *saturation*, and *value* adjustments in any
+   order, but we usually adjust value last and keep as wide a value range as
+   possible to account for different target viewing distances.
+
+Since the reflected light from the retro-reflective tape is a saturated color
+we start by adjusting the :menuselection:`Mask --> Saturation` lower bound.
+While watching the preview, increase the lower bound to a value that starts to
+remove low-saturation pixels but retains all the target pixels that we are
+interested in.
+
+.. figure:: images/dash-mask-sat.png
+   :width: 100%
+   :align: center
+
+   Mask Saturation lower bound set to 100.
+
+We use a specific green-colored light to illuminate the target so we can filter
+out other colors by adjusting the :menuselection:`Mask --> Hue` lower and upper
+bounds until target pixels just start to disappear.
+
+.. figure:: images/dash-mask-hue.png
+   :width: 100%
+   :align: center
+
+   Mask Hue bounds set to 65—100.
+
+
+Finally, since the retro-reflective target tape creates a bright reflection, we
+adjust the :menuselection:`Mask --> Value` lower-bound to clean up the
+reflected target mask.
+
+.. figure:: images/dash-mask-val.png
+   :width: 100%
+   :align: center
+
+   Mask Value lower bound set to 65.
 
 Installation
 ============
