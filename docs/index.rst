@@ -12,15 +12,16 @@ Deadeye is a computer vision system developed by `Stryke Force Team 2767
 .. toctree::
    :maxdepth: 2
 
-   overview
    quickstart
-   installation
-   Server Software <deployment>
    configuration
+   architecture
 
 .. toctree::
    :maxdepth: 2
-   :caption: Development
+   :caption: Installation
+
+   installation
+   deployment
    
 .. Indices and tables
 .. ==================

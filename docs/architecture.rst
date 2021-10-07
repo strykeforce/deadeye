@@ -2,7 +2,7 @@
 .. _sect_intro:
 
 ************
-Introduction
+Architecture
 ************
 
 Deadeye consists of software and hardware that together provide a vision
@@ -11,13 +11,15 @@ the block diagram below. In addition to the main vision processing pipeline
 shown in red, we have an adminstration dashboard in blue, and miscellaneous
 services in yellow. 
 
-This documentation assumes a |JETSON|_ is being used as the vision coprocessor.
-
 .. figure:: images/block-diagram.svg
    :width: 80%
    :align: center
 
    Block Diagram
+
+Although typically used on a |JETSON|_, the Deadeye server software (vision
+process daemon and admin dashboard web server) can be installed on any Linux
+system with the appropriate C++ compiler and development libararies installed.
 
 Software
 ========
