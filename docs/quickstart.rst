@@ -300,4 +300,4 @@ image large target in the **robot log** when you enable the robot.
 
    x=212, y=91
    x=212, y=91
-   ...
+
