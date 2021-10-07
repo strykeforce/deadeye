@@ -294,9 +294,7 @@ Deploy and Run
 --------------
 
 If your pipeline is tuned as above you should see target data for the sample
-image large target in the **robot log** when you enable the robot.
-
-.. code-block::
+image large target in the **robot log** when you enable the robot::
 
    x=212, y=91
    x=212, y=91
