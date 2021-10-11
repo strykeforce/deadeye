@@ -3,13 +3,14 @@
 let
   pkgs = import sources.nixpkgs { };
 in
-pkgs.stdenv.mkDerivation {
-  name = "readerwriterqueue";
+pkgs.stdenv.mkDerivation rec {
+  pname = "readerwriterqueue";
+  version = "1.0.5";
 
   src = pkgs.fetchFromGitHub {
     owner = "cameron314";
     repo = "readerwriterqueue";
-    rev = "v1.0.5";
+    rev = "v${version}";
     sha256 = "sha256-cPFEl669lEStpWnPHdkTsJx2zXbsmgXexoe/1yFeNkg=";
   };
 

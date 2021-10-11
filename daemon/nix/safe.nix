@@ -3,13 +3,14 @@
 let
   pkgs = import sources.nixpkgs { };
 in
-pkgs.stdenv.mkDerivation {
-  name = "safe";
+pkgs.stdenv.mkDerivation rec {
+  pname = "safe";
+  version = "1.0.0";
 
   src = pkgs.fetchFromGitHub {
     owner = "LouisCharlesC";
     repo = "safe";
-    rev = "v1.0.0";
+    rev = "v${version}";
     sha256 = "sha256-wMCMZ0hSB/2JHhJeb725wsmyTrU1WhAKsfzku81WMl0=";
   };
 
