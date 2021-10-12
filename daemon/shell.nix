@@ -1,10 +1,10 @@
 { sources ? import nix/sources.nix }:
 let
   pkgs = import sources.nixpkgs { };
-  libsafe = pkgs.callPackage ./nix/safe.nix { inherit sources; };
-  readerwriterqueue = pkgs.callPackage ./nix/readerwriterqueue.nix { inherit sources; };
-  tinyfsm = pkgs.callPackage ./nix/tinyfsm.nix { inherit sources; };
-  wpilib = pkgs.callPackage ./nix/wpilib.nix { inherit sources; };
+  libsafe = pkgs.callPackage ./nix/safe.nix { };
+  readerwriterqueue = pkgs.callPackage ./nix/readerwriterqueue.nix { };
+  tinyfsm = pkgs.callPackage ./nix/tinyfsm.nix { };
+  wpilib = pkgs.callPackage ./nix/wpilib.nix { };
 in
 pkgs.mkShell {
   buildInputs = [
