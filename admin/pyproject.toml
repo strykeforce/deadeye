@@ -22,6 +22,7 @@ python-dotenv = "^0.18.0"
 black = "*"
 pylint = "*"
 rope = "*"
+watchdog = "^2"
 
 [build-system]
 build-backend = "poetry.core.masonry.api"
