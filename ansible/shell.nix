@@ -4,7 +4,7 @@ let
 in
 pkgs.mkShell {
   buildInputs = with pkgs; [
-    nodejs
+    nodejs-16_x
     python39Packages.ansible-core
     python39Packages.ansible-lint
     python39Packages.poetry
