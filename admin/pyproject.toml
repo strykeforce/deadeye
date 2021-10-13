@@ -11,7 +11,7 @@ deadeye-server = "deadeye.scripts.server:main"
 
 [tool.poetry.dependencies]
 click = "~8.0.1"
-eventlet = "~0.31.0"
+eventlet = "~0.32.0"
 flask = "~2.0.1"
 flask-socketio = "~5.1.0"
 pynetworktables = "~2021.0.0"
