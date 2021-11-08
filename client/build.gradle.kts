@@ -31,6 +31,7 @@ dependencies {
     // Use JUnit Jupiter Engine for testing.
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
     testRuntimeOnly("edu.wpi.first.ntcore:ntcore-jni:$wpiVersion:osxx86-64")
+    testRuntimeOnly("edu.wpi.first.ntcore:ntcore-jni:$wpiVersion:linuxx86-64")
     testRuntimeOnly("edu.wpi.first.wpiutil:wpiutil-java:$wpiVersion")
     testRuntimeOnly("ch.qos.logback:logback-classic:1.2.6")
 }
