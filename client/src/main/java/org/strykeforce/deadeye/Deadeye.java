@@ -4,17 +4,16 @@ import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import okio.BufferedSource;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import java.util.regex.Pattern;
+import okio.BufferedSource;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Represents a connection to a Deadeye camera. It provides methods to configure and control the
@@ -34,30 +33,58 @@ public class Deadeye<T extends TargetData> {
   /**
    * Initialize a connection to a Deadeye camera.
    *
-   * @param id the camera id.
+   * @param id  the camera id.
    * @param cls the appropriate TargetData (or subclass) class object
    */
   public Deadeye(String id, Class<T> cls) {
-    this(id, cls, NetworkTableInstance.getDefault());
+    this(id, cls, NetworkTableInstance.getDefault(), null);
   }
+
+  /**
+   * Initialize a connection to a Deadeye camera and override the detected client IP address.
+   *
+   * @param id          the camera id.
+   * @param cls         the appropriate TargetData (or subclass) class object
+   * @param linkAddress override IP address to send client data to
+   */
+  public Deadeye(String id, Class<T> cls, @Nullable String linkAddress) {
+    this(id, cls, NetworkTableInstance.getDefault(), linkAddress);
+  }
+
 
   /**
    * Initialize a connection to a Deadeye camera using a specified NetworkTables instance. This is
    * primarily used for testing.
    *
-   * @param id the camera id.
+   * @param id  the camera id.
    * @param cls the appropriate TargetData (or subclass) class object
    * @param nti the NetworkTables instance to connect through
    */
-  @SuppressWarnings("unchecked")
   public Deadeye(String id, Class<T> cls, NetworkTableInstance nti) {
+    this(id, cls, nti, null);
+  }
+
+  /**
+   * Initialize a connection to a Deadeye camera using a specified NetworkTables instance and
+   * override the client IP address. This is primarily used for testing.
+   *
+   * @param id          the camera id.
+   * @param cls         the appropriate TargetData (or subclass) class object
+   * @param nti         the NetworkTables instance to connect through
+   * @param linkAddress override IP address to send target data to
+   */
+  @SuppressWarnings("unchecked")
+  public Deadeye(@NotNull String id, @NotNull Class<T> cls, @NotNull NetworkTableInstance nti,
+      @Nullable String linkAddress) {
     if (!Pattern.matches("^[A-Za-z][0-4]$", id)) {
       throw new IllegalArgumentException(id);
     }
 
     if (link == null) {
       synchronized (Link.class) {
-        if (link == null) link = new Link(nti);
+        if (link == null) {
+          link = new Link(nti, linkAddress);
+        }
       }
     }
 
@@ -70,7 +97,9 @@ public class Deadeye<T extends TargetData> {
 
     if (!link.isAlive()) {
       synchronized (Link.class) {
-        if (!link.isAlive()) link.start();
+        if (!link.isAlive()) {
+          link.start();
+        }
       }
     }
 
@@ -85,6 +114,11 @@ public class Deadeye<T extends TargetData> {
       logger.error("Unable to initialize target data", e);
       throw new IllegalArgumentException(e);
     }
+  }
+
+  static JsonAdapter<Info> getInfoJsonAdapter() {
+    Moshi moshi = new Moshi.Builder().build();
+    return moshi.adapter(Info.class);
   }
 
   /**
@@ -107,7 +141,9 @@ public class Deadeye<T extends TargetData> {
 
   public void handleTargetData(BufferedSource source) throws IOException {
     targetData = jsonAdapter.fromJson(source);
-    if (targetDataListener != null) targetDataListener.onTargetData(targetData);
+    if (targetDataListener != null) {
+      targetDataListener.onTargetData(targetData);
+    }
   }
 
   /**
@@ -135,8 +171,11 @@ public class Deadeye<T extends TargetData> {
    * @param enabled true to turn camera on.
    */
   public void setEnabled(boolean enabled) {
-    if (enabled) table.getEntry("On").setBoolean(true);
-    else table.getEntry("Off").setBoolean(true);
+    if (enabled) {
+      table.getEntry("On").setBoolean(true);
+    } else {
+      table.getEntry("Off").setBoolean(true);
+    }
   }
 
   /**
@@ -157,8 +196,11 @@ public class Deadeye<T extends TargetData> {
    */
   public void setLightEnabled(boolean enabled) {
     NetworkTable light = table.getSubTable("Light");
-    if (enabled) light.getEntry("On").setBoolean(true);
-    else light.getEntry("Off").setBoolean(true);
+    if (enabled) {
+      light.getEntry("On").setBoolean(true);
+    } else {
+      light.getEntry("Off").setBoolean(true);
+    }
   }
 
   /**
@@ -189,16 +231,12 @@ public class Deadeye<T extends TargetData> {
     return info;
   }
 
-  static JsonAdapter<Info> getInfoJsonAdapter() {
-    Moshi moshi = new Moshi.Builder().build();
-    return moshi.adapter(Info.class);
-  }
-
   Link getLink() {
     return link;
   }
 
   static class Info {
+
     private final boolean logging;
     private final String pipeline;
     private final String version;
@@ -211,8 +249,12 @@ public class Deadeye<T extends TargetData> {
 
     @Override
     public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
+      if (this == o) {
+        return true;
+      }
+      if (o == null || getClass() != o.getClass()) {
+        return false;
+      }
       Info info = (Info) o;
       return logging == info.logging
           && pipeline.equals(info.pipeline)

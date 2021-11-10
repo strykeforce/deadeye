@@ -1,5 +1,5 @@
 plugins {
-    `idea`
+    idea
     `java-library`
     `maven-publish`
 }
@@ -10,27 +10,29 @@ version = "21.2.0" // updated by scripts/bump.py
 repositories {
     jcenter()
     maven(url = "https://frcmaven.wpi.edu/artifactory/release/")
+    mavenCentral()
 }
 
 dependencies {
     val wpiVersion = "2021.3.1"
-    val slf4jVersion = "1.7.30"
-    val junitVersion = "5.7.2"
+    val slf4jVersion = "1.7.32"
+    val junitVersion = "5.8.1"
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
-    implementation("com.squareup.moshi:moshi:1.11.0")
+    implementation("com.squareup.moshi:moshi:1.12.0")
     implementation("edu.wpi.first.ntcore:ntcore-java:$wpiVersion")
     implementation("org.slf4j:slf4j-api:$slf4jVersion")
-    implementation("org.jetbrains:annotations:20.1.0")
+    implementation("org.jetbrains:annotations:22.0.0")
 
 
     // Use JUnit Jupiter API for testing.
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
 
     // Use JUnit Jupiter Engine for testing.
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
     testRuntimeOnly("edu.wpi.first.ntcore:ntcore-jni:$wpiVersion:osxx86-64")
     testRuntimeOnly("edu.wpi.first.wpiutil:wpiutil-java:$wpiVersion")
-    testRuntimeOnly("org.slf4j:slf4j-nop:$slf4jVersion")
+    testRuntimeOnly("ch.qos.logback:logback-classic:1.2.6")
 }
 
 java {
