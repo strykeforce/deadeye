@@ -11,4 +11,4 @@ Deadeye. To make things interesting, this image includes extra retro-reflective
 tape reflections ("noise") that will need to be filtered out to isolate the
 target correctly.
 
-<img src="images/target.jpg" class="screenshot" />
+<img src="../images/target.jpg" class="figure figure-90" />
