@@ -1,9 +1,0 @@
-[book]
-authors = ["Jeff Hutchison"]
-language = "en"
-multilingual = false
-src = "src"
-title = "Deadeye Vision System"
-
-[output.html]
-additional-css = ["custom.css"]

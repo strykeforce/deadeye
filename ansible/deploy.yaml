@@ -1,7 +1,0 @@
----
-- hosts: deadeye
-  vars:
-    deadeye_admin_port: 5000
-  roles:
-    - role: deadeye
-      tags: deadeye
