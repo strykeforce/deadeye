@@ -9,25 +9,64 @@ import okio.Buffer;
 import okio.BufferedSource;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * A <code>MinAreaRectTargetData</code> represents data returned from a Deadeye
+ * <code>MinAreaRectPipeline</code>.
+ * <p>
+ * The target detected by the <code>MinAreaRectPipeline</code> is represented by an OpenCV
+ * <a href="https://docs.opencv.org/4.5.4/db/dd6/classcv_1_1RotatedRect.html"><code>RotatedRect</code></a>
+ * and so care must be given to interpreting the angle and corner points. See this
+ * <a href="https://theailearner.com/tag/angle-of-rotation-by-cv2-minarearect/">blog post</a> for
+ * a good explanation of how to interpret the angle and corner points contained in this
+ * <code>MinAreaRectTargetData</code>.
+ */
 public class MinAreaRectTargetData extends TargetData {
 
   static final int DATA_LENGTH = 13;
 
-  /** Angle of OpenCV rotated rectangle. */
+  /**
+   * Rotation angle of the OpenCV <code>RotatedRect</code> enclosing this target.
+   */
   public final double angle;
-  /** Center of OpenCV rotated rectangle. */
-  @NotNull public final Point2D center;
-  /** Width of OpenCV rotated rectangle. */
+  /**
+   * Center <code>Point2D</code> of the OpenCV <code>RotatedRect</code> enclosing this target.
+   */
+  @NotNull
+  public final Point2D center;
+  /**
+   * Width of the OpenCV <code>RotatedRect</code> enclosing this target.
+   */
   public final double width;
-  /** Height of OpenCV rotated rectangle. */
+  /**
+   * Height of the OpenCV <code>RotatedRect</code> enclosing this target.
+   */
   public final double height;
-  /** Vertices of OpenCV rotated rectangle. */
-  @NotNull public final Point2D[] points;
+  /**
+   * Corners of the OpenCV <code>RotatedRect</code> enclosing this target.
+   */
+  @NotNull
+  public final Point2D[] points;
 
+  /**
+   * Constructs and initializes an invalid <code>MinAreaRectTargetData</code> with no id, serial 0,
+   * angle 0, and zero-area bounding box at the origin.
+   */
   public MinAreaRectTargetData() {
     this("", 0, false, 0, new Point2D(0, 0), 0, 0, new Point2D[0]);
   }
 
+  /**
+   * Constructs and initializes a <code>MinAreaRectTargetData</code> with the specified values.
+   *
+   * @param id     the <code>UprightRectPipeline</code> camera ID.
+   * @param serial the incrementing serial identifier of the target data.
+   * @param valid  true if a valid target was detected.
+   * @param angle  rotation angle of the OpenCV <code>RotatedRect</code>.
+   * @param center center <code>Point2D</code> of the OpenCV <code>RotatedRect</code>.
+   * @param width  width of the OpenCV <code>RotatedRect</code>.
+   * @param height height of the OpenCV <code>RotatedRect</code>.
+   * @param points corner <code>Point2D</code>s of the OpenCV <code>RotatedRect</code>.
+   */
   public MinAreaRectTargetData(
       @NotNull String id,
       int serial,
@@ -45,6 +84,11 @@ public class MinAreaRectTargetData extends TargetData {
     this.points = points;
   }
 
+  /**
+   * Gets the area of the OpenCV <code>RotatedRect</code> bounding box surrounding this target.
+   *
+   * @return the area of the bounding box.
+   */
   public double area() {
     return width * height;
   }
@@ -57,9 +101,15 @@ public class MinAreaRectTargetData extends TargetData {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    if (!super.equals(o)) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
     MinAreaRectTargetData that = (MinAreaRectTargetData) o;
     return Double.compare(that.angle, angle) == 0
         && Double.compare(that.width, width) == 0
@@ -147,11 +197,11 @@ public class MinAreaRectTargetData extends TargetData {
       reader.endObject();
       Point2D center = new Point2D(data[1], data[2]);
       Point2D[] points =
-          new Point2D[] {
-            new Point2D(data[5], data[6]),
-            new Point2D(data[7], data[8]),
-            new Point2D(data[9], data[10]),
-            new Point2D(data[11], data[12]),
+          new Point2D[]{
+              new Point2D(data[5], data[6]),
+              new Point2D(data[7], data[8]),
+              new Point2D(data[9], data[10]),
+              new Point2D(data[11], data[12]),
           };
       return new MinAreaRectTargetData(
           id, serial, valid, data[0], center, data[4], data[3], points);

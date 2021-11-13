@@ -8,22 +8,49 @@ import okio.Buffer;
 import okio.BufferedSource;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * A <code>UprightRectTargetData</code> represents data returned from a Deadeye
+ * <code>UprightRectPipeline</code>.
+ */
 @SuppressWarnings("unused")
 public class UprightRectTargetData extends TargetData {
 
   static final int DATA_LENGTH = 6;
 
-  /** Bounding box top-left corner point. */
-  @NotNull public final Point topLeft;
-  /** Bounding box bottom-right corner point. */
-  @NotNull public final Point bottomRight;
-  /** Bounding box center. */
-  @NotNull public final Point center;
+  /**
+   * Top left corner <code>Point</code> of the upright bounding box enclosing this target.
+   */
+  @NotNull
+  public final Point topLeft;
+  /**
+   * Bottom right corner <code>Point</code> of the upright bounding box enclosing this target.
+   */
+  @NotNull
+  public final Point bottomRight;
+  /**
+   * Center <code>Point</code> of the upright bounding box enclosing this target.
+   */
+  @NotNull
+  public final Point center;
 
+  /**
+   * Constructs and initializes an invalid <code>UprightRectTargetData</code> with no id, serial 0,
+   * and zero-area bounding box at the origin.
+   */
   public UprightRectTargetData() {
     this("", 0, false, new Point(0, 0), new Point(0, 0), new Point(0, 0));
   }
 
+  /**
+   * Constructs and initializes a <code>UprightRectTargetData</code> with the specified values.
+   *
+   * @param id the <code>UprightRectPipeline</code> camera ID.
+   * @param serial  the incrementing serial identifier of the target data.
+   * @param valid   true if a valid target was detected.
+   * @param topLeft the top left corner of the bounding box enclosing this target.
+   * @param bottomRight the top left corner of the bounding box enclosing this target.
+   * @param center the center of the bounding box enclosing this target.
+   */
   public UprightRectTargetData(
       @NotNull String id,
       int serial,
@@ -37,17 +64,29 @@ public class UprightRectTargetData extends TargetData {
     this.center = center;
   }
 
-  /** Returns bounding box area. */
+  /**
+   * Gets the area of the upright bounding box surrounding this target.
+   *
+   * @return the area of the bounding box.
+   */
   public int area() {
     return width() * height();
   }
 
-  /** Returns width of bounding box. */
+  /**
+   * Gets the width of the upright bounding box surrounding this target.
+   *
+   * @return the width of the bounding box.
+   */
   public int width() {
     return bottomRight.x - topLeft.x;
   }
 
-  /** Returns height of bounding box. */
+  /**
+   * Gets the height of the upright bounding box surrounding this target.
+   *
+   * @return the height of the bounding box.
+   */
   public int height() {
     return bottomRight.y - topLeft.y;
   }
@@ -60,9 +99,15 @@ public class UprightRectTargetData extends TargetData {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    if (!super.equals(o)) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
     UprightRectTargetData that = (UprightRectTargetData) o;
     return topLeft.equals(that.topLeft)
         && bottomRight.equals(that.bottomRight)

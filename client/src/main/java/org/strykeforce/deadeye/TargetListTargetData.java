@@ -11,16 +11,37 @@ import okio.Buffer;
 import okio.BufferedSource;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * A <code>TargetListTargetData</code> represents data returned from a Deadeye
+ * <code>TargetListPipeline</code>.
+ */
 public class TargetListTargetData extends TargetData {
 
   static final int DATA_LENGTH = 5;
 
-  @NotNull public final List<Target> targets;
+  /**
+   * A <code>List</code> containing all <code>Target</code> instances identified by the
+   * <code>TargetListPipeline</code>.
+   */
+  @NotNull
+  public final List<Target> targets;
 
+  /**
+   * Constructs and initializes an invalid <code>TargetListTargetData</code> with no id, serial 0,
+   * and no targets.
+   */
   public TargetListTargetData() {
     this("", 0, false, Collections.emptyList());
   }
 
+  /**
+   * Constructs and initializes a <code>TargetListTargetData</code> with the specified values.
+   *
+   * @param id      the <code>TargetListPipeline</code> camera ID.
+   * @param serial  the incrementing serial identifier of the target data.
+   * @param valid   true if a valid target was detected.
+   * @param targets the list of <code>Target</code> instances identified.
+   */
   public TargetListTargetData(
       @NotNull String id, int serial, boolean valid, @NotNull List<Target> targets) {
     super(id, serial, valid);
@@ -28,6 +49,7 @@ public class TargetListTargetData extends TargetData {
   }
 
   @Override
+  @NotNull
   @SuppressWarnings("rawtypes")
   public DeadeyeJsonAdapter getJsonAdapter() {
     return new JsonAdapterImpl();
@@ -35,9 +57,15 @@ public class TargetListTargetData extends TargetData {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    if (!super.equals(o)) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
     TargetListTargetData that = (TargetListTargetData) o;
     return targets.equals(that.targets);
   }
@@ -52,16 +80,39 @@ public class TargetListTargetData extends TargetData {
     return "TargetListTargetData{" + "targets=" + targets + "} " + super.toString();
   }
 
+  /**
+   * A <code>Target</code> represents a single target returned in a <code>TargetListTargetData</code>.
+   */
   public static class Target {
-    /** Bounding box top-left corner point. */
-    @NotNull public final Point topLeft;
-    /** Bounding box bottom-right corner point. */
-    @NotNull public final Point bottomRight;
-    /** Bounding box center. */
-    @NotNull public final Point center;
-    /** Contour area. */
+
+    /**
+     * Top left corner <code>Point</code> of the upright bounding box enclosing this target.
+     */
+    @NotNull
+    public final Point topLeft;
+    /**
+     * Bottom right corner <code>Point</code> of the upright bounding box enclosing this target.
+     */
+    @NotNull
+    public final Point bottomRight;
+    /**
+     * Center <code>Point</code> of the upright bounding box enclosing this target.
+     */
+    @NotNull
+    public final Point center;
+    /**
+     * Gets the area of the contour enclosing the target.
+     */
     public final int contourArea;
 
+    /**
+     * Constructs and initializes a <code>Target</code> with the specified values.
+     *
+     * @param topLeft the top left corner of the bounding box enclosing this target.
+     * @param bottomRight the top left corner of the bounding box enclosing this target.
+     * @param center the center of the bounding box enclosing this target.
+     * @param contourArea the area of the contour enclosing the target.
+     */
     public Target(
         @NotNull Point topLeft,
         @NotNull Point bottomRight,
@@ -73,25 +124,41 @@ public class TargetListTargetData extends TargetData {
       this.contourArea = contourArea;
     }
 
-    /** Returns bounding box area. */
+    /**
+     * Gets the area of the upright bounding box surrounding this target.
+     *
+     * @return the area of the bounding box.
+     */
     public int area() {
       return width() * height();
     }
 
-    /** Returns width of bounding box. */
+    /**
+     * Gets the width of the upright bounding box surrounding this target.
+     *
+     * @return the width of the bounding box.
+     */
     public int width() {
       return bottomRight.x - topLeft.x;
     }
 
-    /** Returns height of bounding box. */
+    /**
+     * Gets the height of the upright bounding box surrounding this target.
+     *
+     * @return the height of the bounding box.
+     */
     public int height() {
       return bottomRight.y - topLeft.y;
     }
 
     @Override
     public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
+      if (this == o) {
+        return true;
+      }
+      if (o == null || getClass() != o.getClass()) {
+        return false;
+      }
       Target target = (Target) o;
       return contourArea == target.contourArea
           && topLeft.equals(target.topLeft)

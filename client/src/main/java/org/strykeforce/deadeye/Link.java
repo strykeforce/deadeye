@@ -28,6 +28,7 @@ class Link extends Thread {
   private final byte[] bytes = new byte[512];
   private final Buffer buffer = new Buffer();
   private final DatagramPacket packet = new DatagramPacket(bytes, bytes.length);
+  private final String address;
   private final int port;
 
   Link(@NotNull NetworkTableInstance networkTableInstance, @Nullable String address) {
@@ -56,7 +57,9 @@ class Link extends Thread {
 
     config.save(deadeyeTable);
 
+    this.address = config.address;
     port = config.port;
+
     setName("Link");
     setDaemon(true);
   }
@@ -80,6 +83,15 @@ class Link extends Thread {
     } catch (IOException e) {
       logger.error("Deadeye target data receive thread", e);
     }
+  }
+
+  /**
+   * Gets the configured client address.
+   *
+   * @return the configured client address.
+   */
+  public String getAddress() {
+    return address;
   }
 
   synchronized void addTargetDataHandler(String id, Deadeye handler) {

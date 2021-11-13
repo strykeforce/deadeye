@@ -8,6 +8,13 @@ import okio.Buffer;
 import okio.BufferedSource;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * {@code TargetData} is an base class for target data sent by Deadeye camera pipelines.
+ *
+ * @see UprightRectTargetData
+ * @see MinAreaRectTargetData
+ * @see TargetListTargetData
+ */
 @SuppressWarnings("unused")
 public class TargetData {
 
@@ -18,10 +25,19 @@ public class TargetData {
   /** True if target data is valid. */
   public final boolean valid;
 
+  /**
+   * Constructs and initializes an invalid {@code TargetData} with no id and serial 0.
+   */
   public TargetData() {
-    this(null, 0, false);
+    this("", 0, false);
   }
 
+  /**
+   * Construct and initialize a {@code TargetData} with the specified values.
+   * @param id the camera id.
+   * @param serial  the incrementing serial identifier of the target data.
+   * @param valid   true if a valid target was detected.
+   */
   public TargetData(@NotNull String id, int serial, boolean valid) {
     this.id = id;
     this.serial = serial;

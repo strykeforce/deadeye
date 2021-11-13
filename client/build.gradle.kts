@@ -48,7 +48,15 @@ allprojects {
         options.compilerArgs.add("-Xlint:unchecked")
     }
     tasks.withType(Javadoc::class.java).all {
-        options.addStringOption("link", "https://docs.oracle.com/en/java/javase/11/docs/api")
+        options {
+            this as StandardJavadocDocletOptions
+            links(
+                "https://docs.oracle.com/en/java/javase/11/docs/api",
+                "https://first.wpi.edu/wpilib/allwpilib/docs/release/java",
+                "https://javadoc.io/doc/com.squareup.okio/okio/1.17.5/",
+                "https://javadoc.io/doc/org.jetbrains/annotations/22.0.0/"
+            )
+        }
     }
 }
 
