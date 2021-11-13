@@ -47,6 +47,17 @@ allprojects {
     tasks.withType(JavaCompile::class.java).all {
         options.compilerArgs.add("-Xlint:unchecked")
     }
+    tasks.withType(Javadoc::class.java).all {
+        options {
+            this as StandardJavadocDocletOptions
+            links(
+                "https://docs.oracle.com/en/java/javase/11/docs/api",
+                "https://first.wpi.edu/wpilib/allwpilib/docs/release/java",
+                "https://javadoc.io/doc/com.squareup.okio/okio/1.17.5/",
+                "https://javadoc.io/doc/org.jetbrains/annotations/22.0.0/"
+            )
+        }
+    }
 }
 
 val test by tasks.getting(Test::class) {

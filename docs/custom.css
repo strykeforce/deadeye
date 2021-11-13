@@ -1,0 +1,23 @@
+.figure {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+.figure-50 {
+  width: 50%;
+}
+.figure-60 {
+  width: 60%;
+}
+.figure-70 {
+  width: 70%;
+}
+.figure-80 {
+  width: 80%;
+}
+.figure-90 {
+  width: 90%;
+}
+.figure-100 {
+  width: 100%;
+}

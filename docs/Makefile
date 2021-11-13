@@ -1,23 +1,24 @@
-# Minimal makefile for Sphinx documentation
-#
+.PHONY: javadoc
+javadoc:
+	cd ../client && \
+		./gradlew javadoc
 
-# You can set these variables from the command line, and also
-# from the environment for the first two.
-SPHINXOPTS    ?=
-SPHINXBUILD   ?= sphinx-build
-SOURCEDIR     = .
-BUILDDIR      = _build
+.PHONY: book
+book:
+	@echo "====> building book"
+	mdbook build
 
-# Put it first so that "make" without argument is like "make help".
-help:
-	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+.PHONY: deploy
+deploy: book
+	@echo "====> deploying to github"
+	$(eval TMPDIR := $(shell mktemp -d))
+	git worktree add $(TMPDIR) gh-pages
+	rm -rf $(TMPDIR)/*
+	cp -rp book/* $(TMPDIR)
+	cd $(TMPDIR) && \
+		git add -A && \
+		git commit -m "deployed on $(shell date) by ${USER}" && \
+		git push origin gh-pages
+	rm -rf $(TMPDIR)
 
-.PHONY: help Makefile
-
-# Catch-all target: route all unknown targets to Sphinx using the new
-# "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
-%: Makefile
-	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
-
-livehtml:
-	sphinx-autobuild -b html $(ALLSPHINXOPTS) "$(SOURCEDIR)" "$(BUILDDIR)/html"
+# vim: set noexpandtab:
