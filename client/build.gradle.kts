@@ -47,6 +47,9 @@ allprojects {
     tasks.withType(JavaCompile::class.java).all {
         options.compilerArgs.add("-Xlint:unchecked")
     }
+    tasks.withType(Javadoc::class.java).all {
+        options.addStringOption("link", "https://docs.oracle.com/en/java/javase/11/docs/api")
+    }
 }
 
 val test by tasks.getting(Test::class) {

@@ -14,7 +14,7 @@
     {
 
       devShell.x86_64-linux = pkgs.mkShell {
-        buildInputs = with pkgs; [ jdk11 mdbook ];
+        buildInputs = with pkgs; [ jdk11 mdbook python39Packages.poetry ];
         shellHook = ''
           '';
       };
