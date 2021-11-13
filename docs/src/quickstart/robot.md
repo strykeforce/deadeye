@@ -1,11 +1,11 @@
-## Create Robot Project
+# Create Robot Project
 
 Deadeye provides a Java client library that can be used in FRC robot programs
 to control and receive data from a Deadeye vision co-processor. In this
 example, we'll use this library to connect to the Deadeye pipeline we just
 configured and print out data about the sample image\'s target.
 
-### Create Project
+## Create Project
 
 We'll assume you are using [VS Code with the WPILib extension][vscode].
 
@@ -19,7 +19,7 @@ Creator**:
 
 <img src="../images/wpi-new-project.png" class="screenshot" />
 
-### Add Deadeye Library
+## Add Deadeye Library
 
 For FRC robot projects, the Deadeye client library is provided via a
 vendordeps file:
