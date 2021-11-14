@@ -80,15 +80,13 @@
             pkgs.mdbook
             pkgs.ninja
             pkgs.nlohmann_json
-            pkgs.pkg-config
             pkgs.python39Packages.poetry
             pkgs.spdlog
-            pkgs.systemd.dev
             (buildHeaderOnlyLib "readerwriterqueue" "1.0.5" readerwriterqueue)
             (buildHeaderOnlyLib "safe" "1.0.0" safe)
             (buildHeaderOnlyLib "tinyfsm" "0.3.3" tinyfsm)
             wpilib
-          ];
+          ] ++ (if pkgs.stdenv.isLinux then [ pkgs.pkg-config pkgs.systemd.dev ] else [ ]);
         };
       }
     );
