@@ -95,11 +95,11 @@ following table:
 
 The gateway and DNS server are **10.27.67.1** for all units.
 
-**Important:** Make sure you have rebooted the after performing initial set-up
-since its network interface will change after first boot. :::
+> **Important:** Make sure you have rebooted the after performing initial
+> set-up since its network interface will change after first boot.
 
 To finish configuration, log in as user _deadeye_ and run the following
-command to install the `curl`{.interpreted-text role="program"} utility:
+command to install the `curl` utility:
 
 ```console
 $ sudo apt install -y curl

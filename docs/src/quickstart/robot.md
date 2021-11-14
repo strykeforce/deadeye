@@ -1,9 +1,10 @@
 # Create Robot Project
 
-Deadeye provides a Java client library that can be used in FRC robot programs
-to control and receive data from a Deadeye vision co-processor. In this
-example, we'll use this library to connect to the Deadeye pipeline we just
-configured and print out data about the sample image\'s target.
+Deadeye provides a Java client library ([javadocs](/javadoc/)) that can be
+used in FRC robot programs to control and receive data from a Deadeye vision
+co-processor. In this example, we'll use this library to connect to the Deadeye
+pipeline we just configured and print out data about the sample image\'s
+target.
 
 ## Create Project
 
@@ -21,8 +22,8 @@ Creator**:
 
 ## Add Deadeye Library
 
-For FRC robot projects, the Deadeye client library is provided via a
-vendordeps file:
+For FRC robot projects, the Java client library is provided via a vendordeps
+file:
 
 > Download from: <http://maven.strykeforce.org/deadeye.json>
 
