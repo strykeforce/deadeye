@@ -16,9 +16,10 @@ deploy: book
 	rm -rf $(TMPDIR)/*
 	cp -rp book/* $(TMPDIR)
 	cd $(TMPDIR) && \
-		git add -A && \
-		git commit -m "deployed on $(shell date) by ${USER}" && \
+		git add --all && \
+		git commit --message="deployed on $(shell date) by ${USER}" && \
 		git push origin gh-pages
+	git worktree remove $(TMPDIR)
 	rm -rf $(TMPDIR)
 
 # vim: set noexpandtab:

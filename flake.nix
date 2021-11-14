@@ -6,17 +6,31 @@
   };
 
   outputs = { self, nixpkgs }:
-    let
-      pkgs = import nixpkgs {
-        system = "x86_64-linux";
-      };
-    in
     {
-
-      devShell.x86_64-linux = pkgs.mkShell {
-        buildInputs = with pkgs; [ jdk11 mdbook python39Packages.poetry ];
-        shellHook = ''
+      devShell = {
+        x86_64-linux =
+          let
+            pkgs = import nixpkgs {
+              system = "x86_64-linux";
+            };
+          in
+          pkgs.mkShell {
+            buildInputs = with pkgs; [ jdk11 mdbook python39Packages.poetry ];
+            shellHook = ''
           '';
+          };
+
+        x86_64-darwin =
+          let
+            pkgs = import nixpkgs {
+              system = "x86_64-darwin";
+            };
+          in
+          pkgs.mkShell {
+            buildInputs = with pkgs; [ mdbook python39Packages.poetry ];
+            shellHook = ''
+          '';
+          };
       };
     };
 }
