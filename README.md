@@ -14,6 +14,11 @@ Developer Kit][jndk]. It consists of several parts:
 - Provisioning Tools - Ansible playbooks for provisioning and deploying the
   system to vision coprocessors.
 
+## Documentation
+
+- Installation and usage instructions are at https://strykeforce.github.io/deadeye/
+- The Java client library [javadocs](https://strykeforce.github.io/deadeye/javadoc/)
+
 ## Contributing
 
 Deadeye is free and open source. You can find the source code on
