@@ -39,7 +39,7 @@ It runs as a systemd service named `deadeye-daemon.service`.
 
 ### Java Client Library
 
-A Java client libary ([javadocs](/javadoc/)) used by FRC roboRIO robot code to
+A Java client libary ([javadocs](javadoc/)) used by FRC roboRIO robot code to
 control and communicate with the [camera pipeline
 daemon](#camera-pipeline-daemon) running on the vision co-processor.
 Communication to other components is via NetworkTables for configuration and
