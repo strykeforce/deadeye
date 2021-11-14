@@ -3,34 +3,14 @@
 
   inputs = {
     nixpkgs.url = github:NixOS/nixpkgs;
+    flake-utils.url = github:numtide/flake-utils;
   };
 
-  outputs = { self, nixpkgs }:
-    {
-      devShell = {
-        x86_64-linux =
-          let
-            pkgs = import nixpkgs {
-              system = "x86_64-linux";
-            };
-          in
-          pkgs.mkShell {
-            buildInputs = with pkgs; [ jdk11 mdbook python39Packages.poetry ];
-            shellHook = ''
-          '';
-          };
-
-        x86_64-darwin =
-          let
-            pkgs = import nixpkgs {
-              system = "x86_64-darwin";
-            };
-          in
-          pkgs.mkShell {
-            buildInputs = with pkgs; [ mdbook python39Packages.poetry ];
-            shellHook = ''
-          '';
-          };
-      };
-    };
+  outputs = { self, nixpkgs, flake-utils }:
+    flake-utils.lib.eachDefaultSystem (system:
+      let pkgs = nixpkgs.legacyPackages.${system}; in
+      {
+        devShell = pkgs.mkShell { buildInputs = with pkgs; [ jdk11 mdbook python39Packages.poetry ]; };
+      }
+    );
 }
