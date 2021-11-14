@@ -221,10 +221,12 @@ following table:</p>
 <tr><td>D</td><td>deadeye-d</td><td>10.27.67.13</td></tr>
 </tbody></table>
 <p>The gateway and DNS server are <strong>10.27.67.1</strong> for all units.</p>
-<p><strong>Important:</strong> Make sure you have rebooted the after performing initial set-up
-since its network interface will change after first boot. :::</p>
+<blockquote>
+<p><strong>Important:</strong> Make sure you have rebooted the after performing initial
+set-up since its network interface will change after first boot.</p>
+</blockquote>
 <p>To finish configuration, log in as user <em>deadeye</em> and run the following
-command to install the <code>curl</code>{.interpreted-text role=&quot;program&quot;} utility:</p>
+command to install the <code>curl</code> utility:</p>
 <pre><code class="language-console">$ sudo apt install -y curl
 </code></pre>
 <p>When the <code>curl</code> utility is successfully installed, run our custom bootstrap

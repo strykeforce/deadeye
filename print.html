@@ -232,10 +232,11 @@ competitions. Here's an example of logging output from the pipeline we just
 configured.</p>
 <img src="quickstart/../images/1-1.jpg" class="figure figure-90" />
 <div style="break-before: page; page-break-before: always;"></div><h1 id="create-robot-project"><a class="header" href="#create-robot-project">Create Robot Project</a></h1>
-<p>Deadeye provides a Java client library that can be used in FRC robot programs
-to control and receive data from a Deadeye vision co-processor. In this
-example, we'll use this library to connect to the Deadeye pipeline we just
-configured and print out data about the sample image's target.</p>
+<p>Deadeye provides a Java client library (<a href="quickstart//javadoc/">javadocs</a>) that can be
+used in FRC robot programs to control and receive data from a Deadeye vision
+co-processor. In this example, we'll use this library to connect to the Deadeye
+pipeline we just configured and print out data about the sample image's
+target.</p>
 <h2 id="create-project"><a class="header" href="#create-project">Create Project</a></h2>
 <p>We'll assume you are using <a href="https://docs.wpilib.org/en/stable/docs/software/vscode-overview/">VS Code with the WPILib extension</a>.</p>
 <p>See the WPILib VS Code instructions for <a href="https://docs.wpilib.org/en/stable/docs/software/vscode-overview/creating-robot-program.html">creating a robot
@@ -243,8 +244,8 @@ program</a> and use the following settings for the <strong>New Project
 Creator</strong>:</p>
 <img src="quickstart/../images/wpi-new-project.png" class="screenshot" />
 <h2 id="add-deadeye-library"><a class="header" href="#add-deadeye-library">Add Deadeye Library</a></h2>
-<p>For FRC robot projects, the Deadeye client library is provided via a
-vendordeps file:</p>
+<p>For FRC robot projects, the Java client library is provided via a vendordeps
+file:</p>
 <blockquote>
 <p>Download from: <a href="http://maven.strykeforce.org/deadeye.json">http://maven.strykeforce.org/deadeye.json</a></p>
 </blockquote>
@@ -371,37 +372,46 @@ libararies installed.</p>
 <p>The Deadeye system has several components that run on a vision coprocessor,
 client roboRIO and web browser. They communicate over the network and require a
 running <a href="https://docs.wpilib.org/en/stable/docs/software/networktables/">NetworkTables</a> server.</p>
-<h3 id="deadeye-daemon"><a class="header" href="#deadeye-daemon">deadeye-daemon</a></h3>
+<h3 id="camera-pipeline-daemon"><a class="header" href="#camera-pipeline-daemon">Camera Pipeline Daemon</a></h3>
 <p>The main vision processing process running on the vision coprocessor that
 manages up to five cameras and associated target processing pipelines. Each
 running instance is identified by a unit ID: A, B, C...</p>
-<p>Communication is via for configuration and control to <strong>deadeye-admin</strong> and
-<strong>deadeye-java</strong> client and via UDP to <strong>deadeye-java</strong> client that uses
-streaming targeting data. It also provides an on-demand camera video stream
-directly to <strong>deadeye-web</strong> over TCP.</p>
+<p>Communication is via NetworkTables for configuration and control via the <a href="architecture.html#web-admin-dashboard-server">web
+admin dashboard server</a> and the <a href="architecture.html#java-client-library">Java client
+library</a> and via UDP for streaming targeting data to the
+Java client library. It also provides an on-demand camera video stream directly
+to the <a href="architecture.html#web-admin-dashboard-client">web admin dashboard client</a> over TCP.</p>
 <p>It runs as a systemd service named <code>deadeye-daemon.service</code>.</p>
-<h3 id="deadeye-client"><a class="header" href="#deadeye-client">deadeye-client</a></h3>
-<p>Java libary used by FRC roboRIO robot code to control and communicate with
-<strong>deadeye-daemon</strong>.</p>
-<p>Communication to other components is via for configuration and control and to
-<strong>deadeye-daemon</strong> directly via UDP for streaming target data.</p>
-<h3 id="deadeye-admin"><a class="header" href="#deadeye-admin">deadeye-admin</a></h3>
-<p>A Python web service running on the that is the backend for the web-based
-administration dashboard, <strong>deadeye-web</strong>, that configures and controls
-<strong>deadeye-daemon</strong>.</p>
-<p>Communication with <strong>deadeye-daemon</strong> is via and with <strong>deadeye-web</strong> over
-websockets.</p>
+<h3 id="java-client-library"><a class="header" href="#java-client-library">Java Client Library</a></h3>
+<p>A Java client libary (<a href="/javadoc/">javadocs</a>) used by FRC roboRIO robot code to
+control and communicate with the <a href="architecture.html#camera-pipeline-daemon">camera pipeline
+daemon</a> running on the vision co-processor.
+Communication to other components is via NetworkTables for configuration and
+control and to the camera pipeline daemon directly via UDP for streaming target
+data.</p>
+<p>See the <a href="quickstart/robot.html#add-deadeye-library">Quickstart</a> for installation
+and usage instructions.</p>
+<h3 id="web-admin-dashboard-server"><a class="header" href="#web-admin-dashboard-server">Web Admin Dashboard Server</a></h3>
+<p>A Python web service running on the Nano that is the backend for the <a href="architecture.html#web-admin-dashboard-client">web admin
+dashboard client</a>, that configures and controls
+the <a href="architecture.html#camera-pipeline-daemon">camera pipeline daemon</a>.</p>
+<p>Communication with the camera pipeline daemon is via NetworkTables and with the
+web admin dashboard client via a websocket using the <a href="https://socket.io">Socket.IO</a>
+protocol.</p>
 <p>It runs as a systemd service named <code>deadeye-admin.service</code>.</p>
-<h3 id="deadeye-web"><a class="header" href="#deadeye-web">deadeye-web</a></h3>
+<h3 id="web-admin-dashboard-client"><a class="header" href="#web-admin-dashboard-client">Web Admin Dashboard Client</a></h3>
 <p>The web-based adminstration dashboard run on a developer's computer used to
-control, configure and monitor <strong>deadeye-daemon</strong>.</p>
-<p>It communicates with <strong>deadeye-admin</strong> over websockets and streams camera video
-directly from <strong>deadeye-deadeye</strong> over TCP.</p>
+control, configure and monitor the <a href="architecture.html#camera-pipeline-daemon">camera pipeline
+daemon</a>.</p>
+<p>It communicates with the <a href="architecture.html#web-admin-dashboard-server">web admin dashboard
+server</a> over websockets and streams camera preview
+video directly from the camera pipeline daemon over TCP as MJPEG.</p>
 <p>It can be loaded by connecting with a web browser to port 5000, for example,
 <a href="http://10.27.67.10:5000/">http://10.27.67.10:5000/</a>.</p>
-<h3 id="deadeye-shutdown"><a class="header" href="#deadeye-shutdown">deadeye-shutdown</a></h3>
-<p>A background service running on the that watches for a shutdown button press
-and performs a clean shutdown if it pressed for three or more seconds.</p>
+<h3 id="shutdown-service"><a class="header" href="#shutdown-service">Shutdown Service</a></h3>
+<p>A background service running on the Nano that watches for a <a href="architecture.html#shutdown-switch">shutdown
+button</a> press and performs a clean shutdown if it pressed for
+three or more seconds.</p>
 <p>It runs as a systemd service named <code>deadeye-shutdown.service</code>.</p>
 <h2 id="hardware"><a class="header" href="#hardware">Hardware</a></h2>
 <p>Deadeye software is designed to interact with cameras, lights and a
@@ -409,10 +419,10 @@ shutdown switch attached to the Jetson Nano.</p>
 <h3 id="camera"><a class="header" href="#camera">Camera</a></h3>
 <p>Any camera(s)
 <a href="https://developer.nvidia.com/embedded/jetson-partner-supported-cameras">supported</a>
-by the can be used. Deadeye supports up to five attached cameras per
-unit. Our default camera is a <a href="https://www.raspberrypi.org/products/camera-module-v2/">Raspberry Pi Camera Module
-V2</a> connected to
-the <code>J13 camera connector</code>.</p>
+by the Nano can be used. Deadeye supports up to five attached cameras per unit.
+Our default camera is a <a href="https://www.raspberrypi.org/products/camera-module-v2/">Raspberry Pi Camera Module
+V2</a> connected to the
+<code>J13 camera connector</code>.</p>
 <h3 id="lights"><a class="header" href="#lights">Lights</a></h3>
 <p>Our default vision processing pipeline relies on bright green LED
 illumination reflected by retro-reflective target tape back to the
@@ -430,9 +440,9 @@ assigned per table below.</p>
 <tr><td>4</td><td>26</td></tr>
 </tbody></table>
 <h3 id="shutdown-switch"><a class="header" href="#shutdown-switch">Shutdown Switch</a></h3>
-<p>The <strong>deadeye-shutdown</strong> daemon checks <code>GPIO pin 7</code> of the <code>J41</code> header every
-second and will initiate a system shutdown if the input is pulled high by the
-shutdown switch for three consecutive seconds.</p>
+<p>The <a href="architecture.html#shutdown-service">shutdown service</a> daemon checks <code>GPIO pin 7</code> of the
+Nano <code>J41</code> header every second and will initiate a system shutdown if the input
+is pulled high by the shutdown switch for three consecutive seconds.</p>
 <img src="images/shutdown-schematic.svg" class="figure figure-50"/>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="installation"><a class="header" href="#installation">Installation</a></h1>
 <p>This section describes how to prepare a Jetson Nano for Deadeye deployment. We
@@ -511,10 +521,12 @@ following table:</p>
 <tr><td>D</td><td>deadeye-d</td><td>10.27.67.13</td></tr>
 </tbody></table>
 <p>The gateway and DNS server are <strong>10.27.67.1</strong> for all units.</p>
-<p><strong>Important:</strong> Make sure you have rebooted the after performing initial set-up
-since its network interface will change after first boot. :::</p>
+<blockquote>
+<p><strong>Important:</strong> Make sure you have rebooted the after performing initial
+set-up since its network interface will change after first boot.</p>
+</blockquote>
 <p>To finish configuration, log in as user <em>deadeye</em> and run the following
-command to install the <code>curl</code>{.interpreted-text role=&quot;program&quot;} utility:</p>
+command to install the <code>curl</code> utility:</p>
 <pre><code class="language-console">$ sudo apt install -y curl
 </code></pre>
 <p>When the <code>curl</code> utility is successfully installed, run our custom bootstrap
