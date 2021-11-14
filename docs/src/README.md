@@ -19,7 +19,7 @@ Developer Kit][jndk]. It consists of several parts:
 Deadeye is free and open source. You can find the source code on
 [GitHub](https://github.com/strykeforce/deadeye) and issues and feature
 requests can be posted on the [GitHub issue
-tracker](https://github.com/strykeforce/deadeye/issues). Deadeye relies on the
-our users to fix bugs and add features: if you'd like to contribute, please
+tracker](https://github.com/strykeforce/deadeye/issues). Deadeye relies on our
+users to fix bugs and add features: if you'd like to contribute, please
 consider opening a [pull
 request](https://github.com/strykeforce/deadeye/pulls).
