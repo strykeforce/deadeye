@@ -4,6 +4,7 @@ language = "en"
 multilingual = false
 src = "src"
 title = "Deadeye Vision System"
+site-url = "https://strykeforce.github.io/deadeye"
 
 [output.html]
 additional-css = ["custom.css"]
