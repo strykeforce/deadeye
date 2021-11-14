@@ -23,53 +23,64 @@ running [NetworkTables][nt] server.
 
 [nt]: https://docs.wpilib.org/en/stable/docs/software/networktables/
 
-### deadeye-daemon
+### Camera Pipeline Daemon
 
 The main vision processing process running on the vision coprocessor that
 manages up to five cameras and associated target processing pipelines. Each
 running instance is identified by a unit ID: A, B, C...
 
-Communication is via for configuration and control to **deadeye-admin** and
-**deadeye-java** client and via UDP to **deadeye-java** client that uses
-streaming targeting data. It also provides an on-demand camera video stream
-directly to **deadeye-web** over TCP.
+Communication is via NetworkTables for configuration and control via the [web
+admin dashboard server](#web-admin-dashboard-server) and the [Java client
+library](#java-client-library) and via UDP for streaming targeting data to the
+Java client library. It also provides an on-demand camera video stream directly
+to the [web admin dashboard client](#web-admin-dashboard-client) over TCP.
 
 It runs as a systemd service named `deadeye-daemon.service`.
 
-### deadeye-client
+### Java Client Library
 
-Java libary used by FRC roboRIO robot code to control and communicate with
-**deadeye-daemon**.
+A Java client libary ([javadocs](/javadoc/)) used by FRC roboRIO robot code to
+control and communicate with the [camera pipeline
+daemon](#camera-pipeline-daemon) running on the vision co-processor.
+Communication to other components is via NetworkTables for configuration and
+control and to the camera pipeline daemon directly via UDP for streaming target
+data.
 
-Communication to other components is via for configuration and control and to
-**deadeye-daemon** directly via UDP for streaming target data.
+See the [Quickstart](quickstart/robot.md#add-deadeye-library) for installation
+and usage instructions.
 
-### deadeye-admin
+### Web Admin Dashboard Server
 
-A Python web service running on the that is the backend for the web-based
-administration dashboard, **deadeye-web**, that configures and controls
-**deadeye-daemon**.
+A Python web service running on the Nano that is the backend for the [web admin
+dashboard client](#web-admin-dashboard-client), that configures and controls
+the [camera pipeline daemon](#camera-pipeline-daemon).
 
-Communication with **deadeye-daemon** is via and with **deadeye-web** over
-websockets.
+Communication with the camera pipeline daemon is via NetworkTables and with the
+web admin dashboard client via a websocket using the [Socket.IO][socketio]
+protocol.
+
+[socketio]: https://socket.io
 
 It runs as a systemd service named `deadeye-admin.service`.
 
-### deadeye-web
+### Web Admin Dashboard Client
 
 The web-based adminstration dashboard run on a developer's computer used to
-control, configure and monitor **deadeye-daemon**.
+control, configure and monitor the [camera pipeline
+daemon](#camera-pipeline-daemon).
 
-It communicates with **deadeye-admin** over websockets and streams camera video
-directly from **deadeye-deadeye** over TCP.
+It communicates with the [web admin dashboard
+server](#web-admin-dashboard-server) over websockets and streams camera preview
+video directly from the camera pipeline daemon over TCP as MJPEG.
 
 It can be loaded by connecting with a web browser to port 5000, for example,
 <http://10.27.67.10:5000/>.
 
-### deadeye-shutdown
+### Shutdown Service
 
-A background service running on the that watches for a shutdown button press
-and performs a clean shutdown if it pressed for three or more seconds.
+A background service running on the Nano that watches for a [shutdown
+button](#shutdown-switch) press and performs a clean shutdown if it pressed for
+three or more seconds.
 
 It runs as a systemd service named `deadeye-shutdown.service`.
 
@@ -82,10 +93,10 @@ shutdown switch attached to the Jetson Nano.
 
 Any camera(s)
 [supported](https://developer.nvidia.com/embedded/jetson-partner-supported-cameras)
-by the can be used. Deadeye supports up to five attached cameras per
-unit. Our default camera is a [Raspberry Pi Camera Module
-V2](https://www.raspberrypi.org/products/camera-module-v2/) connected to
-the `J13 camera connector`.
+by the Nano can be used. Deadeye supports up to five attached cameras per unit.
+Our default camera is a [Raspberry Pi Camera Module
+V2](https://www.raspberrypi.org/products/camera-module-v2/) connected to the
+`J13 camera connector`.
 
 ### Lights
 
@@ -111,8 +122,8 @@ assigned per table below.
 
 ### Shutdown Switch
 
-The **deadeye-shutdown** daemon checks `GPIO pin 7` of the `J41` header every
-second and will initiate a system shutdown if the input is pulled high by the
-shutdown switch for three consecutive seconds.
+The [shutdown service](#shutdown-service) daemon checks `GPIO pin 7` of the
+Nano `J41` header every second and will initiate a system shutdown if the input
+is pulled high by the shutdown switch for three consecutive seconds.
 
 <img src="images/shutdown-schematic.svg" class="figure figure-50"/>
