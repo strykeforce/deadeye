@@ -46,8 +46,12 @@
           pname = "wpilib";
           version = "2021.3.1";
           src = wpilib-src;
-          nativeBuildInputs = [ pkgs.cmake ];
-          buildInputs = [ pkgs.gcc-unwrapped ];
+          nativeBuildInputs = [
+            pkgs.cmake
+          ];
+          buildInputs = [
+            pkgs.gcc-unwrapped
+          ];
           propagatedBuildInputs = [ pkgs.opencv4 ];
 
           cmakeFlags = [
@@ -72,21 +76,25 @@
       {
         devShell = pkgs.mkShell {
           buildInputs = [
+            pkgs.jdk11
+            pkgs.mdbook
+            pkgs.python39Packages.poetry
+
+          ] ++ pkgs.lib.optional pkgs.stdenv.isLinux [
             pkgs.catch2
             pkgs.cmakeCurses
             pkgs.gst_all_1.gst-plugins-base
             pkgs.gst_all_1.gstreamer
-            pkgs.jdk11
-            pkgs.mdbook
             pkgs.ninja
             pkgs.nlohmann_json
-            pkgs.python39Packages.poetry
+            pkgs.pkg-config
             pkgs.spdlog
+            pkgs.systemd.dev
+            wpilib
             (buildHeaderOnlyLib "readerwriterqueue" "1.0.5" readerwriterqueue)
             (buildHeaderOnlyLib "safe" "1.0.0" safe)
             (buildHeaderOnlyLib "tinyfsm" "0.3.3" tinyfsm)
-            wpilib
-          ] ++ (if pkgs.stdenv.isLinux then [ pkgs.pkg-config pkgs.systemd.dev ] else [ ]);
+          ];
         };
       }
     );
