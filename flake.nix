@@ -84,11 +84,12 @@
             pkgs.catch2
             pkgs.cmakeCurses
             pkgs.gst_all_1.gst-plugins-base
-            pkgs.gst_all_1.gstreamer
+            pkgs.gst_all_1.gst-plugins-good
+            pkgs.gst_all_1.gstreamer.dev
             pkgs.ninja
             pkgs.nlohmann_json
             pkgs.pkg-config
-            pkgs.spdlog
+            pkgs.spdlog.dev
             pkgs.systemd.dev
             wpilib
             (buildHeaderOnlyLib "readerwriterqueue" "1.0.5" readerwriterqueue)
