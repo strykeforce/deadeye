@@ -2,26 +2,26 @@
   description = "Deadeye develop environment";
 
   inputs = {
-    nixpkgs.url = github:NixOS/nixpkgs;
-    flake-utils.url = github:numtide/flake-utils;
+    nixpkgs.url = "github:NixOS/nixpkgs";
+    flake-utils.url = "github:numtide/flake-utils";
 
     safe = {
-      url = github:LouisCharlesC/safe;
+      url = "github:LouisCharlesC/safe";
       flake = false;
     };
 
     tinyfsm = {
-      url = github:jhh/tinyfsm/cmake;
+      url = "github:jhh/tinyfsm/cmake";
       flake = false;
     };
 
     readerwriterqueue = {
-      url = github:cameron314/readerwriterqueue;
+      url = "github:cameron314/readerwriterqueue";
       flake = false;
     };
 
     wpilib-src = {
-      url = github:wpilibsuite/allwpilib?ref=v2021.3.1;
+      url = "github:wpilibsuite/allwpilib?ref=v2021.3.1";
       flake = false;
     };
   };
