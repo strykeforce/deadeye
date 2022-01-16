@@ -49,7 +49,8 @@
     ]
   },
   "devDependencies": {
-    "npm-check": "^5.9.2"
+    "npm-check": "^5.9.2",
+    "prettier": "^2.5.1"
   },
   "jest": {
     "transformIgnorePatterns": [
