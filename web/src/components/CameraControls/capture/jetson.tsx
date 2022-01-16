@@ -195,19 +195,19 @@ const GainRange = (props: GainRangeProps) => {
     displayRestartMessage();
   };
 
-  const handleChange = (which: "lower" | "upper") => (
-    value: string | number | null | undefined
-  ) => {
-    let n = Number(value);
-    if (which === "lower") {
-      n = n <= upper ? n : upper;
-      saveChange(`${n} ${upper}`);
-      return;
-    }
-    // which === "upper"
-    n = n >= lower ? n : lower;
-    saveChange(`${lower} ${n}`);
-  };
+  const handleChange =
+    (which: "lower" | "upper") =>
+    (value: string | number | null | undefined) => {
+      let n = Number(value);
+      if (which === "lower") {
+        n = n <= upper ? n : upper;
+        saveChange(`${n} ${upper}`);
+        return;
+      }
+      // which === "upper"
+      n = n >= lower ? n : lower;
+      saveChange(`${lower} ${n}`);
+    };
 
   return (
     <Row className="capture-pane-control">
@@ -223,7 +223,7 @@ const GainRange = (props: GainRangeProps) => {
           key={key(unit, inum, 16)}
         />
       </Col>
-      <Col span={2}></Col>
+      <Col span={2}/>
       <Col span={8}>
         <InputNumber
           min={range[0]}
