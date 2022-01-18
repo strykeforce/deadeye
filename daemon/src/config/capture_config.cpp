@@ -17,7 +17,7 @@ CaptureConfig::CaptureConfig(CaptureType type, int width, int height,
 
 CaptureConfig::CaptureConfig(std::shared_ptr<nt::Value> value) {
   assert(value);
-  auto j = json::parse(value->GetString().str());
+  auto j = json::parse(value->GetString());
   j.at(kTypeKey).get_to(type);
   j.at(kWidthKey).get_to(width);
   j.at(kHeightKey).get_to(height);

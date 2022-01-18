@@ -2,18 +2,76 @@
 
 Stryke Force Deadeye Vision App
 
-# Build Dependencies
+## Build Dependencies
 
-The following should be installed via CMake:
+### macOS
 
--   [ntcore & cscore](https://github.com/wpilibsuite/allwpilib)
--   [spdlog](https://github.com/gabime/spdlog)
--   [Catch2](https://github.com/catchorg/Catch2)
--   [nlohmann/json](https://github.com/nlohmann/json)
+We'll use Homebrew to satisfy dependencies.
 
-These may be installed or need to be installed:
+#### OpenCV
 
--   OpenCV: see below
+Run `brew edit opencv` and make the following edits:
+
+```diff
+diff --git a/Formula/opencv.rb b/Formula/opencv.rb
+index 3f5d7da1ed7..1b885751e1f 100644
+--- a/Formula/opencv.rb
++++ b/Formula/opencv.rb
+@@ -38,6 +38,13 @@ class Opencv < Formula
+   depends_on "tbb"
+   depends_on "vtk"
+   depends_on "webp"
++  # jhh 2022-01-16
++  depends_on "gstreamer"
++  depends_on "gst-plugins-base"
++  depends_on "gst-plugins-good"
++  depends_on "gst-plugins-bad"
++  depends_on "gst-plugins-ugly"
++  depends_on "gst-libav"
+
+   uses_from_macos "zlib"
+
+@@ -81,7 +88,7 @@ class Opencv < Formula
+       -DWITH_EIGEN=ON
+       -DWITH_FFMPEG=ON
+       -DWITH_GPHOTO2=OFF
+-      -DWITH_GSTREAMER=OFF
++      -DWITH_GSTREAMER=ON
+       -DWITH_JASPER=OFF
+       -DWITH_OPENEXR=ON
+       -DWITH_OPENGL=OFF
+```
+
+Then build and install:
+
+```sh
+$ brew install --build-from-source opencv
+```
+
+Verify that GStreamer was compiled in:
+
+```
+❯ /usr/local/bin/python3
+Python 3.9.10 (main, Jan 15 2022, 11:48:04)
+[Clang 13.0.0 (clang-1300.0.29.3)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import cv2
+>>> print(cv2.getBuildInformation())
+```
+
+#### Other dependencies
+
+
+Install the following homebrew dependencies after installing OpenCV:
+
+```
+$ brew install spdlog nlohmann-json catch2
+$ # the following will build from source
+$ brew install strykeforce/deadeye/louischarlesc-safe strykeforce/deadeye/readerwriterqueue
+$ brew install strykeforce/deadeye/tinyfsm strykeforce/deadeye/wpilib
+```
+
+## Network Tables
 
 ```
 /Deadeye

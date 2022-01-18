@@ -26,7 +26,7 @@ StreamConfig::StreamConfig(int sn, std::string url, View view, Contour contour)
 
 StreamConfig::StreamConfig(std::shared_ptr<nt::Value> value) {
   assert(value);
-  auto j = json::parse(value->GetString().str());
+  auto j = json::parse(value->GetString());
   j.at(kSerialKey).get_to(sn);
   j.at(kUrlKey).get_to(url);
   j.at(kViewKey).get_to(view);
