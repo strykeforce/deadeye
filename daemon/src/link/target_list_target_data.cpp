@@ -9,7 +9,8 @@ using namespace deadeye;
 using json = nlohmann::json;
 
 namespace {
-constexpr int MAX_SERIALIZED_SIZE = 510;
+// minimum datagram size: IPv4 = 576 IPv6 = 1280
+constexpr int MAX_SERIALIZED_SIZE = 1000;
 const cv::Scalar BB_COLOR{20, 255, 20};
 }  // namespace
 
