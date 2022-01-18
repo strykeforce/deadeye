@@ -1,21 +1,21 @@
-bidict==0.21.2; python_version >= "3.6"
-click==8.0.1; python_version >= "3.6"
+bidict==0.21.4; python_version >= "3.6"
+click==8.0.3; python_version >= "3.6"
 colorama==0.4.4; python_version >= "3.6" and python_full_version < "3.0.0" and platform_system == "Windows" or platform_system == "Windows" and python_version >= "3.6" and python_full_version >= "3.5.0"
 dataclasses==0.8; python_version >= "3.6" and python_version < "3.7"
-dnspython==1.16.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0"
-eventlet==0.31.0
-flask-socketio==5.1.0
-flask==2.0.1; python_version >= "3.6"
-greenlet==1.1.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
-importlib-metadata==4.6.1; python_version < "3.8" and python_version >= "3.6"
+dnspython==2.2.0; python_version >= "3.6" and python_version < "4.0"
+eventlet==0.32.0
+flask-socketio==5.1.1; python_version >= "3.6"
+flask==2.0.2; python_version >= "3.6"
+greenlet==1.1.2; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
+importlib-metadata==4.8.3; python_version < "3.8" and python_version >= "3.6"
 itsdangerous==2.0.1; python_version >= "3.6"
-jinja2==3.0.1; python_version >= "3.6"
+jinja2==3.0.3; python_version >= "3.6"
 markupsafe==2.0.1; python_version >= "3.6"
 pynetworktables==2021.0.0; python_version >= "3.5"
 python-dotenv==0.18.0
-python-engineio==4.2.0
-python-socketio==5.3.0
+python-engineio==4.3.1; python_version >= "3.6"
+python-socketio==5.5.1; python_version >= "3.6"
 six==1.16.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.3.0"
-typing-extensions==3.10.0.0; python_version < "3.8" and python_version >= "3.6"
-werkzeug==2.0.1; python_version >= "3.6"
-zipp==3.5.0; python_version < "3.8" and python_version >= "3.6"
+typing-extensions==4.0.1; python_version < "3.8" and python_version >= "3.6"
+werkzeug==2.0.2; python_version >= "3.6"
+zipp==3.6.0; python_version < "3.8" and python_version >= "3.6"
