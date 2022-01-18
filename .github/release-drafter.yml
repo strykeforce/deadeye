@@ -25,7 +25,7 @@ version-resolver:
       - "patch"
   default: patch
 template: |
-  Installation and usage documentation is at: https://deadeye.readthedocs.io/.
+  Installation and usage documentation is at: https://strykeforce.github.io/deadeye/.
 
   ## Changes
 
