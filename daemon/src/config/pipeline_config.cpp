@@ -9,7 +9,7 @@ PipelineConfig::PipelineConfig(int sn, hsv_t hue, hsv_t sat, hsv_t val,
 
 PipelineConfig::PipelineConfig(std::shared_ptr<nt::Value> value) {
   assert(value);
-  auto j = json::parse(value->GetString().str());
+  auto j = json::parse(value->GetString());
   j.at(kSerialKey).get_to(sn);
   j.at(kHsvHueKey).get_to(hue);
   j.at(kHsvSatKey).get_to(sat);
