@@ -23,6 +23,7 @@ deadeye:
       deadeye_unit: F
       camera_0_pipeline: deadeye::UprightRectPipeline
       install_opencv: true
+      ansible_user: deadeye
     deadeye-h:
       ansible_host: deadeye-h
       deadeye_unit: H
