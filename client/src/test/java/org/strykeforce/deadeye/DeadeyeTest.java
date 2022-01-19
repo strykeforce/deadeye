@@ -6,7 +6,6 @@ package org.strykeforce.deadeye;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -25,6 +24,8 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.strykeforce.deadeye.Deadeye.Capture;
+import org.strykeforce.deadeye.Deadeye.Info;
 
 class DeadeyeTest {
 
@@ -87,15 +88,14 @@ class DeadeyeTest {
 
   @Test
   void testGetInfo() {
-    Deadeye.Info expected =
-        new Deadeye.Info(false, "TestPipeline", "1.0.0");
+    Info expected = new Info(false, "TestPipeline", "1.0.0");
     NetworkTable table = nti.getTable(Link.DEADEYE_TABLE + "/Z/0");
     NetworkTableEntry entry = table.getEntry("Info");
-    JsonAdapter<Deadeye.Info> jsonAdapter = Deadeye.getInfoJsonAdapter();
+    JsonAdapter<Info> jsonAdapter = Deadeye.getInfoJsonAdapter();
     entry.setString(jsonAdapter.toJson(expected));
 
     Deadeye<TargetData> deadeye = new Deadeye<>("Z0", TargetData.class, nti);
-    Deadeye.Info actual = deadeye.getInfo();
+    Info actual = deadeye.getInfo();
     assertEquals(expected, actual);
   }
 
@@ -103,7 +103,36 @@ class DeadeyeTest {
   void testGetNoInfo() {
     Deadeye<TargetData> deadeye = new Deadeye<>("Z0", TargetData.class, nti);
     Deadeye.Info actual = deadeye.getInfo();
-    assertNull(actual);
+    assertEquals("ERROR", actual.pipeline);
+  }
+
+  @Test
+  void testGetCapture() {
+    Capture expected = new Capture("test", 30, 640, 480);
+    NetworkTable table = nti.getTable(Link.DEADEYE_TABLE + "/Z/0");
+    NetworkTableEntry entry = table.getEntry("Capture");
+    entry.setString("{\n"
+        + "  \"config\": {\n"
+        + "    \"captureWidth\": 3264,\n"
+        + "    \"captureHeight\": 2464,\n"
+        + "    \"ispDigitalGainRange\": \"1 8\"\n"
+        + "  },\n"
+        + "  \"fps\": 30,\n"
+        + "  \"h\": 480,\n"
+        + "  \"type\": \"test\",\n"
+        + "  \"w\": 640,\n"
+        + "  \"pattern\": \"ball\"\n"
+        + "}\n");
+    Deadeye<TargetData> deadeye = new Deadeye<>("Z0", TargetData.class, nti);
+    Capture actual = deadeye.getCapture();
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  void testGetNoCapture() {
+    Deadeye<TargetData> deadeye = new Deadeye<>("Z0", TargetData.class, nti);
+    Deadeye.Capture actual = deadeye.getCapture();
+    assertEquals("ERROR", actual.type);
   }
 
   @Test

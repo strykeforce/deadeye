@@ -1,5 +1,6 @@
 package org.strykeforce.deadeye;
 
+import com.squareup.moshi.Json;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import edu.wpi.first.networktables.NetworkTable;
@@ -41,7 +42,7 @@ public class Deadeye<T extends TargetData> {
 
   static final Logger logger = LoggerFactory.getLogger(Deadeye.class);
   private static volatile Link link;
-  private final NetworkTable table;
+  private final NetworkTable cameraTable;
   private final String id;
   private final DeadeyeJsonAdapter<T> jsonAdapter;
   private TargetDataListener<T> targetDataListener;
@@ -152,7 +153,7 @@ public class Deadeye<T extends TargetData> {
 
     char unit = this.id.charAt(0);
     char inum = this.id.charAt(1);
-    table = nti.getTable(Link.DEADEYE_TABLE + "/" + unit + "/" + inum);
+    cameraTable = nti.getTable(Link.DEADEYE_TABLE + "/" + unit + "/" + inum);
 
     if (!link.isAlive()) {
       synchronized (Link.class) {
@@ -178,6 +179,11 @@ public class Deadeye<T extends TargetData> {
   static JsonAdapter<Info> getInfoJsonAdapter() {
     Moshi moshi = new Moshi.Builder().build();
     return moshi.adapter(Info.class);
+  }
+
+  static JsonAdapter<Capture> getCaptureJsonAdapter() {
+    Moshi moshi = new Moshi.Builder().build();
+    return moshi.adapter(Capture.class);
   }
 
   /**
@@ -230,7 +236,7 @@ public class Deadeye<T extends TargetData> {
    * @return true if camera is on.
    */
   public boolean getEnabled() {
-    return table.getEntry("On").getBoolean(false);
+    return cameraTable.getEntry("On").getBoolean(false);
   }
 
   /**
@@ -240,9 +246,9 @@ public class Deadeye<T extends TargetData> {
    */
   public void setEnabled(boolean enabled) {
     if (enabled) {
-      table.getEntry("On").setBoolean(true);
+      cameraTable.getEntry("On").setBoolean(true);
     } else {
-      table.getEntry("Off").setBoolean(true);
+      cameraTable.getEntry("Off").setBoolean(true);
     }
   }
 
@@ -253,7 +259,7 @@ public class Deadeye<T extends TargetData> {
    * @return true if light is on.
    */
   public boolean getLightEnabled() {
-    NetworkTable light = table.getSubTable("Light");
+    NetworkTable light = cameraTable.getSubTable("Light");
     return light.getEntry("On").getBoolean(false);
   }
 
@@ -263,7 +269,7 @@ public class Deadeye<T extends TargetData> {
    * @param enabled true to turn light on.
    */
   public void setLightEnabled(boolean enabled) {
-    NetworkTable light = table.getSubTable("Light");
+    NetworkTable light = cameraTable.getSubTable("Light");
     if (enabled) {
       light.getEntry("On").setBoolean(true);
     } else {
@@ -286,17 +292,35 @@ public class Deadeye<T extends TargetData> {
    *
    * @return the pipeline information.
    */
-  @Nullable
+  @NotNull
   public Info getInfo() {
-    String json = table.getEntry("Info").getString("");
+    String json = cameraTable.getEntry("Info").getString("");
     JsonAdapter<Info> jsonAdapter = getInfoJsonAdapter();
-    Info info = null;
     try {
-      info = jsonAdapter.fromJson(json);
-    } catch (IOException e) {
+      return Objects.requireNonNull(jsonAdapter.fromJson(json));
+    } catch (Exception e) {
       logger.error("error reading Info", e);
     }
-    return info;
+    // return error Info
+    return new Info();
+  }
+
+  /**
+   * Gets the capture configuration for the pipeline
+   *
+   * @return the capture configuration
+   */
+  @NotNull
+  public Capture getCapture() {
+    String json = cameraTable.getEntry("Capture").getString("");
+    JsonAdapter<Capture> jsonAdapter = getCaptureJsonAdapter();
+    try {
+      return Objects.requireNonNull(jsonAdapter.fromJson(json));
+    } catch (Exception e) {
+      logger.error("error reading Capture", e);
+    }
+    // return error Capture
+    return new Capture();
   }
 
   Link getLink() {
@@ -320,6 +344,10 @@ public class Deadeye<T extends TargetData> {
      * The version of the pipeline.
      */
     public final String version;
+
+    public Info() {
+      this(false, "ERROR", "ERROR");
+    }
 
     public Info(boolean logging, String pipeline, String version) {
       this.logging = logging;
@@ -360,4 +388,71 @@ public class Deadeye<T extends TargetData> {
           + '}';
     }
   }
+
+  /**
+   * An {@code Capture} represents Deadeye capture configuration information.
+   */
+  public static class Capture {
+
+    /**
+     * The capture type, e.g. "jetson".
+     */
+    public final String type;
+
+    /**
+     * The capture frame rate in frames per second.
+     */
+    @Json(name = "fps")
+    public final int frameRate;
+
+    /**
+     * The width of the captured frame in pixels.
+     */
+    @Json(name = "w")
+    public final int width;
+
+    /**
+     * The height of the captured frame in pixels.
+     */
+    @Json(name = "h")
+    public final int height;
+
+    public Capture() {this("ERROR",0,0,0);}
+
+    public Capture(String type, int frameRate, int width, int height) {
+      this.type = type;
+      this.frameRate = frameRate;
+      this.width = width;
+      this.height = height;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (o == null || getClass() != o.getClass()) {
+        return false;
+      }
+      Capture capture = (Capture) o;
+      return frameRate == capture.frameRate && width == capture.width && height == capture.height
+          && type.equals(capture.type);
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(type, frameRate, width, height);
+    }
+
+    @Override
+    public String toString() {
+      return "Capture{" +
+          "type='" + type + '\'' +
+          ", frameRate=" + frameRate +
+          ", width=" + width +
+          ", height=" + height +
+          '}';
+    }
+  }
+
 }
