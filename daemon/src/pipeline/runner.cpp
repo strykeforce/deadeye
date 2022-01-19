@@ -65,8 +65,9 @@ void Runner::Run() {
 
   std::unique_ptr<Logger> logger = nullptr;
   if (log_enabled) {
-    logger.reset(new Logger(CameraId(pipeline_->GetInum()), capture_config_,
-                            *pipeline_config_.readAccess(), log_config_));
+    logger = std::make_unique<Logger>(
+        CameraId(pipeline_->GetInum()), capture_config_,
+        *pipeline_config_.readAccess(), log_config_);
     logger->Run();
     spdlog::info("{}: logging enabled", *pipeline_);
   } else {

@@ -11,7 +11,7 @@ class TargetListPipeline : public AbstractPipeline {
   std::unique_ptr<TargetData> ProcessContours(Contours const& contours) final;
 
  protected:
-  std::string ToString() const final;
+  [[nodiscard]] std::string ToString() const final;
 
  private:
   std::string capture_type_{"unknown"};

@@ -23,7 +23,7 @@ struct TargetData {
   TargetData& operator=(const TargetData&) = delete;
 
   virtual void DrawMarkers(cv::Mat& preview) const;
-  virtual std::string Dump() const;  // json format
-  virtual std::string ToString() const { return Dump(); }
+  [[nodiscard]] virtual std::string Dump() const;  // json format
+  [[nodiscard]] virtual std::string ToString() const { return Dump(); }
 };
 }  // namespace deadeye

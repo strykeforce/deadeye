@@ -12,11 +12,11 @@ using TargetList = std::vector<std::array<int, 5>>;
 struct TargetListTargetData : public TargetData {
   TargetList targets;
 
-  TargetListTargetData(const std::string id, const int sn, const bool valid,
-                       const TargetList& targets);
+  TargetListTargetData(const std::string& id, int sn, bool valid,
+                       TargetList  targets);
 
   void DrawMarkers(cv::Mat& preview) const override;
-  std::string Dump() const override;
-  std::string ToString() const override;
+  [[nodiscard]] std::string Dump() const override;
+  [[nodiscard]] std::string ToString() const override;
 };
 }  // namespace deadeye

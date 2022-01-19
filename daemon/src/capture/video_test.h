@@ -6,8 +6,8 @@
 namespace deadeye {
 class VideoTest : public Gstreamer {
  public:
-  VideoTest(const CaptureConfig& config);
-  virtual ~VideoTest() {}
+  explicit VideoTest(const CaptureConfig& config);
+  ~VideoTest() override = default;
 };
 
 }  // namespace deadeye

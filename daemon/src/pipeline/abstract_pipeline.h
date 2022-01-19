@@ -16,25 +16,24 @@ class AbstractPipeline : public Pipeline {
   void Configure(const CaptureConfig& config) override;
   void Configure(const PipelineConfig& config) override;
 
-  virtual cv::Mat GetMask() const override { return hsv_threshold_output_; }
+  [[nodiscard]] cv::Mat GetMask() const override { return hsv_threshold_output_; }
 
-  virtual Contours GetContours() const override {
+  [[nodiscard]] Contours GetContours() const override {
     return find_contours_output_;
   }
 
-  virtual Contours GetFilteredContours() const override {
+  [[nodiscard]] Contours GetFilteredContours() const override {
     return filter_contours_output_;
   }
 
-  virtual std::unique_ptr<TargetData> ProcessFrame(
-      const cv::Mat& frame) override;
+  std::unique_ptr<TargetData> ProcessFrame(const cv::Mat& frame) override;
 
  protected:
   virtual void FilterContours(const FilterConfig& filter, const Contours& src,
                               Contours& dest);
   virtual std::unique_ptr<TargetData> ProcessContours(const Contours& contours);
 
-  virtual std::string ToString() const override;
+  [[nodiscard]] std::string ToString() const override;
 
   std::string id_;
 

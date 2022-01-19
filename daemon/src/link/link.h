@@ -11,12 +11,12 @@ struct LinkConfig;
 
 class Link {
  public:
-  Link(int inum);
+  explicit Link(int inum);
   ~Link();
   Link(const Link&) = delete;
   Link& operator=(const Link&) = delete;
 
-  void Send(TargetData* const td) const;  // Caller retains ownership
+  void Send(TargetData* td) const;  // Caller retains ownership
 
   static void Init(nt::NetworkTableInstance& nti);
 

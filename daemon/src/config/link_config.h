@@ -12,8 +12,8 @@ struct LinkConfig {
   static constexpr auto kEnabledKey = "enabled";
 
   std::string address;
-  int port;
-  bool enabled;
+  int port{};
+  bool enabled{};
 
   /**
    * Default constructor.
@@ -28,7 +28,7 @@ struct LinkConfig {
   /**
    * Constructor from NetworkTables value.
    */
-  LinkConfig(const nlohmann::json& j);
+  explicit LinkConfig(const nlohmann::json& j);
 };
 
 void to_json(nlohmann::json& j, const LinkConfig& l);

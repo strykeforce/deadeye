@@ -4,6 +4,7 @@
 #include <spdlog/spdlog.h>
 
 #include <opencv2/core/types.hpp>
+#include <utility>
 
 #include "config/capture_config.h"
 #include "config/deadeye_config.h"
@@ -16,20 +17,20 @@ using Contours = std::vector<std::vector<cv::Point>>;
 
 class Pipeline {
  public:
-  Pipeline(int inum, std::string name) : inum_(inum), name_(name) {}
+  Pipeline(int inum, std::string name) : inum_(inum), name_(std::move(name)) {}
   virtual ~Pipeline() = default;
   Pipeline(const Pipeline&) = delete;
   Pipeline& operator=(const Pipeline&) = delete;
 
-  int GetInum() const { return inum_; }
-  std::string GetName() const { return name_; }
+  [[nodiscard]] int GetInum() const { return inum_; }
+  [[nodiscard]] std::string GetName() const { return name_; }
 
-  virtual cv::Mat GetMask() const = 0;
+  [[nodiscard]] virtual cv::Mat GetMask() const = 0;
   virtual void Configure(const CaptureConfig& config) = 0;
   virtual void Configure(const PipelineConfig& config) = 0;
 
-  virtual Contours GetContours() const = 0;
-  virtual Contours GetFilteredContours() const = 0;
+  [[nodiscard]] virtual Contours GetContours() const = 0;
+  [[nodiscard]] virtual Contours GetFilteredContours() const = 0;
 
   virtual std::unique_ptr<TargetData> ProcessFrame(const cv::Mat& frame) = 0;
 
@@ -40,7 +41,7 @@ class Pipeline {
   }
 
  protected:
-  virtual std::string ToString() const = 0;
+  [[nodiscard]] virtual std::string ToString() const = 0;
   int inum_;
   std::string name_;
 };

@@ -8,8 +8,8 @@ std::string BuildV4L2Pipeline(const CaptureConfig& config);
 
 class UsbGStreamer : public Gstreamer {
  public:
-  UsbGStreamer(const CaptureConfig& config);
-  virtual ~UsbGStreamer() {}
+  explicit UsbGStreamer(const CaptureConfig& config);
+  ~UsbGStreamer() override = default;
 };
 
 }  // namespace deadeye

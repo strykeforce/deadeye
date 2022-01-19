@@ -30,7 +30,7 @@ class Controller {
     static Controller instance{pipelines};
     return instance;
   }
-  Controller(PipelinesPtr pipelines);
+  explicit Controller(PipelinesPtr pipelines);
 
   void StartNetworkTables();
 

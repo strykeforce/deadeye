@@ -7,8 +7,7 @@
 
 using namespace std::chrono_literals;
 
-namespace deadeye {
-namespace camera {
+namespace deadeye::camera {
 
 // forward declarations
 template <int inum>
@@ -108,8 +107,7 @@ class Error : public Camera<inum> {
   void exit() final { base::SetStatus(DE_ERROR, false); }
 };
 
-}  // namespace camera
-}  // namespace deadeye
+}  // namespace deadeye::camera
 
 FSM_INITIAL_STATE(deadeye::Camera<0>, deadeye::camera::Off<0>)
 FSM_INITIAL_STATE(deadeye::Camera<1>, deadeye::camera::Off<1>)

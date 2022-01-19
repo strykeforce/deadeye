@@ -9,9 +9,9 @@ namespace deadeye {
 
 class Gstreamer : public Capture {
  public:
-  virtual ~Gstreamer();
+  ~Gstreamer() override;
 
-  virtual bool Grab(cv::Mat& frame) override;
+  bool Grab(cv::Mat& frame) override;
 
  protected:
   cv::VideoCapture cap_;

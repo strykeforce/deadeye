@@ -4,6 +4,7 @@
 #include <spdlog/spdlog.h>
 
 #include <opencv2/imgproc.hpp>
+#include <utility>
 
 using namespace deadeye;
 using json = nlohmann::json;
@@ -14,10 +15,10 @@ constexpr int MAX_SERIALIZED_SIZE = 1000;
 const cv::Scalar BB_COLOR{20, 255, 20};
 }  // namespace
 
-TargetListTargetData::TargetListTargetData(const std::string id, const int sn,
+TargetListTargetData::TargetListTargetData(const std::string& id, const int sn,
                                            const bool valid,
-                                           const TargetList& targets)
-    : TargetData{id, sn, valid}, targets{targets} {}
+                                           TargetList  targets)
+    : TargetData{id, sn, valid}, targets{std::move(targets)} {}
 
 void TargetListTargetData::DrawMarkers(cv::Mat& preview) const {
   for (const auto& t : targets) {
@@ -37,8 +38,8 @@ std::string TargetListTargetData::Dump() const {
   if (serialized.size() > MAX_SERIALIZED_SIZE) {
     spdlog::error("TargetListTargetData too big for UDP: {}",
                   serialized.size());
-    TargetList targets{{{-1, -1, -1, -1, -1}}};
-    TargetListTargetData td{id, serial, false, targets};
+    TargetList error_targets{{{-1, -1, -1, -1, -1}}};
+    TargetListTargetData td{id, serial, false, error_targets};
     return td.Dump();
   }
 

@@ -13,7 +13,7 @@ struct UprightTargetData : public TargetData {
   UprightTargetData(std::string id, int sn, bool valid, cv::Rect bb);
 
   void DrawMarkers(cv::Mat& preview) const override;
-  std::string Dump() const override;
-  std::string ToString() const override;
+  [[nodiscard]] std::string Dump() const override;
+  [[nodiscard]] std::string ToString() const override;
 };
 }  // namespace deadeye

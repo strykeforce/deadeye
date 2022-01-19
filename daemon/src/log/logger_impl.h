@@ -2,20 +2,20 @@
 
 #include <readerwriterqueue/readerwriterqueue.h>
 
+#include <utility>
+
 #include "link/target_data.h"
 #include "pipeline/pipeline.h"  // for Contours
 
-namespace deadeye {
-
-namespace logger {
+namespace deadeye::logger {
 
 struct LogEntry {
   LogEntry() = default;
 
-  LogEntry(cv::Mat const frame, Contours filtered_contours,
+  LogEntry(cv::Mat frame, Contours filtered_contours,
            std::unique_ptr<TargetData> target)
-      : frame{frame},
-        filtered_contours{filtered_contours},
+      : frame{std::move(frame)},
+        filtered_contours{std::move(filtered_contours)},
         target{std::move(target)} {}
 
   cv::Mat frame;
@@ -30,7 +30,7 @@ class LoggerImpl {
  public:
   LoggerImpl(std::string id, LogConfig config, LoggerQueue& queue,
              std::atomic<bool>& cancel);
-  virtual ~LoggerImpl() {}
+  virtual ~LoggerImpl() = default;
 
   virtual void Run() = 0;
 
@@ -46,6 +46,4 @@ class LoggerImpl {
   bool CheckDir(const LogConfig& config);
   static int enable_count_;
 };
-}  // namespace logger
-
-}  // namespace deadeye
+}  // namespace deadeye::logger

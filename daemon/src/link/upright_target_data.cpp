@@ -3,13 +3,16 @@
 #include <fmt/core.h>
 
 #include <opencv2/imgproc.hpp>
+#include <utility>
 
 using namespace deadeye;
 using json = nlohmann::json;
 
 UprightTargetData::UprightTargetData(std::string id, int sn, bool valid,
                                      cv::Rect bb)
-    : TargetData{id, sn, valid}, bb(bb), center((bb.tl() + bb.br()) / 2) {}
+    : TargetData{std::move(id), sn, valid},
+      bb(bb),
+      center((bb.tl() + bb.br()) / 2) {}
 
 void UprightTargetData::DrawMarkers(cv::Mat& preview) const {
   cv::drawMarker(preview, center, cv::Scalar::all(255));

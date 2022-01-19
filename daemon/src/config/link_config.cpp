@@ -1,12 +1,14 @@
 #include "link_config.h"
 
+#include <utility>
+
 using namespace deadeye;
 using json = nlohmann::json;
 
-LinkConfig::LinkConfig() {}
+LinkConfig::LinkConfig() = default;
 
 LinkConfig::LinkConfig(std::string address, int port, bool enabled)
-    : address(address), port(port), enabled(enabled) {}
+    : address(std::move(address)), port(port), enabled(enabled) {}
 
 LinkConfig::LinkConfig(const nlohmann::json& j) {
   j.at(LinkConfig::kAddressKey).get_to(address);

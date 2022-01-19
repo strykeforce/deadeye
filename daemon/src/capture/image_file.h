@@ -9,10 +9,10 @@ namespace deadeye {
 
 class ImageFile : public Capture {
  public:
-  ImageFile(const CaptureConfig& config);
-  virtual ~ImageFile() {}
+  explicit ImageFile(const CaptureConfig& config);
+  ~ImageFile() override = default;
 
-  virtual bool Grab(cv::Mat& frame) override;
+  bool Grab(cv::Mat& frame) override;
 
  private:
   cv::Mat src_;

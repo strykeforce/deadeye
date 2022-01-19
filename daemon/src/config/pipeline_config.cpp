@@ -1,13 +1,15 @@
 #include "pipeline_config.h"
 
+#include <utility>
+
 using namespace deadeye;
 using json = nlohmann::json;
 
 PipelineConfig::PipelineConfig(int sn, hsv_t hue, hsv_t sat, hsv_t val,
                                FilterConfig filter, LogConfig log)
-    : sn(sn), hue(hue), sat(sat), val(val), filter(filter), log(log) {}
+    : sn(sn), hue(hue), sat(sat), val(val), filter(filter), log(std::move(log)) {}
 
-PipelineConfig::PipelineConfig(std::shared_ptr<nt::Value> value) {
+PipelineConfig::PipelineConfig(const std::shared_ptr<nt::Value>& value) {
   assert(value);
   auto j = json::parse(value->GetString());
   j.at(kSerialKey).get_to(sn);

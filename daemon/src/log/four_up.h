@@ -9,8 +9,7 @@
 #include "link/target_data.h"
 #include "log/logger_impl.h"
 
-namespace deadeye {
-namespace logger {
+namespace deadeye::logger {
 
 class FourUp : public LoggerImpl {
  public:
@@ -32,5 +31,4 @@ class FourUp : public LoggerImpl {
 
   std::chrono::high_resolution_clock::time_point begin_;
 };
-}  // namespace logger
-}  // namespace deadeye
+}  // namespace deadeye::logger

@@ -30,7 +30,7 @@ struct StreamConfig {
   /**
    * Construct with default values for camera inum.
    */
-  StreamConfig(int inum);
+  explicit StreamConfig(int inum);
 
   /**
    * Constructor from member values.
@@ -40,44 +40,44 @@ struct StreamConfig {
   /**
    * Constructor from NetworkTables.
    */
-  StreamConfig(std::shared_ptr<nt::Value> value);
+  explicit StreamConfig(const std::shared_ptr<nt::Value>& value);
 
   /**
    * Get stream enabled.
    */
-  inline bool StreamEnabled() const {
+  [[nodiscard]] inline bool StreamEnabled() const {
     return !(view == View::none && contour == Contour::none);
   }
 
   template <typename OStream>
   friend OStream& operator<<(OStream& os, const StreamConfig& sc) {
-    std::string view;
+    std::string current_view;
     switch (sc.view) {
       case View::none:
-        view = "none";
+        current_view = "none";
         break;
       case View::original:
-        view = "original";
+        current_view = "original";
         break;
       case View::mask:
-        view = "mask";
+        current_view = "mask";
         break;
     }
 
-    std::string contour;
+    std::string current_contour;
     switch (sc.contour) {
       case Contour::none:
-        contour = "none";
+        current_contour = "none";
         break;
       case Contour::filter:
-        contour = "filter";
+        current_contour = "filter";
         break;
       case Contour::all:
-        contour = "ALL";
+        current_contour = "ALL";
         break;
     }
     os << "StreamConfig<sn=" << sc.sn << ", url=\"" << sc.url
-       << "\", view=" << view << ", contour=" << contour << ">";
+       << "\", view=" << current_view << ", contour=" << current_contour << ">";
     return os;
   }
 };

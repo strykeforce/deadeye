@@ -9,6 +9,7 @@
 #include <cassert>
 #include <csignal>
 #include <future>
+#include <memory>
 #include <tinyfsm.hpp>
 
 #include "config/deadeye_config.h"
@@ -26,16 +27,16 @@ static spdlog::level::level_enum Nt2spdlogLevel(const nt::LogMessage& msg);
 using namespace deadeye;
 
 namespace {
-static constexpr double kPollTimeout = 0.25;
+constexpr double kPollTimeout = 0.25;
 
 std::atomic<bool> quit{false};
 
-void signal_handler(int signal) { quit = true; }
+void signal_handler([[maybe_unused]] int signal) { quit = true; }
 
 /**
  * From http://www.rioki.org/2016/03/31/cpp-switch-string.html
  */
-static constexpr unsigned int hash(const char* str, int h = 0) {
+constexpr unsigned int hash(const char* str, int h = 0) {
   return !str[h] ? 5381 : (hash(str, h + 1) * 33) ^ str[h];
 }
 
@@ -51,7 +52,7 @@ Controller::Controller(PipelinesPtr pipelines) {
 
   for (int i = 0; i < static_cast<int>(pipelines->size()); i++) {
     if (!(*pipelines)[i]) {
-      (*pipelines)[i].reset(new NullPipeline(i));
+      (*pipelines)[i] = std::make_unique<NullPipeline>(i);
       has_active_pipeline_[i] = false;
     } else {
       has_active_pipeline_[i] = true;
