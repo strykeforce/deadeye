@@ -73,7 +73,7 @@ TEST_CASE("TargetListTargetData serialized size", "[link]") {
   auto serialized = td1.Dump();
   REQUIRE(serialized.size() < 512);
 
-  for (size_t i = 0; i < 5; i++) {
+  for (size_t i = 0; i < 30; i++) {
     targets.push_back({999, 999, 999, 999, 9999});
   }
   TargetListTargetData td2{"Z1", 123'456'789, true, targets};
