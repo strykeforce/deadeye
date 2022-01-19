@@ -37,7 +37,7 @@ inline void GeometricContoursFilter(const FilterConfig& filter,
     cv::Rect bb = cv::boundingRect(contour);
 
     if (filter.IsAreaEnabled()) {
-      double bb_area = static_cast<double>(bb.area());
+      auto bb_area = static_cast<double>(bb.area());
       double ratio = bb_area / filter.frame_area;
       area_ok = ratio >= filter.area[0] && ratio <= filter.area[1];
       // spdlog::debug("bb = {}, frame = {}, ratio = {}", bb.area(),

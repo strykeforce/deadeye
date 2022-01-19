@@ -23,7 +23,7 @@ TEST_CASE("FindContours", "[ops]") {
   }
 }
 
-void MaskWrite(cv::Mat const &mask, Contours const &contours) {
+void MaskWrite(cv::Mat const& mask, Contours const& contours) {
   cv::Mat output;
   cv::cvtColor(mask, output, cv::COLOR_GRAY2BGR);
   cv::drawContours(output, contours, -1, cv::Scalar(255, 0, 240), 2);
@@ -128,7 +128,7 @@ TEST_CASE("solidity filter", "[ops]") {
 
   SECTION("solidity 1.0") {
     FilterConfig filter{{kAreaMin, kAreaMax},
-                        {kSolidityMax, kSolidityMax},
+                        {kSolidityMax - 1e-3, kSolidityMax},
                         {kAspectMin, kAspectMax}};
     filter.frame_area = 1280 * 720;
     GeometricContoursFilter(filter, contours, filtered_contours);

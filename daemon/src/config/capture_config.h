@@ -39,17 +39,17 @@ struct CaptureConfig {
   /**
    * Constructor from NetworkTables.
    */
-  CaptureConfig(std::shared_ptr<nt::Value> value);
+  explicit CaptureConfig(const std::shared_ptr<nt::Value>& value);
 
   /*
    * Get output size of frame.
    */
-  cv::Size Size() const;
+  [[nodiscard]] cv::Size Size() const;
 
   /*
    * Get string representation of capture type.
    */
-  std::string PipelineType() const;
+  [[nodiscard]] std::string PipelineType() const;
 
   template <typename OStream>
   friend OStream& operator<<(OStream& os, const CaptureConfig& cc) {

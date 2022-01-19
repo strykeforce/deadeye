@@ -11,7 +11,7 @@
 #include <cstring>
 #endif
 
-void deadeye::log::Configure(std::string name) {
+void deadeye::log::Configure(const std::string& name) {
   spdlog::cfg::load_env_levels();  // take from SPDLOG_LEVEL
 
 #ifdef __linux__

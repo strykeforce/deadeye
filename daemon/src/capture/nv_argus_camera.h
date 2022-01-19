@@ -8,8 +8,8 @@ std::string NvArgusCameraPipeline(const CaptureConfig& config);
 
 class NvArgusCamera : public Gstreamer {
  public:
-  NvArgusCamera(const CaptureConfig& config);
-  virtual ~NvArgusCamera() {}
+  explicit NvArgusCamera(const CaptureConfig& config);
+  ~NvArgusCamera() override = default;
 };
 
 }  // namespace deadeye

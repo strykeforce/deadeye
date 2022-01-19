@@ -29,7 +29,7 @@ bool ImageFile::Grab(cv::Mat& frame) {
 
 void ImageFile::LoadInvalidSource(const std::string& path) {
   src_ = cv::Mat::zeros(size_, CV_8UC3);
-  auto sep = path.rfind("/");
+  auto sep = path.rfind('/');
   auto file = sep != std::string::npos ? path.substr(sep + 1) : path;
   std::string text = fmt::format("ERROR LOADING: {}", file);
   int scale = size_.width / 320;

@@ -14,7 +14,7 @@ class Pipeline;
 
 class Streamer {
  public:
-  Streamer(const Pipeline* pipeline, const cv::Size size);
+  Streamer(const Pipeline* pipeline, cv::Size size);
   void Configure(const StreamConfig& config);
   void Process(const cv::Mat& frame, const TargetData* target);
 

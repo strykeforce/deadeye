@@ -10,7 +10,7 @@ using namespace deadeye;
 
 namespace {
 void ResetCScoreLogging();
-static int gcd(int a, int b) { return (b == 0) ? a : gcd(b, a % b); }
+int gcd(int a, int b) { return (b == 0) ? a : gcd(b, a % b); }
 }  // namespace
 
 Streamer::Streamer(const Pipeline* pipeline, const cv::Size size)

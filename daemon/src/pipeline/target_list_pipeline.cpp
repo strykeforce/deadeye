@@ -4,13 +4,14 @@
 #include <spdlog/spdlog.h>
 
 #include <opencv2/imgproc.hpp>
+#include <utility>
 
 #include "link/target_list_target_data.h"
 
 using namespace deadeye;
 
 TargetListPipeline::TargetListPipeline(int inum, std::string name)
-    : AbstractPipeline{inum, name} {}
+    : AbstractPipeline{inum, std::move(name)} {}
 
 void TargetListPipeline::Configure(const CaptureConfig& config) {
   capture_type_ = config.PipelineType();

@@ -1,10 +1,12 @@
 #include "log_config.h"
 
+#include <utility>
+
 using namespace deadeye;
 using json = nlohmann::json;
 
 LogConfig::LogConfig(LogType type, std::string path, int fps, bool mount)
-    : type(type), path(path), fps(fps), mount(mount) {}
+    : type(type), path(std::move(path)), fps(fps), mount(mount) {}
 
 // ---------------------------------------------------------------------------
 // nlohmann_json support

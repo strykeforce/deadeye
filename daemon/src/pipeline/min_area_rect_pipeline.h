@@ -11,7 +11,7 @@ class MinAreaRectPipeline : public AbstractPipeline {
   std::unique_ptr<TargetData> ProcessContours(Contours const& contours) final;
 
  protected:
-  std::string ToString() const final;
+  [[nodiscard]] std::string ToString() const final;
 
  private:
   cv::Point2f center2f_;

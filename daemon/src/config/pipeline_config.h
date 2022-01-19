@@ -48,10 +48,16 @@ struct PipelineConfig {
   /**
    * Constructor from NetworkTables.
    */
-  PipelineConfig(std::shared_ptr<nt::Value> value);
+  explicit PipelineConfig(const std::shared_ptr<nt::Value>& value);
 
-  cv::Scalar HsvLow() const { return cv::Scalar(hue[0], sat[0], val[0]); }
-  cv::Scalar HsvHigh() const { return cv::Scalar(hue[1], sat[1], val[1]); }
+  [[nodiscard]] cv::Scalar HsvLow() const {
+    return {static_cast<double>(hue[0]), static_cast<double>(sat[0]),
+            static_cast<double>(val[0])};
+  }
+  [[nodiscard]] cv::Scalar HsvHigh() const {
+    return {static_cast<double>(hue[1]), static_cast<double>(sat[1]),
+            static_cast<double>(val[1])};
+  }
 
   template <typename OStream>
   friend OStream& operator<<(OStream& os, const PipelineConfig& pc) {

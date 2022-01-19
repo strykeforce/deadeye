@@ -4,9 +4,10 @@
 #include <fmt/core.h>
 #include <ifaddrs.h>
 #include <spdlog/spdlog.h>
-#include <stdio.h>
+#include <cstdio>
 
 #include <sstream>
+#include <utility>
 
 using namespace deadeye;
 using json = nlohmann::json;
@@ -16,15 +17,15 @@ std::string stream_url(int inum);
 }
 
 StreamConfig::StreamConfig()
-    : sn(0), url(""), view(View::none), contour(Contour::none) {}
+    : sn(0), view(View::none), contour(Contour::none) {}
 
 StreamConfig::StreamConfig(int inum)
     : sn(0), url(stream_url(inum)), view(View::none), contour(Contour::none) {}
 
 StreamConfig::StreamConfig(int sn, std::string url, View view, Contour contour)
-    : sn(sn), url(url), view(view), contour(contour) {}
+    : sn(sn), url(std::move(url)), view(view), contour(contour) {}
 
-StreamConfig::StreamConfig(std::shared_ptr<nt::Value> value) {
+StreamConfig::StreamConfig(const std::shared_ptr<nt::Value>& value) {
   assert(value);
   auto j = json::parse(value->GetString());
   j.at(kSerialKey).get_to(sn);

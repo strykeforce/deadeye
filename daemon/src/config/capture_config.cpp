@@ -3,6 +3,7 @@
 #include <fmt/core.h>
 
 #include <nlohmann/json.hpp>
+#include <utility>
 
 using namespace deadeye;
 using json = nlohmann::json;
@@ -13,9 +14,9 @@ CaptureConfig::CaptureConfig(CaptureType type, int width, int height,
       width(width),
       height(height),
       frame_rate(frame_rate),
-      config(config) {}
+      config(std::move(config)) {}
 
-CaptureConfig::CaptureConfig(std::shared_ptr<nt::Value> value) {
+CaptureConfig::CaptureConfig(const std::shared_ptr<nt::Value>& value) {
   assert(value);
   auto j = json::parse(value->GetString());
   j.at(kTypeKey).get_to(type);
@@ -38,7 +39,6 @@ std::string CaptureConfig::PipelineType() const {
     default:
       return "UNKNOWN";
   }
-  return "";
 }
 
 cv::Size CaptureConfig::Size() const { return cv::Size{width, height}; }

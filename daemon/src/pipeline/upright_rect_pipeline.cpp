@@ -4,6 +4,7 @@
 #include <spdlog/spdlog.h>
 
 #include <opencv2/imgproc.hpp>
+#include <utility>
 
 // #include "config/pipeline_config.h"
 // #include "config/stream_config.h"
@@ -12,7 +13,7 @@
 using namespace deadeye;
 
 UprightRectPipeline::UprightRectPipeline(int inum, std::string name)
-    : AbstractPipeline{inum, name} {}
+    : AbstractPipeline{inum, std::move(name)} {}
 
 void UprightRectPipeline::Configure(const CaptureConfig& config) {
   capture_type_ = config.PipelineType();

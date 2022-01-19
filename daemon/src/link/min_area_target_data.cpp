@@ -3,25 +3,26 @@
 #include <fmt/core.h>
 
 #include <opencv2/imgproc.hpp>
+#include <utility>
 
 using namespace deadeye;
 using json = nlohmann::json;
 
 MinAreaTargetData::MinAreaTargetData(std::string id, int sn, bool valid,
-                                     cv::RotatedRect rect, cv::Point center)
-    : TargetData{id, sn, valid}, rect(rect), center(center) {
+                                     const cv::RotatedRect& rect, cv::Point center)
+    : TargetData{std::move(id), sn, valid}, rect(rect), center(std::move(center)) {
   rect.points(corners);
 }
 
 void MinAreaTargetData::DrawMarkers(cv::Mat& preview) const {
-  cv::Point center{preview.cols / 2, preview.rows / 2};
+  cv::Point frame_center{preview.cols / 2, preview.rows / 2};
   cv::Point2f target = rect.center;
-  cv::drawMarker(preview, center, cv::Scalar::all(255),
+  cv::drawMarker(preview, frame_center, cv::Scalar::all(255),
                  cv::MARKER_TILTED_CROSS);
   cv::drawMarker(preview, target, cv::Scalar::all(255));
 
-  for (int i = 0; i < 4; i++)
-    cv::circle(preview, corners[i], 3, cv::Scalar(0, 0, 255), cv::FILLED,
+  for (const auto & corner : corners)
+    cv::circle(preview, corner, 3, cv::Scalar(0, 0, 255), cv::FILLED,
                cv::LINE_AA);
   // cv::rectangle(preview, bb, cv::Scalar(255, 0, 0));
 }

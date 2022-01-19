@@ -9,7 +9,7 @@ namespace deadeye {
 
 class Capture {
  public:
-  virtual ~Capture() {}
+  virtual ~Capture() = default;
   virtual bool Grab(cv::Mat& frame) = 0;
 };
 }  // namespace deadeye
