@@ -421,6 +421,9 @@ void Controller::Run() {
 }
 
 void Controller::ShutDown() {
+  nt::DestroyEntryListenerPoller(poller_);
+  nt::RemoveEntryListener(entry_listener_);
+
   // fsm dispatches to all instances
   if (has_active_pipeline_[0]) {
     Camera<0>::dispatch(CameraOff());
