@@ -10,7 +10,10 @@ using namespace deadeye;
 
 namespace {
 void ResetCScoreLogging();
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "misc-no-recursion"
 int gcd(int a, int b) { return (b == 0) ? a : gcd(b, a % b); }
+#pragma clang diagnostic pop
 }  // namespace
 
 Streamer::Streamer(const Pipeline* pipeline, const cv::Size size)

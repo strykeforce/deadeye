@@ -1,7 +1,6 @@
 #include "capture/usb_cscore.h"
 
 #include <cscore_oo.h>
-#include <fmt/core.h>
 #include <spdlog/spdlog.h>
 
 using namespace deadeye;

@@ -1,5 +1,7 @@
 #include "target_data.h"
 
+#include <utility>
+
 using namespace deadeye;
 using json = nlohmann::json;
 
@@ -9,7 +11,7 @@ const char* TargetData::kValidKey{"v"};
 const char* TargetData::kDataKey{"d"};
 
 TargetData::TargetData(std::string id, int serial, bool valid)
-    : id(id), serial(serial), valid(valid) {}
+    : id(std::move(std::move(id))), serial(serial), valid(valid) {}
 
 void TargetData::DrawMarkers(cv::Mat& preview) const {}
 

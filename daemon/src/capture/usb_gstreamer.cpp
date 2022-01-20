@@ -6,7 +6,7 @@
 using namespace deadeye;
 using json = nlohmann::json;
 
-UsbGStreamer::UsbGStreamer(const CaptureConfig& config) {
+[[maybe_unused]] UsbGStreamer::UsbGStreamer(const CaptureConfig& config) {
   auto pipeline = BuildV4L2Pipeline(config);
   is_yuv_ = false;
   cap_.open(pipeline, cv::CAP_GSTREAMER);

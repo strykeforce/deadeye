@@ -1,7 +1,6 @@
 #include "upright_rect_pipeline.h"
 
 #include <fmt/core.h>
-#include <spdlog/spdlog.h>
 
 #include <opencv2/imgproc.hpp>
 #include <utility>
@@ -12,7 +11,7 @@
 
 using namespace deadeye;
 
-UprightRectPipeline::UprightRectPipeline(int inum, std::string name)
+[[maybe_unused]] UprightRectPipeline::UprightRectPipeline(int inum, std::string name)
     : AbstractPipeline{inum, std::move(name)} {}
 
 void UprightRectPipeline::Configure(const CaptureConfig& config) {

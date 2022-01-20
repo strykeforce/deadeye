@@ -3,13 +3,14 @@
 #include <fmt/core.h>
 
 #include <opencv2/imgcodecs.hpp>
+#include <utility>
 
 using namespace deadeye::logger;
 
-Capture::Capture(std::string id, CaptureConfig capture_config,
-                 LogConfig log_config, LoggerQueue& queue,
+Capture::Capture(std::string id, const CaptureConfig& capture_config,
+                 const LogConfig& log_config, LoggerQueue& queue,
                  std::atomic<bool>& cancel)
-    : LoggerImpl(id, log_config, queue, cancel) {}
+    : LoggerImpl(std::move(id), log_config, queue, cancel) {}
 
 void Capture::Run() {
   int seq = 1;

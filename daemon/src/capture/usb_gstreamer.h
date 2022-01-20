@@ -8,7 +8,7 @@ std::string BuildV4L2Pipeline(const CaptureConfig& config);
 
 class UsbGStreamer : public Gstreamer {
  public:
-  explicit UsbGStreamer(const CaptureConfig& config);
+  [[maybe_unused]] explicit UsbGStreamer(const CaptureConfig& config);
   ~UsbGStreamer() override = default;
 };
 

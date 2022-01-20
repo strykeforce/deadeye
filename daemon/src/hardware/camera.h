@@ -21,7 +21,7 @@ namespace deadeye {
 class Pipeline;
 
 template <class T>
-using owner = T;
+using owner [[maybe_unused]] = T;
 
 // ---------------------------------------------------------------------------
 // Events
@@ -62,21 +62,21 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
   }
 
  private:
-  void react(tinyfsm::Event const&) {}  // default
+  [[maybe_unused]] void react(tinyfsm::Event const&) {}
 
-  virtual void react(CameraOn const&) {}
-  virtual void react(CameraOff const&) {}
-  virtual void react(ConfigCapture const& c) {
+  [[maybe_unused]] virtual void react(CameraOn const&) {}
+  [[maybe_unused]] virtual void react(CameraOff const&) {}
+  [[maybe_unused]] virtual void react(ConfigCapture const& c) {
     Camera<inum>::pipeline_runner_.Configure(c.config);
   }
-  virtual void react(ConfigPipeline const& c) {
+  [[maybe_unused]] virtual void react(ConfigPipeline const& c) {
     Camera<inum>::pipeline_runner_.Configure(c.config);
   }
-  virtual void react(ConfigStream const& s) {
+  [[maybe_unused]] virtual void react(ConfigStream const& s) {
     Camera<inum>::pipeline_runner_.Configure(s.config);
   }
 
-  virtual void entry() = 0;
+  [[maybe_unused]] virtual void entry() = 0;
   virtual void exit() = 0;
 
  protected:
@@ -94,7 +94,7 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
 
 // state variable definitions
 template <int inum>
-Runner Camera<inum>::pipeline_runner_;
+Runner Camera<inum>::pipeline_runner_; // NOLINT
 
 template <int inum>
 std::future<void> Camera<inum>::pipeline_future_;

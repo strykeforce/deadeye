@@ -3,13 +3,15 @@
 #include <dirent.h>
 #include <sys/stat.h>
 
+#include <utility>
+
 using namespace deadeye::logger;
 
 int LoggerImpl::enable_count_{0};
 
-LoggerImpl::LoggerImpl(std::string id, LogConfig config, LoggerQueue& queue,
+LoggerImpl::LoggerImpl(std::string id, const LogConfig& config, LoggerQueue& queue,
                        std::atomic<bool>& cancel)
-    : id_{id},
+    : id_{std::move(std::move(id))},
       enabled_{config.fps > 0 && CheckMount(config) && CheckDir(config)},
       queue_(queue),
       cancel_{cancel} {
@@ -19,8 +21,8 @@ LoggerImpl::LoggerImpl(std::string id, LogConfig config, LoggerQueue& queue,
 }
 
 bool LoggerImpl::CheckMount(const LogConfig& config) {
-  struct stat mnt;
-  struct stat parent;
+  struct stat mnt{};
+  struct stat parent{};
 
   // check mount point
   if (stat(config.path.c_str(), &mnt)) {

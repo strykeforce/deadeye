@@ -28,7 +28,7 @@ Link::Link(int inum) : id_(DEADEYE_UNIT + std::to_string(inum)) {
   if (fd_ == -1)
     spdlog::critical("Link<{}> send socket error: {}", id_, strerror(errno));
 
-  sockaddr_in addr;
+  sockaddr_in addr{};
   addr.sin_family = AF_INET;
   addr.sin_port = htons(link_config.port);
   inet_pton(AF_INET, link_config.address.c_str(), &addr.sin_addr);

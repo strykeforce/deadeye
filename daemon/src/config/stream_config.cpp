@@ -67,16 +67,16 @@ std::ostream& operator<<(std::ostream& os, const StreamConfig& sc) {
 //
 
 namespace {
-const uint32_t nm08 = htonl(0xFF000000);
-const uint32_t nm12 = htonl(0xFFF00000);
-const uint32_t nm16 = htonl(0xFFFF0000);
+const uint32_t nm08 = htonl(0xFF000000); // NOLINT
+const uint32_t nm12 = htonl(0xFFF00000); // NOLINT
+const uint32_t nm16 = htonl(0xFFFF0000); // NOLINT
 
 // 10.0.0.0-10.255.255.255
-const uint32_t n010 = htonl(0x0A000000) & nm08;
+const uint32_t n010 = htonl(0x0A000000) & nm08; // NOLINT
 // 172.16.0.0-172.31.255.255
-const uint32_t n172 = htonl(0xAC100000) & nm12;
+const uint32_t n172 = htonl(0xAC100000) & nm12; // NOLINT
 // 192.168.0.0-192.168.255.255
-const uint32_t n192 = htonl(0xC0A80000) & nm16;
+const uint32_t n192 = htonl(0xC0A80000) & nm16; // NOLINT
 
 bool is_private(struct sockaddr* addr) {
   if (addr == nullptr) return false;
@@ -110,7 +110,10 @@ std::string first_rfc1918() {
   }
 
   freeifaddrs(ifaddr);
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "LocalValueEscapesScope"
   return addr;
+#pragma clang diagnostic pop
 }
 
 std::string stream_url(int inum) {

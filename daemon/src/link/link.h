@@ -24,7 +24,7 @@ class Link {
   bool enabled_;
   std::string id_;
   int fd_;
-  LinkConfig GetConfig();
+  static LinkConfig GetConfig();
 };
 
 }  // namespace deadeye

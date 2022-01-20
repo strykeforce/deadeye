@@ -19,8 +19,8 @@ struct StreamConfig {
 
   int sn = 0;
   std::string url;
-  View view;
-  Contour contour;
+  View view{};
+  Contour contour{};
 
   /**
    * Default constructor.
