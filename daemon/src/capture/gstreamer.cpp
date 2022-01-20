@@ -15,4 +15,4 @@ bool Gstreamer::Grab(cv::Mat& frame) {
   bool is_ok = cap_.read(frame);
   if (is_ok && is_yuv_) cv::cvtColor(frame, frame, cv::COLOR_YUV2BGR_UYVY);
   return is_ok;
-};
+}

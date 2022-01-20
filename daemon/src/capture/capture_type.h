@@ -10,5 +10,5 @@ NLOHMANN_JSON_SERIALIZE_ENUM(CaptureType, {
                                               {CaptureType::test, "test"},
                                               {CaptureType::file, "file"},
                                               {CaptureType::usb, "usb"},
-                                          });
+                                          })
 }  // namespace deadeye
