@@ -33,12 +33,15 @@ std::atomic<bool> quit{false};
 
 void signal_handler([[maybe_unused]] int signal) { quit = true; }
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "misc-no-recursion"
 /**
  * From http://www.rioki.org/2016/03/31/cpp-switch-string.html
  */
 constexpr unsigned int hash(const char* str, int h = 0) {
   return !str[h] ? 5381 : (hash(str, h + 1) * 33) ^ str[h];
 }
+#pragma clang diagnostic pop
 
 }  // namespace
 
