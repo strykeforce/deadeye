@@ -3,6 +3,7 @@
 using namespace deadeye;
 
 #ifdef __aarch64__
+#include <cassert>
 using namespace gpiod;
 
 LedDrive::LedDrive(int inum) {

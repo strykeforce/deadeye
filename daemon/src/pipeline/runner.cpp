@@ -58,7 +58,7 @@ void Runner::Run() {
 
   // Set up streaming. CScore streaming will hang on connection if too many
   // connections are attempted, current workaround is for user to  disable and
-  // reenable the stream to reset.
+  // re-enable the stream to reset.
   Streamer streamer(pipeline_.get(), capture_config_.Size());
   bool stream_enabled{false};
 
@@ -129,7 +129,7 @@ void Runner::Run() {
 
     if (stream_enabled) streamer.Process(frame, target_data.get());
 
-    // Log frame if neccessary
+    // Log frame if necessary
     if (log_enabled && --log_counter == 0) {
       logger->Log(frame, pipeline_->GetFilteredContours(),
                   std::move(target_data));
