@@ -8,7 +8,7 @@ namespace deadeye {
 
 class LedDrive {
  public:
-  explicit LedDrive(int inum);
+  explicit LedDrive([[maybe_unused]] int inum);
 
   void On();
   void Off();

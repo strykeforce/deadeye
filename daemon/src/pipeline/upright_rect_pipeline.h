@@ -4,7 +4,7 @@
 namespace deadeye {
 class UprightRectPipeline : public AbstractPipeline {
  public:
-  UprightRectPipeline(int inum, std::string name);
+  [[maybe_unused]] UprightRectPipeline(int inum, std::string name);
 
   void Configure(const CaptureConfig& config) override;
 

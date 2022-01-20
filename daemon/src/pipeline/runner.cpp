@@ -12,6 +12,8 @@
 #include "log/logger.h"
 #include "pipeline/streamer.h"
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "NullDereference"
 using namespace deadeye;
 
 void Runner::SetPipeline(std::unique_ptr<Pipeline> pipeline) {
@@ -146,8 +148,10 @@ void Runner::Stop() { cancel_ = true; }
 
 void Runner::LogTickMeter(cv::TickMeter& tm) {
   spdlog::info("{}: stopping", *pipeline_);
-  double avg = tm.getTimeSec() / tm.getCounter();
+  double avg = tm.getTimeSec() / static_cast<double>(tm.getCounter());
   double fps = 1.0 / avg;
   spdlog::info("{}: avg. time = {:6.3f} ms, FPS = {:5.2f}", *pipeline_,
                avg * 1000.0, fps);
 }
+
+#pragma clang diagnostic pop

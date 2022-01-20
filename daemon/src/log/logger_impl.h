@@ -28,7 +28,7 @@ using LoggerQueue =
 
 class LoggerImpl {
  public:
-  LoggerImpl(std::string id, LogConfig config, LoggerQueue& queue,
+  LoggerImpl(std::string id, const LogConfig& config, LoggerQueue& queue,
              std::atomic<bool>& cancel);
   virtual ~LoggerImpl() = default;
 

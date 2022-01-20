@@ -13,7 +13,7 @@ struct LogConfig {
   static constexpr auto kMountKey = "mount";
   static constexpr auto kDefaultPath = "/var/opt/deadeye";
 
-  LogType type;
+  LogType type{};
   std::string path{kDefaultPath};
   int fps{0};
   bool mount{true};

@@ -3,25 +3,21 @@
 #include <fmt/core.h>
 #include <spdlog/spdlog.h>
 
-#include <cstring>
 #include <nlohmann/json.hpp>
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <sstream>
+#include <utility>
 
 #include "pipeline/pipeline_ops.h"
 
 using namespace deadeye::logger;
 using json = nlohmann::json;
 
-namespace {
-static const cv::Size kFrameSize{640, 360};
-}
-
-FourUp::FourUp(std::string id, CaptureConfig capture_config,
-               PipelineConfig pipeline_config, LogConfig log_config,
+FourUp::FourUp(std::string id, const CaptureConfig& capture_config,
+               const PipelineConfig& pipeline_config, const LogConfig& log_config,
                LoggerQueue& queue, std::atomic<bool>& cancel)
-    : LoggerImpl(id, log_config, queue, cancel),
+    : LoggerImpl(std::move(id), log_config, queue, cancel),
       width_(capture_config.width),
       height_(capture_config.height),
       hsv_low_(pipeline_config.HsvLow()),

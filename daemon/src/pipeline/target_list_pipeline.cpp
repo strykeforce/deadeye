@@ -10,7 +10,8 @@
 
 using namespace deadeye;
 
-TargetListPipeline::TargetListPipeline(int inum, std::string name)
+[[maybe_unused]] TargetListPipeline::TargetListPipeline(int inum,
+                                                        std::string name)
     : AbstractPipeline{inum, std::move(name)} {}
 
 void TargetListPipeline::Configure(const CaptureConfig& config) {
@@ -24,7 +25,7 @@ std::unique_ptr<TargetData> TargetListPipeline::ProcessContours(
 
   for (const auto& contour : contours) {
     cv::Rect bb = cv::boundingRect(contour);
-    int area = std::round(cv::contourArea(contour));
+    int area = static_cast<int>(std::round(cv::contourArea(contour)));
     targets.push_back({bb.x, bb.y, bb.width, bb.height, area});
   }
 

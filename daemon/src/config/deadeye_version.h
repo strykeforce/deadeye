@@ -4,10 +4,9 @@
 namespace deadeye {
 
 std::string GetDeadeyeVersion();
-unsigned GetDeadeyeVersionMajor();
-unsigned GetDeadeyeVersionMinor();
-unsigned GetDeadeyeVersionPatch();
-unsigned GetDeadeyeVersionTweak();
-unsigned GetDeadeyeCommitsSinceVersionChange();
+[[maybe_unused]] unsigned GetDeadeyeVersionMajor();
+[[maybe_unused]] unsigned GetDeadeyeVersionMinor();
+[[maybe_unused]] unsigned GetDeadeyeVersionPatch();
+[[maybe_unused]] unsigned GetDeadeyeVersionTweak();
 
 }  // namespace deadeye

@@ -28,13 +28,13 @@ class Lights : public tinyfsm::Fsm<Lights<inum>> {
 
  private:
   // default reaction for unhandled events
-  void react(tinyfsm::Event const &) {}
+  [[maybe_unused]] void react(tinyfsm::Event const &) {}
 
-  virtual void react(LightsOn const &) {}
-  virtual void react(LightsOff const &) {}
-  virtual void react(LightsBlink const &) {}
+  [[maybe_unused]] virtual void react(LightsOn const &) {}
+  [[maybe_unused]] virtual void react(LightsOff const &) {}
+  [[maybe_unused]] virtual void react(LightsBlink const &) {}
 
-  virtual void entry() = 0;
+  [[maybe_unused]] virtual void entry() = 0;
   virtual void exit() = 0;
 
  protected:
@@ -57,6 +57,6 @@ template <int inum>
 std::atomic<bool> Lights<inum>::cancel_task_{false};
 
 template <int inum>
-LedDrive Lights<inum>::led_{inum};
+LedDrive Lights<inum>::led_{inum}; // NOLINT
 
 }  // namespace deadeye

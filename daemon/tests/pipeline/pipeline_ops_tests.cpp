@@ -12,7 +12,7 @@ TEST_CASE("FindContours", "[ops]") {
     PipelineConfig pc;
     MaskFrame(frame, mask, pc.HsvLow(), pc.HsvHigh());
     FindContours(mask, contours);
-    REQUIRE(contours.size() == 0);
+    REQUIRE(contours.empty());
   }
 
   SECTION("tuned hsv range") {

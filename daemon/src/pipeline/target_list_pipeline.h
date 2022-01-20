@@ -4,7 +4,7 @@
 namespace deadeye {
 class TargetListPipeline : public AbstractPipeline {
  public:
-  TargetListPipeline(int inum, std::string name);
+  [[maybe_unused]] TargetListPipeline(int inum, std::string name);
 
   void Configure(const CaptureConfig& config) override;
 

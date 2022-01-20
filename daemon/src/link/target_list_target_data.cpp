@@ -12,7 +12,7 @@ using json = nlohmann::json;
 namespace {
 // minimum datagram size: IPv4 = 576 IPv6 = 1280
 constexpr int MAX_SERIALIZED_SIZE = 1000;
-const cv::Scalar BB_COLOR{20, 255, 20};
+const cv::Scalar BB_COLOR{20, 255, 20}; // NOLINT
 }  // namespace
 
 TargetListTargetData::TargetListTargetData(const std::string& id, const int sn,
@@ -27,6 +27,8 @@ void TargetListTargetData::DrawMarkers(cv::Mat& preview) const {
   }
 }
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "misc-no-recursion"
 std::string TargetListTargetData::Dump() const {
   json j = json{{TargetData::kIdKey, id},
                 {TargetData::kSerialKey, serial},
@@ -45,6 +47,7 @@ std::string TargetListTargetData::Dump() const {
 
   return serialized;
 }
+#pragma clang diagnostic pop
 
 std::string TargetListTargetData::ToString() const {
   return fmt::format("id={} sn={} val={})", id, serial, valid);

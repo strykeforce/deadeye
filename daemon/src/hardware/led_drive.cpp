@@ -1,9 +1,5 @@
 #include "led_drive.h"
 
-#include <spdlog/spdlog.h>
-
-#include "config/deadeye_config.h"
-
 using namespace deadeye;
 
 #ifdef __aarch64__
@@ -23,7 +19,7 @@ void LedDrive::On() { line_.set_value(0); }
 
 void LedDrive::Off() { line_.set_value(1); }
 #else
-LedDrive::LedDrive(int inum) {}
+LedDrive::LedDrive([[maybe_unused]] int inum) {}
 void LedDrive::On() {}
 void LedDrive::Off() {}
 #endif

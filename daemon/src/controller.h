@@ -10,7 +10,6 @@ static constexpr int kNumCameras = 5;
 
 class Pipeline;
 using Pipelines = std::array<std::unique_ptr<Pipeline>, kNumCameras>;
-using PipelinesPtr = Pipelines* const;
 
 class Controller {
  public:
@@ -26,11 +25,12 @@ class Controller {
   void ShutDown();
 
  private:
-  static Controller& getInstanceImpl(PipelinesPtr pipelines = nullptr) {
+  static Controller& getInstanceImpl(Pipelines* pipelines = nullptr) {
     static Controller instance{pipelines};
     return instance;
   }
-  explicit Controller(PipelinesPtr pipelines);
+
+  explicit Controller(Pipelines *pipelines);
 
   void StartNetworkTables();
 

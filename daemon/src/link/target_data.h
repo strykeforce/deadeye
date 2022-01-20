@@ -12,8 +12,8 @@ struct TargetData {
   static const char* kDataKey;
 
   std::string id;
-  int serial;
-  bool valid;
+  int serial{};
+  bool valid{};
 
   TargetData() = default;
   virtual ~TargetData() = default;

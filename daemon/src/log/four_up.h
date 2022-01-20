@@ -13,8 +13,8 @@ namespace deadeye::logger {
 
 class FourUp : public LoggerImpl {
  public:
-  FourUp(std::string id, CaptureConfig capture_config,
-         PipelineConfig pipeline_config, LogConfig log_config,
+  FourUp(std::string id, const CaptureConfig& capture_config,
+         const PipelineConfig& pipeline_config, const LogConfig& log_config,
          LoggerQueue& queue, std::atomic<bool>& cancel);
   void Run() override;
 

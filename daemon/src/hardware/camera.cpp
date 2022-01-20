@@ -2,7 +2,6 @@
 
 #include <future>
 
-#include "controller.h"
 #include "lights.h"
 
 using namespace std::chrono_literals;

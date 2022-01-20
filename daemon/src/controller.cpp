@@ -33,19 +33,23 @@ std::atomic<bool> quit{false};
 
 void signal_handler([[maybe_unused]] int signal) { quit = true; }
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "misc-no-recursion"
 /**
  * From http://www.rioki.org/2016/03/31/cpp-switch-string.html
  */
 constexpr unsigned int hash(const char* str, int h = 0) {
   return !str[h] ? 5381 : (hash(str, h + 1) * 33) ^ str[h];
 }
+#pragma clang diagnostic pop
 
 }  // namespace
 
 /**
  * Constructor for Controller.
  */
-Controller::Controller(PipelinesPtr pipelines) {
+Controller::Controller(Pipelines* pipelines)
+    : inst_{0}, poller_{0}, entry_listener_{0}, has_active_pipeline_{} {
   spdlog::info("Deadeye {}", GetDeadeyeVersion());
 
   assert(pipelines);
@@ -418,6 +422,9 @@ void Controller::Run() {
 }
 
 void Controller::ShutDown() {
+  nt::DestroyEntryListenerPoller(poller_);
+  nt::RemoveEntryListener(entry_listener_);
+
   // fsm dispatches to all instances
   if (has_active_pipeline_[0]) {
     Camera<0>::dispatch(CameraOff());
@@ -459,7 +466,8 @@ void Controller::StartNetworkTables() {
 
   char* env_nt_port = std::getenv("DEADEYE_NT_PORT");
   const unsigned int nt_port =
-    env_nt_port ? static_cast<unsigned int>(std::stoi(env_nt_port)) : NT_DEFAULT_PORT;
+      env_nt_port ? static_cast<unsigned int>(std::stoi(env_nt_port))
+                  : NT_DEFAULT_PORT;
 
   // create own NT server if DEADEYE_NT_SERVER=127.0.0.1
   if (std::strncmp("127.0.0.1", nt_server, 15) == 0) {

@@ -1,7 +1,6 @@
 #include "min_area_rect_pipeline.h"
 
 #include <fmt/core.h>
-#include <spdlog/spdlog.h>
 
 #include <opencv2/imgproc.hpp>
 #include <utility>
@@ -10,7 +9,7 @@
 
 using namespace deadeye;
 
-MinAreaRectPipeline::MinAreaRectPipeline(int inum, std::string name)
+[[maybe_unused]] MinAreaRectPipeline::MinAreaRectPipeline(int inum, std::string name)
     : AbstractPipeline{inum, std::move(name)} {}
 
 void MinAreaRectPipeline::Configure(const CaptureConfig& config) {

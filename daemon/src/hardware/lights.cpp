@@ -6,8 +6,6 @@
 #include <thread>
 #include <tinyfsm.hpp>
 
-#include "controller.h"
-
 using namespace deadeye;
 
 namespace {
@@ -69,6 +67,8 @@ class Blinking : public Lights<inum> {
     spdlog::info("Lights<{}{}> blink", DEADEYE_UNIT, inum);
   }
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "UnreachableCallsOfFunction"
   void CancelTask() {
     base::cancel_task_ = true;
     if (base::task_future_.valid()) {
@@ -80,6 +80,7 @@ class Blinking : public Lights<inum> {
       }
     }
   }
+#pragma clang diagnostic pop
 
   void react(LightsOn const &) override {
     CancelTask();
