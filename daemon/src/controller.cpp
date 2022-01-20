@@ -48,7 +48,8 @@ constexpr unsigned int hash(const char* str, int h = 0) {
 /**
  * Constructor for Controller.
  */
-Controller::Controller(Pipelines *pipelines) {
+Controller::Controller(Pipelines* pipelines)
+    : inst_{0}, poller_{0}, entry_listener_{0}, has_active_pipeline_{} {
   spdlog::info("Deadeye {}", GetDeadeyeVersion());
 
   assert(pipelines);
@@ -465,7 +466,8 @@ void Controller::StartNetworkTables() {
 
   char* env_nt_port = std::getenv("DEADEYE_NT_PORT");
   const unsigned int nt_port =
-    env_nt_port ? static_cast<unsigned int>(std::stoi(env_nt_port)) : NT_DEFAULT_PORT;
+      env_nt_port ? static_cast<unsigned int>(std::stoi(env_nt_port))
+                  : NT_DEFAULT_PORT;
 
   // create own NT server if DEADEYE_NT_SERVER=127.0.0.1
   if (std::strncmp("127.0.0.1", nt_server, 15) == 0) {
