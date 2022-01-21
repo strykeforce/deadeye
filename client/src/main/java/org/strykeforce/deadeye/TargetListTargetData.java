@@ -20,11 +20,11 @@ public class TargetListTargetData extends TargetData {
   static final int DATA_LENGTH = 5;
 
   /**
-   * A <code>List</code> containing all <code>Target</code> instances identified by the
+   * A <code>List</code> containing all {@code Rect}instances identified by the
    * <code>TargetListPipeline</code>.
    */
   @NotNull
-  public final List<Target> targets;
+  public final List<Rect> targets;
 
   /**
    * Constructs and initializes an invalid <code>TargetListTargetData</code> with no id, serial 0,
@@ -43,7 +43,7 @@ public class TargetListTargetData extends TargetData {
    * @param targets the list of <code>Target</code> instances identified.
    */
   public TargetListTargetData(
-      @NotNull String id, int serial, boolean valid, @NotNull List<Target> targets) {
+      @NotNull String id, int serial, boolean valid, @NotNull List<Rect> targets) {
     super(id, serial, valid);
     this.targets = targets;
   }
@@ -80,112 +80,6 @@ public class TargetListTargetData extends TargetData {
     return "TargetListTargetData{" + "targets=" + targets + "} " + super.toString();
   }
 
-  /**
-   * A <code>Target</code> represents a single target returned in a <code>TargetListTargetData</code>.
-   */
-  public static class Target {
-
-    /**
-     * Top left corner <code>Point</code> of the upright bounding box enclosing this target.
-     */
-    @NotNull
-    public final Point topLeft;
-    /**
-     * Bottom right corner <code>Point</code> of the upright bounding box enclosing this target.
-     */
-    @NotNull
-    public final Point bottomRight;
-    /**
-     * Center <code>Point</code> of the upright bounding box enclosing this target.
-     */
-    @NotNull
-    public final Point center;
-    /**
-     * Gets the area of the contour enclosing the target.
-     */
-    public final int contourArea;
-
-    /**
-     * Constructs and initializes a <code>Target</code> with the specified values.
-     *
-     * @param topLeft the top left corner of the bounding box enclosing this target.
-     * @param bottomRight the top left corner of the bounding box enclosing this target.
-     * @param center the center of the bounding box enclosing this target.
-     * @param contourArea the area of the contour enclosing the target.
-     */
-    public Target(
-        @NotNull Point topLeft,
-        @NotNull Point bottomRight,
-        @NotNull Point center,
-        int contourArea) {
-      this.topLeft = topLeft;
-      this.bottomRight = bottomRight;
-      this.center = center;
-      this.contourArea = contourArea;
-    }
-
-    /**
-     * Gets the area of the upright bounding box surrounding this target.
-     *
-     * @return the area of the bounding box.
-     */
-    public int area() {
-      return width() * height();
-    }
-
-    /**
-     * Gets the width of the upright bounding box surrounding this target.
-     *
-     * @return the width of the bounding box.
-     */
-    public int width() {
-      return bottomRight.x - topLeft.x;
-    }
-
-    /**
-     * Gets the height of the upright bounding box surrounding this target.
-     *
-     * @return the height of the bounding box.
-     */
-    public int height() {
-      return bottomRight.y - topLeft.y;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) {
-        return true;
-      }
-      if (o == null || getClass() != o.getClass()) {
-        return false;
-      }
-      Target target = (Target) o;
-      return contourArea == target.contourArea
-          && topLeft.equals(target.topLeft)
-          && bottomRight.equals(target.bottomRight)
-          && center.equals(target.center);
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(topLeft, bottomRight, center, contourArea);
-    }
-
-    @Override
-    public String toString() {
-      return "Target{"
-          + "topLeft="
-          + topLeft
-          + ", bottomRight="
-          + bottomRight
-          + ", center="
-          + center
-          + ", contourArea="
-          + contourArea
-          + '}';
-    }
-  }
-
   private static class JsonAdapterImpl implements DeadeyeJsonAdapter<TargetListTargetData> {
 
     // json d field: bb.tl().x, bb.tl().y, bb.br().x, bb.br().y, center.x, center.y
@@ -197,7 +91,7 @@ public class TargetListTargetData extends TargetData {
       String id = null;
       int serial = -1;
       boolean valid = false;
-      List<Target> targets = new ArrayList<>();
+      List<Rect> targets = new ArrayList<>();
 
       reader.beginObject();
       while (reader.hasNext()) {
@@ -223,8 +117,7 @@ public class TargetListTargetData extends TargetData {
               // bb.x, bb.y, bb.width, bb.height, area
               Point topLeft = new Point(data[0], data[1]);
               Point bottomRight = new Point(data[0] + data[2], data[1] + data[3]);
-              Point center = Point.boundingBoxCenterFrom(topLeft, bottomRight);
-              targets.add(new Target(topLeft, bottomRight, center, data[4]));
+              targets.add(new Rect(topLeft, bottomRight));
             }
             reader.endArray();
             break;
@@ -246,11 +139,11 @@ public class TargetListTargetData extends TargetData {
       writer.name("v").value(targetData.valid);
 
       writer.name("d").beginArray();
-      for (Target t : targetData.targets) {
+      for (Rect t : targetData.targets) {
         writer.beginArray();
         writer.value(t.topLeft.x).value(t.topLeft.y);
         writer.value(t.width()).value(t.height());
-        writer.value(t.contourArea);
+        writer.value(0); // contour area not in Rect
         writer.endArray();
       }
       writer.endArray();
