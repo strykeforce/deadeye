@@ -74,11 +74,11 @@ public class Rect {
    *
    * <p>For example:
    *
-   * <code><pre>
+   * <pre><code>
    *     assertTrue(rect.contains(rect.topLeft));
    *     assertFalse(rect.contains(rect.bottomRight));
    *     assertTrue(rect.contains(rect.center()));
-   * </pre></code>
+   * </code></pre>
    *
    * @param point the (x, y) point to check
    * @return true if point is contained in rectangle
