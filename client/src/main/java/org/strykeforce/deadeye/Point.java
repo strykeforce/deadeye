@@ -1,6 +1,7 @@
 package org.strykeforce.deadeye;
 
 import java.util.Objects;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A point representing a location in (x,y) coordinate space, specified in integer precision.
@@ -18,8 +19,9 @@ public final class Point {
 
   /**
    * Constructs and initializes a point at the specified (x,y) location in the coordinate space.
-   * @param x  the X coordinate of the newly constructed {@code Point}
-   * @param y  the y coordinate of the newly constructed {@code Point}
+   *
+   * @param x the X coordinate of the newly constructed {@code Point}
+   * @param y the y coordinate of the newly constructed {@code Point}
    */
   public Point(int x, int y) {
     this.x = x;
@@ -33,8 +35,9 @@ public final class Point {
    * @param bottomRight the bottom right corner of the bounding box.
    * @return the {@code Point} at the center of this bounding box.
    */
-  public static Point boundingBoxCenterFrom(Point topLeft, Point bottomRight) {
-    return new Point((topLeft.x + bottomRight.x) / 2, (topLeft.y + bottomRight.y) / 2);
+  public static Point boundingBoxCenterFrom(@NotNull Point topLeft, @NotNull Point bottomRight) {
+    // Rect constructor checks for nulls
+    return new Rect(topLeft, bottomRight).center();
   }
 
   /**
@@ -61,7 +64,7 @@ public final class Point {
    * @param that the point to measure distance from.
    * @return the distance to the other {@code Point}.
    */
-  public double distanceTo(Point that) {
+  public double distanceTo(@NotNull Point that) {
     double dx = this.x - that.x;
     double dy = this.y - that.y;
     return Math.sqrt(dx * dx + dy * dy);
