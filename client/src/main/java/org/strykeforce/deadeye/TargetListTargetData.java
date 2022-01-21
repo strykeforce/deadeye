@@ -45,7 +45,7 @@ public class TargetListTargetData extends TargetData {
   public TargetListTargetData(
       @NotNull String id, int serial, boolean valid, @NotNull List<Rect> targets) {
     super(id, serial, valid);
-    this.targets = targets;
+    this.targets = Collections.unmodifiableList(targets);
   }
 
   @Override
