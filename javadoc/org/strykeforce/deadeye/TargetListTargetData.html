@@ -86,7 +86,7 @@ loadScripts(document, 'script');</script>
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
-<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
 <li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
@@ -144,31 +144,6 @@ extends <a href="TargetData.html" title="class in org.strykeforce.deadeye">Targe
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
-<!-- ======== NESTED CLASS SUMMARY ======== -->
-<section role="region">
-<ul class="blockList">
-<li class="blockList"><a id="nested.class.summary">
-<!--   -->
-</a>
-<h3>Nested Class Summary</h3>
-<table class="memberSummary">
-<caption><span>Nested Classes</span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colSecond" scope="col">Class</th>
-<th class="colLast" scope="col">Description</th>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>static class&nbsp;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="TargetListTargetData.Target.html" title="class in org.strykeforce.deadeye">TargetListTargetData.Target</a></span></code></th>
-<td class="colLast">
-<div class="block">A <code>Target</code> represents a single target returned in a <code>TargetListTargetData</code>.</div>
-</td>
-</tr>
-</table>
-</li>
-</ul>
-</section>
 <!-- =========== FIELD SUMMARY =========== -->
 <section role="region">
 <ul class="blockList">
@@ -184,10 +159,10 @@ extends <a href="TargetData.html" title="class in org.strykeforce.deadeye">Targe
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code><a href="https://javadoc.io/doc/org.jetbrains/annotations/22.0.0/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a> <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="TargetListTargetData.Target.html" title="class in org.strykeforce.deadeye">TargetListTargetData.Target</a>&gt;</code></td>
+<td class="colFirst"><code><a href="https://javadoc.io/doc/org.jetbrains/annotations/22.0.0/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a> <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Rect.html" title="class in org.strykeforce.deadeye">Rect</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#targets">targets</a></span></code></th>
 <td class="colLast">
-<div class="block">A <code>List</code> containing all <code>Target</code> instances identified by the
+<div class="block">A <code>List</code> containing all <code>Rect</code>instances identified by the
  <code>TargetListPipeline</code>.</div>
 </td>
 </tr>
@@ -226,7 +201,7 @@ extends <a href="TargetData.html" title="class in org.strykeforce.deadeye">Targe
 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.String,int,boolean,java.util.List)">TargetListTargetData</a></span>&#8203;(<a href="https://javadoc.io/doc/org.jetbrains/annotations/22.0.0/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a> <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;id,
                     int&nbsp;serial,
                     boolean&nbsp;valid,
-                    <a href="https://javadoc.io/doc/org.jetbrains/annotations/22.0.0/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a> <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="TargetListTargetData.Target.html" title="class in org.strykeforce.deadeye">TargetListTargetData.Target</a>&gt;&nbsp;targets)</code></th>
+                    <a href="https://javadoc.io/doc/org.jetbrains/annotations/22.0.0/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a> <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Rect.html" title="class in org.strykeforce.deadeye">Rect</a>&gt;&nbsp;targets)</code></th>
 <td class="colLast">
 <div class="block">Constructs and initializes a <code>TargetListTargetData</code> with the specified values.</div>
 </td>
@@ -300,8 +275,8 @@ extends <a href="TargetData.html" title="class in org.strykeforce.deadeye">Targe
 <li class="blockList">
 <h4>targets</h4>
 <pre><a href="https://javadoc.io/doc/org.jetbrains/annotations/22.0.0/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a>
-public final&nbsp;<a href="https://javadoc.io/doc/org.jetbrains/annotations/22.0.0/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a> <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="TargetListTargetData.Target.html" title="class in org.strykeforce.deadeye">TargetListTargetData.Target</a>&gt; targets</pre>
-<div class="block">A <code>List</code> containing all <code>Target</code> instances identified by the
+public final&nbsp;<a href="https://javadoc.io/doc/org.jetbrains/annotations/22.0.0/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a> <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Rect.html" title="class in org.strykeforce.deadeye">Rect</a>&gt; targets</pre>
+<div class="block">A <code>List</code> containing all <code>Rect</code>instances identified by the
  <code>TargetListPipeline</code>.</div>
 </li>
 </ul>
@@ -337,7 +312,7 @@ public final&nbsp;<a href="https://javadoc.io/doc/org.jetbrains/annotations/22.0
                             int&nbsp;serial,
                             boolean&nbsp;valid,
                             <a href="https://javadoc.io/doc/org.jetbrains/annotations/22.0.0/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a>
-                            <a href="https://javadoc.io/doc/org.jetbrains/annotations/22.0.0/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a> <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="TargetListTargetData.Target.html" title="class in org.strykeforce.deadeye">TargetListTargetData.Target</a>&gt;&nbsp;targets)</pre>
+                            <a href="https://javadoc.io/doc/org.jetbrains/annotations/22.0.0/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a> <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Rect.html" title="class in org.strykeforce.deadeye">Rect</a>&gt;&nbsp;targets)</pre>
 <div class="block">Constructs and initializes a <code>TargetListTargetData</code> with the specified values.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -461,7 +436,7 @@ public&nbsp;<a href="https://javadoc.io/doc/org.jetbrains/annotations/22.0.0/org
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
-<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
 <li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
