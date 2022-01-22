@@ -37,7 +37,7 @@ public final class Point {
    */
   public static Point boundingBoxCenterFrom(@NotNull Point topLeft, @NotNull Point bottomRight) {
     // Rect constructor checks for nulls
-    return new Rect(topLeft, bottomRight).center();
+    return new Rect(topLeft, bottomRight, 0).center();
   }
 
   /**

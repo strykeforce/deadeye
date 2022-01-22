@@ -21,16 +21,22 @@ public class Rect {
   public final Point bottomRight;
 
   /**
+   * The contour area of the enclosed OpenCV contour.
+   */
+  public final int contourArea;
+
+  /**
    * Constructs a rectangle with the specified (x, y) corner points.
    *
    * @param topLeft     the coordinates of the top left corner
    * @param bottomRight the coordinates of the bottom right corner
    */
-  public Rect(@NotNull Point topLeft, @NotNull Point bottomRight) {
+  public Rect(@NotNull Point topLeft, @NotNull Point bottomRight, int contourArea) {
     Objects.requireNonNull(topLeft);
     Objects.requireNonNull(bottomRight);
     this.topLeft = topLeft;
     this.bottomRight = bottomRight;
+    this.contourArea = contourArea;
   }
 
   /**
@@ -106,16 +112,18 @@ public class Rect {
       return false;
     }
     Rect rect = (Rect) o;
-    return topLeft.equals(rect.topLeft) && bottomRight.equals(rect.bottomRight);
+    return contourArea == rect.contourArea && topLeft.equals(rect.topLeft) && bottomRight.equals(
+        rect.bottomRight);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(topLeft, bottomRight);
+    return Objects.hash(topLeft, bottomRight, contourArea);
   }
 
   @Override
   public String toString() {
-    return "Rect{" + "topLeft=" + topLeft + ", bottomRight=" + bottomRight + '}';
+    return "Rect{" + "topLeft=" + topLeft + ", bottomRight=" + bottomRight + ", contourArea="
+        + contourArea + '}';
   }
 }

@@ -180,7 +180,7 @@ public class TargetListTargetData extends TargetData {
               // bb.x, bb.y, bb.width, bb.height, area
               Point topLeft = new Point(data[0], data[1]);
               Point bottomRight = new Point(data[0] + data[2], data[1] + data[3]);
-              targets.add(new Rect(topLeft, bottomRight));
+              targets.add(new Rect(topLeft, bottomRight, data[4]));
             }
             reader.endArray();
             break;
@@ -206,7 +206,7 @@ public class TargetListTargetData extends TargetData {
         writer.beginArray();
         writer.value(t.topLeft.x).value(t.topLeft.y);
         writer.value(t.width()).value(t.height());
-        writer.value(0); // contour area not in Rect
+        writer.value(t.contourArea);
         writer.endArray();
       }
       writer.endArray();

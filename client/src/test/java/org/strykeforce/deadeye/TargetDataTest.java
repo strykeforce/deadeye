@@ -126,11 +126,11 @@ class TargetDataTest {
     List<Rect> targets = new ArrayList<>();
     Point tl = new Point(0, 0);
     Point br = new Point(10, 10);
-    targets.add(new Rect(tl, br));
+    targets.add(new Rect(tl, br, 85));
 
     tl = new Point(10, 10);
     br = new Point(110, 110);
-    targets.add(new Rect(tl, br));
+    targets.add(new Rect(tl, br, 900));
 
     TargetListTargetData exp = new TargetListTargetData("Z1", 3, true, targets);
 
@@ -145,11 +145,11 @@ class TargetDataTest {
     List<Rect> targets = new ArrayList<>();
     Point tl = new Point(0, 0);
     Point br = new Point(10, 10);
-    targets.add(new Rect(tl, br));
+    targets.add(new Rect(tl, br, 10));
 
     tl = new Point(10, 10);
     br = new Point(110, 110);
-    targets.add(new Rect(tl, br));
+    targets.add(new Rect(tl, br, 10));
 
     TargetListTargetData expected = new TargetListTargetData("Z1", 5, true, targets);
 

@@ -10,9 +10,9 @@ class TargetListTargetDataTest {
 
   @Test
   void targetsOrderedByTopLeftX() {
-    Rect r1 = new Rect(new Point(0, 0), new Point(10, 10));
-    Rect r2 = new Rect(new Point(5, 0), new Point(15, 10));
-    Rect r3 = new Rect(new Point(10, 0), new Point(20, 10));
+    Rect r1 = new Rect(new Point(0, 0), new Point(10, 10), 10);
+    Rect r2 = new Rect(new Point(5, 0), new Point(15, 10), 10);
+    Rect r3 = new Rect(new Point(10, 0), new Point(20, 10), 10);
 
     var targets = Arrays.asList(r2, r1, r3);
     TargetListTargetData td = new TargetListTargetData("Z0", 0, true, targets);
@@ -27,9 +27,9 @@ class TargetListTargetDataTest {
 
   @Test
   void targetsOrderedByTopLeftY() {
-    Rect r1 = new Rect(new Point(0, 5), new Point(10, 10));
-    Rect r2 = new Rect(new Point(0, 10), new Point(10, 15));
-    Rect r3 = new Rect(new Point(0, 15), new Point(10, 20));
+    Rect r1 = new Rect(new Point(0, 5), new Point(10, 10), 10);
+    Rect r2 = new Rect(new Point(0, 10), new Point(10, 15), 10);
+    Rect r3 = new Rect(new Point(0, 15), new Point(10, 20), 10);
 
     var targets = Arrays.asList(r2, r1, r3);
     TargetListTargetData td = new TargetListTargetData("Z0", 0, true, targets);
@@ -44,9 +44,9 @@ class TargetListTargetDataTest {
 
   @Test
   void targetsOrderedByCenterX() {
-    Rect r1 = new Rect(new Point(0, 5), new Point(10, 10));
-    Rect r2 = new Rect(new Point(0, 10), new Point(20, 15));
-    Rect r3 = new Rect(new Point(0, 15), new Point(30, 20));
+    Rect r1 = new Rect(new Point(0, 5), new Point(10, 10), 10);
+    Rect r2 = new Rect(new Point(0, 10), new Point(20, 15), 10);
+    Rect r3 = new Rect(new Point(0, 15), new Point(30, 20), 10);
 
     var targets = Arrays.asList(r2, r1, r3);
     TargetListTargetData td = new TargetListTargetData("Z0", 0, true, targets);
@@ -56,9 +56,9 @@ class TargetListTargetDataTest {
 
   @Test
   void targetsOrderedByCenterY() {
-    Rect r1 = new Rect(new Point(0, 5), new Point(10, 15));
-    Rect r2 = new Rect(new Point(0, 10), new Point(20, 25));
-    Rect r3 = new Rect(new Point(0, 15), new Point(30, 35));
+    Rect r1 = new Rect(new Point(0, 5), new Point(10, 15),10);
+    Rect r2 = new Rect(new Point(0, 10), new Point(20, 25),10);
+    Rect r3 = new Rect(new Point(0, 15), new Point(30, 35),10);
 
     var targets = Arrays.asList(r2, r1, r3);
     TargetListTargetData td = new TargetListTargetData("Z0", 0, true, targets);
@@ -68,9 +68,9 @@ class TargetListTargetDataTest {
 
   @Test
   void targetsOrderedByBottomRightX() {
-    Rect r1 = new Rect(new Point(0, 5), new Point(10, 15));
-    Rect r2 = new Rect(new Point(0, 10), new Point(20, 15));
-    Rect r3 = new Rect(new Point(0, 15), new Point(30, 15));
+    Rect r1 = new Rect(new Point(0, 5), new Point(10, 15),10);
+    Rect r2 = new Rect(new Point(0, 10), new Point(20, 15),10);
+    Rect r3 = new Rect(new Point(0, 15), new Point(30, 15),10);
 
     var targets = Arrays.asList(r2, r1, r3);
     TargetListTargetData td = new TargetListTargetData("Z0", 0, true, targets);
@@ -80,9 +80,9 @@ class TargetListTargetDataTest {
 
   @Test
   void targetsOrderedByBottomRightY() {
-    Rect r1 = new Rect(new Point(0, 5), new Point(10, 15));
-    Rect r2 = new Rect(new Point(0, 10), new Point(20, 25));
-    Rect r3 = new Rect(new Point(0, 15), new Point(30, 35));
+    Rect r1 = new Rect(new Point(0, 5), new Point(10, 15),10);
+    Rect r2 = new Rect(new Point(0, 10), new Point(20, 25),10);
+    Rect r3 = new Rect(new Point(0, 15), new Point(30, 35),10);
 
     var targets = Arrays.asList(r2, r1, r3);
     TargetListTargetData td = new TargetListTargetData("Z0", 0, true, targets);

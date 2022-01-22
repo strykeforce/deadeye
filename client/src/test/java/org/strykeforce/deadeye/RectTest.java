@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 class RectTest {
 
-  Rect rect = new Rect(new Point(0, 0), new Point(10, 20));
+  Rect rect = new Rect(new Point(0, 0), new Point(10, 20), 10);
 
   @Test
   void center() {
@@ -41,23 +41,23 @@ class RectTest {
   @Test
   void isEmpty() {
     assertFalse(rect.isEmpty());
-    assertTrue(new Rect(rect.bottomRight, rect.topLeft).isEmpty());
-    assertTrue(new Rect(new Point(10,10), new Point(10,20)).isEmpty());
-    assertTrue(new Rect(new Point(10,10), new Point(9,20)).isEmpty());
-    assertTrue(new Rect(new Point(0,10), new Point(10,10)).isEmpty());
-    assertTrue(new Rect(new Point(0,10), new Point(10,9)).isEmpty());
+    assertTrue(new Rect(rect.bottomRight, rect.topLeft, 0).isEmpty());
+    assertTrue(new Rect(new Point(10,10), new Point(10,20), 0).isEmpty());
+    assertTrue(new Rect(new Point(10,10), new Point(9,20), 0).isEmpty());
+    assertTrue(new Rect(new Point(0,10), new Point(10,10), 0).isEmpty());
+    assertTrue(new Rect(new Point(0,10), new Point(10,9), 0).isEmpty());
   }
 
   @Test
   void equality() {
-    Rect expected = new Rect(new Point(0, 0), new Point(10, 20));
+    Rect expected = new Rect(new Point(0, 0), new Point(10, 20), 10);
     assertNotSame(expected, rect);
     assertEquals(expected, rect);
   }
 
   @Test
   void hashCodeEquality() {
-    Rect expected = new Rect(new Point(0, 0), new Point(10, 20));
+    Rect expected = new Rect(new Point(0, 0), new Point(10, 20), 10);
     assertEquals(expected.hashCode(), rect.hashCode());
   }
 }
