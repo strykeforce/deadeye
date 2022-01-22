@@ -160,6 +160,13 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>int</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#contourArea">contourArea</a></span></code></th>
+<td class="colLast">
+<div class="block">The contour area of the enclosed OpenCV contour.</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code><a href="https://javadoc.io/doc/org.jetbrains/annotations/22.0.0/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a> <a href="Point.html" title="class in org.strykeforce.deadeye">Point</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#topLeft">topLeft</a></span></code></th>
 <td class="colLast">
@@ -184,8 +191,9 @@ extends <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/ja
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(org.strykeforce.deadeye.Point,org.strykeforce.deadeye.Point)">Rect</a></span>&#8203;(<a href="https://javadoc.io/doc/org.jetbrains/annotations/22.0.0/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a> <a href="Point.html" title="class in org.strykeforce.deadeye">Point</a>&nbsp;topLeft,
-    <a href="https://javadoc.io/doc/org.jetbrains/annotations/22.0.0/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a> <a href="Point.html" title="class in org.strykeforce.deadeye">Point</a>&nbsp;bottomRight)</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(org.strykeforce.deadeye.Point,org.strykeforce.deadeye.Point,int)">Rect</a></span>&#8203;(<a href="https://javadoc.io/doc/org.jetbrains/annotations/22.0.0/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a> <a href="Point.html" title="class in org.strykeforce.deadeye">Point</a>&nbsp;topLeft,
+    <a href="https://javadoc.io/doc/org.jetbrains/annotations/22.0.0/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a> <a href="Point.html" title="class in org.strykeforce.deadeye">Point</a>&nbsp;bottomRight,
+    int&nbsp;contourArea)</code></th>
 <td class="colLast">
 <div class="block">Constructs a rectangle with the specified (x, y) corner points.</div>
 </td>
@@ -303,12 +311,22 @@ public final&nbsp;<a href="https://javadoc.io/doc/org.jetbrains/annotations/22.0
 <a id="bottomRight">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>bottomRight</h4>
 <pre><a href="https://javadoc.io/doc/org.jetbrains/annotations/22.0.0/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a>
 public final&nbsp;<a href="https://javadoc.io/doc/org.jetbrains/annotations/22.0.0/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a> <a href="Point.html" title="class in org.strykeforce.deadeye">Point</a> bottomRight</pre>
 <div class="block">The coordinates of the bottom right corner of this rectangle.</div>
+</li>
+</ul>
+<a id="contourArea">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>contourArea</h4>
+<pre>public final&nbsp;int contourArea</pre>
+<div class="block">The contour area of the enclosed OpenCV contour.</div>
 </li>
 </ul>
 </li>
@@ -321,7 +339,7 @@ public final&nbsp;<a href="https://javadoc.io/doc/org.jetbrains/annotations/22.0
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="&lt;init&gt;(org.strykeforce.deadeye.Point,org.strykeforce.deadeye.Point)">
+<a id="&lt;init&gt;(org.strykeforce.deadeye.Point,org.strykeforce.deadeye.Point,int)">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -330,7 +348,8 @@ public final&nbsp;<a href="https://javadoc.io/doc/org.jetbrains/annotations/22.0
 <pre>public&nbsp;Rect&#8203;(<a href="https://javadoc.io/doc/org.jetbrains/annotations/22.0.0/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a>
             <a href="https://javadoc.io/doc/org.jetbrains/annotations/22.0.0/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a> <a href="Point.html" title="class in org.strykeforce.deadeye">Point</a>&nbsp;topLeft,
             <a href="https://javadoc.io/doc/org.jetbrains/annotations/22.0.0/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a>
-            <a href="https://javadoc.io/doc/org.jetbrains/annotations/22.0.0/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a> <a href="Point.html" title="class in org.strykeforce.deadeye">Point</a>&nbsp;bottomRight)</pre>
+            <a href="https://javadoc.io/doc/org.jetbrains/annotations/22.0.0/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a> <a href="Point.html" title="class in org.strykeforce.deadeye">Point</a>&nbsp;bottomRight,
+            int&nbsp;contourArea)</pre>
 <div class="block">Constructs a rectangle with the specified (x, y) corner points.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
