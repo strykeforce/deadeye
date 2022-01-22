@@ -5,6 +5,7 @@ import com.squareup.moshi.JsonWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import okio.Buffer;
@@ -20,7 +21,7 @@ public class TargetListTargetData extends TargetData {
   static final int DATA_LENGTH = 5;
 
   /**
-   * A <code>List</code> containing all {@code Rect}instances identified by the
+   * A <code>List</code> containing all {@code Rect} instances identified by the
    * <code>TargetListPipeline</code>.
    */
   @NotNull
@@ -45,7 +46,69 @@ public class TargetListTargetData extends TargetData {
   public TargetListTargetData(
       @NotNull String id, int serial, boolean valid, @NotNull List<Rect> targets) {
     super(id, serial, valid);
-    this.targets = Collections.unmodifiableList(targets);
+    this.targets = targets;
+  }
+
+  /**
+   * Returns a {@code List} of target {@code Rect}s in {@code Rect.topLeft.x} ascending order.
+   *
+   * @return a sorted {@code List}
+   */
+  public List<Rect> targetsOrderedByTopLeftX() {
+    targets.sort(Comparator.comparingInt(r -> r.topLeft.x));
+    return targets;
+  }
+
+  /**
+   * Returns a {@code List} of target {@code Rect}s in {@code Rect.topLeft.y} ascending order.
+   *
+   * @return a sorted {@code List}
+   */
+
+  public List<Rect> targetsOrderedByTopLeftY() {
+    targets.sort(Comparator.comparingInt(r -> r.topLeft.y));
+    return targets;
+  }
+
+  /**
+   * Returns a {@code List} of target {@code Rect}s in {@code Rect.center().x} ascending order.
+   *
+   * @return a sorted {@code List}
+   */
+  public List<Rect> targetsOrderedByCenterX() {
+    targets.sort(Comparator.comparingInt(r -> r.center().x));
+    return targets;
+  }
+
+  /**
+   * Returns a {@code List} of target {@code Rect}s in {@code Rect.center().y} ascending order.
+   *
+   * @return a sorted {@code List}
+   */
+  public List<Rect> targetsOrderedByCenterY() {
+    targets.sort(Comparator.comparingInt(r -> r.center().y));
+    return targets;
+  }
+
+  /**
+   * Returns a {@code List} of target {@code Rect}s in {@code Rect.bottomRight.y} ascending order.
+   *
+   * @return a sorted {@code List}
+   */
+
+  public List<Rect> targetsOrderedByBottomRightX() {
+    targets.sort(Comparator.comparingInt(r -> r.bottomRight.x));
+    return targets;
+  }
+
+  /**
+   * Returns a {@code List} of target {@code Rect}s in {@code Rect.bottomRight.x} ascending order.
+   *
+   * @return a sorted {@code List}
+   */
+  public List<Rect> targetsOrderedByBottomRightY() {
+    targets.sort(Comparator.comparingInt(r -> r.bottomRight.y));
+    return targets;
   }
 
   @Override
