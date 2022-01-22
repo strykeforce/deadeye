@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -162,7 +162,7 @@ extends <a href="TargetData.html" title="class in org.strykeforce.deadeye">Targe
 <td class="colFirst"><code><a href="https://javadoc.io/doc/org.jetbrains/annotations/22.0.0/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a> <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Rect.html" title="class in org.strykeforce.deadeye">Rect</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#targets">targets</a></span></code></th>
 <td class="colLast">
-<div class="block">A <code>List</code> containing all <code>Rect</code>instances identified by the
+<div class="block">A <code>List</code> containing all <code>Rect</code> instances identified by the
  <code>TargetListPipeline</code>.</div>
 </td>
 </tr>
@@ -240,6 +240,48 @@ extends <a href="TargetData.html" title="class in org.strykeforce.deadeye">Targe
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Rect.html" title="class in org.strykeforce.deadeye">Rect</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#targetsOrderedByBottomRightX()">targetsOrderedByBottomRightX</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Returns a <code>List</code> of target <code>Rect</code>s in <code>Rect.bottomRight.y</code> ascending order.</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Rect.html" title="class in org.strykeforce.deadeye">Rect</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#targetsOrderedByBottomRightY()">targetsOrderedByBottomRightY</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Returns a <code>List</code> of target <code>Rect</code>s in <code>Rect.bottomRight.x</code> ascending order.</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Rect.html" title="class in org.strykeforce.deadeye">Rect</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#targetsOrderedByCenterX()">targetsOrderedByCenterX</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Returns a <code>List</code> of target <code>Rect</code>s in <code>Rect.center().x</code> ascending order.</div>
+</td>
+</tr>
+<tr id="i6" class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Rect.html" title="class in org.strykeforce.deadeye">Rect</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#targetsOrderedByCenterY()">targetsOrderedByCenterY</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Returns a <code>List</code> of target <code>Rect</code>s in <code>Rect.center().y</code> ascending order.</div>
+</td>
+</tr>
+<tr id="i7" class="rowColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Rect.html" title="class in org.strykeforce.deadeye">Rect</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#targetsOrderedByTopLeftX()">targetsOrderedByTopLeftX</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Returns a <code>List</code> of target <code>Rect</code>s in <code>Rect.topLeft.x</code> ascending order.</div>
+</td>
+</tr>
+<tr id="i8" class="altColor">
+<td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Rect.html" title="class in org.strykeforce.deadeye">Rect</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#targetsOrderedByTopLeftY()">targetsOrderedByTopLeftY</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Returns a <code>List</code> of target <code>Rect</code>s in <code>Rect.topLeft.y</code> ascending order.</div>
+</td>
+</tr>
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toString()">toString</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
@@ -276,7 +318,7 @@ extends <a href="TargetData.html" title="class in org.strykeforce.deadeye">Targe
 <h4>targets</h4>
 <pre><a href="https://javadoc.io/doc/org.jetbrains/annotations/22.0.0/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a>
 public final&nbsp;<a href="https://javadoc.io/doc/org.jetbrains/annotations/22.0.0/org/jetbrains/annotations/NotNull.html?is-external=true" title="class or interface in org.jetbrains.annotations" class="externalLink">@NotNull</a> <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Rect.html" title="class in org.strykeforce.deadeye">Rect</a>&gt; targets</pre>
-<div class="block">A <code>List</code> containing all <code>Rect</code>instances identified by the
+<div class="block">A <code>List</code> containing all <code>Rect</code> instances identified by the
  <code>TargetListPipeline</code>.</div>
 </li>
 </ul>
@@ -333,6 +375,90 @@ public final&nbsp;<a href="https://javadoc.io/doc/org.jetbrains/annotations/22.0
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a id="targetsOrderedByTopLeftX()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>targetsOrderedByTopLeftX</h4>
+<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Rect.html" title="class in org.strykeforce.deadeye">Rect</a>&gt;&nbsp;targetsOrderedByTopLeftX()</pre>
+<div class="block">Returns a <code>List</code> of target <code>Rect</code>s in <code>Rect.topLeft.x</code> ascending order.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a sorted <code>List</code></dd>
+</dl>
+</li>
+</ul>
+<a id="targetsOrderedByTopLeftY()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>targetsOrderedByTopLeftY</h4>
+<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Rect.html" title="class in org.strykeforce.deadeye">Rect</a>&gt;&nbsp;targetsOrderedByTopLeftY()</pre>
+<div class="block">Returns a <code>List</code> of target <code>Rect</code>s in <code>Rect.topLeft.y</code> ascending order.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a sorted <code>List</code></dd>
+</dl>
+</li>
+</ul>
+<a id="targetsOrderedByCenterX()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>targetsOrderedByCenterX</h4>
+<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Rect.html" title="class in org.strykeforce.deadeye">Rect</a>&gt;&nbsp;targetsOrderedByCenterX()</pre>
+<div class="block">Returns a <code>List</code> of target <code>Rect</code>s in <code>Rect.center().x</code> ascending order.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a sorted <code>List</code></dd>
+</dl>
+</li>
+</ul>
+<a id="targetsOrderedByCenterY()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>targetsOrderedByCenterY</h4>
+<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Rect.html" title="class in org.strykeforce.deadeye">Rect</a>&gt;&nbsp;targetsOrderedByCenterY()</pre>
+<div class="block">Returns a <code>List</code> of target <code>Rect</code>s in <code>Rect.center().y</code> ascending order.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a sorted <code>List</code></dd>
+</dl>
+</li>
+</ul>
+<a id="targetsOrderedByBottomRightX()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>targetsOrderedByBottomRightX</h4>
+<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Rect.html" title="class in org.strykeforce.deadeye">Rect</a>&gt;&nbsp;targetsOrderedByBottomRightX()</pre>
+<div class="block">Returns a <code>List</code> of target <code>Rect</code>s in <code>Rect.bottomRight.y</code> ascending order.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a sorted <code>List</code></dd>
+</dl>
+</li>
+</ul>
+<a id="targetsOrderedByBottomRightY()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>targetsOrderedByBottomRightY</h4>
+<pre class="methodSignature">public&nbsp;<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/List.html?is-external=true" title="class or interface in java.util" class="externalLink">List</a>&lt;<a href="Rect.html" title="class in org.strykeforce.deadeye">Rect</a>&gt;&nbsp;targetsOrderedByBottomRightY()</pre>
+<div class="block">Returns a <code>List</code> of target <code>Rect</code>s in <code>Rect.bottomRight.x</code> ascending order.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a sorted <code>List</code></dd>
+</dl>
+</li>
+</ul>
 <a id="getJsonAdapter()">
 <!--   -->
 </a>
