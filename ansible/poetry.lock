@@ -1,17 +1,17 @@
 [[package]]
 name = "ansible"
-version = "5.2.0"
+version = "5.3.0"
 description = "Radically simple IT automation"
 category = "main"
 optional = false
 python-versions = ">=3.8"
 
 [package.dependencies]
-ansible-core = ">=2.12.1,<2.13.0"
+ansible-core = ">=2.12.2,<2.13.0"
 
 [[package]]
 name = "ansible-core"
-version = "2.12.1"
+version = "2.12.2"
 description = "Radically simple IT automation"
 category = "main"
 optional = false
@@ -178,7 +178,7 @@ python-versions = ">=3.5"
 
 [[package]]
 name = "pyparsing"
-version = "3.0.6"
+version = "3.0.7"
 description = "Python parsing module"
 category = "main"
 optional = false
@@ -211,7 +211,7 @@ test = ["commentjson", "packaging", "pytest"]
 
 [[package]]
 name = "rich"
-version = "11.0.0"
+version = "11.1.0"
 description = "Render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal"
 category = "main"
 optional = false
@@ -289,10 +289,10 @@ content-hash = "396f850fcbedf4f90872225752661245e8a88e8bbdeb54d12cedb8e80098561a
 
 [metadata.files]
 ansible = [
-    {file = "ansible-5.2.0.tar.gz", hash = "sha256:c6d448f229cb4a77a6026bd61bcd5bcf062f4f666f1ed24432ba043d145499cb"},
+    {file = "ansible-5.3.0.tar.gz", hash = "sha256:50020dab43f6c59debdeb57f45c90ec6db78d4fa574edc6d75bc52e05cbd3639"},
 ]
 ansible-core = [
-    {file = "ansible-core-2.12.1.tar.gz", hash = "sha256:a4508707262be11bb4dd98a006f1b14817879a055e6b6c46ad9fca8894fb3073"},
+    {file = "ansible-core-2.12.2.tar.gz", hash = "sha256:bc79e1723a5a92cbc105d581b25b66840d15bb5f4c98925c936ef5a71f92e7c3"},
 ]
 ansible-lint = [
     {file = "ansible-lint-5.3.2.tar.gz", hash = "sha256:9ba886db4c44e59360bc8d668f0beae6193c0a1fcbb9e76127000ca3aced7c28"},
@@ -480,8 +480,8 @@ pygments = [
     {file = "Pygments-2.11.2.tar.gz", hash = "sha256:4e426f72023d88d03b2fa258de560726ce890ff3b630f88c21cbb8b2503b8c6a"},
 ]
 pyparsing = [
-    {file = "pyparsing-3.0.6-py3-none-any.whl", hash = "sha256:04ff808a5b90911829c55c4e26f75fa5ca8a2f5f36aa3a51f68e27033341d3e4"},
-    {file = "pyparsing-3.0.6.tar.gz", hash = "sha256:d9bdec0013ef1eb5a84ab39a3b3868911598afa494f5faa038647101504e2b81"},
+    {file = "pyparsing-3.0.7-py3-none-any.whl", hash = "sha256:a6c06a88f252e6c322f65faf8f418b16213b51bdfaece0524c1c1bc30c63c484"},
+    {file = "pyparsing-3.0.7.tar.gz", hash = "sha256:18ee9022775d270c55187733956460083db60b37d0d0fb357445f3094eed3eea"},
 ]
 pyyaml = [
     {file = "PyYAML-6.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:d4db7c7aef085872ef65a8fd7d6d09a14ae91f691dec3e87ee5ee0539d516f53"},
@@ -523,8 +523,8 @@ resolvelib = [
     {file = "resolvelib-0.5.5.tar.gz", hash = "sha256:123de56548c90df85137425a3f51eb93df89e2ba719aeb6a8023c032758be950"},
 ]
 rich = [
-    {file = "rich-11.0.0-py3-none-any.whl", hash = "sha256:d7a8086aa1fa7e817e3bba544eee4fd82047ef59036313147759c11475f0dafd"},
-    {file = "rich-11.0.0.tar.gz", hash = "sha256:c32a8340b21c75931f157466fefe81ae10b92c36a5ea34524dff3767238774a4"},
+    {file = "rich-11.1.0-py3-none-any.whl", hash = "sha256:365ebcdbfb3aa8d4b0ed2490e0fbf7b886a39d14eb7ea5fb7aece950835e1eed"},
+    {file = "rich-11.1.0.tar.gz", hash = "sha256:43e03d8eec12e21beaecc22c828a41c4247356414a12d5879834863d4ad53816"},
 ]
 "ruamel.yaml" = [
     {file = "ruamel.yaml-0.17.20-py3-none-any.whl", hash = "sha256:810eef9c46523a3f77479c66267a4708255ebe806a2d540078408c2227f011af"},
