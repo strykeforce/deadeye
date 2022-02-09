@@ -71,6 +71,12 @@ $ brew install strykeforce/deadeye/louischarlesc-safe strykeforce/deadeye/reader
 $ brew install strykeforce/deadeye/tinyfsm strykeforce/deadeye/wpilib
 ```
 
+### Configure CMake to find WPILib when using homebrew
+
+```
+$ cmake -G Ninja -DCMAKE_PREFIX_PATH=(brew --prefix wpilib) ..
+```
+
 ## Network Tables
 
 ```
