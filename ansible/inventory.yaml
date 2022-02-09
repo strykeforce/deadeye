@@ -23,6 +23,8 @@ deadeye:
       ansible_host: deadeye-f.local
       deadeye_unit: F
       camera_0_pipeline: deadeye::UprightRectPipeline
+      camera_1_pipeline: deadeye::MinAreaRectPipeline
+      camera_2_pipeline: deadeye::TargetListPipeline
       install_opencv: true
       ansible_user: deadeye
     deadeye-h:
