@@ -2,7 +2,8 @@
 Description=Deadeye Vision System Daemon
 Requires=network-online.target
 Wants=var-opt-deadeye.mount
-After=network-online.target
+Wants=deadeye-admin.service
+Before=deadeye-admin.service
 
 [Service]
 Environment=DEADEYE_NT_SERVER={{ deadeye_nt_server }} SPDLOG_LEVEL={{ deadeye_spdlog_level }}
