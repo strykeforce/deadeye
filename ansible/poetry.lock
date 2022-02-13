@@ -26,7 +26,7 @@ resolvelib = ">=0.5.3,<0.6.0"
 
 [[package]]
 name = "ansible-lint"
-version = "5.3.2"
+version = "5.4.0"
 description = "Checks playbooks for practices and behaviour that could potentially be improved"
 category = "main"
 optional = false
@@ -45,7 +45,7 @@ yamllint = {version = ">=1.25.0", optional = true, markers = "extra == \"yamllin
 [package.extras]
 community = ["ansible (>=2.10)"]
 core = ["ansible-core (>=2.11.4)"]
-test = ["flaky (>=3.7.0)", "pytest (>=6.0.1)", "pytest-cov (>=2.10.1)", "pytest-xdist (>=2.1.0)", "psutil"]
+test = ["coverage (>=6.2,<6.3)", "tomli (>=1.2.3,<2.0.0)", "flaky (>=3.7.0)", "pytest (>=6.0.1)", "pytest-cov (>=2.10.1)", "pytest-xdist (>=2.1.0)", "psutil"]
 yamllint = ["yamllint (>=1.25.0)"]
 
 [[package]]
@@ -211,7 +211,7 @@ test = ["commentjson", "packaging", "pytest"]
 
 [[package]]
 name = "rich"
-version = "11.1.0"
+version = "11.2.0"
 description = "Render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal"
 category = "main"
 optional = false
@@ -227,7 +227,7 @@ jupyter = ["ipywidgets (>=7.5.1,<8.0.0)"]
 
 [[package]]
 name = "ruamel.yaml"
-version = "0.17.20"
+version = "0.17.21"
 description = "ruamel.yaml is a YAML parser/emitter that supports roundtrip preservation of comments, seq/map flow style, and map key order"
 category = "main"
 optional = false
@@ -295,8 +295,8 @@ ansible-core = [
     {file = "ansible-core-2.12.2.tar.gz", hash = "sha256:bc79e1723a5a92cbc105d581b25b66840d15bb5f4c98925c936ef5a71f92e7c3"},
 ]
 ansible-lint = [
-    {file = "ansible-lint-5.3.2.tar.gz", hash = "sha256:9ba886db4c44e59360bc8d668f0beae6193c0a1fcbb9e76127000ca3aced7c28"},
-    {file = "ansible_lint-5.3.2-py3-none-any.whl", hash = "sha256:4673e55e61809bbebf5a6376cc5ed9cac32ef5fff6a121db70ea5ab0228cd81f"},
+    {file = "ansible-lint-5.4.0.tar.gz", hash = "sha256:2160a60b4ab034c04006d701a1779340ffb0f6e28f030ff8de958e1062a88962"},
+    {file = "ansible_lint-5.4.0-py3-none-any.whl", hash = "sha256:fb57755825b50da88c226052772bd843d37714155b504175912daac0e186e8c0"},
 ]
 bracex = [
     {file = "bracex-2.2.1-py3-none-any.whl", hash = "sha256:096c4b788bf492f7af4e90ef8b5bcbfb99759ae3415ea1b83c9d29a5ed8f9a94"},
@@ -523,12 +523,12 @@ resolvelib = [
     {file = "resolvelib-0.5.5.tar.gz", hash = "sha256:123de56548c90df85137425a3f51eb93df89e2ba719aeb6a8023c032758be950"},
 ]
 rich = [
-    {file = "rich-11.1.0-py3-none-any.whl", hash = "sha256:365ebcdbfb3aa8d4b0ed2490e0fbf7b886a39d14eb7ea5fb7aece950835e1eed"},
-    {file = "rich-11.1.0.tar.gz", hash = "sha256:43e03d8eec12e21beaecc22c828a41c4247356414a12d5879834863d4ad53816"},
+    {file = "rich-11.2.0-py3-none-any.whl", hash = "sha256:d5f49ad91fb343efcae45a2b2df04a9755e863e50413623ab8c9e74f05aee52b"},
+    {file = "rich-11.2.0.tar.gz", hash = "sha256:1a6266a5738115017bb64a66c59c717e7aa047b3ae49a011ede4abdeffc6536e"},
 ]
 "ruamel.yaml" = [
-    {file = "ruamel.yaml-0.17.20-py3-none-any.whl", hash = "sha256:810eef9c46523a3f77479c66267a4708255ebe806a2d540078408c2227f011af"},
-    {file = "ruamel.yaml-0.17.20.tar.gz", hash = "sha256:4b8a33c1efb2b443a93fcaafcfa4d2e445f8e8c29c528d9f5cdafb7cc9e4004c"},
+    {file = "ruamel.yaml-0.17.21-py3-none-any.whl", hash = "sha256:742b35d3d665023981bd6d16b3d24248ce5df75fdb4e2924e93a05c1f8b61ca7"},
+    {file = "ruamel.yaml-0.17.21.tar.gz", hash = "sha256:8b7ce697a2f212752a35c1ac414471dc16c424c9573be4926b56ff3f5d23b7af"},
 ]
 "ruamel.yaml.clib" = [
     {file = "ruamel.yaml.clib-0.2.6-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:6e7be2c5bcb297f5b82fee9c665eb2eb7001d1050deaba8471842979293a80b0"},

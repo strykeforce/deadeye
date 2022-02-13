@@ -1,7 +1,6 @@
 [Unit]
 Description=Deadeye Admin Server
-Wants=deadeye-daemon.service
-After=deadeye-daemon.service
+After=network-online.target
 
 [Service]
 Environment=DEADEYE_NT_SERVER={{ deadeye_nt_server }}
