@@ -25,6 +25,8 @@ PipelineConfig::PipelineConfig(const std::shared_ptr<nt::Value>& value) {
     j.at(PipelineConfig::kFilterKey).get_to(filter);
   if (j.contains(PipelineConfig::kLogKey))
     j.at(PipelineConfig::kLogKey).get_to(log);
+  if (j.contains(PipelineConfig::kConfigKey))
+    config = j.at(PipelineConfig::kConfigKey).get<json>();
 }
 
 // ---------------------------------------------------------------------------
