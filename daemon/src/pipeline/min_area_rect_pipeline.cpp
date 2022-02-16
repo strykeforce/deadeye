@@ -13,8 +13,8 @@ using namespace deadeye;
     : AbstractPipeline{inum, std::move(name)} {}
 
 void MinAreaRectPipeline::Configure(const CaptureConfig& config) {
+  AbstractPipeline::Configure(config);
   center2f_ = static_cast<cv::Point2f>(config.Size() / 2);
-  capture_type_ = config.PipelineType();
 }
 
 // Target is center of contour bounding box.
