@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "org.strykeforce"
-version = "22.0.0" // updated by scripts/bump.py
+version = "22.1.0" // updated by scripts/bump.py
 
 repositories {
     jcenter()
