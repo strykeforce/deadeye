@@ -14,10 +14,6 @@ using namespace deadeye;
                                                         std::string name)
     : AbstractPipeline{inum, std::move(name)} {}
 
-void TargetListPipeline::Configure(const CaptureConfig& config) {
-  capture_type_ = config.PipelineType();
-}
-
 // Target is center of contour bounding box.
 std::unique_ptr<TargetData> TargetListPipeline::ProcessContours(
     Contours const& contours) {

@@ -36,15 +36,14 @@ class AbstractPipeline : public Pipeline {
   [[nodiscard]] std::string ToString() const override;
 
   std::string id_;
-
   PipelineConfig pipeline_config_;
+  std::string capture_type_{"unknown"};
 
  private:
   cv::Mat frame_;
   cv::Mat hsv_threshold_output_;
   Contours find_contours_output_;
   Contours filter_contours_output_;
-  std::string capture_type_{"unknown"};
 };
 
 }  // namespace deadeye

@@ -33,7 +33,8 @@ TEST_CASE("PipelineConfig to JSON", "[pipeline]") {
   json expected = R"(
 {"hue":[1,2],"sat":[25,24],"sn":2767,"val":[250,251],
 "log":{"fps":0,"path":"/var/opt/deadeye","mount":true,"type":"capture"},
-"filter":{"area":[0.0,1.0],"aspect":[0.0,20.0],"solidity":[0.0,1.0]}}
+"filter":{"area":[0.0,1.0],"aspect":[0.0,20.0],"solidity":[0.0,1.0]},
+"config":{}}
 )"_json;
 
   REQUIRE(j == expected);

@@ -22,6 +22,7 @@ struct PipelineConfig {
   static constexpr auto kHsvHueKey = "hue";
   static constexpr auto kHsvSatKey = "sat";
   static constexpr auto kHsvValKey = "val";
+  static constexpr auto kConfigKey = "config";
   static constexpr auto kFilterKey = "filter";
   static constexpr auto kLogKey = "log";
 
@@ -31,6 +32,7 @@ struct PipelineConfig {
   hsv_t hue{-1, -1};
   hsv_t sat{-1, -1};
   hsv_t val{-1, -1};
+  nlohmann::json config = nlohmann::json::object();
   FilterConfig filter;
   LogConfig log;
 
