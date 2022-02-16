@@ -24,15 +24,14 @@
       - -DCMAKE_CXX_FLAGS_RELEASE=-Ofast -march=native -mtune=native -flto -ffat-lto-objects -DNDEBUG
       - -DDEADEYE_BUILD_TESTS={{ deadeye_build_tests }}
       - -DDEADEYE_UNIT_ID={{ deadeye_unit }}
+      - -DDEADEYE_NT_SERVER={{ deadeye_nt_server }}
       - -DDEADEYE_CAMERA0_PIPELINE={{ camera_0_pipeline }}
       - -DDEADEYE_CAMERA1_PIPELINE={{ camera_1_pipeline }}
       - -DDEADEYE_CAMERA2_PIPELINE={{ camera_2_pipeline }}
       - -DDEADEYE_CAMERA3_PIPELINE={{ camera_3_pipeline }}
       - -DDEADEYE_CAMERA4_PIPELINE={{ camera_4_pipeline }}
       - ../daemon
-  # environment:
-  #   LDFLAGS: -latomic
-  #   CXXFLAGS: -Wno-psabi
+  when: deadeye_repo is changed
 
 - name: Build and Install
   command:
@@ -40,3 +39,4 @@
     argv:
       - /usr/bin/ninja
       - install
+  when: deadeye_repo is changed

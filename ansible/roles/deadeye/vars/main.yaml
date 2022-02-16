@@ -10,5 +10,4 @@ deadeye_build_tests: "OFF"
 nginx_html: /opt/deadeye/share/nginx/html
 admin_host: 127.0.0.1
 deadeyed_host: 127.0.0.1
-deadeye_nt_server: 10.27.67.2
 deadeye_spdlog_level: info
