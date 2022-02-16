@@ -50,7 +50,8 @@ TEST_CASE("PipelineConfig New", "[pipeline]") {
 }
 
 TEST_CASE("PipelineConfig from JSON", "[pipeline]") {
-  auto expected = R"(
+  SECTION("without optional config") {
+    auto expected = R"(
 {
   "sn": 2767,
   "hue": [2, 4],
@@ -61,17 +62,49 @@ TEST_CASE("PipelineConfig from JSON", "[pipeline]") {
   }
 )"_json;
 
-  PipelineConfig pc = expected;
+    PipelineConfig pc = expected;
 
-  REQUIRE(pc.sn == 2767);
-  REQUIRE(pc.hue[0] == 2);
-  REQUIRE(pc.hue[1] == 4);
-  REQUIRE(pc.sat[0] == 4);
-  REQUIRE(pc.sat[1] == 6);
-  REQUIRE(pc.val[0] == 8);
-  REQUIRE(pc.val[1] == 10);
-  REQUIRE(pc.filter == FilterConfig({0.0, 1.0}, {4.0, 5.0}, {2.0, 3.0}));
-  REQUIRE(pc.log == LogConfig(LogType::four_up, "/foo", 1, true));
+    REQUIRE(pc.sn == 2767);
+    REQUIRE(pc.hue[0] == 2);
+    REQUIRE(pc.hue[1] == 4);
+    REQUIRE(pc.sat[0] == 4);
+    REQUIRE(pc.sat[1] == 6);
+    REQUIRE(pc.val[0] == 8);
+    REQUIRE(pc.val[1] == 10);
+    REQUIRE(pc.filter == FilterConfig({0.0, 1.0}, {4.0, 5.0}, {2.0, 3.0}));
+    REQUIRE(pc.log == LogConfig(LogType::four_up, "/foo", 1, true));
+
+  }
+
+  SECTION("with optional config") {
+    auto expected = R"(
+{
+  "sn": 2767,
+  "hue": [2, 4],
+  "sat": [4, 6],
+  "val": [8, 10],
+  "log": {"fps":1, "path":"/foo"},
+  "filter": {"area":[0.0,1.0], "aspect":[2.0,3.0], "solidity":[4.0,5.0]},
+  "config": {"a": 2767, "b": "Stryke Force"}
+  }
+)"_json;
+
+    PipelineConfig pc = expected;
+
+    REQUIRE(pc.sn == 2767);
+    REQUIRE(pc.hue[0] == 2);
+    REQUIRE(pc.hue[1] == 4);
+    REQUIRE(pc.sat[0] == 4);
+    REQUIRE(pc.sat[1] == 6);
+    REQUIRE(pc.val[0] == 8);
+    REQUIRE(pc.val[1] == 10);
+    REQUIRE(pc.filter == FilterConfig({0.0, 1.0}, {4.0, 5.0}, {2.0, 3.0}));
+    REQUIRE(pc.log == LogConfig(LogType::four_up, "/foo", 1, true));
+
+    json j = pc.config;
+    REQUIRE(j.value("a", 0) == 2767);
+    REQUIRE(j.value("b", "not this") == "Stryke Force");
+  }
 }
 
 TEST_CASE("LogConfig has sane defaults", "[pipeline]") {
