@@ -1,18 +1,11 @@
 ---
-- name: Set jhh authorized keys
-  authorized_key:
-    user: "{{ build_user }}"
-    state: present
-    key: https://github.com/jhh.keys
-
-- name: Install git
-  apt:
-    update_cache: false
-    name:
-      - git
-
-- name: Clone repo
-  git:
-    repo: "{{ deadeye_repo }}"
+- name: Sync remote repo from local
+  ansible.posix.synchronize:
+    src: ../../deadeye/daemon
     dest: "{{ deadeye_src }}"
+    times: false
+    checksum: true
+    delete: true
+    rsync_opts:
+      - "--exclude *build*/"
   register: deadeye_repo
