@@ -16,7 +16,9 @@ class AbstractPipeline : public Pipeline {
   void Configure(const CaptureConfig& config) override;
   void Configure(const PipelineConfig& config) override;
 
-  [[nodiscard]] cv::Mat GetMask() const override { return hsv_threshold_output_; }
+  [[nodiscard]] cv::Mat GetMask() const override {
+    return hsv_threshold_output_;
+  }
 
   [[nodiscard]] Contours GetContours() const override {
     return find_contours_output_;

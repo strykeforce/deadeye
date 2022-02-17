@@ -8,7 +8,8 @@
 using namespace deadeye;
 
 AbstractPipeline::AbstractPipeline(int inum, std::string name)
-    : Pipeline{inum, std::move(name)}, id_(DEADEYE_UNIT + std::to_string(inum)) {}
+    : Pipeline{inum, std::move(name)},
+      id_(DEADEYE_UNIT + std::to_string(inum)) {}
 
 /**
  * Configure handles changes to capture settings and only takes effect
@@ -33,12 +34,15 @@ std::unique_ptr<TargetData> AbstractPipeline::ProcessFrame(
   frame_ = frame;
   MaskFrame(frame_, hsv_threshold_output_, pipeline_config_.HsvLow(),
             pipeline_config_.HsvHigh());
+
   FindContours(hsv_threshold_output_, find_contours_output_);
 
   FilterContours(pipeline_config_.filter, find_contours_output_,
                  filter_contours_output_);
+
   std::unique_ptr<TargetData> target_data =
       ProcessContours(filter_contours_output_);
+
   return std::move(target_data);
 }
 
