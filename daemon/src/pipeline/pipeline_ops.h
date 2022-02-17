@@ -21,11 +21,14 @@ inline void FindContours(const cv::Mat& mask, Contours& contours) {
  */
 inline void GeometricContoursFilter(const FilterConfig& filter,
                                     const Contours& src, Contours& dest) {
-  dest.clear();
-
 #ifndef NDEBUG
   if (filter.IsAreaEnabled()) assert(filter.frame_area > 0);
 #endif
+
+  dest.clear();
+  // temporarily zip together contours and areas for sorting contours by area
+  // after filtering
+  std::vector<std::pair<std::vector<cv::Point>, double>> zipped;
 
   for (const auto& contour : src) {
     // set these to true if filter is skipped, false otherwise
@@ -61,9 +64,14 @@ inline void GeometricContoursFilter(const FilterConfig& filter,
     }
 
     if (area_ok && solidity_ok && aspect_ok) {
-      dest.push_back(contour);
+      zipped.emplace_back(contour, area);
     }
   }
+
+  std::sort(zipped.begin(), zipped.end(),
+            [](const auto& a, const auto& b) { return a.second > b.second; });
+
+  for (const auto& p : zipped) dest.push_back(p.first);
 }
 
 }  // namespace deadeye

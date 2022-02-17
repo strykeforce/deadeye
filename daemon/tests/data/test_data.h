@@ -1,3 +1,5 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "cert-err58-cpp"
 #pragma once
 
 #include <opencv2/core/types.hpp>
@@ -30,3 +32,5 @@ static cv::Scalar kHsvHigh{110, 255, 255};
 static std::string kAreaFilter{DEADEYE_TEST_DATA "area_filter.jpg"};
 static std::string kSolidityFilter{DEADEYE_TEST_DATA "solidity_filter.jpg"};
 static std::string kAspectFilter{DEADEYE_TEST_DATA "aspect_filter.jpg"};
+
+#pragma clang diagnostic pop

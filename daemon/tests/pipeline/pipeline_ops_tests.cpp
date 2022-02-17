@@ -44,7 +44,7 @@ TEST_CASE("area filter", "[ops]") {
   SECTION("no filters") {
     FilterConfig filter;
     GeometricContoursFilter(filter, contours, filtered_contours);
-    REQUIRE(filtered_contours == contours);
+    REQUIRE(filtered_contours.size() == contours.size());
   }
 
   SECTION("area 0.2713") {
@@ -107,7 +107,7 @@ TEST_CASE("solidity filter", "[ops]") {
   SECTION("no filters") {
     FilterConfig filter;
     GeometricContoursFilter(filter, contours, filtered_contours);
-    REQUIRE(filtered_contours == contours);
+    REQUIRE(filtered_contours.size() == contours.size());
   }
 
   SECTION("solidity 0.35") {
@@ -150,7 +150,7 @@ TEST_CASE("aspect filter", "[ops]") {
   SECTION("no filters") {
     FilterConfig filter;
     GeometricContoursFilter(filter, contours, filtered_contours);
-    REQUIRE(filtered_contours == contours);
+    REQUIRE(filtered_contours.size() == contours.size());
   }
 
   SECTION("aspect 0.1") {
@@ -192,4 +192,36 @@ TEST_CASE("aspect filter", "[ops]") {
     GeometricContoursFilter(filter, contours, filtered_contours);
     REQUIRE(filtered_contours.size() == 1);
   }
+}
+
+TEST_CASE("contours sorted after filtering", "[ops]") {
+  cv::Mat frame = cv::imread(kTargetMaster);
+  REQUIRE(frame.size() == cv::Size(1280, 720));
+  cv::Mat mask;
+  Contours contours;
+
+  PipelineConfig pc{kTargetMasterPipelineConfig};
+  MaskFrame(frame, mask, pc.HsvLow(), pc.HsvHigh());
+  FindContours(mask, contours);
+  REQUIRE(contours.size() == kTargetMasterNumContours);
+
+  struct compare {
+    bool operator()(cv::InputArray a, cv::InputArray b) const {
+      return cv::contourArea(a) > cv::contourArea(b);
+    }
+  } comparator;
+
+  REQUIRE_FALSE(
+      std::is_sorted(std::begin(contours), std::end(contours), comparator));
+
+  FilterConfig filter;
+  Contours filtered_contours;
+  GeometricContoursFilter(filter, contours, filtered_contours);
+
+  REQUIRE(std::is_sorted(filtered_contours.begin(), filtered_contours.end(),
+                         comparator));
+
+  // for (auto& c : contours) WARN("contour area = " << cv::contourArea(c));
+  // for (auto& c : filtered_contours) WARN("filtered_contour area = " <<
+  // cv::contourArea(c));
 }
