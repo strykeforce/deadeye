@@ -1,5 +1,10 @@
 ---
-- name: Sync remote repo from local
+- name: create deadeye directory
+  file:
+    path: "{{ deadeye_dir }}"
+    state: directory
+
+- name: sync remote repo from local
   ansible.posix.synchronize:
     src: ../../deadeye/daemon
     dest: "{{ deadeye_src }}"
