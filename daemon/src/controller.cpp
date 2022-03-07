@@ -43,6 +43,12 @@ constexpr unsigned int hash(const char* str, int h = 0) {
 }
 #pragma clang diagnostic pop
 
+#ifdef __linux__
+const char* kNetworkTablesIniPath = "/etc/opt/deadeye/networktables.ini";
+#else
+const char* kNetworkTablesIniPath = "networktables.ini";
+#endif
+
 }  // namespace
 
 /**
@@ -471,8 +477,9 @@ void Controller::StartNetworkTables() {
 
   // create own NT server if DEADEYE_NT_SERVER=127.0.0.1
   if (std::strncmp("127.0.0.1", nt_server, 15) == 0) {
-    spdlog::info("Starting local NetworkTables server");
-    nt::StartServer(inst_, "network_tables.ini", "0.0.0.0", nt_port);
+    spdlog::info("Starting our own NetworkTables server");
+    spdlog::info("NetworkTables persist file: {}", kNetworkTablesIniPath);
+    nt::StartServer(inst_, kNetworkTablesIniPath, "0.0.0.0", nt_port);
     return;
   }
 
