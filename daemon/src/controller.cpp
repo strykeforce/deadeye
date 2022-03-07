@@ -472,7 +472,7 @@ void Controller::StartNetworkTables() {
   // create own NT server if DEADEYE_NT_SERVER=127.0.0.1
   if (std::strncmp("127.0.0.1", nt_server, 15) == 0) {
     spdlog::info("Starting local NetworkTables server");
-    nt::StartServer(inst_, "network_tables.ini", nt_server, nt_port);
+    nt::StartServer(inst_, "network_tables.ini", "0.0.0.0", nt_port);
     return;
   }
 
