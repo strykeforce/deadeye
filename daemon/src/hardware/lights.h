@@ -8,7 +8,7 @@
 #include <future>
 #include <tinyfsm.hpp>
 
-#include "config/deadeye_config.h"
+#include "config.h"
 #include "led_drive.h"
 
 namespace deadeye {

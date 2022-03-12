@@ -6,8 +6,8 @@
 #include <opencv2/core/types.hpp>
 #include <utility>
 
+#include "config.h"
 #include "config/capture_config.h"
-#include "config/deadeye_config.h"
 #include "config/pipeline_config.h"
 #include "link/target_data.h"
 

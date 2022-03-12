@@ -6,7 +6,7 @@
 #include <string>
 
 #include "config/capture_config.h"
-#include "config/deadeye_config.h"
+#include "config.h"
 #include "config/filter_config.h"
 #include "config/log_config.h"
 #include "config/pipeline_config.h"

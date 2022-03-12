@@ -2,7 +2,7 @@
 
 #include <utility>
 
-#include "config/deadeye_config.h"
+#include "config.h"
 #include "pipeline/pipeline_ops.h"
 
 using namespace deadeye;

@@ -5,8 +5,6 @@
 #include <opencv2/imgproc.hpp>
 #include <utility>
 
-// #include "config/pipeline_config.h"
-// #include "config/stream_config.h"
 #include "link/upright_target_data.h"
 
 using namespace deadeye;
