@@ -1,7 +1,6 @@
 ---
 - hosts: deadeye
-  vars:
-    deadeye_admin_port: 5000
-  roles:
-    - role: deadeye
-      tags: deadeye
+  tasks:
+   - name: Print all available facts
+     ansible.builtin.debug:
+       var: ansible_facts["default_ipv4"]["address"]
