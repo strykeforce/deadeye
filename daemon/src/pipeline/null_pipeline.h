@@ -1,6 +1,6 @@
 #pragma once
 
-#include "config/deadeye_config.h"
+#include "config.h"
 #include "link/target_data.h"
 #include "pipeline/pipeline.h"
 

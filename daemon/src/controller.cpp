@@ -12,8 +12,7 @@
 #include <memory>
 #include <tinyfsm.hpp>
 
-#include "config/deadeye_config.h"
-#include "config/deadeye_version.h"
+#include "config.h"
 #include "config/pipeline_config.h"
 #include "config/stream_config.h"
 #include "hardware/camera.h"

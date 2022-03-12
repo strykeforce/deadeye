@@ -5,8 +5,8 @@
 #include <opencv2/imgproc.hpp>
 
 #include "../data/test_data.h"
+#include "config.h"
 #include "config/capture_config.h"
-#include "config/deadeye_config.h"
 #include "config/pipeline_config.h"
 #include "config/stream_config.h"
 #include "pipeline/abstract_pipeline.h"

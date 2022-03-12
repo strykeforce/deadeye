@@ -11,7 +11,7 @@
 #include <tinyfsm.hpp>
 
 #include "config/capture_config.h"
-#include "config/deadeye_config.h"
+#include "config.h"
 #include "config/pipeline_config.h"
 #include "config/stream_config.h"
 #include "pipeline/runner.h"

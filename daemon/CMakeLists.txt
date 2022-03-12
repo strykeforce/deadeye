@@ -30,6 +30,13 @@ set(DEADEYE_CAMERA2_PIPELINE "" CACHE STRING "Camera 2 Pipeline class")
 set(DEADEYE_CAMERA3_PIPELINE "" CACHE STRING "Camera 3 Pipeline class")
 set(DEADEYE_CAMERA4_PIPELINE "" CACHE STRING "Camera 4 Pipeline class")
 
+# Create config.h and put in header search path
+configure_file(
+        "${PROJECT_SOURCE_DIR}/src/config.h.in"
+        "${PROJECT_BINARY_DIR}/config.h"
+)
+
+include_directories("${CMAKE_BINARY_DIR}")
 # Dependencies
 find_package(spdlog REQUIRED)
 find_package(wpilib REQUIRED)

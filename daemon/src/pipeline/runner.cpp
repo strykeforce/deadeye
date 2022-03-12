@@ -7,7 +7,7 @@
 
 #include "capture/capture.h"
 #include "capture/capture_factory.h"
-#include "config/deadeye_config.h"
+#include "config.h"
 #include "link/link.h"
 #include "log/logger.h"
 #include "pipeline/streamer.h"

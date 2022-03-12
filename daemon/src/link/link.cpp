@@ -9,7 +9,7 @@
 
 #include <nlohmann/json.hpp>
 
-#include "config/deadeye_config.h"
+#include "config.h"
 #include "config/link_config.h"
 #include "controller.h"
 #include "link/upright_target_data.h"
@@ -63,7 +63,7 @@ void Link::Send(TargetData* const td) const {
 
 void Link::Init(nt::NetworkTableInstance& nti) {
   auto entry = nti.GetEntry(DE_LINK_ENTRY);
-  LinkConfig lc{CLIENT_ADDRESS, CLIENT_PORT, true};
+  LinkConfig lc{DEADEYE_CLIENT_ADDRESS, DEADEYE_CLIENT_PORT, true};
   json j = {lc};
   entry.SetDefaultString(j.dump());
   entry.SetPersistent();
