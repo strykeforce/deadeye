@@ -37,7 +37,6 @@ configure_file(
         "${PROJECT_BINARY_DIR}/config.h"
 )
 
-include_directories("${CMAKE_BINARY_DIR}")
 # Dependencies
 find_package(spdlog REQUIRED)
 find_package(wpilib REQUIRED)
