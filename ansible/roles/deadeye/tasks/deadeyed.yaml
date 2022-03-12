@@ -30,6 +30,7 @@
       - -DDEADEYE_CAMERA2_PIPELINE={{ camera_2_pipeline }}
       - -DDEADEYE_CAMERA3_PIPELINE={{ camera_3_pipeline }}
       - -DDEADEYE_CAMERA4_PIPELINE={{ camera_4_pipeline }}
+      - -DDEADEYE_STREAM_ADDRESS={{ deadeye_stream_address }}
       - ../daemon
   when: deadeye_repo is changed
 

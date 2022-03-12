@@ -8,6 +8,7 @@
 
 #include <sstream>
 #include <utility>
+#include "config.h"
 
 using namespace deadeye;
 using json = nlohmann::json;
@@ -78,49 +79,11 @@ const uint32_t n172 = htonl(0xAC100000) & nm12; // NOLINT
 // 192.168.0.0-192.168.255.255
 const uint32_t n192 = htonl(0xC0A80000) & nm16; // NOLINT
 
-bool is_private(struct sockaddr* addr) {
-  if (addr == nullptr) return false;
-  uint32_t ip = ((sockaddr_in*)addr)->sin_addr.s_addr;
-  return (n010 == (ip & nm08)) || (n172 == (ip & nm12)) ||
-         (n192 == (ip & nm16));
-}
-
-std::string first_rfc1918() {
-  struct ifaddrs* ifaddr;
-  std::string addr = "error";
-
-  if (getifaddrs(&ifaddr) == -1) {
-    spdlog::critical("Error getting interface address for stream: {}",
-                     strerror(errno));
-    return addr;
-  }
-
-  for (struct ifaddrs* ifa = ifaddr; ifa != nullptr; ifa = ifa->ifa_next) {
-    if (ifa->ifa_addr == nullptr) continue;
-    if (ifa->ifa_netmask == nullptr) continue;
-    if (((sockaddr_in*)(ifa->ifa_addr))->sin_family != AF_INET) continue;
-
-    if (is_private(ifa->ifa_addr)) {
-      char ip_str[INET_ADDRSTRLEN];
-      in_addr ip = ((sockaddr_in*)(ifa->ifa_addr))->sin_addr;
-      inet_ntop(AF_INET, &ip, ip_str, INET_ADDRSTRLEN);
-      addr = ip_str;
-      break;
-    }
-  }
-
-  freeifaddrs(ifaddr);
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "LocalValueEscapesScope"
-  return addr;
-#pragma clang diagnostic pop
-}
-
 std::string stream_url(int inum) {
   if (std::getenv("DEADEYE_DOCKER")) {
     return fmt::format("/stream/{}/?s=0", inum);
   }
-  return fmt::format("http://{}:{}/stream.mjpg?s=0", first_rfc1918(),
+  return fmt::format("http://{}:{}/stream.mjpg?s=0", DEADEYE_STREAM_ADDRESS,
                      5805 + inum);
 }
 

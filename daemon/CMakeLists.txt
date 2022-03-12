@@ -22,6 +22,7 @@ set(DEADEYE_UNIT_ID "A" CACHE STRING "Deadeye unique unit ID")
 set(DEADEYE_NT_SERVER "10.27.67.2" CACHE STRING "NetworkTables server address")
 set(DEADEYE_CLIENT_ADDRESS "10.27.67.2" CACHE STRING "Deadeye client address")
 set(DEADEYE_CLIENT_PORT "5800" CACHE STRING "Deadeye client port")
+set(DEADEYE_STREAM_ADDRESS "10.27.67.10" CACHE STRING "Deadeye stream server address")
 
 # Camera Pipelines
 set(DEADEYE_CAMERA0_PIPELINE "deadeye::UprightRectPipeline" CACHE STRING "Camera 0 Pipeline class")
