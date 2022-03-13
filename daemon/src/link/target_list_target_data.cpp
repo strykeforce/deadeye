@@ -12,12 +12,12 @@ using json = nlohmann::json;
 namespace {
 // minimum datagram size: IPv4 = 576 IPv6 = 1280
 constexpr int MAX_SERIALIZED_SIZE = 1000;
-const cv::Scalar BB_COLOR{20, 255, 20}; // NOLINT
+const cv::Scalar BB_COLOR{20, 255, 20};  // NOLINT
 }  // namespace
 
-TargetListTargetData::TargetListTargetData(const std::string& id, const int sn,
-                                           const bool valid,
-                                           TargetList  targets)
+TargetListTargetData::TargetListTargetData(const std::string_view id,
+                                           const int sn, const bool valid,
+                                           TargetList targets)
     : TargetData{id, sn, valid}, targets{std::move(targets)} {}
 
 void TargetListTargetData::DrawMarkers(cv::Mat& preview) const {

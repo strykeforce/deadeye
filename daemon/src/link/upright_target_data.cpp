@@ -8,9 +8,9 @@
 using namespace deadeye;
 using json = nlohmann::json;
 
-UprightTargetData::UprightTargetData(std::string id, int sn, bool valid,
+UprightTargetData::UprightTargetData(std::string_view id, int sn, bool valid,
                                      cv::Rect bb)
-    : TargetData{std::move(id), sn, valid},
+    : TargetData{id, sn, valid},
       bb(bb),
       center((bb.tl() + bb.br()) / 2) {}
 

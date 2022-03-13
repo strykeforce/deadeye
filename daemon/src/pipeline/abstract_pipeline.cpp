@@ -9,7 +9,9 @@ using namespace deadeye;
 
 AbstractPipeline::AbstractPipeline(int inum, std::string name)
     : Pipeline{inum, std::move(name)},
-      id_(DEADEYE_UNIT + std::to_string(inum)) {}
+      id_string_(DEADEYE_UNIT + std::to_string(inum)) {
+  id_ = id_string_;
+}
 
 /**
  * Configure handles changes to capture settings and only takes effect

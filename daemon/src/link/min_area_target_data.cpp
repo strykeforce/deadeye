@@ -8,9 +8,10 @@
 using namespace deadeye;
 using json = nlohmann::json;
 
-MinAreaTargetData::MinAreaTargetData(std::string id, int sn, bool valid,
-                                     const cv::RotatedRect& rect, cv::Point center)
-    : TargetData{std::move(id), sn, valid}, rect(rect), center(std::move(center)) {
+MinAreaTargetData::MinAreaTargetData(std::string_view id, int sn, bool valid,
+                                     const cv::RotatedRect& rect,
+                                     cv::Point center)
+    : TargetData{id, sn, valid}, rect(rect), center(center) {
   rect.points(corners);
 }
 
@@ -21,7 +22,7 @@ void MinAreaTargetData::DrawMarkers(cv::Mat& preview) const {
                  cv::MARKER_TILTED_CROSS);
   cv::drawMarker(preview, target, cv::Scalar::all(255));
 
-  for (const auto & corner : corners)
+  for (const auto& corner : corners)
     cv::circle(preview, corner, 3, cv::Scalar(0, 0, 255), cv::FILLED,
                cv::LINE_AA);
   // cv::rectangle(preview, bb, cv::Scalar(255, 0, 0));

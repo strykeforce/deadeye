@@ -12,7 +12,7 @@ struct MinAreaTargetData : public TargetData {
   cv::Point center;
   cv::Point2f corners[4];
 
-  MinAreaTargetData(std::string id, int sn, bool valid, const cv::RotatedRect& rect,
+  MinAreaTargetData(std::string_view id, int sn, bool valid, const cv::RotatedRect& rect,
                     cv::Point center);
 
   void DrawMarkers(cv::Mat& preview) const override;
