@@ -10,8 +10,8 @@ const char* TargetData::kSerialKey{"sn"};
 const char* TargetData::kValidKey{"v"};
 const char* TargetData::kDataKey{"d"};
 
-TargetData::TargetData(std::string id, int serial, bool valid)
-    : id(std::move(std::move(id))), serial(serial), valid(valid) {}
+TargetData::TargetData(std::string_view id, int serial, bool valid)
+    : id(id), serial(serial), valid(valid) {}
 
 void TargetData::DrawMarkers(cv::Mat& preview) const {}
 

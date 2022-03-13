@@ -11,13 +11,13 @@ struct TargetData {
   static const char* kValidKey;
   static const char* kDataKey;
 
-  std::string id;
+  std::string_view id;
   int serial{};
   bool valid{};
 
   TargetData() = default;
   virtual ~TargetData() = default;
-  TargetData(std::string id, int serial, bool valid);
+  TargetData(std::string_view id, int serial, bool valid);
 
   TargetData(const TargetData&) = delete;
   TargetData& operator=(const TargetData&) = delete;

@@ -37,11 +37,12 @@ class AbstractPipeline : public Pipeline {
 
   [[nodiscard]] std::string ToString() const override;
 
-  std::string id_;
+  std::string_view id_;
   PipelineConfig pipeline_config_;
   std::string capture_type_{"unknown"};
 
  private:
+  std::string id_string_;
   cv::Mat frame_;
   cv::Mat hsv_threshold_output_;
   Contours find_contours_output_;
