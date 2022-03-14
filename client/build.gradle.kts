@@ -14,14 +14,14 @@ repositories {
 }
 
 dependencies {
-    val wpiVersion = "2022.2.1"
-    val slf4jVersion = "1.7.33"
+    val wpiVersion = "2022.4.1"
+    val slf4jVersion = "1.7.36"
     val junitVersion = "5.8.2"
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation("com.squareup.moshi:moshi:1.13.0")
     implementation("edu.wpi.first.ntcore:ntcore-java:$wpiVersion")
     implementation("org.slf4j:slf4j-api:$slf4jVersion")
-    implementation("org.jetbrains:annotations:22.0.0")
+    implementation("org.jetbrains:annotations:23.0.0")
 
 
     // Use JUnit Jupiter API for testing.
@@ -33,7 +33,7 @@ dependencies {
     testRuntimeOnly("edu.wpi.first.ntcore:ntcore-jni:$wpiVersion:osxx86-64")
     testRuntimeOnly("edu.wpi.first.ntcore:ntcore-jni:$wpiVersion:linuxx86-64")
     testRuntimeOnly("edu.wpi.first.wpiutil:wpiutil-java:$wpiVersion")
-    testRuntimeOnly("ch.qos.logback:logback-classic:1.2.10")
+    testRuntimeOnly("ch.qos.logback:logback-classic:1.2.11")
 }
 
 java {

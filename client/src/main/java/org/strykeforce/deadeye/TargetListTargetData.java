@@ -11,11 +11,13 @@ import java.util.Objects;
 import okio.Buffer;
 import okio.BufferedSource;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A <code>TargetListTargetData</code> represents data returned from a Deadeye
  * <code>TargetListPipeline</code>.
  */
+@SuppressWarnings("unused")
 public class TargetListTargetData extends TargetData {
 
   static final int DATA_LENGTH = 5;
@@ -54,7 +56,7 @@ public class TargetListTargetData extends TargetData {
    *
    * @return a sorted {@code List}
    */
-  public List<Rect> targetsOrderedByTopLeftX() {
+  public @NotNull List<Rect> targetsOrderedByTopLeftX() {
     targets.sort(Comparator.comparingInt(r -> r.topLeft.x));
     return targets;
   }
@@ -65,7 +67,7 @@ public class TargetListTargetData extends TargetData {
    * @return a sorted {@code List}
    */
 
-  public List<Rect> targetsOrderedByTopLeftY() {
+  public @NotNull List<Rect> targetsOrderedByTopLeftY() {
     targets.sort(Comparator.comparingInt(r -> r.topLeft.y));
     return targets;
   }
@@ -75,7 +77,7 @@ public class TargetListTargetData extends TargetData {
    *
    * @return a sorted {@code List}
    */
-  public List<Rect> targetsOrderedByCenterX() {
+  public @NotNull List<Rect> targetsOrderedByCenterX() {
     targets.sort(Comparator.comparingInt(r -> r.center().x));
     return targets;
   }
@@ -85,7 +87,7 @@ public class TargetListTargetData extends TargetData {
    *
    * @return a sorted {@code List}
    */
-  public List<Rect> targetsOrderedByCenterY() {
+  public @NotNull List<Rect> targetsOrderedByCenterY() {
     targets.sort(Comparator.comparingInt(r -> r.center().y));
     return targets;
   }
@@ -96,7 +98,7 @@ public class TargetListTargetData extends TargetData {
    * @return a sorted {@code List}
    */
 
-  public List<Rect> targetsOrderedByBottomRightX() {
+  public @NotNull List<Rect> targetsOrderedByBottomRightX() {
     targets.sort(Comparator.comparingInt(r -> r.bottomRight.x));
     return targets;
   }
@@ -106,7 +108,7 @@ public class TargetListTargetData extends TargetData {
    *
    * @return a sorted {@code List}
    */
-  public List<Rect> targetsOrderedByBottomRightY() {
+  public @NotNull List<Rect> targetsOrderedByBottomRightY() {
     targets.sort(Comparator.comparingInt(r -> r.bottomRight.y));
     return targets;
   }
@@ -119,7 +121,7 @@ public class TargetListTargetData extends TargetData {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) {
       return true;
     }
@@ -139,7 +141,7 @@ public class TargetListTargetData extends TargetData {
   }
 
   @Override
-  public String toString() {
+  public @NotNull String toString() {
     return "TargetListTargetData{" + "targets=" + targets + "} " + super.toString();
   }
 
@@ -149,7 +151,7 @@ public class TargetListTargetData extends TargetData {
     private static final JsonReader.Options OPTIONS = JsonReader.Options.of("id", "sn", "v", "d");
 
     @Override
-    public TargetListTargetData fromJson(BufferedSource source) throws IOException {
+    public @NotNull TargetListTargetData fromJson(@NotNull BufferedSource source) throws IOException {
       JsonReader reader = JsonReader.of(source);
       String id = null;
       int serial = -1;
@@ -193,7 +195,7 @@ public class TargetListTargetData extends TargetData {
     }
 
     @Override
-    public String toJson(TargetListTargetData targetData) throws IOException {
+    public @NotNull String toJson(@NotNull TargetListTargetData targetData) throws IOException {
       Buffer buffer = new Buffer();
       JsonWriter writer = JsonWriter.of(buffer);
       writer.beginObject();

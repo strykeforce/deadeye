@@ -5,11 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
 class RectTest {
 
-  Rect rect = new Rect(new Point(0, 0), new Point(10, 20), 10);
+  @NotNull Rect rect = new Rect(new Point(0, 0), new Point(10, 20), 10);
 
   @Test
   void center() {

@@ -90,7 +90,7 @@ class Link extends Thread {
    *
    * @return the configured client address.
    */
-  public String getAddress() {
+  String getAddress() {
     return address;
   }
 

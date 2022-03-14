@@ -1,9 +1,13 @@
 package org.strykeforce.deadeye;
 
 import java.util.Objects;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 /**
  * A point representing a location in (x,y) coordinate space, specified in double precision.
  */
+@SuppressWarnings("unused")
 public final class Point2D {
   public final double x;
   public final double y;
@@ -42,14 +46,14 @@ public final class Point2D {
    * @param that the point to measure distance from.
    * @return the distance to the other {@code Point}.
    */
-  public double distanceTo(Point that) {
+  public double distanceTo(@NotNull Point that) {
     double dx = this.x - that.x;
     double dy = this.y - that.y;
     return Math.sqrt(dx * dx + dy * dy);
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Point2D point = (Point2D) o;
@@ -62,7 +66,7 @@ public final class Point2D {
   }
 
   @Override
-  public String toString() {
+  public @NotNull String toString() {
     return "(" + x + ", " + y + ")";
   }
 }

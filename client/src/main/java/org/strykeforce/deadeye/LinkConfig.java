@@ -16,15 +16,16 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 class LinkConfig {
 
   static final LinkConfig DEFAULT = new LinkConfig("10.27.67.2", 5800, true);
   final int port;
   final boolean enabled;
-  final String address;
+  final @Nullable String address;
 
-  LinkConfig(@NotNull String address, int port, boolean enabled) {
+  LinkConfig(@Nullable String address, int port, boolean enabled) {
     this.address = address;
     this.port = port;
     this.enabled = enabled;
@@ -48,6 +49,7 @@ class LinkConfig {
       Link.logger.warn("more than one entry unsupported, using first:\n\t{}", json);
     }
 
+    // only use first config for now
     var config = configs.get(0);
     if (config.address == null || config.port == 0 || !config.address.equals(
         addressToInetAddress(config.address).getHostAddress())) {
@@ -84,6 +86,7 @@ class LinkConfig {
     }
   }
 
+  @NotNull
   static InetAddress addressToInetAddress(String address) {
     InetAddress inetAddress = null;
     var invalid = true;
@@ -110,7 +113,7 @@ class LinkConfig {
     }
   }
 
-  LinkConfig withAddress(String address) {
+  @NotNull LinkConfig withAddress(@NotNull String address) {
     return new LinkConfig(address, this.port, this.enabled);
   }
 
@@ -137,7 +140,7 @@ class LinkConfig {
     return addressValid && portValid;
   }
 
-  void save(NetworkTable deadeyeTable) {
+  void save(@NotNull NetworkTable deadeyeTable) {
     JsonAdapter<List<LinkConfig>> jsonAdapter = getConfigJsonAdapter();
     deadeyeTable.getEntry(Link.LINK_ENTRY)
         .setString(jsonAdapter.toJson(Collections.singletonList(this)));
@@ -152,8 +155,9 @@ class LinkConfig {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    LinkConfig config = (LinkConfig) o;
-    return port == config.port && enabled == config.enabled && address.equals(config.address);
+    LinkConfig that = (LinkConfig) o;
+    return port == that.port && enabled == that.enabled && Objects.equals(address,
+        that.address);
   }
 
   @Override
@@ -162,7 +166,7 @@ class LinkConfig {
   }
 
   @Override
-  public String toString() {
+  public @NotNull String toString() {
     return "LinkConfig{" +
         "port=" + port +
         ", enabled=" + enabled +
