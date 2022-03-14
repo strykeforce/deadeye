@@ -8,18 +8,19 @@
 
 #define DEADEYE_UNIT DE_STRINGIFY(@DEADEYE_UNIT_ID@)
 
-#define DE_DEADEYE_TABLE "/Deadeye"
-#define DE_CAPTURE "/Capture"
-#define DE_INFO "/Info"
-#define DE_LIGHTS "/Light"
-#define DE_LINK "/Link"
-#define DE_PIPELINE "/Pipeline"
-#define DE_STREAM "/Stream"
-#define DE_CONTROL_TABLE DE_DEADEYE_TABLE "/" DEADEYE_UNIT
-#define DE_CONFIG_TABLE DE_DEADEYE_TABLE "/" DEADEYE_UNIT
+#define DE_DEADEYE_TABLE "Deadeye"
+#define DE_CAPTURE "Capture"
+#define DE_INFO "Info"
+#define DE_LOG "Log"
+#define DE_LIGHTS "Light"
+#define DE_LINK "Link"
+#define DE_PIPELINE "Pipeline"
+#define DE_STREAM "Stream"
+#define DE_CONTROL_TABLE "/" DE_DEADEYE_TABLE "/" DEADEYE_UNIT
+#define DE_CONFIG_TABLE "/" DE_DEADEYE_TABLE "/" DEADEYE_UNIT
 
 #define DE_CAMERA_CONTROL_TABLE(inum) DE_CONTROL_TABLE "/" inum
-#define DE_LIGHTS_CONTROL_TABLE(inum) DE_CAMERA_CONTROL_TABLE(inum) DE_LIGHTS
+#define DE_LIGHTS_CONTROL_TABLE(inum) DE_CAMERA_CONTROL_TABLE(inum) "/" DE_LIGHTS
 
 #define DE_ERROR "Error"
 #define DE_ON "On"
@@ -28,10 +29,10 @@
 
 #define DE_CAMERA_CONTROL(inum, param) DE_CAMERA_CONTROL_TABLE(inum) "/" param
 #define DE_LIGHTS_CONTROL(inum, param) DE_LIGHTS_CONTROL_TABLE(inum) "/" param
-#define DE_CAPTURE_CONFIG_ENTRY(inum) DE_CONFIG_TABLE "/" inum DE_CAPTURE
-#define DE_PIPELINE_CONFIG_ENTRY(inum) DE_CONFIG_TABLE "/" inum DE_PIPELINE
-#define DE_STREAM_CONFIG_ENTRY(inum) DE_CONFIG_TABLE "/" inum DE_STREAM
-#define DE_LINK_ENTRY DE_DEADEYE_TABLE DE_LINK
+#define DE_CAPTURE_CONFIG_ENTRY(inum) DE_CONFIG_TABLE "/" inum "/" DE_CAPTURE
+#define DE_PIPELINE_CONFIG_ENTRY(inum) DE_CONFIG_TABLE "/" inum "/" DE_PIPELINE
+#define DE_STREAM_CONFIG_ENTRY(inum) DE_CONFIG_TABLE "/" inum "/" DE_STREAM
+#define DE_LINK_ENTRY "/" DE_DEADEYE_TABLE "/" DE_LINK
 
 #define DEADEYE_CLIENT_PORT @DEADEYE_CLIENT_PORT@
 #define DEADEYE_CLIENT_ADDRESS DE_STRINGIFY(@DEADEYE_CLIENT_ADDRESS@)
@@ -58,23 +59,27 @@ inline std::string CameraControlTablePath(int inum) {
 }
 
 inline std::string LightsControlTablePath(int inum) {
-  return fmt::format("{}{}", deadeye::CameraControlTablePath(inum), DE_LIGHTS);
+  return fmt::format("{}/{}", deadeye::CameraControlTablePath(inum), DE_LIGHTS);
 }
 
 inline std::string CaptureConfigEntryPath(int inum) {
-  return fmt::format("{}/{}{}", DE_CONFIG_TABLE, inum, DE_CAPTURE);
+  return fmt::format("{}/{}", deadeye::CameraControlTablePath(inum), DE_CAPTURE);
 }
 
 inline std::string PipelineConfigEntryPath(int inum) {
-  return fmt::format("{}/{}{}", DE_CONFIG_TABLE, inum, DE_PIPELINE);
+  return fmt::format("{}/{}", deadeye::CameraControlTablePath(inum), DE_PIPELINE);
 }
 
 inline std::string StreamConfigEntryPath(int inum) {
-  return fmt::format("{}/{}{}", DE_CONFIG_TABLE, inum, DE_STREAM);
+  return fmt::format("{}/{}", deadeye::CameraControlTablePath(inum), DE_STREAM);
 }
 
 inline std::string InfoEntryPath(int inum) {
-  return fmt::format("{}/{}{}", DE_CONFIG_TABLE, inum, DE_INFO);
+  return fmt::format("{}/{}", deadeye::CameraControlTablePath(inum), DE_INFO);
+}
+
+inline std::string LogEntryPath(int inum) {
+  return fmt::format("{}/{}", deadeye::CameraControlTablePath(inum), DE_LOG);
 }
 
 static const cv::Size kStreamSize{320, 240}; // NOLINT

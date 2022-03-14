@@ -1,6 +1,6 @@
 add_executable(Deadeye_tests
         main.cpp
-        )
+        config_test.cpp)
 
 target_include_directories(Deadeye_tests PUBLIC
         "${PROJECT_BINARY_DIR}"
