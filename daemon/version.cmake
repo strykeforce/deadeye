@@ -1,1 +1,1 @@
-set(Deadeye_VER 22.1.0) # updated by scripts/bump.py
+set(Deadeye_VER 22.2.0) # updated by scripts/bump.py
