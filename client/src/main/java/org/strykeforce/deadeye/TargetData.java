@@ -7,9 +7,10 @@ import java.util.Objects;
 import okio.Buffer;
 import okio.BufferedSource;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * {@code TargetData} is an base class for target data sent by Deadeye camera pipelines.
+ * {@code TargetData} is a base class for target data sent by Deadeye camera pipelines.
  *
  * @see UprightRectTargetData
  * @see MinAreaRectTargetData
@@ -50,7 +51,7 @@ public class TargetData {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     TargetData that = (TargetData) o;
@@ -71,9 +72,9 @@ public class TargetData {
     private static final JsonReader.Options OPTIONS = JsonReader.Options.of("id", "sn", "v");
 
     @Override
-    public TargetData fromJson(BufferedSource source) throws IOException {
+    public @NotNull TargetData fromJson(@NotNull BufferedSource source) throws IOException {
       JsonReader reader = JsonReader.of(source);
-      String id = null;
+      String id = "Z0";
       int serial = -1;
       boolean valid = false;
 
@@ -102,7 +103,7 @@ public class TargetData {
     }
 
     @Override
-    public String toJson(@NotNull TargetData targetData) throws IOException {
+    public @NotNull String toJson(@NotNull TargetData targetData) throws IOException {
       Buffer buffer = new Buffer();
       JsonWriter writer = JsonWriter.of(buffer);
       writer.beginObject();

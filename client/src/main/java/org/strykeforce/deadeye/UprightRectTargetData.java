@@ -7,6 +7,7 @@ import java.util.Objects;
 import okio.Buffer;
 import okio.BufferedSource;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A <code>UprightRectTargetData</code> represents data returned from a Deadeye
@@ -93,12 +94,12 @@ public class UprightRectTargetData extends TargetData {
 
   @Override
   @SuppressWarnings("rawtypes")
-  public DeadeyeJsonAdapter getJsonAdapter() {
+  public @NotNull DeadeyeJsonAdapter getJsonAdapter() {
     return new JsonAdapterImpl();
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) {
       return true;
     }
@@ -120,7 +121,7 @@ public class UprightRectTargetData extends TargetData {
   }
 
   @Override
-  public String toString() {
+  public @NotNull String toString() {
     return "UprightRectTargetData{"
         + "topLeft="
         + topLeft
@@ -138,9 +139,9 @@ public class UprightRectTargetData extends TargetData {
     private static final JsonReader.Options OPTIONS = JsonReader.Options.of("id", "sn", "v", "d");
 
     @Override
-    public UprightRectTargetData fromJson(BufferedSource source) throws IOException {
+    public @NotNull UprightRectTargetData fromJson(@NotNull BufferedSource source) throws IOException {
       JsonReader reader = JsonReader.of(source);
-      String id = null;
+      String id = "Z0";
       int serial = -1;
       boolean valid = false;
       int[] data = new int[DATA_LENGTH];
@@ -180,7 +181,7 @@ public class UprightRectTargetData extends TargetData {
     }
 
     @Override
-    public String toJson(@NotNull UprightRectTargetData targetData) throws IOException {
+    public @NotNull String toJson(@NotNull UprightRectTargetData targetData) throws IOException {
       Buffer buffer = new Buffer();
       JsonWriter writer = JsonWriter.of(buffer);
       writer.beginObject();

@@ -41,12 +41,13 @@ import org.slf4j.LoggerFactory;
 public class Deadeye<T extends TargetData> {
 
   static final Logger logger = LoggerFactory.getLogger(Deadeye.class);
-  private static volatile Link link;
-  private final NetworkTable cameraTable;
-  private final String id;
-  private final DeadeyeJsonAdapter<T> jsonAdapter;
-  private TargetDataListener<T> targetDataListener;
-  private T targetData;
+  private static volatile @Nullable Link link;
+  private final @NotNull NetworkTable cameraTable;
+  private final @NotNull String id;
+  private final @NotNull DeadeyeJsonAdapter<T> jsonAdapter;
+  private @NotNull TargetDataListener<T> targetDataListener = data -> {
+  };
+  private @NotNull T targetData;
 
   /**
    * Constructs an instance of {@code Deadeye} and initializes a connection to the associated
@@ -55,11 +56,10 @@ public class Deadeye<T extends TargetData> {
    * @param id  the camera id, i.e. the Deadeye unit letter followed by the camera number, for
    *            example "A0".
    * @param cls the {@code TargetData} Java class corresponding to the Deadeye pipeline type.
-   * @throws NullPointerException     if the {@code cls} is {@code null}
    * @throws IllegalArgumentException if the {@code id} is not a letter followed by a 0-4 digit
    * @throws IllegalArgumentException if the {@code cls} is not a valid {@code TargetData} class
    */
-  public Deadeye(String id, Class<T> cls) {
+  public Deadeye(@NotNull String id, @NotNull Class<T> cls) {
     this(id, cls, NetworkTableInstance.getDefault(), null);
   }
 
@@ -78,13 +78,12 @@ public class Deadeye<T extends TargetData> {
    * @param linkAddress the IP address the Deadeye daemon should send data to. If null, this client
    *                    will reuse a previously configured address or attempt to automatically
    *                    detect the correct IP address.
-   * @throws NullPointerException     if the {@code cls} is {@code null}
    * @throws IllegalArgumentException if the {@code id} is not a letter followed by a 0-4 digit
    * @throws IllegalArgumentException if the {@code cls} is not a valid {@code TargetData} class
    * @throws IllegalArgumentException if the {@code linkAddress} supplied more than once and does
    *                                  not match address already in use
    */
-  public Deadeye(String id, Class<T> cls, String linkAddress) {
+  public Deadeye(@NotNull String id, @NotNull Class<T> cls, @Nullable String linkAddress) {
     this(id, cls, NetworkTableInstance.getDefault(), linkAddress);
   }
 
@@ -98,11 +97,10 @@ public class Deadeye<T extends TargetData> {
    *            example "A0".
    * @param cls the {@code TargetData} Java class corresponding to the Deadeye pipeline type.
    * @param nti the NetworkTables instance to connect through.
-   * @throws NullPointerException     if the {@code cls} or {@code nti} is {@code null}
    * @throws IllegalArgumentException if the {@code id} is not a letter followed by a 0-4 digit
    * @throws IllegalArgumentException if the {@code cls} is not a valid {@code TargetData} class
    */
-  public Deadeye(String id, Class<T> cls, NetworkTableInstance nti) {
+  public Deadeye(@NotNull String id, @NotNull Class<T> cls, @NotNull NetworkTableInstance nti) {
     this(id, cls, nti, null);
   }
 
@@ -121,14 +119,15 @@ public class Deadeye<T extends TargetData> {
    * @param nti         the NetworkTables instance to connect through.
    * @param linkAddress the IP address the Deadeye daemon should send data to. If null, this client
    *                    will attempt to automatically detect the correct IP address.
-   * @throws NullPointerException     if the {@code cls} or {@code nti} is {@code null}
    * @throws IllegalArgumentException if the {@code id} is not a letter followed by a 0-4 digit
    * @throws IllegalArgumentException if the {@code cls} is not a valid {@code TargetData} class
    * @throws IllegalArgumentException if the {@code linkAddress} supplied more than once and does
    *                                  not match address already in use
    */
   @SuppressWarnings("unchecked")
-  public Deadeye(String id, Class<T> cls, NetworkTableInstance nti, String linkAddress) {
+  public Deadeye(
+      @NotNull String id, @NotNull Class<T> cls, @NotNull NetworkTableInstance nti,
+      @Nullable String linkAddress) {
     Objects.requireNonNull(cls, "cls must not be null");
     Objects.requireNonNull(nti, "nti must not be null");
     if (!Pattern.matches("^[A-Za-z][0-4]$", id)) {
@@ -143,6 +142,7 @@ public class Deadeye<T extends TargetData> {
       }
     }
 
+    Link link = Objects.requireNonNull(Deadeye.link);
     if (linkAddress != null && !link.getAddress().equals(linkAddress)) {
       throw new IllegalArgumentException(
           "supplied linkAddress does not match address already in use");
@@ -191,6 +191,7 @@ public class Deadeye<T extends TargetData> {
    *
    * @return the associated {@code TargetDataListener}.
    */
+  @NotNull
   public TargetDataListener<T> getTargetDataListener() {
     return targetDataListener;
   }
@@ -201,7 +202,7 @@ public class Deadeye<T extends TargetData> {
    *
    * @param targetDataListener class to receive target data
    */
-  public void setTargetDataListener(TargetDataListener<T> targetDataListener) {
+  public void setTargetDataListener(@NotNull TargetDataListener<T> targetDataListener) {
     this.targetDataListener = targetDataListener;
   }
 
@@ -215,9 +216,7 @@ public class Deadeye<T extends TargetData> {
    */
   public void handleTargetData(BufferedSource source) throws IOException {
     targetData = jsonAdapter.fromJson(source);
-    if (targetDataListener != null) {
-      targetDataListener.onTargetData(targetData);
-    }
+    targetDataListener.onTargetData(targetData);
   }
 
   /**
@@ -225,6 +224,7 @@ public class Deadeye<T extends TargetData> {
    *
    * @return the last valid target data update.
    */
+  @NotNull
   public T getTargetData() {
     return targetData;
   }
@@ -323,7 +323,12 @@ public class Deadeye<T extends TargetData> {
     return new Capture();
   }
 
-  Link getLink() {
+  /**
+   * Provide Link for testing.
+   *
+   * @return the {@code Link} or {@code null} if a Deadeye unit has not been initialized yet
+   */
+  @Nullable Link getLink() {
     return link;
   }
 
@@ -356,7 +361,7 @@ public class Deadeye<T extends TargetData> {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
       if (this == o) {
         return true;
       }
@@ -375,7 +380,7 @@ public class Deadeye<T extends TargetData> {
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
       return "Info{"
           + "logging="
           + logging
@@ -417,7 +422,9 @@ public class Deadeye<T extends TargetData> {
     @Json(name = "h")
     public final int height;
 
-    public Capture() {this("ERROR",0,0,0);}
+    public Capture() {
+      this("ERROR", 0, 0, 0);
+    }
 
     public Capture(String type, int frameRate, int width, int height) {
       this.type = type;
@@ -427,7 +434,7 @@ public class Deadeye<T extends TargetData> {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
       if (this == o) {
         return true;
       }
@@ -445,7 +452,7 @@ public class Deadeye<T extends TargetData> {
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
       return "Capture{" +
           "type='" + type + '\'' +
           ", frameRate=" + frameRate +

@@ -1,5 +1,7 @@
 package org.strykeforce.deadeye;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * A class implements {@code TargetDataListener} to receive updates of the specifed {@code
  * TargetData} from a Deadeye camera pipeline.
@@ -14,5 +16,5 @@ public interface TargetDataListener<T extends TargetData> {
    *
    * @param data the received {@code TargetData}
    */
-  void onTargetData(T data);
+  void onTargetData(@NotNull T data);
 }

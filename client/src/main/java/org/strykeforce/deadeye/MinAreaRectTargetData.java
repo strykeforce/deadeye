@@ -8,6 +8,7 @@ import java.util.Objects;
 import okio.Buffer;
 import okio.BufferedSource;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A <code>MinAreaRectTargetData</code> represents data returned from a Deadeye
@@ -89,18 +90,19 @@ public class MinAreaRectTargetData extends TargetData {
    *
    * @return the area of the bounding box.
    */
+  @SuppressWarnings("unused")
   public double area() {
     return width * height;
   }
 
   @SuppressWarnings("rawtypes")
   @Override
-  public DeadeyeJsonAdapter getJsonAdapter() {
+  public @NotNull DeadeyeJsonAdapter getJsonAdapter() {
     return new JsonAdapterImpl();
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) {
       return true;
     }
@@ -126,7 +128,7 @@ public class MinAreaRectTargetData extends TargetData {
   }
 
   @Override
-  public String toString() {
+  public @NotNull String toString() {
     return "MinAreaRectTargetData{"
         + "angle="
         + angle
@@ -161,9 +163,9 @@ public class MinAreaRectTargetData extends TargetData {
     private static final JsonReader.Options OPTIONS = JsonReader.Options.of("id", "sn", "v", "d");
 
     @Override
-    public MinAreaRectTargetData fromJson(BufferedSource source) throws IOException {
+    public @NotNull MinAreaRectTargetData fromJson(@NotNull BufferedSource source) throws IOException {
       JsonReader reader = JsonReader.of(source);
-      String id = null;
+      String id = "Z0";
       int serial = -1;
       boolean valid = false;
       double[] data = new double[DATA_LENGTH];
@@ -208,7 +210,7 @@ public class MinAreaRectTargetData extends TargetData {
     }
 
     @Override
-    public String toJson(@NotNull MinAreaRectTargetData targetData) throws IOException {
+    public @NotNull String toJson(@NotNull MinAreaRectTargetData targetData) throws IOException {
       Buffer buffer = new Buffer();
       JsonWriter writer = JsonWriter.of(buffer);
       writer.beginObject();

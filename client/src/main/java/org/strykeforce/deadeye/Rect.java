@@ -2,6 +2,7 @@ package org.strykeforce.deadeye;
 
 import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A rectangle in (x, y) coordinate space, specified in integer precision.
@@ -45,7 +46,7 @@ public class Rect {
    *
    * @return the center (x, y) point
    */
-  public Point center() {
+  public @NotNull Point center() {
     return new Point((topLeft.x + bottomRight.x) / 2, (topLeft.y + bottomRight.y) / 2);
   }
 
@@ -105,7 +106,7 @@ public class Rect {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) {
       return true;
     }
@@ -123,7 +124,7 @@ public class Rect {
   }
 
   @Override
-  public String toString() {
+  public @NotNull String toString() {
     return "Rect{" + "topLeft=" + topLeft + ", bottomRight=" + bottomRight + ", contourArea="
         + contourArea + '}';
   }

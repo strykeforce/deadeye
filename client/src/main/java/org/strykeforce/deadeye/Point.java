@@ -2,10 +2,12 @@ package org.strykeforce.deadeye;
 
 import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A point representing a location in (x,y) coordinate space, specified in integer precision.
  */
+@SuppressWarnings("unused")
 public final class Point {
 
   /**
@@ -35,7 +37,7 @@ public final class Point {
    * @param bottomRight the bottom right corner of the bounding box.
    * @return the {@code Point} at the center of this bounding box.
    */
-  public static Point boundingBoxCenterFrom(@NotNull Point topLeft, @NotNull Point bottomRight) {
+  public static @NotNull Point boundingBoxCenterFrom(@NotNull Point topLeft, @NotNull Point bottomRight) {
     // Rect constructor checks for nulls
     return new Rect(topLeft, bottomRight, 0).center();
   }
@@ -71,7 +73,7 @@ public final class Point {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(@Nullable Object o) {
     if (this == o) {
       return true;
     }
@@ -88,7 +90,7 @@ public final class Point {
   }
 
   @Override
-  public String toString() {
+  public @NotNull String toString() {
     return "(" + x + ", " + y + ")";
   }
 }
