@@ -193,7 +193,7 @@ public class TargetListTargetData extends TargetData {
     }
 
     @Override
-    public String toJson(TargetListTargetData targetData) throws IOException {
+    public String toJson(@NotNull TargetListTargetData targetData) throws IOException {
       Buffer buffer = new Buffer();
       JsonWriter writer = JsonWriter.of(buffer);
       writer.beginObject();

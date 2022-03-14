@@ -180,7 +180,7 @@ public class UprightRectTargetData extends TargetData {
     }
 
     @Override
-    public String toJson(UprightRectTargetData targetData) throws IOException {
+    public String toJson(@NotNull UprightRectTargetData targetData) throws IOException {
       Buffer buffer = new Buffer();
       JsonWriter writer = JsonWriter.of(buffer);
       writer.beginObject();

@@ -102,7 +102,7 @@ public class TargetData {
     }
 
     @Override
-    public String toJson(TargetData targetData) throws IOException {
+    public String toJson(@NotNull TargetData targetData) throws IOException {
       Buffer buffer = new Buffer();
       JsonWriter writer = JsonWriter.of(buffer);
       writer.beginObject();

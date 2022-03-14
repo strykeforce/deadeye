@@ -208,7 +208,7 @@ public class MinAreaRectTargetData extends TargetData {
     }
 
     @Override
-    public String toJson(MinAreaRectTargetData targetData) throws IOException {
+    public String toJson(@NotNull MinAreaRectTargetData targetData) throws IOException {
       Buffer buffer = new Buffer();
       JsonWriter writer = JsonWriter.of(buffer);
       writer.beginObject();

@@ -3,6 +3,7 @@ package org.strykeforce.deadeye;
 import okio.BufferedSource;
 
 import java.io.IOException;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A {@code TargetData} class implements {@code DeadeyeJsonAdapter} to enable
@@ -25,5 +26,5 @@ public interface DeadeyeJsonAdapter<T extends TargetData> {
    * @return this object in JSON format.
    * @throws IOException if a serialization error occurs.
    */
-  String toJson(T targetData) throws IOException;
+  String toJson(@NotNull T targetData) throws IOException;
 }

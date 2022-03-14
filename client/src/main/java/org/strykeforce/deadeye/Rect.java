@@ -30,6 +30,7 @@ public class Rect {
    *
    * @param topLeft     the coordinates of the top left corner
    * @param bottomRight the coordinates of the bottom right corner
+   * @param contourArea the area of the contour contained by this rectangle
    */
   public Rect(@NotNull Point topLeft, @NotNull Point bottomRight, int contourArea) {
     Objects.requireNonNull(topLeft);
