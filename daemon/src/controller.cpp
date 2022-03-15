@@ -18,6 +18,7 @@
 #include "hardware/camera.h"
 #include "hardware/lights.h"
 #include "link/link.h"
+#include "log/client_logger.h"
 #include "pipeline/null_pipeline.h"
 
 // forward declaration
@@ -27,6 +28,12 @@ using namespace deadeye;
 
 namespace {
 constexpr double kPollTimeout = 0.25;
+
+#ifdef __linux__
+constexpr std::string_view kNetworkTablesIniPath = "/etc/opt/deadeye/networktables.ini";
+#else
+constexpr std::string_view kNetworkTablesIniPath = "networktables.ini";
+#endif
 
 std::atomic<bool> quit{false};
 
@@ -41,13 +48,6 @@ constexpr unsigned int hash(const char* str, int h = 0) {
   return !str[h] ? 5381 : (hash(str, h + 1) * 33) ^ str[h];
 }
 #pragma clang diagnostic pop
-
-#ifdef __linux__
-const char* kNetworkTablesIniPath = "/etc/opt/deadeye/networktables.ini";
-#else
-const char* kNetworkTablesIniPath = "networktables.ini";
-#endif
-
 }  // namespace
 
 /**
@@ -55,9 +55,9 @@ const char* kNetworkTablesIniPath = "networktables.ini";
  */
 Controller::Controller(Pipelines* pipelines)
     : inst_{0}, poller_{0}, entry_listener_{0}, has_active_pipeline_{} {
-  spdlog::info("Deadeye {}", GetDeadeyeVersion());
-
   assert(pipelines);
+
+  StartNetworkTables();
 
   for (int i = 0; i < static_cast<int>(pipelines->size()); i++) {
     if (!(*pipelines)[i]) {
@@ -65,6 +65,10 @@ Controller::Controller(Pipelines* pipelines)
       has_active_pipeline_[i] = false;
     } else {
       has_active_pipeline_[i] = true;
+      ClientLogger client_logger{i};
+      client_logger.Info(fmt::format("{}<{}>: Deadeye version {}",
+                                     (*pipelines)[i]->GetName(), CameraId(i),
+                                     GetDeadeyeVersion()));
     }
     if ((*pipelines)[i]->GetInum() != i) {
       spdlog::critical("{} does not match position in initialization array: {}",
@@ -82,7 +86,6 @@ Controller::Controller(Pipelines* pipelines)
   Camera<3>::SetPipeline(std::move((*pipelines)[3]));
   Camera<4>::SetPipeline(std::move((*pipelines)[4]));
 
-  StartNetworkTables();
   InitializeNetworkTables();
 
   InitializeCamera<0>();
@@ -434,22 +437,32 @@ void Controller::ShutDown() {
   if (has_active_pipeline_[0]) {
     Camera<0>::dispatch(CameraOff());
     Lights<0>::dispatch(LightsOff());
+    ClientLogger client_logger{0};
+    client_logger.Warn(fmt::format("Camera<{}> shutting down", CameraId(0)));
   }
   if (has_active_pipeline_[1]) {
     Camera<1>::dispatch(CameraOff());
     Lights<1>::dispatch(LightsOff());
+    ClientLogger client_logger{1};
+    client_logger.Warn(fmt::format("Camera<{}> shutting down", CameraId(1)));
   }
   if (has_active_pipeline_[2]) {
     Camera<2>::dispatch(CameraOff());
     Lights<2>::dispatch(LightsOff());
+    ClientLogger client_logger{2};
+    client_logger.Warn(fmt::format("Camera<{}> shutting down", CameraId(2)));
   }
   if (has_active_pipeline_[3]) {
     Camera<3>::dispatch(CameraOff());
     Lights<3>::dispatch(LightsOff());
+    ClientLogger client_logger{3};
+    client_logger.Warn(fmt::format("Camera<{}> shutting down", CameraId(3)));
   }
   if (has_active_pipeline_[4]) {
     Camera<4>::dispatch(CameraOff());
     Lights<4>::dispatch(LightsOff());
+    ClientLogger client_logger{4};
+    client_logger.Warn(fmt::format("Camera<{}> shutting down", CameraId(4)));
   }
 }
 
@@ -534,7 +547,7 @@ void Controller::InitializeNetworkTables() {
 
     entry = nti.GetEntry(PipelineConfigEntryPath(i));
     PipelineConfig pc{0,        {0, 255},       {0, 255},
-                      {0, 255}, FilterConfig(), LogConfig()};
+                      {0, 255}, FilterConfig(), FrameLogConfig()};
     j = pc;
     entry.SetDefaultString(j.dump());
     entry.SetPersistent();
@@ -566,13 +579,13 @@ void Controller::InitializeCamera() {
   entry.SetString(j.dump());
   entry.ClearPersistent();
 
-  spdlog::debug("Camera<{}{}> initialized", DEADEYE_UNIT, inum);
+  spdlog::debug("Camera<{}> initialized", CameraId(inum));
 }
 
 template <int inum>
 void Controller::LogCamera() {
   auto pl = Camera<inum>::GetPipeline();
-  spdlog::info("Camera<{}{}>: {} {}", DEADEYE_UNIT, inum, *pl,
+  spdlog::info("Camera<{}>: {} {}", CameraId(inum), *pl,
                has_active_pipeline_[inum] ? "[active]" : "");
 }
 

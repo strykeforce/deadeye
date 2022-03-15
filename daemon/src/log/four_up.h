@@ -7,20 +7,21 @@
 #include "config/capture_config.h"
 #include "config/pipeline_config.h"
 #include "link/target_data.h"
-#include "log/logger_impl.h"
+#include "log/frame_logger_base.h"
 
 namespace deadeye::logger {
 
-class FourUp : public LoggerImpl {
+class FourUp : public FrameLoggerBase {
  public:
-  FourUp(std::string id, const CaptureConfig& capture_config,
-         const PipelineConfig& pipeline_config, const LogConfig& log_config,
-         LoggerQueue& queue, std::atomic<bool>& cancel);
+  FourUp(const int inum, const CaptureConfig& capture_config,
+         const PipelineConfig& pipeline_config,
+         const FrameLogConfig& log_config, FrameLoggerQueue& queue,
+         std::atomic<bool>& cancel);
   void Run() override;
 
  private:
-  cv::Mat InfoPane(const LogEntry& entry, const Contours& contours, int seq,
-                   int elapsed);
+  cv::Mat InfoPane(const FrameLogEntry& entry, const Contours& contours,
+                   int seq, int elapsed);
 
   std::string capture_;
   int width_;

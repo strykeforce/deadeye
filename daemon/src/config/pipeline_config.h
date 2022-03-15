@@ -9,7 +9,7 @@
 #include <string>
 
 #include "config/filter_config.h"
-#include "config/log_config.h"
+#include "config/frame_log_config.h"
 
 namespace {
 std::string onoff(bool state) { return state ? "(on)" : "(off)"; }
@@ -34,7 +34,7 @@ struct PipelineConfig {
   hsv_t val{-1, -1};
   nlohmann::json config = nlohmann::json::object();
   FilterConfig filter;
-  LogConfig log;
+  FrameLogConfig log;
 
   /**
    * Default constructor.
@@ -45,7 +45,7 @@ struct PipelineConfig {
    * Constructor from member values.
    */
   PipelineConfig(int sn, hsv_t hue, hsv_t sat, hsv_t val, FilterConfig filter,
-                 LogConfig log);
+                 FrameLogConfig log);
 
   /**
    * Constructor from NetworkTables.

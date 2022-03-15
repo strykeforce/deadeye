@@ -71,7 +71,7 @@ deadeye:
     camera_2_pipeline:
     camera_3_pipeline:
     camera_4_pipeline:
-    deadeye_nt_server: 10.27.67.2
+    deadeye_nt_server: 127.0.0.1
     install_opencv: false
     deadeye_stream_address: "{{ ansible_facts['default_ipv4']['address'] }}"
 

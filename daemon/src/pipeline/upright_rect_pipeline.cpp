@@ -24,5 +24,5 @@ std::unique_ptr<TargetData> UprightRectPipeline::ProcessContours(
 }
 
 std::string UprightRectPipeline::ToString() const {
-  return fmt::format("UprightRectPipeline<{}, {}>", id_, capture_type_);
+  return fmt::format("UprightRectPipeline<{}>", id_);
 }

@@ -9,7 +9,8 @@
 #include "capture/capture_factory.h"
 #include "config.h"
 #include "link/link.h"
-#include "log/logger.h"
+#include "log/client_logger.h"
+#include "log/frame_logger.h"
 #include "pipeline/streamer.h"
 
 #pragma clang diagnostic push
@@ -26,7 +27,7 @@ void Runner::Configure(const CaptureConfig& config) {
   capture_config_ = config;
 }
 
-void Runner::Configure(const LogConfig& config) { log_config_ = config; }
+void Runner::Configure(const FrameLogConfig& config) { log_config_ = config; }
 
 void Runner::Configure(const PipelineConfig& config) {
   safe::WriteAccess<SafePipelineConfig> value{pipeline_config_};
@@ -48,8 +49,9 @@ void Runner::Run() {
   cancel_ = false;
   pipeline_config_ready_ = true;
   stream_config_ready_ = true;
+  ClientLogger client_logger{pipeline_->GetInum()};
 
-  spdlog::info("{}: starting", *pipeline_);
+  client_logger.Info(fmt::format("{}: starting", *pipeline_));
 
   // load capture config at start of run
   pipeline_->Configure(capture_config_);
@@ -63,20 +65,20 @@ void Runner::Run() {
   bool stream_enabled{false};
 
   Link link{pipeline_->GetInum()};
-  bool log_enabled = log_config_.fps > 0;
+  bool frame_log_enabled = log_config_.fps > 0;
 
-  std::unique_ptr<Logger> logger = nullptr;
-  if (log_enabled) {
-    logger = std::make_unique<Logger>(
-        CameraId(pipeline_->GetInum()), capture_config_,
-        *pipeline_config_.readAccess(), log_config_);
-    logger->Run();
+  std::unique_ptr<FrameLogger> frame_logger = nullptr;
+  if (frame_log_enabled) {
+    frame_logger = std::make_unique<FrameLogger>(
+        pipeline_->GetInum(), capture_config_, *pipeline_config_.readAccess(),
+        log_config_);
+    frame_logger->Run();
     spdlog::info("{}: logging enabled", *pipeline_);
   } else {
     spdlog::warn("{}: logging disabled", *pipeline_);
   }
 
-  int log_interval = log_enabled ? fps / log_config_.fps : 0;
+  int log_interval = frame_log_enabled ? fps / log_config_.fps : 0;
   int log_counter = log_interval;
   int sn = 0;
 
@@ -89,8 +91,11 @@ void Runner::Run() {
   while (true) {  // Loop until pipeline cancelled
 
     if (cancel_.load()) {
-      LogTickMeter(tm);
-      if (log_enabled) logger->Stop();
+      double avg = tm.getTimeSec() / static_cast<double>(tm.getCounter());
+      if (frame_log_enabled) frame_logger->Stop();
+      client_logger.Info(
+          fmt::format("{}: stopped, avg. time = {:6.3f} ms, FPS = {:5.2f}", *pipeline_,
+                      avg * 1000.0, 1.0 / avg));
       return;
     }
 
@@ -118,7 +123,7 @@ void Runner::Run() {
 
     // Get new frame
     if (!capture->Grab(frame))
-      spdlog::critical("{} failed to grab frame", *pipeline_);
+      client_logger.Error(fmt::format("{} failed to grab frame", *pipeline_));
 
     // Process frame through pipeline
     std::unique_ptr<TargetData> target_data = pipeline_->ProcessFrame(frame);
@@ -130,9 +135,9 @@ void Runner::Run() {
     if (stream_enabled) streamer.Process(frame, target_data.get());
 
     // Log frame if necessary
-    if (log_enabled && --log_counter == 0) {
-      logger->Log(frame, pipeline_->GetFilteredContours(),
-                  std::move(target_data));
+    if (frame_log_enabled && --log_counter == 0) {
+      frame_logger->Log(frame, pipeline_->GetFilteredContours(),
+                        std::move(target_data));
       log_counter = log_interval;
     }
 
@@ -141,17 +146,5 @@ void Runner::Run() {
 }
 
 void Runner::Stop() { cancel_ = true; }
-
-/////////////////////////////////////////////////////////////////////////////
-// private
-/////////////////////////////////////////////////////////////////////////////
-
-void Runner::LogTickMeter(cv::TickMeter& tm) {
-  spdlog::info("{}: stopping", *pipeline_);
-  double avg = tm.getTimeSec() / static_cast<double>(tm.getCounter());
-  double fps = 1.0 / avg;
-  spdlog::info("{}: avg. time = {:6.3f} ms, FPS = {:5.2f}", *pipeline_,
-               avg * 1000.0, fps);
-}
 
 #pragma clang diagnostic pop

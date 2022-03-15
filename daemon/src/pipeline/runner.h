@@ -5,7 +5,7 @@
 #include <opencv2/core/utility.hpp>
 
 #include "config/capture_config.h"
-#include "config/log_config.h"
+#include "config/frame_log_config.h"
 #include "config/pipeline_config.h"
 #include "config/stream_config.h"
 #include "pipeline/pipeline.h"
@@ -22,7 +22,7 @@ class Runner {
   Pipeline* GetPipeline();
 
   void Configure(const CaptureConfig& config);
-  void Configure(const LogConfig& config);
+  void Configure(const FrameLogConfig& config);
   void Configure(const PipelineConfig& config);
   void Configure(const StreamConfig& config);
 
@@ -30,14 +30,12 @@ class Runner {
   void Stop();
 
  private:
-  void LogTickMeter(cv::TickMeter& tm);
-
   PipelinePtr pipeline_;
 
   std::atomic<bool> cancel_{false};
 
   CaptureConfig capture_config_;
-  LogConfig log_config_;
+  FrameLogConfig log_config_;
   SafeStreamConfig stream_config_;
   std::atomic<bool> stream_config_ready_{false};
   SafePipelineConfig pipeline_config_;
