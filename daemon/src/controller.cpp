@@ -29,6 +29,12 @@ using namespace deadeye;
 namespace {
 constexpr double kPollTimeout = 0.25;
 
+#ifdef __linux__
+constexpr std::string_view kNetworkTablesIniPath = "/etc/opt/deadeye/networktables.ini";
+#else
+constexpr std::string_view kNetworkTablesIniPath = "networktables.ini";
+#endif
+
 std::atomic<bool> quit{false};
 
 void signal_handler([[maybe_unused]] int signal) { quit = true; }
@@ -42,13 +48,6 @@ constexpr unsigned int hash(const char* str, int h = 0) {
   return !str[h] ? 5381 : (hash(str, h + 1) * 33) ^ str[h];
 }
 #pragma clang diagnostic pop
-
-#ifdef __linux__
-const char* kNetworkTablesIniPath = "/etc/opt/deadeye/networktables.ini";
-#else
-const char* kNetworkTablesIniPath = "networktables.ini";
-#endif
-
 }  // namespace
 
 /**
@@ -438,22 +437,32 @@ void Controller::ShutDown() {
   if (has_active_pipeline_[0]) {
     Camera<0>::dispatch(CameraOff());
     Lights<0>::dispatch(LightsOff());
+    ClientLogger client_logger{0};
+    client_logger.Warn(fmt::format("Camera<{}> shutting down", CameraId(0)));
   }
   if (has_active_pipeline_[1]) {
     Camera<1>::dispatch(CameraOff());
     Lights<1>::dispatch(LightsOff());
+    ClientLogger client_logger{1};
+    client_logger.Warn(fmt::format("Camera<{}> shutting down", CameraId(1)));
   }
   if (has_active_pipeline_[2]) {
     Camera<2>::dispatch(CameraOff());
     Lights<2>::dispatch(LightsOff());
+    ClientLogger client_logger{2};
+    client_logger.Warn(fmt::format("Camera<{}> shutting down", CameraId(2)));
   }
   if (has_active_pipeline_[3]) {
     Camera<3>::dispatch(CameraOff());
     Lights<3>::dispatch(LightsOff());
+    ClientLogger client_logger{3};
+    client_logger.Warn(fmt::format("Camera<{}> shutting down", CameraId(3)));
   }
   if (has_active_pipeline_[4]) {
     Camera<4>::dispatch(CameraOff());
     Lights<4>::dispatch(LightsOff());
+    ClientLogger client_logger{4};
+    client_logger.Warn(fmt::format("Camera<{}> shutting down", CameraId(4)));
   }
 }
 

@@ -36,10 +36,10 @@ void FourUp::Run() {
   int seq = 1;
   FrameLogEntry entry;
   if (enabled_)
-    spdlog::info("FourUp<{}>: logging to {}", id_,
-                 fmt::format(template_, id_, "nnn"));
+    client_logger.Info(
+        fmt::format("FourUp<{}>: logging to " + template_, id_, id_, "nnn"));
   else
-    spdlog::warn("FourUp<{}>: logging disabled", id_);
+    client_logger.Warn(fmt::format("FourUp<{}>: logging disabled", id_));
 
   begin_ = std::chrono::high_resolution_clock::now();
 

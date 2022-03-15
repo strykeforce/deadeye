@@ -29,5 +29,5 @@ std::unique_ptr<TargetData> MinAreaRectPipeline::ProcessContours(
 }
 
 std::string MinAreaRectPipeline::ToString() const {
-  return fmt::format("MinAreaRectPipeline<{}, {}>", id_, capture_type_);
+  return fmt::format("MinAreaRectPipeline<{}>", id_);
 }

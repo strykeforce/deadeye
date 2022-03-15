@@ -30,5 +30,5 @@ std::unique_ptr<TargetData> TargetListPipeline::ProcessContours(
 }
 
 std::string TargetListPipeline::ToString() const {
-  return fmt::format("TargetListPipeline<{}, {}>", id_, capture_type_);
+  return fmt::format("TargetListPipeline<{}>", id_);
 }
