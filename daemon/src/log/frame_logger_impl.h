@@ -9,11 +9,11 @@
 
 namespace deadeye::logger {
 
-struct LogEntry {
-  LogEntry() = default;
+struct FrameLogEntry {
+  FrameLogEntry() = default;
 
-  LogEntry(cv::Mat frame, Contours filtered_contours,
-           std::unique_ptr<TargetData> target)
+  FrameLogEntry(cv::Mat frame, Contours filtered_contours,
+                std::unique_ptr<TargetData> target)
       : frame{std::move(frame)},
         filtered_contours{std::move(filtered_contours)},
         target{std::move(target)} {}
@@ -24,13 +24,13 @@ struct LogEntry {
 };
 
 using LoggerQueue =
-    moodycamel::BlockingReaderWriterQueue<deadeye::logger::LogEntry>;
+    moodycamel::BlockingReaderWriterQueue<deadeye::logger::FrameLogEntry>;
 
-class LoggerImpl {
+class FrameLoggerImpl {
  public:
-  LoggerImpl(std::string id, const LogConfig& config, LoggerQueue& queue,
-             std::atomic<bool>& cancel);
-  virtual ~LoggerImpl() = default;
+  FrameLoggerImpl(std::string id, const FrameLogConfig& config,
+                  LoggerQueue& queue, std::atomic<bool>& cancel);
+  virtual ~FrameLoggerImpl() = default;
 
   virtual void Run() = 0;
 
@@ -42,8 +42,8 @@ class LoggerImpl {
   LoggerQueue& queue_;
 
  private:
-  bool CheckMount(const LogConfig& config);
-  bool CheckDir(const LogConfig& config);
+  bool CheckMount(const FrameLogConfig& config);
+  bool CheckDir(const FrameLogConfig& config);
   static int enable_count_;
 };
 }  // namespace deadeye::logger

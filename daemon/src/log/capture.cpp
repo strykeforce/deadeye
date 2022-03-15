@@ -8,13 +8,13 @@
 using namespace deadeye::logger;
 
 Capture::Capture(std::string id, const CaptureConfig& capture_config,
-                 const LogConfig& log_config, LoggerQueue& queue,
+                 const FrameLogConfig& log_config, LoggerQueue& queue,
                  std::atomic<bool>& cancel)
-    : LoggerImpl(std::move(id), log_config, queue, cancel) {}
+    : FrameLoggerImpl(std::move(id), log_config, queue, cancel) {}
 
 void Capture::Run() {
   int seq = 1;
-  LogEntry entry;
+  FrameLogEntry entry;
   if (enabled_)
     spdlog::info("Capture<{}>: logging to {}", id_,
                  fmt::format(template_, id_, "nnn"));

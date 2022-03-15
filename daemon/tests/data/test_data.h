@@ -5,10 +5,10 @@
 #include <opencv2/core/types.hpp>
 #include <string>
 
-#include "config/capture_config.h"
 #include "config.h"
+#include "config/capture_config.h"
 #include "config/filter_config.h"
-#include "config/log_config.h"
+#include "config/frame_log_config.h"
 #include "config/pipeline_config.h"
 
 static constexpr int kTargetMasterNumContours = 17;
@@ -23,7 +23,7 @@ static deadeye::PipelineConfig kTargetMasterPipelineConfig{
     {0, 255},
     {70, 277},
     deadeye::FilterConfig(),
-    deadeye::LogConfig()};
+    deadeye::FrameLogConfig()};
 
 // test images below will mask with these HSV values
 static cv::Scalar kHsvLow{32, 130, 200};

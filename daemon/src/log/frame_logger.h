@@ -10,23 +10,24 @@
 
 #include "log/capture.h"
 #include "log/four_up.h"
-#include "log/log_type.h"
-#include "log/logger_impl.h"
+#include "log/frame_log_type.h"
+#include "log/frame_logger_impl.h"
 
 namespace deadeye {
 
-class Logger {
+class FrameLogger {
  public:
-  Logger() = default;
-  Logger(const std::string& id, const CaptureConfig& capture_config,
-         const PipelineConfig& pipeline_config, const LogConfig& log_config) {
+  FrameLogger() = default;
+  FrameLogger(const std::string& id, const CaptureConfig& capture_config,
+              const PipelineConfig& pipeline_config,
+              const FrameLogConfig& log_config) {
     switch (log_config.type) {
-      case LogType::capture:
+      case FrameLogType::capture:
         logger_ = std::make_unique<logger::Capture>(
             id, capture_config, log_config, queue_, cancel_);
         break;
 
-      case LogType::four_up:
+      case FrameLogType::four_up:
         logger_ = std::make_unique<logger::FourUp>(
             id, capture_config, pipeline_config, log_config, queue_, cancel_);
 
@@ -35,15 +36,15 @@ class Logger {
     }
   };
   void Run() {
-    future_ =
-        std::async(std::launch::async, &logger::LoggerImpl::Run, logger_.get());
+    future_ = std::async(std::launch::async, &logger::FrameLoggerImpl::Run,
+                         logger_.get());
     spdlog::debug("Logger::Run starting async logging task");
   }
 
   void Log(cv::Mat const& frame, Contours filtered_contours,
            std::unique_ptr<TargetData> target) {
-    queue_.enqueue(
-        logger::LogEntry{frame.clone(), std::move(filtered_contours), std::move(target)});
+    queue_.enqueue(logger::FrameLogEntry{
+        frame.clone(), std::move(filtered_contours), std::move(target)});
   }
 
   void Stop() {
@@ -54,7 +55,7 @@ class Logger {
 
  private:
   std::atomic<bool> cancel_{false};
-  std::unique_ptr<logger::LoggerImpl> logger_;
+  std::unique_ptr<logger::FrameLoggerImpl> logger_;
   std::future<void> future_;
   logger::LoggerQueue queue_;
 };

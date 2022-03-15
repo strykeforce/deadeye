@@ -61,7 +61,8 @@ TEST_CASE("client logging updates default NetworkTablesInstance", "[logging]") {
   std::string_view msg{"default nti test"};
 
   logger.Log(ClientLogger::Level::info, msg);
-  REQUIRE(table->GetString(DE_LOG, default_value) == msg);
+  json logged = json::parse(table->GetString(DE_LOG, default_value));
+  REQUIRE(logged == expected("info", msg));
 
   nt::NetworkTableInstance::Destroy(nti);
 }

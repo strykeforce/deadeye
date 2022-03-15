@@ -6,7 +6,7 @@ using namespace deadeye;
 using json = nlohmann::json;
 
 PipelineConfig::PipelineConfig(int sn, hsv_t hue, hsv_t sat, hsv_t val,
-                               FilterConfig filter, LogConfig log)
+                               FilterConfig filter, FrameLogConfig log)
     : sn(sn),
       hue(hue),
       sat(sat),

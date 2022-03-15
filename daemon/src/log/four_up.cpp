@@ -15,9 +15,10 @@ using namespace deadeye::logger;
 using json = nlohmann::json;
 
 FourUp::FourUp(std::string id, const CaptureConfig& capture_config,
-               const PipelineConfig& pipeline_config, const LogConfig& log_config,
-               LoggerQueue& queue, std::atomic<bool>& cancel)
-    : LoggerImpl(std::move(id), log_config, queue, cancel),
+               const PipelineConfig& pipeline_config,
+               const FrameLogConfig& log_config, LoggerQueue& queue,
+               std::atomic<bool>& cancel)
+    : FrameLoggerImpl(std::move(id), log_config, queue, cancel),
       width_(capture_config.width),
       height_(capture_config.height),
       hsv_low_(pipeline_config.HsvLow()),
@@ -33,7 +34,7 @@ FourUp::FourUp(std::string id, const CaptureConfig& capture_config,
 
 void FourUp::Run() {
   int seq = 1;
-  LogEntry entry;
+  FrameLogEntry entry;
   if (enabled_)
     spdlog::info("FourUp<{}>: logging to {}", id_,
                  fmt::format(template_, id_, "nnn"));
@@ -119,7 +120,7 @@ void FourUp::Run() {
   spdlog::debug("FourUp<{}>: task exited", id_);
 }
 
-cv::Mat FourUp::InfoPane(const LogEntry& entry, const Contours& contours,
+cv::Mat FourUp::InfoPane(const FrameLogEntry& entry, const Contours& contours,
                          int seq, int elapsed) {
   // info panel prints well at this size, scale up or down as needed
   // for frame size.

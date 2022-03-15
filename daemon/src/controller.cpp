@@ -534,7 +534,7 @@ void Controller::InitializeNetworkTables() {
 
     entry = nti.GetEntry(PipelineConfigEntryPath(i));
     PipelineConfig pc{0,        {0, 255},       {0, 255},
-                      {0, 255}, FilterConfig(), LogConfig()};
+                      {0, 255}, FilterConfig(), FrameLogConfig()};
     j = pc;
     entry.SetDefaultString(j.dump());
     entry.SetPersistent();
