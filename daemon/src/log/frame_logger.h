@@ -8,35 +8,35 @@
 #include <opencv2/core/mat.hpp>
 #include <utility>
 
-#include "log/capture.h"
+#include "log/full_frame.h"
 #include "log/four_up.h"
 #include "log/frame_log_type.h"
-#include "log/frame_logger_impl.h"
+#include "log/frame_logger_base.h"
 
 namespace deadeye {
 
 class FrameLogger {
  public:
   FrameLogger() = default;
-  FrameLogger(const std::string& id, const CaptureConfig& capture_config,
+  FrameLogger(const int inum, const CaptureConfig& capture_config,
               const PipelineConfig& pipeline_config,
               const FrameLogConfig& log_config) {
     switch (log_config.type) {
       case FrameLogType::capture:
-        logger_ = std::make_unique<logger::Capture>(
-            id, capture_config, log_config, queue_, cancel_);
+        logger_ = std::make_unique<logger::FullFrame>(
+            inum, capture_config, log_config, queue_, cancel_);
         break;
 
       case FrameLogType::four_up:
         logger_ = std::make_unique<logger::FourUp>(
-            id, capture_config, pipeline_config, log_config, queue_, cancel_);
+            inum, capture_config, pipeline_config, log_config, queue_, cancel_);
 
       default:
         break;
     }
   };
   void Run() {
-    future_ = std::async(std::launch::async, &logger::FrameLoggerImpl::Run,
+    future_ = std::async(std::launch::async, &logger::FrameLoggerBase::Run,
                          logger_.get());
     spdlog::debug("Logger::Run starting async logging task");
   }
@@ -55,9 +55,9 @@ class FrameLogger {
 
  private:
   std::atomic<bool> cancel_{false};
-  std::unique_ptr<logger::FrameLoggerImpl> logger_;
+  std::unique_ptr<logger::FrameLoggerBase> logger_;
   std::future<void> future_;
-  logger::LoggerQueue queue_;
+  logger::FrameLoggerQueue queue_;
 };
 
 }  // namespace deadeye

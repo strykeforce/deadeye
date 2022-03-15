@@ -51,7 +51,6 @@ void Runner::Run() {
   stream_config_ready_ = true;
   ClientLogger client_logger{pipeline_->GetInum()};
 
-  spdlog::info("{}: starting", *pipeline_);
   client_logger.Info(fmt::format("{}: starting", *pipeline_));
 
   // load capture config at start of run
@@ -71,8 +70,8 @@ void Runner::Run() {
   std::unique_ptr<FrameLogger> frame_logger = nullptr;
   if (frame_log_enabled) {
     frame_logger = std::make_unique<FrameLogger>(
-        CameraId(pipeline_->GetInum()), capture_config_,
-        *pipeline_config_.readAccess(), log_config_);
+        pipeline_->GetInum(), capture_config_, *pipeline_config_.readAccess(),
+        log_config_);
     frame_logger->Run();
     spdlog::info("{}: logging enabled", *pipeline_);
   } else {
@@ -92,8 +91,11 @@ void Runner::Run() {
   while (true) {  // Loop until pipeline cancelled
 
     if (cancel_.load()) {
-      LogTickMeter(tm);
+      double avg = tm.getTimeSec() / static_cast<double>(tm.getCounter());
       if (frame_log_enabled) frame_logger->Stop();
+      client_logger.Info(
+          fmt::format("{}: stopped, avg. time = {:6.3f} ms, FPS = {:5.2f}", *pipeline_,
+                      avg * 1000.0, 1.0 / avg));
       return;
     }
 
@@ -121,7 +123,7 @@ void Runner::Run() {
 
     // Get new frame
     if (!capture->Grab(frame))
-      spdlog::critical("{} failed to grab frame", *pipeline_);
+      client_logger.Error(fmt::format("{} failed to grab frame", *pipeline_));
 
     // Process frame through pipeline
     std::unique_ptr<TargetData> target_data = pipeline_->ProcessFrame(frame);
@@ -144,17 +146,5 @@ void Runner::Run() {
 }
 
 void Runner::Stop() { cancel_ = true; }
-
-/////////////////////////////////////////////////////////////////////////////
-// private
-/////////////////////////////////////////////////////////////////////////////
-
-void Runner::LogTickMeter(cv::TickMeter& tm) {
-  spdlog::info("{}: stopping", *pipeline_);
-  double avg = tm.getTimeSec() / static_cast<double>(tm.getCounter());
-  double fps = 1.0 / avg;
-  spdlog::info("{}: avg. time = {:6.3f} ms, FPS = {:5.2f}", *pipeline_,
-               avg * 1000.0, fps);
-}
 
 #pragma clang diagnostic pop

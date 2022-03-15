@@ -1,25 +1,24 @@
-#include "log/capture.h"
+#include "log/full_frame.h"
 
 #include <fmt/core.h>
 
 #include <opencv2/imgcodecs.hpp>
-#include <utility>
 
 using namespace deadeye::logger;
 
-Capture::Capture(std::string id, const CaptureConfig& capture_config,
-                 const FrameLogConfig& log_config, LoggerQueue& queue,
-                 std::atomic<bool>& cancel)
-    : FrameLoggerImpl(std::move(id), log_config, queue, cancel) {}
+FullFrame::FullFrame(const int inum, const CaptureConfig& capture_config,
+                     const FrameLogConfig& log_config, FrameLoggerQueue& queue,
+                     std::atomic<bool>& cancel)
+    : FrameLoggerBase(inum, log_config, queue, cancel) {}
 
-void Capture::Run() {
+void FullFrame::Run() {
   int seq = 1;
   FrameLogEntry entry;
   if (enabled_)
-    spdlog::info("Capture<{}>: logging to {}", id_,
-                 fmt::format(template_, id_, "nnn"));
+    client_logger.Info(
+        fmt::format("FullFrame<{}>: logging to " + template_, id_, id_, "nnn"));
   else
-    spdlog::warn("Capture<{}>: logging disabled", id_);
+    client_logger.Warn(fmt::format("FullFrame<{}>: logging disabled", id_));
 
   while (!cancel_.load()) {
     if (!queue_.wait_dequeue_timed(entry, std::chrono::milliseconds(100))) {

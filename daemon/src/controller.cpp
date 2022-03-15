@@ -18,6 +18,7 @@
 #include "hardware/camera.h"
 #include "hardware/lights.h"
 #include "link/link.h"
+#include "log/client_logger.h"
 #include "pipeline/null_pipeline.h"
 
 // forward declaration
@@ -55,9 +56,9 @@ const char* kNetworkTablesIniPath = "networktables.ini";
  */
 Controller::Controller(Pipelines* pipelines)
     : inst_{0}, poller_{0}, entry_listener_{0}, has_active_pipeline_{} {
-  spdlog::info("Deadeye {}", GetDeadeyeVersion());
-
   assert(pipelines);
+
+  StartNetworkTables();
 
   for (int i = 0; i < static_cast<int>(pipelines->size()); i++) {
     if (!(*pipelines)[i]) {
@@ -65,6 +66,10 @@ Controller::Controller(Pipelines* pipelines)
       has_active_pipeline_[i] = false;
     } else {
       has_active_pipeline_[i] = true;
+      ClientLogger client_logger{i};
+      client_logger.Info(fmt::format("{}<{}>: Deadeye version {}",
+                                     (*pipelines)[i]->GetName(), CameraId(i),
+                                     GetDeadeyeVersion()));
     }
     if ((*pipelines)[i]->GetInum() != i) {
       spdlog::critical("{} does not match position in initialization array: {}",
@@ -82,7 +87,6 @@ Controller::Controller(Pipelines* pipelines)
   Camera<3>::SetPipeline(std::move((*pipelines)[3]));
   Camera<4>::SetPipeline(std::move((*pipelines)[4]));
 
-  StartNetworkTables();
   InitializeNetworkTables();
 
   InitializeCamera<0>();
@@ -566,13 +570,13 @@ void Controller::InitializeCamera() {
   entry.SetString(j.dump());
   entry.ClearPersistent();
 
-  spdlog::debug("Camera<{}{}> initialized", DEADEYE_UNIT, inum);
+  spdlog::debug("Camera<{}> initialized", CameraId(inum));
 }
 
 template <int inum>
 void Controller::LogCamera() {
   auto pl = Camera<inum>::GetPipeline();
-  spdlog::info("Camera<{}{}>: {} {}", DEADEYE_UNIT, inum, *pl,
+  spdlog::info("Camera<{}>: {} {}", CameraId(inum), *pl,
                has_active_pipeline_[inum] ? "[active]" : "");
 }
 

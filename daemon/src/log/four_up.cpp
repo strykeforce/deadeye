@@ -14,11 +14,11 @@
 using namespace deadeye::logger;
 using json = nlohmann::json;
 
-FourUp::FourUp(std::string id, const CaptureConfig& capture_config,
+FourUp::FourUp(const int inum, const CaptureConfig& capture_config,
                const PipelineConfig& pipeline_config,
-               const FrameLogConfig& log_config, LoggerQueue& queue,
+               const FrameLogConfig& log_config, FrameLoggerQueue& queue,
                std::atomic<bool>& cancel)
-    : FrameLoggerImpl(std::move(id), log_config, queue, cancel),
+    : FrameLoggerBase(inum, log_config, queue, cancel),
       width_(capture_config.width),
       height_(capture_config.height),
       hsv_low_(pipeline_config.HsvLow()),

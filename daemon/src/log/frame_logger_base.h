@@ -6,6 +6,7 @@
 
 #include "link/target_data.h"
 #include "pipeline/pipeline.h"  // for Contours
+#include "client_logger.h"
 
 namespace deadeye::logger {
 
@@ -23,14 +24,15 @@ struct FrameLogEntry {
   std::unique_ptr<TargetData> target;
 };
 
-using LoggerQueue =
+using FrameLoggerQueue =
     moodycamel::BlockingReaderWriterQueue<deadeye::logger::FrameLogEntry>;
 
-class FrameLoggerImpl {
+class FrameLoggerBase {
  public:
-  FrameLoggerImpl(std::string id, const FrameLogConfig& config,
-                  LoggerQueue& queue, std::atomic<bool>& cancel);
-  virtual ~FrameLoggerImpl() = default;
+  FrameLoggerBase(int inum, const FrameLogConfig& config,
+                  FrameLoggerQueue& queue,
+                  std::atomic<bool>& cancel);
+  virtual ~FrameLoggerBase() = default;
 
   virtual void Run() = 0;
 
@@ -39,7 +41,8 @@ class FrameLoggerImpl {
   bool enabled_;
   std::string template_;
   std::atomic<bool>& cancel_;
-  LoggerQueue& queue_;
+  FrameLoggerQueue& queue_;
+  ClientLogger client_logger;
 
  private:
   bool CheckMount(const FrameLogConfig& config);

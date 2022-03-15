@@ -30,8 +30,6 @@ class Runner {
   void Stop();
 
  private:
-  void LogTickMeter(cv::TickMeter& tm);
-
   PipelinePtr pipeline_;
 
   std::atomic<bool> cancel_{false};

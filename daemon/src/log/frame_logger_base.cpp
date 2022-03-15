@@ -1,4 +1,4 @@
-#include "log/frame_logger_impl.h"
+#include "log/frame_logger_base.h"
 
 #include <dirent.h>
 #include <sys/stat.h>
@@ -7,20 +7,22 @@
 
 using namespace deadeye::logger;
 
-int FrameLoggerImpl::enable_count_{0};
+int FrameLoggerBase::enable_count_{0};
 
-FrameLoggerImpl::FrameLoggerImpl(std::string id, const FrameLogConfig& config,
-                                 LoggerQueue& queue, std::atomic<bool>& cancel)
-    : id_{std::move(std::move(id))},
+FrameLoggerBase::FrameLoggerBase(const int inum, const FrameLogConfig& config,
+                                 FrameLoggerQueue& queue,
+                                 std::atomic<bool>& cancel)
+    : id_{CameraId(inum)},
       enabled_{config.fps > 0 && CheckMount(config) && CheckDir(config)},
       queue_(queue),
-      cancel_{cancel} {
-  FrameLoggerImpl::enable_count_++;
+      cancel_{cancel},
+      client_logger{inum} {
+  FrameLoggerBase::enable_count_++;
   template_ = fmt::format("{}/{{}}/{}-{{}}.jpg", config.path,
-                          FrameLoggerImpl::enable_count_);
+                          FrameLoggerBase::enable_count_);
 }
 
-bool FrameLoggerImpl::CheckMount(const FrameLogConfig& config) {
+bool FrameLoggerBase::CheckMount(const FrameLogConfig& config) {
   struct stat mnt {};
   struct stat parent {};
 
@@ -53,7 +55,7 @@ bool FrameLoggerImpl::CheckMount(const FrameLogConfig& config) {
   }
 }
 
-bool FrameLoggerImpl::CheckDir(const FrameLogConfig& config) {
+bool FrameLoggerBase::CheckDir(const FrameLogConfig& config) {
   // verify base path is dir
   DIR* dir = opendir(config.path.c_str());
   if (dir) {
