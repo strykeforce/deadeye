@@ -41,13 +41,15 @@ import org.slf4j.LoggerFactory;
 public class Deadeye<T extends TargetData> {
 
   static final Logger logger = LoggerFactory.getLogger(Deadeye.class);
-  private static volatile @Nullable Link link;
   private final @NotNull NetworkTable cameraTable;
+  private static volatile @Nullable Link link;
   private final @NotNull String id;
   private final @NotNull DeadeyeJsonAdapter<T> jsonAdapter;
   private @NotNull TargetDataListener<T> targetDataListener = data -> {
   };
   private @NotNull T targetData;
+  @SuppressWarnings("FieldCanBeLocal")
+  private final @NotNull PipelineLogger pipelineLogger;
 
   /**
    * Constructs an instance of {@code Deadeye} and initializes a connection to the associated
@@ -154,6 +156,8 @@ public class Deadeye<T extends TargetData> {
     char unit = this.id.charAt(0);
     char inum = this.id.charAt(1);
     cameraTable = nti.getTable(Link.DEADEYE_TABLE + "/" + unit + "/" + inum);
+
+    pipelineLogger = new PipelineLogger(cameraTable);
 
     if (!link.isAlive()) {
       synchronized (Link.class) {
