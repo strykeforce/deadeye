@@ -18,6 +18,7 @@ namespace deadeye {
 class FrameLogger {
  public:
   FrameLogger() = default;
+
   FrameLogger(const int inum, const CaptureConfig& capture_config,
               const PipelineConfig& pipeline_config,
               const FrameLogConfig& log_config) {
@@ -35,6 +36,7 @@ class FrameLogger {
         break;
     }
   };
+
   void Run() {
     future_ = std::async(std::launch::async, &logger::FrameLoggerBase::Run,
                          logger_.get());

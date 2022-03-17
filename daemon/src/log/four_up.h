@@ -13,11 +13,11 @@ namespace deadeye::logger {
 
 class FourUp : public FrameLoggerBase {
  public:
-  FourUp(const int inum, const CaptureConfig& capture_config,
+  FourUp(int inum, const CaptureConfig& capture_config,
          const PipelineConfig& pipeline_config,
          const FrameLogConfig& log_config, FrameLoggerQueue& queue,
          std::atomic<bool>& cancel);
-  void Run() override;
+  void RunLoop() override;
 
  private:
   cv::Mat InfoPane(const FrameLogEntry& entry, const Contours& contours,

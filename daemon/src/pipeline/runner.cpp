@@ -144,5 +144,3 @@ void Runner::Run() {
   }
 }
 #pragma clang diagnostic pop
-
-void Runner::Stop() { cancel_ = true; }

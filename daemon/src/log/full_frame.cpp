@@ -11,14 +11,9 @@ FullFrame::FullFrame(const int inum, const CaptureConfig& capture_config,
                      std::atomic<bool>& cancel)
     : FrameLoggerBase(inum, log_config, queue, cancel) {}
 
-void FullFrame::Run() {
-  int seq = 1;
+void FullFrame::RunLoop() {
+  frame_count_ = 1;
   FrameLogEntry entry;
-  if (enabled_)
-    client_logger.Info(
-        fmt::format("FullFrame<{}>: logging to " + template_, id_, id_, "nnn"));
-  else
-    client_logger.Warn(fmt::format("FullFrame<{}>: logging disabled", id_));
 
   while (!cancel_.load()) {
     if (!queue_.wait_dequeue_timed(entry, std::chrono::milliseconds(100))) {
@@ -26,7 +21,7 @@ void FullFrame::Run() {
     }
     if (!enabled_) continue;  // throw away if logged by upstream while disabled
 
-    auto path = fmt::format(template_, id_, seq);
+    auto path = fmt::format(template_, id_, frame_count_);
 
     try {
       cv::imwrite(path, entry.frame);
@@ -39,6 +34,6 @@ void FullFrame::Run() {
       spdlog::warn("Capture<{}>: logger queue filling: {}", id_,
                    queue_.size_approx());
 
-    seq++;
+    frame_count_++;
   }
 }

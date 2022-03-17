@@ -32,14 +32,9 @@ FourUp::FourUp(const int inum, const CaptureConfig& capture_config,
   capture_ = buf.str();
 }
 
-void FourUp::Run() {
-  int seq = 1;
+void FourUp::RunLoop() {
+  frame_count_ = 1;
   FrameLogEntry entry;
-  if (enabled_)
-    client_logger.Info(
-        fmt::format("FourUp<{}>: logging to " + template_, id_, id_, "nnn"));
-  else
-    client_logger.Warn(fmt::format("FourUp<{}>: logging disabled", id_));
 
   begin_ = std::chrono::high_resolution_clock::now();
 
@@ -59,7 +54,7 @@ void FourUp::Run() {
     Contours contours;
     FindContours(mask, contours);
 
-    auto path = fmt::format(template_, id_, seq);
+    auto path = fmt::format(template_, id_, frame_count_);
     try {
       cv::cvtColor(mask, mask, cv::COLOR_GRAY2BGR);
 
@@ -90,7 +85,7 @@ void FourUp::Run() {
       cv::hconcat(mat_array, 3, bottom);
 
       cv::Mat info =
-          InfoPane(entry, contours, seq, static_cast<int>(elapsed.count()));
+          InfoPane(entry, contours, frame_count_, static_cast<int>(elapsed.count()));
       // fit info pane to four-up
       cv::Size info_size{top.cols, static_cast<int>(std::round(top.rows / 4))};
       cv::resize(
@@ -115,7 +110,7 @@ void FourUp::Run() {
     if (queue_.size_approx() > 0)
       spdlog::warn("FourUp<{}>: queue filling: {}", id_, queue_.size_approx());
 
-    seq++;
+    frame_count_++;
   }
   spdlog::debug("FourUp<{}>: task exited", id_);
 }

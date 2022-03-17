@@ -27,7 +27,7 @@ class Runner {
   void Configure(const StreamConfig& config);
 
   void Run();
-  void Stop();
+  void Stop() { cancel_ = true; };
 
  private:
   PipelinePtr pipeline_;

@@ -6,11 +6,11 @@ namespace deadeye::logger {
 
 class FullFrame : public FrameLoggerBase {
  public:
-  FullFrame(const int inum, const CaptureConfig& capture_config,
-          const FrameLogConfig& log_config, FrameLoggerQueue& queue,
-          std::atomic<bool>& cancel);
+  FullFrame(int inum, const CaptureConfig& capture_config,
+            const FrameLogConfig& log_config, FrameLoggerQueue& queue,
+            std::atomic<bool>& cancel);
 
-  void Run() override;
+  void RunLoop() override;
 };
 
 }  // namespace deadeye::logger
