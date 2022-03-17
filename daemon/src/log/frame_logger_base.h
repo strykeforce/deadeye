@@ -33,6 +33,10 @@ class FrameLoggerBase {
                   FrameLoggerQueue& queue, std::atomic<bool>& cancel);
   virtual ~FrameLoggerBase() = default;
 
+  inline std::string GetFrameImagePath(int frame_count) {
+    return fmt::format(template_, frame_count);
+  }
+
   void Run();
 
  protected:

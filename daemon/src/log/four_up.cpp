@@ -54,7 +54,7 @@ void FourUp::RunLoop() {
     Contours contours;
     FindContours(mask, contours);
 
-    auto path = fmt::format(template_, id_, frame_count_);
+    auto path = GetFrameImagePath(frame_count_);
     try {
       cv::cvtColor(mask, mask, cv::COLOR_GRAY2BGR);
 

@@ -19,17 +19,18 @@ FrameLoggerBase::FrameLoggerBase(const int inum, const FrameLogConfig& config,
       cancel_{cancel},
       client_logger{inum} {
   FrameLoggerBase::sequence_++;
-  template_ = fmt::format("{}/{{}}/{}-{{}}.jpg", config.path,
+  template_ = fmt::format("{}/{}/{}-{{}}.jpg", config.path, id_,
                           FrameLoggerBase::sequence_);
 }
 
 void FrameLoggerBase::Run() {
-  if (enabled_)
-    client_logger.Info(fmt::format("FrameLogger<{}>: logging to " + template_,
-                                   id_, id_, "nnn"));
-  else
-    client_logger.Warn(fmt::format("FullFrame<{}>: logging disabled", id_));
+  client_logger.Info(
+      fmt::format("FrameLogger<{}>: first log {}", id_, GetFrameImagePath(1)));
+
   RunLoop();
+
+  client_logger.Info(fmt::format("FrameLogger<{}>: last log {}", id_,
+                                 GetFrameImagePath(frame_count_ - 1)));
 }
 
 bool FrameLoggerBase::CheckMount(const FrameLogConfig& config) {

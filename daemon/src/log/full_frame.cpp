@@ -21,8 +21,7 @@ void FullFrame::RunLoop() {
     }
     if (!enabled_) continue;  // throw away if logged by upstream while disabled
 
-    auto path = fmt::format(template_, id_, frame_count_);
-
+    std::string path = GetFrameImagePath(frame_count_);
     try {
       cv::imwrite(path, entry.frame);
     } catch (const cv::Exception& ex) {
