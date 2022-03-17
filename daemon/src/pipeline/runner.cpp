@@ -7,14 +7,11 @@
 
 #include "capture/capture.h"
 #include "capture/capture_factory.h"
-#include "config.h"
 #include "link/link.h"
 #include "log/client_logger.h"
 #include "log/frame_logger.h"
 #include "pipeline/streamer.h"
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "NullDereference"
 using namespace deadeye;
 
 void Runner::SetPipeline(std::unique_ptr<Pipeline> pipeline) {
@@ -42,6 +39,8 @@ void Runner::Configure(const StreamConfig& config) {
   stream_config_ready_ = true;
 }
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "NullDereference"
 /**
  * Run loop
  */
@@ -67,7 +66,7 @@ void Runner::Run() {
   Link link{pipeline_->GetInum()};
   bool frame_log_enabled = log_config_.fps > 0;
 
-  std::unique_ptr<FrameLogger> frame_logger = nullptr;
+  std::unique_ptr<FrameLogger> frame_logger;
   if (frame_log_enabled) {
     frame_logger = std::make_unique<FrameLogger>(
         pipeline_->GetInum(), capture_config_, *pipeline_config_.readAccess(),
@@ -144,7 +143,6 @@ void Runner::Run() {
     tm.stop();
   }
 }
+#pragma clang diagnostic pop
 
 void Runner::Stop() { cancel_ = true; }
-
-#pragma clang diagnostic pop
