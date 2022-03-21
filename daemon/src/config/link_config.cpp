@@ -5,8 +5,6 @@
 using namespace deadeye;
 using json = nlohmann::json;
 
-LinkConfig::LinkConfig() = default;
-
 LinkConfig::LinkConfig(std::string address, int port, bool enabled)
     : address(std::move(address)), port(port), enabled(enabled) {}
 
