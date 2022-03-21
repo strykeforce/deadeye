@@ -1,34 +1,43 @@
 #pragma once
 
 #include <nlohmann/json.hpp>
+#include <utility>
 #include <vector>
 
 namespace deadeye {
 struct FrameLoggerState {
   static constexpr auto kFrameSeq = "sequence";
-  int sequence{0};
+  unsigned int sequence{0};
 
-  explicit FrameLoggerState(const nlohmann::json& j);
+  FrameLoggerState() = default;
+  explicit FrameLoggerState(unsigned int sequence);
 };
 
-void to_json(nlohmann::json& j, const FrameLoggerState& s);
-void from_json(const nlohmann::json& j, FrameLoggerState& s);
+void to_json(nlohmann::json& j, const FrameLoggerState& fls);
+void from_json(const nlohmann::json& j, FrameLoggerState& fls);
 
 struct PipelineState {
   static constexpr auto kFrameLogger = "frame";
 
   FrameLoggerState frame_logger;
+
+  PipelineState() = default;
+  explicit PipelineState(FrameLoggerState frame_logger);
 };
+
+void to_json(nlohmann::json& j, const PipelineState& pls);
+void from_json(const nlohmann::json& j, PipelineState& pls);
 
 struct State {
   static constexpr auto kPipelines = "pipelines";
 
   std::vector<PipelineState> pipelines;
 
-  explicit State(const nlohmann::json& j);
+  State() = default;
+  explicit State(std::vector<PipelineState> pipelines);
 
-  static State Load(std::string_view path);
-
+  void Store(std::ostream& os) const;
+  static State Load(std::istream& is);
 };
 
 void to_json(nlohmann::json& j, const State& s);
