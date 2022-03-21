@@ -43,9 +43,12 @@ void deadeye::from_json(const json& j, State& s) {
 }
 
 void State::Store(std::ostream& os) const {
-  json j;
-  deadeye::to_json(j, *this);
-  os << j.dump();
+  json j = *this;
+  os << j;
 }
 
-State State::Load(std::istream& is) { return State(json::parse(is)); }
+State State::Load(std::istream& is) {
+  json j;
+  is >> j;
+  return j;
+}
