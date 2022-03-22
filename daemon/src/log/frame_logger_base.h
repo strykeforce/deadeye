@@ -4,9 +4,10 @@
 
 #include <utility>
 
+#include "client_logger.h"
 #include "link/target_data.h"
 #include "pipeline/pipeline.h"  // for Contours
-#include "client_logger.h"
+#include "state.h"
 
 namespace deadeye::logger {
 
@@ -30,23 +31,29 @@ using FrameLoggerQueue =
 class FrameLoggerBase {
  public:
   FrameLoggerBase(int inum, const FrameLogConfig& config,
-                  FrameLoggerQueue& queue,
+                  FrameLoggerState& state, FrameLoggerQueue& queue,
                   std::atomic<bool>& cancel);
   virtual ~FrameLoggerBase() = default;
 
-  virtual void Run() = 0;
+  inline std::string GetFrameImagePath(int frame_count) {
+    return fmt::format(template_, frame_count);
+  }
+
+  void Run();
 
  protected:
   std::string id_;
   bool enabled_;
   std::string template_;
+  int frame_count_{1};
   std::atomic<bool>& cancel_;
   FrameLoggerQueue& queue_;
-  ClientLogger client_logger;
+  ClientLogger client_logger_;
+
+  virtual void RunLoop() = 0;
 
  private:
   bool CheckMount(const FrameLogConfig& config);
   bool CheckDir(const FrameLogConfig& config);
-  static int enable_count_;
 };
 }  // namespace deadeye::logger

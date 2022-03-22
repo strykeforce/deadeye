@@ -7,14 +7,12 @@
 
 #include "capture/capture.h"
 #include "capture/capture_factory.h"
-#include "config.h"
 #include "link/link.h"
 #include "log/client_logger.h"
 #include "log/frame_logger.h"
 #include "pipeline/streamer.h"
+#include "state.h"
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "NullDereference"
 using namespace deadeye;
 
 void Runner::SetPipeline(std::unique_ptr<Pipeline> pipeline) {
@@ -42,6 +40,8 @@ void Runner::Configure(const StreamConfig& config) {
   stream_config_ready_ = true;
 }
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "NullDereference"
 /**
  * Run loop
  */
@@ -50,6 +50,7 @@ void Runner::Run() {
   pipeline_config_ready_ = true;
   stream_config_ready_ = true;
   ClientLogger client_logger{pipeline_->GetInum()};
+  PipelineState state = PipelineState::Load(pipeline_->GetInum());
 
   client_logger.Info(fmt::format("{}: starting", *pipeline_));
 
@@ -67,11 +68,11 @@ void Runner::Run() {
   Link link{pipeline_->GetInum()};
   bool frame_log_enabled = log_config_.fps > 0;
 
-  std::unique_ptr<FrameLogger> frame_logger = nullptr;
+  std::unique_ptr<FrameLogger> frame_logger;
   if (frame_log_enabled) {
     frame_logger = std::make_unique<FrameLogger>(
         pipeline_->GetInum(), capture_config_, *pipeline_config_.readAccess(),
-        log_config_);
+        log_config_, state.frame_logger);
     frame_logger->Run();
     spdlog::info("{}: logging enabled", *pipeline_);
   } else {
@@ -93,9 +94,10 @@ void Runner::Run() {
     if (cancel_.load()) {
       double avg = tm.getTimeSec() / static_cast<double>(tm.getCounter());
       if (frame_log_enabled) frame_logger->Stop();
+      state.Store();
       client_logger.Info(
-          fmt::format("{}: stopped, avg. time = {:6.3f} ms, FPS = {:5.2f}", *pipeline_,
-                      avg * 1000.0, 1.0 / avg));
+          fmt::format("{}: stopped, avg. time = {:6.3f} ms, FPS = {:5.2f}",
+                      *pipeline_, avg * 1000.0, 1.0 / avg));
       return;
     }
 
@@ -144,7 +146,4 @@ void Runner::Run() {
     tm.stop();
   }
 }
-
-void Runner::Stop() { cancel_ = true; }
-
 #pragma clang diagnostic pop

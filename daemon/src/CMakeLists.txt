@@ -2,6 +2,7 @@
 add_library(Deadeye_library
         controller.cpp
         log.cpp
+        state.cpp
         )
 
 target_include_directories(Deadeye_library PUBLIC

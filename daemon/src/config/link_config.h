@@ -18,7 +18,7 @@ struct LinkConfig {
   /**
    * Default constructor.
    */
-  LinkConfig();
+  LinkConfig() = default;
 
   /**
    * Constructor from member values.
