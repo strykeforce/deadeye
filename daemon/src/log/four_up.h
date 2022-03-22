@@ -15,8 +15,8 @@ class FourUp : public FrameLoggerBase {
  public:
   FourUp(int inum, const CaptureConfig& capture_config,
          const PipelineConfig& pipeline_config,
-         const FrameLogConfig& log_config, FrameLoggerQueue& queue,
-         std::atomic<bool>& cancel);
+         const FrameLogConfig& log_config, FrameLoggerState& state,
+         FrameLoggerQueue& queue, std::atomic<bool>& cancel);
   void RunLoop() override;
 
  private:

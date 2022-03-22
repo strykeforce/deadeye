@@ -7,6 +7,7 @@
 #include "client_logger.h"
 #include "link/target_data.h"
 #include "pipeline/pipeline.h"  // for Contours
+#include "state.h"
 
 namespace deadeye::logger {
 
@@ -30,7 +31,8 @@ using FrameLoggerQueue =
 class FrameLoggerBase {
  public:
   FrameLoggerBase(int inum, const FrameLogConfig& config,
-                  FrameLoggerQueue& queue, std::atomic<bool>& cancel);
+                  FrameLoggerState& state, FrameLoggerQueue& queue,
+                  std::atomic<bool>& cancel);
   virtual ~FrameLoggerBase() = default;
 
   inline std::string GetFrameImagePath(int frame_count) {
@@ -47,7 +49,7 @@ class FrameLoggerBase {
   int frame_count_{1};
   std::atomic<bool>& cancel_;
   FrameLoggerQueue& queue_;
-  ClientLogger client_logger;
+  ClientLogger client_logger_;
 
   virtual void RunLoop() = 0;
 

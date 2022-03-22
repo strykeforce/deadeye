@@ -7,9 +7,9 @@
 using namespace deadeye::logger;
 
 FullFrame::FullFrame(const int inum, const CaptureConfig& capture_config,
-                     const FrameLogConfig& log_config, FrameLoggerQueue& queue,
-                     std::atomic<bool>& cancel)
-    : FrameLoggerBase(inum, log_config, queue, cancel) {}
+                     const FrameLogConfig& log_config, FrameLoggerState& state,
+                     FrameLoggerQueue& queue, std::atomic<bool>& cancel)
+    : FrameLoggerBase(inum, log_config, state, queue, cancel) {}
 
 void FullFrame::RunLoop() {
   frame_count_ = 1;

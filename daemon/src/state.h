@@ -7,7 +7,7 @@
 namespace deadeye {
 struct FrameLoggerState {
   static constexpr auto kFrameSeq = "sequence";
-  unsigned int sequence{0};
+  unsigned int sequence{1};
 
   FrameLoggerState() = default;
   explicit FrameLoggerState(unsigned int sequence);
@@ -20,9 +20,14 @@ struct PipelineState {
   static constexpr auto kFrameLogger = "frame";
 
   FrameLoggerState frame_logger;
+  int inum_;
 
   PipelineState() = default;
-  explicit PipelineState(FrameLoggerState frame_logger);
+  PipelineState(int inum);
+  explicit PipelineState(int inum, FrameLoggerState frame_logger);
+
+  void Store();
+  static PipelineState Load(int inum);
 };
 
 void to_json(nlohmann::json& j, const PipelineState& pls);

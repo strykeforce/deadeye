@@ -45,9 +45,12 @@ TEST_CASE("LogEntryPath configured", "[config]") {
   REQUIRE(LogEntryPath(3) == expected);
 }
 
+TEST_CASE("StateEntryPath configured", "[config]") {
+  std::string expected{"/Deadeye/" DEADEYE_UNIT "/3/State"};
+  REQUIRE(StateEntryPath(3) == expected);
+}
+
 TEST_CASE("LinkEntryPath configured", "[config]") {
   std::string expected{"/Deadeye/Link"};
   REQUIRE_THAT(expected, Equals(DE_LINK_ENTRY));
 }
-
-

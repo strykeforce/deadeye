@@ -8,10 +8,11 @@
 #include <opencv2/core/mat.hpp>
 #include <utility>
 
-#include "log/full_frame.h"
 #include "log/four_up.h"
 #include "log/frame_log_type.h"
 #include "log/frame_logger_base.h"
+#include "log/full_frame.h"
+#include "state.h"
 
 namespace deadeye {
 
@@ -21,16 +22,17 @@ class FrameLogger {
 
   FrameLogger(const int inum, const CaptureConfig& capture_config,
               const PipelineConfig& pipeline_config,
-              const FrameLogConfig& log_config) {
+              const FrameLogConfig& log_config, FrameLoggerState& state) {
     switch (log_config.type) {
       case FrameLogType::capture:
         logger_ = std::make_unique<logger::FullFrame>(
-            inum, capture_config, log_config, queue_, cancel_);
+            inum, capture_config, log_config, state, queue_, cancel_);
         break;
 
       case FrameLogType::four_up:
-        logger_ = std::make_unique<logger::FourUp>(
-            inum, capture_config, pipeline_config, log_config, queue_, cancel_);
+        logger_ = std::make_unique<logger::FourUp>(inum, capture_config,
+                                                   pipeline_config, log_config,
+                                                   state, queue_, cancel_);
 
       default:
         break;

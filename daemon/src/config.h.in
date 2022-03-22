@@ -15,6 +15,7 @@
 #define DE_LIGHTS "Light"
 #define DE_LINK "Link"
 #define DE_PIPELINE "Pipeline"
+#define DE_STATE "State"
 #define DE_STREAM "Stream"
 #define DE_CONTROL_TABLE "/" DE_DEADEYE_TABLE "/" DEADEYE_UNIT
 #define DE_CONFIG_TABLE "/" DE_DEADEYE_TABLE "/" DEADEYE_UNIT
@@ -82,5 +83,8 @@ inline std::string LogEntryPath(int inum) {
   return fmt::format("{}/{}", deadeye::CameraControlTablePath(inum), DE_LOG);
 }
 
+inline std::string StateEntryPath(int inum) {
+  return fmt::format("{}/{}", deadeye::CameraControlTablePath(inum), DE_STATE);
+}
 static const cv::Size kStreamSize{320, 240}; // NOLINT
 }  // namespace deadeye

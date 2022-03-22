@@ -16,9 +16,9 @@ using json = nlohmann::json;
 
 FourUp::FourUp(const int inum, const CaptureConfig& capture_config,
                const PipelineConfig& pipeline_config,
-               const FrameLogConfig& log_config, FrameLoggerQueue& queue,
-               std::atomic<bool>& cancel)
-    : FrameLoggerBase(inum, log_config, queue, cancel),
+               const FrameLogConfig& log_config, FrameLoggerState& state,
+               FrameLoggerQueue& queue, std::atomic<bool>& cancel)
+    : FrameLoggerBase(inum, log_config, state, queue, cancel),
       width_(capture_config.width),
       height_(capture_config.height),
       hsv_low_(pipeline_config.HsvLow()),
@@ -84,8 +84,8 @@ void FourUp::RunLoop() {
       cv::Mat bottom;
       cv::hconcat(mat_array, 3, bottom);
 
-      cv::Mat info =
-          InfoPane(entry, contours, frame_count_, static_cast<int>(elapsed.count()));
+      cv::Mat info = InfoPane(entry, contours, frame_count_,
+                              static_cast<int>(elapsed.count()));
       // fit info pane to four-up
       cv::Size info_size{top.cols, static_cast<int>(std::round(top.rows / 4))};
       cv::resize(

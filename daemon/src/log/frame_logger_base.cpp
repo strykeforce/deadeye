@@ -7,9 +7,8 @@
 
 using namespace deadeye::logger;
 
-int FrameLoggerBase::sequence_{0};
-
 FrameLoggerBase::FrameLoggerBase(const int inum, const FrameLogConfig& config,
+                                 FrameLoggerState& state,
                                  FrameLoggerQueue& queue,
                                  std::atomic<bool>& cancel)
     : id_{CameraId(inum)},
@@ -17,20 +16,19 @@ FrameLoggerBase::FrameLoggerBase(const int inum, const FrameLogConfig& config,
       enabled_{config.fps > 0 && CheckMount(config) && CheckDir(config)},
       queue_(queue),
       cancel_{cancel},
-      client_logger{inum} {
-  FrameLoggerBase::sequence_++;
-  template_ = fmt::format("{}/{}/{}-{{}}.jpg", config.path, id_,
-                          FrameLoggerBase::sequence_);
+      client_logger_{inum} {
+  template_ =
+      fmt::format("{}/{}/{}-{{}}.jpg", config.path, id_, state.sequence++);
 }
 
 void FrameLoggerBase::Run() {
-  client_logger.Info(
+  client_logger_.Info(
       fmt::format("FrameLogger<{}>: first log {}", id_, GetFrameImagePath(1)));
 
   RunLoop();
 
-  client_logger.Info(fmt::format("FrameLogger<{}>: last log {}", id_,
-                                 GetFrameImagePath(frame_count_ - 1)));
+  client_logger_.Info(fmt::format("FrameLogger<{}>: last log {}", id_,
+                                  GetFrameImagePath(frame_count_ - 1)));
 }
 
 bool FrameLoggerBase::CheckMount(const FrameLogConfig& config) {
