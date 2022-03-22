@@ -29,26 +29,3 @@ void deadeye::to_json(json& j, const PipelineState& pls) {
 void deadeye::from_json(const json& j, PipelineState& pls) {
   j.at(PipelineState::kFrameLogger).get_to(pls.frame_logger);
 }
-
-// State
-State::State(std::vector<PipelineState> pipelines)
-    : pipelines(std::move(pipelines)){};
-
-void deadeye::to_json(json& j, const State& s) {
-  j = json{{State::kPipelines, s.pipelines}};
-}
-
-void deadeye::from_json(const json& j, State& s) {
-  j.at(State::kPipelines).get_to(s.pipelines);
-}
-
-void State::Store(std::ostream& os) const {
-  json j = *this;
-  os << j;
-}
-
-State State::Load(std::istream& is) {
-  json j;
-  is >> j;
-  return j;
-}

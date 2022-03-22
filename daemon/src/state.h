@@ -28,19 +28,4 @@ struct PipelineState {
 void to_json(nlohmann::json& j, const PipelineState& pls);
 void from_json(const nlohmann::json& j, PipelineState& pls);
 
-struct State {
-  static constexpr auto kPipelines = "pipelines";
-
-  std::vector<PipelineState> pipelines;
-
-  State() = default;
-  explicit State(std::vector<PipelineState> pipelines);
-
-  void Store(std::ostream& os) const;
-  static State Load(std::istream& is);
-};
-
-void to_json(nlohmann::json& j, const State& s);
-void from_json(const nlohmann::json& j, State& s);
-
 }  // namespace deadeye
