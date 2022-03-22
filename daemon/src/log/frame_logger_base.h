@@ -43,7 +43,6 @@ class FrameLoggerBase {
 
  protected:
   std::string id_;
-  FrameLogConfig config_;
   bool enabled_;
   std::string template_;
   int frame_count_{1};
@@ -56,6 +55,5 @@ class FrameLoggerBase {
  private:
   bool CheckMount(const FrameLogConfig& config);
   bool CheckDir(const FrameLogConfig& config);
-  static int sequence_;
 };
 }  // namespace deadeye::logger

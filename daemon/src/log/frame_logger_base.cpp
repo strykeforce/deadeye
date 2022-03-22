@@ -12,7 +12,6 @@ FrameLoggerBase::FrameLoggerBase(const int inum, const FrameLogConfig& config,
                                  FrameLoggerQueue& queue,
                                  std::atomic<bool>& cancel)
     : id_{CameraId(inum)},
-      config_{config},
       enabled_{config.fps > 0 && CheckMount(config) && CheckDir(config)},
       queue_(queue),
       cancel_{cancel},
