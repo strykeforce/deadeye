@@ -86,7 +86,7 @@ class Error : public Camera<inum> {
 
   void entry() final {
     base::SetStatus(DE_ERROR, true);
-    Lights<inum>::dispatch(LightsBlink());
+    Lights<inum>::dispatch(LightsOff());
     spdlog::error("Camera<{}{}> error: {}", DEADEYE_UNIT, inum, base::error_);
   }
 
