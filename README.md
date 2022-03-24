@@ -11,13 +11,13 @@ Developer Kit][jndk]. It consists of several parts:
 - Client Library - Java library for use with FRC robots and other clients
 - Admin Web UI - React web interface to manage Deadeye vision system.
 - Admin Server and Tools - Python web service to connect admin web UI to vision
-  daemon back-end.
+  daemon backend.
 - Provisioning Tools - Ansible playbooks for provisioning and deploying the
   system to vision coprocessors.
 
 ## Documentation
 
-- Installation and usage instructions are at https://strykeforce.github.io/deadeye/
+- [Installation and usage instructions](https://strykeforce.github.io/deadeye/)
 - The Java client library [javadocs](https://strykeforce.github.io/deadeye/javadoc/)
 
 ## Contributing
