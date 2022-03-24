@@ -1,4 +1,5 @@
 # Deadeye
+[![GitHub Super-Linter](https://github.com/strykeforce/deadeye/workflows/Lint%20Code%20Base/badge.svg)](https://github.com/marketplace/actions/super-linter)
 
 **Deadeye** is a vision system for FIRST<sup>®</sup> Robotics Competition
 robots designed to be run on a vision coprocessor, such as the [Jetson Nano
