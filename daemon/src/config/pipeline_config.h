@@ -14,7 +14,6 @@
 #include "config/filter_config.h"
 #include "config/frame_log_config.h"
 
-
 namespace deadeye {
 
 static std::string onoff(bool state) { return state ? "(on)" : "(off)"; }

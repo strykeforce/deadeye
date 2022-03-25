@@ -7,10 +7,10 @@
 #include "catch2/catch.hpp"
 #include "config/capture_config.h"
 
-using ::deadeye::PipelineConfig;
 using ::deadeye::FilterConfig;
 using ::deadeye::FrameLogConfig;
 using ::deadeye::FrameLogType;
+using ::deadeye::PipelineConfig;
 using json = nlohmann::json;
 
 TEST_CASE("PipelineConfig HSV bound as array", "[pipeline]") {

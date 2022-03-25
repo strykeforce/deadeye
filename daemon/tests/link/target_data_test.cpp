@@ -7,11 +7,11 @@
 #include "link/target_list_target_data.h"
 #include "link/upright_target_data.h"
 
-using ::deadeye::TargetData;
-using ::deadeye::UprightTargetData;
 using ::deadeye::MinAreaTargetData;
+using ::deadeye::TargetData;
 using ::deadeye::TargetList;
 using ::deadeye::TargetListTargetData;
+using ::deadeye::UprightTargetData;
 
 TEST_CASE("TargetData to JSON", "[link]") {
   TargetData td{"Z1", 1, true};

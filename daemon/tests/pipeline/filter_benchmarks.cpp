@@ -16,9 +16,10 @@ TEST_CASE("BM004: GeometricContoursFilter 1280x720",
   deadeye::FindContours(mask, contours);
   REQUIRE(contours.size() == kTargetMasterNumContours);
 
-  deadeye::FilterConfig filter{{deadeye::kAreaMin + e, deadeye::kAreaMax},
-                      {deadeye::kSolidityMin + e, deadeye::kSolidityMax},
-                      {deadeye::kAspectMin, deadeye::kAspectMax - e}};
+  deadeye::FilterConfig filter{
+      {deadeye::kAreaMin + e, deadeye::kAreaMax},
+      {deadeye::kSolidityMin + e, deadeye::kSolidityMax},
+      {deadeye::kAspectMin, deadeye::kAspectMax - e}};
   filter.frame_area = frame.size().area();
   deadeye::Contours filtered_contours;
   BENCHMARK("all enabled") {
