@@ -18,8 +18,8 @@ on:
   push:
     branches-ignore: [master, main]
     # Remove the line above to run when pushing to master
-  #pull_request:
-  #  branches: [master, main]
+  pull_request:
+    branches: [master, main]
 
 ###############
 # Set the Job #
@@ -54,5 +54,5 @@ jobs:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-          VALIDATE_CPP=true
-          VALIDATE_CLANG_FORMAT=true
+          VALIDATE_CPP: true
+          VALIDATE_CLANG_FORMAT: true
