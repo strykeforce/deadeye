@@ -1,4 +1,4 @@
-#!/usr/bin/env -i bash
+#!/bin/bash
 
 HOME=/Users/jeff
 DIR=$HOME/Code/strykeforce/deadeye/daemon
