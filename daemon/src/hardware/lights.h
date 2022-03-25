@@ -26,13 +26,16 @@ template <int inum>
 class Lights : public tinyfsm::Fsm<Lights<inum>> {
   friend class tinyfsm::Fsm<Lights<inum>>;
 
+ public:
+  static bool IsOn() { return on_; }
+
  private:
   // default reaction for unhandled events
-  [[maybe_unused]] void react(tinyfsm::Event const &) {}
+  [[maybe_unused]] void react(tinyfsm::Event const&) {}
 
-  [[maybe_unused]] virtual void react(LightsOn const &) {}
-  [[maybe_unused]] virtual void react(LightsOff const &) {}
-  [[maybe_unused]] virtual void react(LightsBlink const &) {}
+  [[maybe_unused]] virtual void react(LightsOn const&) {}
+  [[maybe_unused]] virtual void react(LightsOff const&) {}
+  [[maybe_unused]] virtual void react(LightsBlink const&) {}
 
   [[maybe_unused]] virtual void entry() = 0;
   virtual void exit() = 0;
@@ -41,6 +44,7 @@ class Lights : public tinyfsm::Fsm<Lights<inum>> {
   static std::future<void> task_future_;
   static std::atomic<bool> cancel_task_;
   static LedDrive led_;
+  static bool on_;
 
   void SetStatus(std::string name, bool state) {
     std::string path = fmt::format("{}/{}", LightsControlTablePath(inum), name);
@@ -57,6 +61,9 @@ template <int inum>
 std::atomic<bool> Lights<inum>::cancel_task_{false};
 
 template <int inum>
-LedDrive Lights<inum>::led_{inum}; // NOLINT
+LedDrive Lights<inum>::led_{inum};  // NOLINT
+
+template <int inum>
+bool Lights<inum>::on_{false};
 
 }  // namespace deadeye

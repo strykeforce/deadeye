@@ -30,6 +30,7 @@ class On : public Lights<inum> {
     base::SetStatus(DE_ON, true);
     spdlog::info("Lights<{}{}> on", DEADEYE_UNIT, inum);
     base::led_.On();
+    base::on_ = true;
   }
 
   void react(LightsBlink const &) override {
@@ -103,6 +104,7 @@ class Off : public Lights<inum> {
     base::SetStatus(DE_OFF, true);
     spdlog::info("Lights<{}{}> off", DEADEYE_UNIT, inum);
     base::led_.Off();
+    base::on_ = false;
   }
 
   void react(LightsOn const &) override {

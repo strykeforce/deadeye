@@ -34,6 +34,10 @@ run:
 		--env DEADEYE_DOCKER=1 \
 		$(NS)/$(IMAGE)
 
+.PHONY: sync
+sync:
+	rsync --verbose --recursive --checksum --delete --exclude "*build*/" . deadeye-a:deadeye/
+
 .PHONY: clean
 clean:
 	rm -rf .built*
