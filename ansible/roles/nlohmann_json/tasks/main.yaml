@@ -11,6 +11,9 @@
   file:
     path: /usr/local/src/json-{{ nlohmann_json_version }}/build
     state: directory
+    owner: root
+    group: root
+    mode: 0755
   tags:
     - nlohmann_json
 
