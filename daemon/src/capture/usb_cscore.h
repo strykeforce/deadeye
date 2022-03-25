@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cscore_cv.h>
+
 #include "capture/capture.h"
 
 namespace deadeye {

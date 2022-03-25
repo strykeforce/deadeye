@@ -10,9 +10,7 @@ using json = nlohmann::json;
 
 UprightTargetData::UprightTargetData(std::string_view id, int sn, bool valid,
                                      cv::Rect bb)
-    : TargetData{id, sn, valid},
-      bb(bb),
-      center((bb.tl() + bb.br()) / 2) {}
+    : TargetData{id, sn, valid}, bb(bb), center((bb.tl() + bb.br()) / 2) {}
 
 void UprightTargetData::DrawMarkers(cv::Mat& preview) const {
   cv::drawMarker(preview, center, cv::Scalar::all(255));

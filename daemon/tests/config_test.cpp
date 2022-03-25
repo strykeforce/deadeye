@@ -1,6 +1,7 @@
 #include "config.h"
-#include <string>
+
 #include <catch2/catch.hpp>
+#include <string>
 
 using namespace deadeye;
 using Catch::Matchers::Equals;

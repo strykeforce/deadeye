@@ -30,7 +30,8 @@ namespace {
 constexpr double kPollTimeout = 0.25;
 
 #ifdef __linux__
-constexpr std::string_view kNetworkTablesIniPath = "/etc/opt/deadeye/networktables.ini";
+constexpr std::string_view kNetworkTablesIniPath =
+    "/etc/opt/deadeye/networktables.ini";
 #else
 constexpr std::string_view kNetworkTablesIniPath = "networktables.ini";
 #endif

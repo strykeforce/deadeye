@@ -9,7 +9,8 @@
 
 using namespace deadeye;
 
-[[maybe_unused]] MinAreaRectPipeline::MinAreaRectPipeline(int inum, std::string name)
+[[maybe_unused]] MinAreaRectPipeline::MinAreaRectPipeline(int inum,
+                                                          std::string name)
     : AbstractPipeline{inum, std::move(name)} {}
 
 void MinAreaRectPipeline::Configure(const CaptureConfig& config) {

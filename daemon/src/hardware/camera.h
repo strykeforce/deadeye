@@ -10,8 +10,8 @@
 #include <memory>
 #include <tinyfsm.hpp>
 
-#include "config/capture_config.h"
 #include "config.h"
+#include "config/capture_config.h"
 #include "config/pipeline_config.h"
 #include "config/stream_config.h"
 #include "pipeline/runner.h"
@@ -94,7 +94,7 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
 
 // state variable definitions
 template <int inum>
-Runner Camera<inum>::pipeline_runner_; // NOLINT
+Runner Camera<inum>::pipeline_runner_; // NOLINT(cert-err58-cpp)
 
 template <int inum>
 std::future<void> Camera<inum>::pipeline_future_;

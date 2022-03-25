@@ -9,7 +9,8 @@
 
 using namespace deadeye;
 
-[[maybe_unused]] UprightRectPipeline::UprightRectPipeline(int inum, std::string name)
+[[maybe_unused]] UprightRectPipeline::UprightRectPipeline(int inum,
+                                                          std::string name)
     : AbstractPipeline{inum, std::move(name)} {}
 
 // Target is center of contour bounding box.

@@ -33,11 +33,11 @@ class On : public Lights<inum> {
     base::on_ = true;
   }
 
-  void react(LightsBlink const &) override {
+  void react(LightsBlink const&) override {
     base::template transit<lights::Blinking<inum>>();
   }
 
-  void react(LightsOff const &) override {
+  void react(LightsOff const&) override {
     base::template transit<lights::Off<inum>>();
   }
 
@@ -75,7 +75,7 @@ class Blinking : public Lights<inum> {
     if (base::task_future_.valid()) {
       try {
         base::task_future_.get();
-      } catch (std::exception const &e) {
+      } catch (std::exception const& e) {
         spdlog::error("Lights<{}{}> error while cancelling blink: {}",
                       DEADEYE_UNIT, inum, e.what());
       }
@@ -83,12 +83,12 @@ class Blinking : public Lights<inum> {
   }
 #pragma clang diagnostic pop
 
-  void react(LightsOn const &) override {
+  void react(LightsOn const&) override {
     CancelTask();
     base::template transit<lights::On<inum>>();
   }
 
-  void react(LightsOff const &) override {
+  void react(LightsOff const&) override {
     CancelTask();
     base::template transit<lights::Off<inum>>();
   }
@@ -107,11 +107,11 @@ class Off : public Lights<inum> {
     base::on_ = false;
   }
 
-  void react(LightsOn const &) override {
+  void react(LightsOn const&) override {
     base::template transit<lights::On<inum>>();
   }
 
-  void react(LightsBlink const &) override {
+  void react(LightsBlink const&) override {
     base::template transit<lights::Blinking<inum>>();
   }
 
