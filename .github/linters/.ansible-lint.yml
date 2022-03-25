@@ -9,6 +9,7 @@
 # Exclude paths from linter #
 #############################
 exclude_paths:
+  - '/github/workspace/ansible/inventory.yaml'
   - '/github/workspace/ansible/.prettierrc.yaml'
   - '/github/workspace/ansible/roles/deadeye/tasks/repo.yaml'
 
