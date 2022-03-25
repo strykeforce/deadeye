@@ -1,10 +1,12 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "led_drive.h"
 
-using namespace deadeye;
+using ::deadeye::LedDrive;
 
 #ifdef __aarch64__
 #include <cassert>
-using namespace gpiod;
+using ::gpiod::chip;
 
 LedDrive::LedDrive(int inum) {
   assert(inum >= 0 && inum < 5);

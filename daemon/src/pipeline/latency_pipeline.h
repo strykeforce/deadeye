@@ -1,4 +1,9 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
 #pragma once
+
+#include <memory>
+#include <string>
+
 #include "hardware/lights.h"
 #include "pipeline/abstract_pipeline.h"
 

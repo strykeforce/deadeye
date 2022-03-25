@@ -1,10 +1,11 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "camera.h"
 
 #include <future>
+#include <string>
 
 #include "lights.h"
-
-using namespace std::chrono_literals;
 
 namespace deadeye::camera {
 

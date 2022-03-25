@@ -1,6 +1,8 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "pipeline_tests.h"
 
-using namespace deadeye;
+using namespace deadeye;  // NOLINT(build/namespaces)
 
 static double e = 1e-6;
 

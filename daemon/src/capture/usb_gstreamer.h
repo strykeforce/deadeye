@@ -1,4 +1,7 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
 #pragma once
+
+#include <string>
 
 #include "capture/gstreamer.h"
 #include "config/capture_config.h"

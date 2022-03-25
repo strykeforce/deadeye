@@ -1,9 +1,13 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "capture/usb_gstreamer.h"
 
 #include <fmt/core.h>
 #include <spdlog/spdlog.h>
 
-using namespace deadeye;
+#include <string>
+
+using ::deadeye::UsbGStreamer;
 using json = nlohmann::json;
 
 [[maybe_unused]] UsbGStreamer::UsbGStreamer(const CaptureConfig& config) {

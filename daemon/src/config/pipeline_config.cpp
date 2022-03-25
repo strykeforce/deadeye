@@ -1,8 +1,11 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "pipeline_config.h"
 
+#include <memory>
 #include <utility>
 
-using namespace deadeye;
+using ::deadeye::PipelineConfig;
 using json = nlohmann::json;
 
 PipelineConfig::PipelineConfig(int sn, hsv_t hue, hsv_t sat, hsv_t val,

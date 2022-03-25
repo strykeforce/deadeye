@@ -1,3 +1,5 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "config/pipeline_config.h"
 
 #include <opencv2/core/mat.hpp>
@@ -5,7 +7,10 @@
 #include "catch2/catch.hpp"
 #include "config/capture_config.h"
 
-using namespace deadeye;
+using ::deadeye::PipelineConfig;
+using ::deadeye::FilterConfig;
+using ::deadeye::FrameLogConfig;
+using ::deadeye::FrameLogType;
 using json = nlohmann::json;
 
 TEST_CASE("PipelineConfig HSV bound as array", "[pipeline]") {

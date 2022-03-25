@@ -1,11 +1,12 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "config/capture_config.h"
 
-#include <fmt/core.h>
-
+#include <memory>
 #include <nlohmann/json.hpp>
 #include <utility>
 
-using namespace deadeye;
+using ::deadeye::CaptureConfig;
 using json = nlohmann::json;
 
 CaptureConfig::CaptureConfig(CaptureType type, int width, int height,

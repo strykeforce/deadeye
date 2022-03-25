@@ -1,9 +1,12 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 // #include <iostream>
 #include "config/capture_config.h"
 
 #include "catch2/catch.hpp"
 
-using namespace deadeye;
+using ::deadeye::CaptureConfig;
+using ::deadeye::CaptureType;
 
 TEST_CASE("CaptureConfig config object", "[capture]") {
   auto j = R"(

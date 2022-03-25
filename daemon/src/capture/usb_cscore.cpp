@@ -1,9 +1,11 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "capture/usb_cscore.h"
 
 #include <cscore_oo.h>
 #include <spdlog/spdlog.h>
 
-using namespace deadeye;
+using ::deadeye::UsbCsCore;
 using json = nlohmann::json;
 
 UsbCsCore::UsbCsCore(const CaptureConfig& config) {

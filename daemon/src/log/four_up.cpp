@@ -1,3 +1,5 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "log/four_up.h"
 
 #include <fmt/core.h>
@@ -11,7 +13,7 @@
 
 #include "pipeline/pipeline_ops.h"
 
-using namespace deadeye::logger;
+using ::deadeye::logger::FourUp;
 using json = nlohmann::json;
 
 FourUp::FourUp(const int inum, const CaptureConfig& capture_config,

@@ -1,6 +1,11 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "pipeline_tests.h"
 
-using namespace deadeye;
+using ::deadeye::AbstractPipeline;
+using ::deadeye::Contours;
+using ::deadeye::FilterConfig;
+using ::deadeye::PipelineConfig;
 
 TEST_CASE("pipeline filter tests", "[pipeline][filter]") {
   cv::Mat frame = cv::imread(kTargetMaster);
@@ -39,8 +44,9 @@ TEST_CASE("pipeline filter tests", "[pipeline][filter]") {
   }
 
   SECTION("area > 5e-05") {
-    FilterConfig filter{
-        {5e-05, 1.0}, {kSolidityMin, kSolidityMax}, {kAspectMin, kAspectMax}};
+    FilterConfig filter{{5e-05, 1.0},
+                        {deadeye::kSolidityMin, deadeye::kSolidityMax},
+                        {deadeye::kAspectMin, deadeye::kAspectMax}};
     filter.frame_area = frame.cols * frame.rows;
     pipeline_config.filter = filter;
 

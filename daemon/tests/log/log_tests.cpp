@@ -1,3 +1,5 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include <networktables/NetworkTableInstance.h>
 
 #include <catch2/catch.hpp>
@@ -6,7 +8,8 @@
 #include "config.h"
 #include "log/client_logger.h"
 
-using namespace deadeye;
+using ::deadeye::CameraControlTablePath;
+using ::deadeye::ClientLogger;
 using json = nlohmann::json;
 
 namespace {

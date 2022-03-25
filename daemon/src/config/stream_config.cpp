@@ -1,13 +1,16 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "stream_config.h"
 
 #include <fmt/core.h>
 
+#include <memory>
 #include <sstream>
 #include <utility>
 
 #include "config.h"
 
-using namespace deadeye;
+using ::deadeye::StreamConfig;
 using json = nlohmann::json;
 
 namespace {

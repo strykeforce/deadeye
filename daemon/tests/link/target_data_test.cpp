@@ -1,3 +1,5 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include <opencv2/core/types.hpp>
 
 #include "catch2/catch.hpp"
@@ -5,7 +7,11 @@
 #include "link/target_list_target_data.h"
 #include "link/upright_target_data.h"
 
-using namespace deadeye;
+using ::deadeye::TargetData;
+using ::deadeye::UprightTargetData;
+using ::deadeye::MinAreaTargetData;
+using ::deadeye::TargetList;
+using ::deadeye::TargetListTargetData;
 
 TEST_CASE("TargetData to JSON", "[link]") {
   TargetData td{"Z1", 1, true};

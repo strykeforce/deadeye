@@ -1,0 +1,13 @@
+<component name="CopyrightManager">
+  <settings default="Stryke Force">
+    <module2copyright>
+      <element module="Project Files" copyright="Stryke Force" />
+    </module2copyright>
+    <LanguageOptions name="ObjectiveC">
+      <option name="fileTypeOverride" value="3" />
+      <option name="addBlankAfter" value="false" />
+      <option name="block" value="false" />
+      <option name="prefixLines" value="false" />
+    </LanguageOptions>
+  </settings>
+</component>

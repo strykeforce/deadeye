@@ -1,6 +1,9 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
 #pragma once
 
+#include <memory>
 #include <opencv2/core/mat.hpp>
+#include <string>
 
 #include "config/capture_config.h"
 #include "config/pipeline_config.h"

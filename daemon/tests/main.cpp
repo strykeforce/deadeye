@@ -1,3 +1,5 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #define CATCH_CONFIG_RUNNER
 #include <networktables/NetworkTableInstance.h>
 

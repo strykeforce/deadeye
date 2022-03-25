@@ -1,12 +1,15 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "pipeline/streamer.h"
 
 #include <wpi/Logger.h>
 
+#include <map>
 #include <opencv2/imgproc.hpp>
 
 #include "pipeline/pipeline.h"
 
-using namespace deadeye;
+using ::deadeye::Streamer;
 
 namespace {
 void ResetCScoreLogging();
@@ -98,14 +101,16 @@ void Streamer::Process(const cv::Mat& frame, const TargetData* target) {
 
 namespace {
 void ResetCScoreLogging() {
-  using namespace wpi;
-  using namespace spdlog;
-  static std::map<unsigned int, level::level_enum> levels{
-      {WPI_LOG_DEBUG4, level::debug},     {WPI_LOG_DEBUG3, level::debug},
-      {WPI_LOG_DEBUG2, level::debug},     {WPI_LOG_DEBUG1, level::debug},
-      {WPI_LOG_DEBUG, level::debug},      {WPI_LOG_INFO, level::info},
-      {WPI_LOG_WARNING, level::warn},     {WPI_LOG_ERROR, level::err},
-      {WPI_LOG_CRITICAL, level::critical}};
+  static std::map<unsigned int, spdlog::level::level_enum> levels{
+      {wpi::WPI_LOG_DEBUG4, spdlog::level::debug},
+      {wpi::WPI_LOG_DEBUG3, spdlog::level::debug},
+      {wpi::WPI_LOG_DEBUG2, spdlog::level::debug},
+      {wpi::WPI_LOG_DEBUG1, spdlog::level::debug},
+      {wpi::WPI_LOG_DEBUG, spdlog::level::debug},
+      {wpi::WPI_LOG_INFO, spdlog::level::info},
+      {wpi::WPI_LOG_WARNING, spdlog::level::warn},
+      {wpi::WPI_LOG_ERROR, spdlog::level::err},
+      {wpi::WPI_LOG_CRITICAL, spdlog::level::critical}};
 
   cs::SetLogger(
       [](unsigned int level, char const* file, unsigned int line,
@@ -113,7 +118,7 @@ void ResetCScoreLogging() {
         spdlog::log(levels[level], "cscore: {} in {}, line {}", msg, file,
                     line);
       },
-      WPI_LOG_WARNING);
+      wpi::WPI_LOG_WARNING);
 }
 
 }  // namespace

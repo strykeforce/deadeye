@@ -1,6 +1,9 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
 #pragma once
+
 #include <nlohmann/json.hpp>
 #include <opencv2/core/types.hpp>
+#include <string>
 
 #include "link/target_data.h"
 
@@ -20,4 +23,3 @@ struct MinAreaTargetData : public TargetData {
   [[nodiscard]] std::string ToString() const override;
 };
 }  // namespace deadeye
-   //

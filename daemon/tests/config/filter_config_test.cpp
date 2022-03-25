@@ -1,10 +1,12 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "config/filter_config.h"
 
 #include <opencv2/core/mat.hpp>
 
 #include "catch2/catch.hpp"
 
-using namespace deadeye;
+using ::deadeye::FilterConfig;
 using json = nlohmann::json;
 
 TEST_CASE("FilterConfig to JSON", "[pipeline]") {

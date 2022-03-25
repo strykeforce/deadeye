@@ -1,9 +1,12 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
 #pragma once
+
 #include <fmt/core.h>
 #include <networktables/NetworkTableValue.h>
 #include <spdlog/fmt/ostr.h>
 
 #include <iostream>
+#include <memory>
 #include <nlohmann/json.hpp>
 #include <opencv2/core/types.hpp>
 #include <string>

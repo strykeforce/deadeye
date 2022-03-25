@@ -1,3 +1,4 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
 #pragma once
 
 #include <fmt/core.h>
@@ -8,7 +9,9 @@
 #include <atomic>
 #include <future>
 #include <memory>
+#include <string>
 #include <tinyfsm.hpp>
+#include <utility>
 
 #include "config.h"
 #include "config/capture_config.h"
@@ -103,6 +106,6 @@ template <int inum>
 std::atomic<bool> Camera<inum>::has_error_{false};
 
 template <int inum>
-std::string Camera<inum>::error_;
+std::string Camera<inum>::error_;  // NOLINT(runtime/string)
 
 }  // namespace deadeye

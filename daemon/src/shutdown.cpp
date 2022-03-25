@@ -1,3 +1,5 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include <sys/reboot.h>
 #include <systemd/sd-bus.h>
 #include <unistd.h>
@@ -18,8 +20,9 @@ int do_normal_shutdown();
 int do_fast_shutdown();
 
 int main() {
-  using namespace std::chrono_literals;
-  using namespace gpiod;
+  using namespace std::chrono_literals;  // NOLINT(build/namespaces)
+  using ::gpiod::chip;
+  using ::gpiod::line_request;
 
   deadeye::log::Configure("shutdown");
 

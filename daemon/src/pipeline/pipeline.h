@@ -1,10 +1,15 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
 #pragma once
+
 #include <fmt/core.h>
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 
+#include <memory>
 #include <opencv2/core/types.hpp>
+#include <string>
 #include <utility>
+#include <vector>
 
 #include "config.h"
 #include "config/capture_config.h"

@@ -1,6 +1,8 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "filter_config.h"
 
-using namespace deadeye;
+using ::deadeye::FilterConfig;
 using json = nlohmann::json;
 
 FilterConfig::FilterConfig(filter_t area, filter_t solidity, filter_t aspect)

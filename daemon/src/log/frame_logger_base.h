@@ -1,7 +1,10 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
 #pragma once
 
 #include <readerwriterqueue/readerwriterqueue.h>
 
+#include <memory>
+#include <string>
 #include <utility>
 
 #include "client_logger.h"

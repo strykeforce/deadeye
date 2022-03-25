@@ -1,6 +1,9 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
 #pragma once
 
 #include <spdlog/spdlog.h>
+
+#include <memory>
 
 #include "capture/capture.h"
 #include "capture/capture_type.h"

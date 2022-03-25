@@ -1,9 +1,12 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "pipeline/runner.h"
 
 #include <spdlog/spdlog.h>
 
 #include <memory>
 #include <opencv2/core/mat.hpp>
+#include <utility>
 
 #include "capture/capture.h"
 #include "capture/capture_factory.h"
@@ -13,7 +16,8 @@
 #include "pipeline/streamer.h"
 #include "state.h"
 
-using namespace deadeye;
+using ::deadeye::Pipeline;
+using ::deadeye::Runner;
 
 void Runner::SetPipeline(std::unique_ptr<Pipeline> pipeline) {
   pipeline_ = std::move(pipeline);
@@ -90,7 +94,6 @@ void Runner::Run() {
   cv::TickMeter tm;
 
   while (true) {  // Loop until pipeline cancelled
-
     if (cancel_.load()) {
       double avg = tm.getTimeSec() / static_cast<double>(tm.getCounter());
       if (frame_log_enabled) frame_logger->Stop();

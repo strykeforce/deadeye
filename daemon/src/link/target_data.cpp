@@ -1,8 +1,11 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "target_data.h"
 
+#include <string>
 #include <utility>
 
-using namespace deadeye;
+using ::deadeye::TargetData;
 using json = nlohmann::json;
 
 const char* TargetData::kIdKey{"id"};

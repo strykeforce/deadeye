@@ -1,8 +1,10 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "link_config.h"
 
 #include <utility>
 
-using namespace deadeye;
+using ::deadeye::LinkConfig;
 using json = nlohmann::json;
 
 LinkConfig::LinkConfig(std::string address, int port, bool enabled)

@@ -1,6 +1,9 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
 #pragma once
+
 #include <nlohmann/json.hpp>
 #include <opencv2/core/mat.hpp>
+#include <string>
 
 using json = nlohmann::json;
 

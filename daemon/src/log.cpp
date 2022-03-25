@@ -1,3 +1,5 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "log.h"
 
 #include <spdlog/cfg/env.h>

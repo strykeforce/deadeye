@@ -1,6 +1,10 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "latency_target_data.h"
 
-using namespace deadeye;
+#include <string>
+
+using ::deadeye::LatencyTargetData;
 
 namespace {
 constexpr std::string_view kLightsKey{"l"};
@@ -8,8 +12,7 @@ constexpr std::string_view kTimestampKey{"ts"};
 }  // namespace
 
 LatencyTargetData::LatencyTargetData(std::string_view id, int sn, bool valid,
-                                     cv::Rect bb, bool lights,
-                                     long long timestamp)
+                                     cv::Rect bb, bool lights, int64 timestamp)
     : UprightTargetData(id, sn, valid, bb),
       lights(lights),
       timestamp(timestamp) {}

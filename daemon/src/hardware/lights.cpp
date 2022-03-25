@@ -1,3 +1,5 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "lights.h"
 
 #include <spdlog/spdlog.h>
@@ -6,17 +8,16 @@
 #include <thread>
 #include <tinyfsm.hpp>
 
-using namespace deadeye;
-
 namespace {
-using namespace std::literals::chrono_literals;
+using namespace std::literals::  // NOLINT(build/namespaces_literals)
+    chrono_literals;
 constexpr auto kBlinkPeriod = 250ms;
 }  // namespace
 
 // ---------------------------------------------------------------------------
 // Lights states
 //
-namespace lights {
+namespace deadeye::lights {
 template <int inum>
 class Off;
 template <int inum>
@@ -117,10 +118,10 @@ class Off : public Lights<inum> {
 
   void exit() override { base::SetStatus(DE_OFF, false); }
 };
-}  // namespace lights
+}  // namespace deadeye::lights
 
-FSM_INITIAL_STATE(Lights<0>, lights::Off<0>)
-FSM_INITIAL_STATE(Lights<1>, lights::Off<1>)
-FSM_INITIAL_STATE(Lights<2>, lights::Off<2>)
-FSM_INITIAL_STATE(Lights<3>, lights::Off<3>)
-FSM_INITIAL_STATE(Lights<4>, lights::Off<4>)
+FSM_INITIAL_STATE(deadeye::Lights<0>, deadeye::lights::Off<0>)
+FSM_INITIAL_STATE(deadeye::Lights<1>, deadeye::lights::Off<1>)
+FSM_INITIAL_STATE(deadeye::Lights<2>, deadeye::lights::Off<2>)
+FSM_INITIAL_STATE(deadeye::Lights<3>, deadeye::lights::Off<3>)
+FSM_INITIAL_STATE(deadeye::Lights<4>, deadeye::lights::Off<4>)

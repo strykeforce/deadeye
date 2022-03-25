@@ -1,8 +1,10 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include <memory>
 
 #include "pipeline_tests.h"
 
-using namespace deadeye;
+using namespace deadeye;  // NOLINT(build/namespaces)
 
 namespace {
 FilterConfig GetFilterAll(cv::Size size) {

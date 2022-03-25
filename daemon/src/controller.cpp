@@ -1,3 +1,5 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "controller.h"
 
 #include <networktables/NetworkTableInstance.h>
@@ -11,6 +13,7 @@
 #include <future>
 #include <memory>
 #include <tinyfsm.hpp>
+#include <utility>
 
 #include "config.h"
 #include "config/pipeline_config.h"
@@ -24,7 +27,7 @@
 // forward declaration
 static spdlog::level::level_enum Nt2spdlogLevel(const nt::LogMessage& msg);
 
-using namespace deadeye;
+using ::deadeye::Controller;
 
 namespace {
 constexpr double kPollTimeout = 0.25;
@@ -594,18 +597,16 @@ void Controller::LogCamera() {
  * Nt2spdlogLevel converts logging levels.
  */
 spdlog::level::level_enum Nt2spdlogLevel(const nt::LogMessage& msg) {
-  using namespace spdlog::level;
-
   switch (msg.level) {
     case NT_LOG_CRITICAL:
-      return critical;
+      return ::spdlog::level::critical;
     case NT_LOG_ERROR:
-      return err;
+      return ::spdlog::level::err;
     case NT_LOG_WARNING:
-      return warn;
+      return ::spdlog::level::warn;
     case NT_LOG_INFO:
-      return info;
+      return ::spdlog::level::info;
     default:
-      return debug;
+      return ::spdlog::level::debug;
   }
 }
