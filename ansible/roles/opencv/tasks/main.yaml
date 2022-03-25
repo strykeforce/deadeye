@@ -45,6 +45,9 @@
   file:
     path: /usr/local/src/opencv-{{ opencv_version }}/build
     state: directory
+    mode: 0755
+    owner: root
+    group: root
   tags:
     - opencv
 

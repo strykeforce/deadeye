@@ -14,6 +14,9 @@
       file:
         path: /var/log/journal
         state: directory
+        mode: 0755
+        owner: root
+        group: root
       register: jetson_journal_dir
       tags: jetson
     - name: Set systemd journal dir access mode and ownership
