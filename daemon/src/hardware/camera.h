@@ -94,7 +94,7 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
 
 // state variable definitions
 template <int inum>
-Runner Camera<inum>::pipeline_runner_; // NOLINT(cert-err58-cpp)
+Runner Camera<inum>::pipeline_runner_;
 
 template <int inum>
 std::future<void> Camera<inum>::pipeline_future_;

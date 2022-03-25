@@ -18,6 +18,7 @@ using PipelinePtr = std::unique_ptr<Pipeline>;
 
 class Runner {
  public:
+  Runner() noexcept = default;
   void SetPipeline(std::unique_ptr<Pipeline> pipeline);
   Pipeline* GetPipeline();
 
