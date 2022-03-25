@@ -54,5 +54,4 @@ jobs:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-          VALIDATE_CPP: true
-          VALIDATE_CLANG_FORMAT: true
+	  VALIDATE_ANSIBLE: true
