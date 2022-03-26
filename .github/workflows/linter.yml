@@ -54,5 +54,6 @@ jobs:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-          VALIDATE_GOOGLE_JAVA_FORMAT: true
-          VALIDATE_JAVA: true
+          VALIDATE_TYPESCRIPT_ES: true
+          VALIDATE_TYPESCRIPT_STANDARD: true
+          VALIDATE_DOCKERFILE_HADOLINT: true
