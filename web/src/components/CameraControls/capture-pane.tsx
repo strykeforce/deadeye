@@ -151,6 +151,7 @@ const DIMENSIONS = {
   ],
   jetson: [
     [1280, 720],
+    [720, 1280],
     [960, 540],
     [640, 360],
     [320, 180],
@@ -177,7 +178,7 @@ const DimensionSelect = (props: CaptureControlProps) => {
       const key = `${dims[0]}x${dims[1]}`;
       return (
         <Option value={key} key={key}>
-          {dims[0]} x {dims[1]} ppx
+          {dims[0]} x {dims[1]} px
         </Option>
       );
     }
