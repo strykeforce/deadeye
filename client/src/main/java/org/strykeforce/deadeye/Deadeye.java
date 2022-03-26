@@ -19,17 +19,16 @@ import org.slf4j.LoggerFactory;
 /**
  * Objects of the {@code Deadeye} class represent a connection to a Deadeye camera pipeline. It
  * provides methods to configure and control the camera and to receive target data.
- * <p>
- * To use this class make sure that the {@code TargetData} type that you construct this class with
- * is the same as the Deadeye pipeline target data type. These include:
+ *
+ * <p>To use this class make sure that the {@code TargetData} type that you construct this class
+ * with is the same as the Deadeye pipeline target data type. These include:
  * <ul>
  *   <li>{@code UprightRectTargetData} when using an {@code UprightRectPipeline}</li>
  *   <li>{@code MinAreaRectTargetData} when using a {@code MinAreaRectPipeline}</li>
  *   <li>{@code TargetListTargetData} when using a {@code TargetListPipeline}</li>
  * </ul>
  *
- * <p>
- * For example, assuming our Deadeye camera "A0" uses an {@code UprightRectPipeline},
+ * <p>For example, assuming our Deadeye camera "A0" uses an {@code UprightRectPipeline},
  * the constructor for this class is:
  *
  * <blockquote>
@@ -68,10 +67,9 @@ public class Deadeye<T extends TargetData> {
   /**
    * Constructs an instance of {@code Deadeye} and initializes a connection to the associated
    * Deadeye camera while manually specifying this client IP address.
-   * <p>
-   * Manually specifying the client IP address should only be done once, for the first {@code
+   *
+   * <p>Manually specifying the client IP address should only be done once, for the first {@code
    * Deadeye} instance initialized.
-   * <p>
    *
    * @param id          the camera id, i.e. the Deadeye unit letter followed by the camera number,
    *                    for example "A0".
@@ -110,8 +108,8 @@ public class Deadeye<T extends TargetData> {
    * Constructs an instance of {@code Deadeye} and initializes a connection to a Deadeye camera
    * using a specified NetworkTables instance while manually specifying this client IP address. This
    * constructor is primarily for testing or when using a robot simulator.
-   * <p>
-   * Manually specifying the client IP address should only be done once, for the first {@code
+   *
+   * <p>Manually specifying the client IP address should only be done once, for the first {@code
    * Deadeye} instance initialized.
    *
    * @param id          the camera id, i.e. the Deadeye unit letter followed by the camera number,
@@ -310,7 +308,7 @@ public class Deadeye<T extends TargetData> {
   }
 
   /**
-   * Gets the capture configuration for the pipeline
+   * Gets the capture configuration for the pipeline.
    *
    * @return the capture configuration
    */
@@ -358,6 +356,13 @@ public class Deadeye<T extends TargetData> {
       this(false, "ERROR", "ERROR");
     }
 
+    /**
+     * Create a new Info object.
+     *
+     * @param logging  true if logging enabled
+     * @param pipeline the type of pipeline
+     * @param version  the version of the pipeline
+     */
     public Info(boolean logging, String pipeline, String version) {
       this.logging = logging;
       this.pipeline = pipeline;
@@ -430,6 +435,14 @@ public class Deadeye<T extends TargetData> {
       this("ERROR", 0, 0, 0);
     }
 
+    /**
+     * Create a new Capture object.
+     *
+     * @param type      the capture type
+     * @param frameRate the frame rate in FPS
+     * @param width     the width of the captured frame
+     * @param height    the height of the captured frame
+     */
     public Capture(String type, int frameRate, int width, int height) {
       this.type = type;
       this.frameRate = frameRate;
@@ -457,12 +470,8 @@ public class Deadeye<T extends TargetData> {
 
     @Override
     public @NotNull String toString() {
-      return "Capture{" +
-          "type='" + type + '\'' +
-          ", frameRate=" + frameRate +
-          ", width=" + width +
-          ", height=" + height +
-          '}';
+      return "Capture{type='" + type + '\'' + ", frameRate=" + frameRate + ", width=" + width
+          + ", height=" + height + '}';
     }
   }
 

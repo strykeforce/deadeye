@@ -55,3 +55,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
           VALIDATE_GOOGLE_JAVA_FORMAT: true
+          VALIDATE_JAVA: true

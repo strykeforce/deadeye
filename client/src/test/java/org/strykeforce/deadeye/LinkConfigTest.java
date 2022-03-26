@@ -2,7 +2,6 @@ package org.strykeforce.deadeye;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.strykeforce.deadeye.Link.DEADEYE_TABLE;
 import static org.strykeforce.deadeye.Link.LINK_ENTRY;
@@ -110,8 +109,8 @@ class LinkConfigTest {
 
   @Test
   void testMultipleLinks() {
-    entry.setString("[{ \"address\": \"1.2.3.4\", \"port\": 5801, \"enabled\": false}," +
-        "{ \"address\": \"10.27.67.2\", \"port\": 5800, \"enabled\": true}]");
+    entry.setString("[{ \"address\": \"1.2.3.4\", \"port\": 5801, \"enabled\": false},"
+        + "{ \"address\": \"10.27.67.2\", \"port\": 5800, \"enabled\": true}]");
     NetworkTable deadeyeTable = nti.getTable(DEADEYE_TABLE);
     LinkConfig config = LinkConfig.getConfig(deadeyeTable);
     assertEquals(new LinkConfig("1.2.3.4", 5801, false), config);

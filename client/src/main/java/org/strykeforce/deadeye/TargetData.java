@@ -19,11 +19,18 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public class TargetData {
 
-  /** Deadeye unit ID. */
-  @NotNull public final String id;
-  /** Serial number of target data message. */
+  /**
+   * Deadeye unit ID.
+   */
+  @NotNull
+  public final String id;
+  /**
+   * Serial number of target data message.
+   */
   public final int serial;
-  /** True if target data is valid. */
+  /**
+   * True if target data is valid.
+   */
   public final boolean valid;
 
   /**
@@ -35,9 +42,10 @@ public class TargetData {
 
   /**
    * Construct and initialize a {@code TargetData} with the specified values.
-   * @param id the camera id.
-   * @param serial  the incrementing serial identifier of the target data.
-   * @param valid   true if a valid target was detected.
+   *
+   * @param id     the camera id.
+   * @param serial the incrementing serial identifier of the target data.
+   * @param valid  true if a valid target was detected.
    */
   public TargetData(@NotNull String id, int serial, boolean valid) {
     this.id = id;
@@ -52,8 +60,12 @@ public class TargetData {
 
   @Override
   public boolean equals(@Nullable Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
     TargetData that = (TargetData) o;
     return serial == that.serial && valid == that.valid && id.equals(that.id);
   }
@@ -69,6 +81,7 @@ public class TargetData {
   }
 
   private static class JsonAdapterImpl implements DeadeyeJsonAdapter<TargetData> {
+
     private static final JsonReader.Options OPTIONS = JsonReader.Options.of("id", "sn", "v");
 
     @Override
