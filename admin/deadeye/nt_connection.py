@@ -1,9 +1,6 @@
-import os
-
-
 from networktables import NetworkTables
 
-from .settings import DEADEYE_NT_SERVER, DEADEYE_NT_PORT
+from .settings import DEADEYE_NT_PORT, DEADEYE_NT_SERVER
 
 
 class NetworkTablesConnection:
