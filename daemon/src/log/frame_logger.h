@@ -1,3 +1,4 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
 #pragma once
 
 #include <spdlog/spdlog.h>
@@ -37,7 +38,7 @@ class FrameLogger {
       default:
         break;
     }
-  };
+  }
 
   void Run() {
     future_ = std::async(std::launch::async, &logger::FrameLoggerBase::Run,

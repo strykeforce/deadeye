@@ -1,6 +1,6 @@
 ---
 - name: Install nginx
-  apt:
+  ansible.builtin.apt:
     update_cache: false
     name:
       - nginx

@@ -1,9 +1,13 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "capture/nv_argus_camera.h"
 
 #include <fmt/core.h>
 #include <spdlog/spdlog.h>
 
-using namespace deadeye;
+#include <string>
+
+using ::deadeye::NvArgusCamera;
 using json = nlohmann::json;
 
 NvArgusCamera::NvArgusCamera(const CaptureConfig& config) {

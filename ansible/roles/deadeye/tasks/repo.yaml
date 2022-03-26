@@ -1,8 +1,11 @@
 ---
 - name: create deadeye directory
-  file:
+  ansible.builtin.file:
     path: "{{ deadeye_dir }}"
     state: directory
+    mode: 0755
+    owner: root
+    group: root
 
 - name: sync remote repo from local
   ansible.posix.synchronize:

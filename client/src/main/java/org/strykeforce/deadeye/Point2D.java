@@ -9,13 +9,17 @@ import org.jetbrains.annotations.Nullable;
  */
 @SuppressWarnings("unused")
 public final class Point2D {
+
+  // CHECKSTYLE:OFF
   public final double x;
   public final double y;
+  // CHECKSTYLE:ON
 
   /**
    * Constructs and initializes a point at the specified (x,y) location in the coordinate space.
-   * @param x  the X coordinate of the newly constructed {@code Point2D}
-   * @param y  the y coordinate of the newly constructed {@code Point2D}
+   *
+   * @param x the X coordinate of the newly constructed {@code Point2D}
+   * @param y the y coordinate of the newly constructed {@code Point2D}
    */
   public Point2D(double x, double y) {
     this.x = x;
@@ -27,7 +31,7 @@ public final class Point2D {
    *
    * @return the length of the radius from the origin to this {@code Point}.
    */
-  public double r() {
+  public double radius() {
     return Math.sqrt(x * x + y * y);
   }
 
@@ -54,8 +58,12 @@ public final class Point2D {
 
   @Override
   public boolean equals(@Nullable Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
     Point2D point = (Point2D) o;
     return x == point.x && y == point.y;
   }

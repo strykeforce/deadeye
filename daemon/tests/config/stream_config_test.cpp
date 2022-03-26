@@ -1,8 +1,10 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "config/stream_config.h"
 
 #include "catch2/catch.hpp"
 
-using namespace deadeye;
+using ::deadeye::StreamConfig;
 using json = nlohmann::json;
 
 TEST_CASE("StreamConfig equality", "[pipeline]") {

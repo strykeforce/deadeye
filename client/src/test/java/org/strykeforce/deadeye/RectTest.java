@@ -43,10 +43,10 @@ class RectTest {
   void isEmpty() {
     assertFalse(rect.isEmpty());
     assertTrue(new Rect(rect.bottomRight, rect.topLeft, 0).isEmpty());
-    assertTrue(new Rect(new Point(10,10), new Point(10,20), 0).isEmpty());
-    assertTrue(new Rect(new Point(10,10), new Point(9,20), 0).isEmpty());
-    assertTrue(new Rect(new Point(0,10), new Point(10,10), 0).isEmpty());
-    assertTrue(new Rect(new Point(0,10), new Point(10,9), 0).isEmpty());
+    assertTrue(new Rect(new Point(10, 10), new Point(10, 20), 0).isEmpty());
+    assertTrue(new Rect(new Point(10, 10), new Point(9, 20), 0).isEmpty());
+    assertTrue(new Rect(new Point(0, 10), new Point(10, 10), 0).isEmpty());
+    assertTrue(new Rect(new Point(0, 10), new Point(10, 9), 0).isEmpty());
   }
 
   @Test

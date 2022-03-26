@@ -1,6 +1,6 @@
 ---
 - name: Unarchive sources
-  unarchive:
+  ansible.builtin.unarchive:
     src: https://github.com/gabime/spdlog/archive/v{{ spdlog_version }}.tar.gz
     dest: /usr/local/src
     remote_src: true
@@ -8,14 +8,17 @@
     - spdlog
 
 - name: Create build directory
-  file:
+  ansible.builtin.file:
     path: /usr/local/src/spdlog-{{ spdlog_version }}/build
     state: directory
+    owner: root
+    group: root
+    mode: 0755
   tags:
     - spdlog
 
 - name: Run cmake
-  command:
+  ansible.builtin.command:
     chdir: /usr/local/src/spdlog-{{ spdlog_version }}/build
     argv:
       - /usr/bin/cmake
@@ -30,7 +33,7 @@
     - cmake
 
 - name: Build and install
-  command:
+  ansible.builtin.command:
     chdir: /usr/local/src/spdlog-{{ spdlog_version }}/build
     argv:
       - /usr/bin/ninja

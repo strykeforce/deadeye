@@ -1,3 +1,4 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
 #pragma once
 
 #include <nlohmann/json.hpp>
@@ -23,7 +24,7 @@ struct PipelineState {
   int inum_;
 
   PipelineState() = default;
-  PipelineState(int inum);
+  explicit PipelineState(int inum);
   explicit PipelineState(int inum, FrameLoggerState frame_logger);
 
   void Store();

@@ -1,8 +1,6 @@
-import os
-
 from networktables import NetworkTables
 
-from .settings import DEADEYE_NT_SERVER, DEADEYE_NT_PORT
+from .settings import DEADEYE_NT_PORT, DEADEYE_NT_SERVER
 
 
 class NetworkTablesConnection:
@@ -44,7 +42,9 @@ class NetworkTablesConnection:
             callback(True)
 
         self.connecting = True
-        self.logger.info("connecting to NT server at %s:%i", DEADEYE_NT_SERVER, DEADEYE_NT_PORT)
+        self.logger.info(
+            "connecting to NT server at %s:%i", DEADEYE_NT_SERVER, DEADEYE_NT_PORT
+        )
 
         # NetworkTables.initialize(server=DEADEYE_NT_SERVER)
         NetworkTables.startClient((DEADEYE_NT_SERVER, DEADEYE_NT_PORT))

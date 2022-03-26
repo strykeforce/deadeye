@@ -1,6 +1,8 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
 #pragma once
 
 #include <cscore_cv.h>
+
 #include "capture/capture.h"
 
 namespace deadeye {

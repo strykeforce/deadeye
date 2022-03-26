@@ -1,15 +1,21 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "upright_rect_pipeline.h"
 
 #include <fmt/core.h>
 
+#include <memory>
 #include <opencv2/imgproc.hpp>
+#include <string>
 #include <utility>
 
 #include "link/upright_target_data.h"
 
-using namespace deadeye;
+using ::deadeye::TargetData;
+using ::deadeye::UprightRectPipeline;
 
-[[maybe_unused]] UprightRectPipeline::UprightRectPipeline(int inum, std::string name)
+[[maybe_unused]] UprightRectPipeline::UprightRectPipeline(int inum,
+                                                          std::string name)
     : AbstractPipeline{inum, std::move(name)} {}
 
 // Target is center of contour bounding box.

@@ -1,10 +1,13 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "log/full_frame.h"
 
 #include <fmt/core.h>
 
 #include <opencv2/imgcodecs.hpp>
+#include <string>
 
-using namespace deadeye::logger;
+using ::deadeye::logger::FullFrame;
 
 FullFrame::FullFrame(const int inum, const CaptureConfig& capture_config,
                      const FrameLogConfig& log_config, FrameLoggerState& state,

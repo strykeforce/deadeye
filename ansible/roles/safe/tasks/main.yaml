@@ -1,6 +1,6 @@
 ---
 - name: Unarchive sources
-  unarchive:
+  ansible.builtin.unarchive:
     src: https://github.com/LouisCharlesC/safe/archive/v{{ safe_version }}.tar.gz
     dest: /usr/local/src
     remote_src: true
@@ -8,14 +8,17 @@
     - safe
 
 - name: Create build directory
-  file:
+  ansible.builtin.file:
     path: /usr/local/src/safe-{{ safe_version }}/build
     state: directory
+    owner: root
+    group: root
+    mode: 0755
   tags:
     - safe
 
 - name: Run cmake
-  command:
+  ansible.builtin.command:
     chdir: /usr/local/src/safe-{{ safe_version }}/build
     argv:
       - /usr/bin/cmake
@@ -29,7 +32,7 @@
     - cmake
 
 - name: Build and install
-  command:
+  ansible.builtin.command:
     chdir: /usr/local/src/safe-{{ safe_version }}/build
     argv:
       - /usr/bin/ninja

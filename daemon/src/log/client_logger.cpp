@@ -1,13 +1,16 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "client_logger.h"
 
 #include <networktables/NetworkTableInstance.h>
 #include <spdlog/spdlog.h>
 
 #include <nlohmann/json.hpp>
+#include <string>
 
 #include "config.h"
 
-using namespace deadeye;
+using ::deadeye::ClientLogger;
 using json = nlohmann::json;
 
 namespace {

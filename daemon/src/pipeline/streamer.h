@@ -1,4 +1,6 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
 #pragma once
+
 #include <cscore.h>
 #include <cscore_cv.h>
 

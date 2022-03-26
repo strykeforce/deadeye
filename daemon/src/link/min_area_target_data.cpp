@@ -1,11 +1,14 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "min_area_target_data.h"
 
 #include <fmt/core.h>
 
 #include <opencv2/imgproc.hpp>
+#include <string>
 #include <utility>
 
-using namespace deadeye;
+using ::deadeye::MinAreaTargetData;
 using json = nlohmann::json;
 
 MinAreaTargetData::MinAreaTargetData(std::string_view id, int sn, bool valid,

@@ -1,8 +1,7 @@
-import click
-import os
-import socket
 import subprocess
 import sys
+
+import click
 
 DAEMON_SERVICE = "deadeye-daemon.service"
 ADMIN_SERVICE = "deadeye-admin.service"

@@ -1,3 +1,5 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include <networktables/NetworkTableInstance.h>
 
 #include <opencv2/core/mat.hpp>
@@ -7,7 +9,7 @@
 #include "config/link_config.h"
 #include "state.h"
 
-using namespace deadeye;
+using namespace deadeye;  // NOLINT(build/namespaces)
 using json = nlohmann::json;
 
 TEST_CASE("Serialize FrameLoggerState", "[state]") {

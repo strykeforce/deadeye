@@ -6,20 +6,20 @@ DEADEYE=/opt/deadeye
 
 function set_jetson_ip() {
 	ip=$1
-	conn=$(nmcli -g GENERAL.CONNECTION device show eth0)
-	uuid=$(nmcli -g connection.uuid connection show "$conn")
+	CONN=$(nmcli -g GENERAL.CONNECTION device show eth0)
+	UUID=$(nmcli -g connection.uuid connection show "$CONN")
 
-	nmcli connection modify $UUID \
+	nmcli connection modify "$UUID" \
 	connection.id ether-eth0 \
 	ipv4.method manual \
-	ipv4.addresses $ip/24 \
+	ipv4.addresses "$ip/24" \
 	ipv4.gateway 10.27.67.1 \
 	ipv4.dns 10.27.67.1
 
-	nmcli connection down $UUID > /dev/null
-	nmcli connection up $UUID > /dev/null
+	nmcli connection down "$UUID" > /dev/null
+	nmcli connection up "$UUID" > /dev/null
 
-	echo Configured $HOSTNAME with static ip address $IP
+	echo Configured "$HOSTNAME" with static ip address "$IP"
 }
 
 function config_sudo() {
@@ -37,7 +37,7 @@ function install_deadeye_cli() {
 	[[ ! -e $DEADEYE/bin/python ]] &&  virtualenv -p python3 -q $DEADEYE
 	[[ ! -d $DEADEYE/src ]] && git clone https://github.com/strykeforce/deadeye.git $DEADEYE/src
 	$DEADEYE/bin/pip install --quiet --requirement=$DEADEYE/src/admin/requirements.txt
-	cd $DEADEYE/src/admin
+	cd $DEADEYE/src/admin || return
 	$DEADEYE/bin/pip install .
 	[[ ! -e /usr/local/bin/deadeye ]] && ln -s $DEADEYE/bin/deadeye /usr/local/bin/
 	echo

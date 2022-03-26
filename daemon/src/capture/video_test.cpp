@@ -1,9 +1,11 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "capture/video_test.h"
 
 #include <fmt/core.h>
 #include <spdlog/spdlog.h>
 
-using namespace deadeye;
+using ::deadeye::VideoTest;
 using json = nlohmann::json;
 
 VideoTest::VideoTest(const CaptureConfig& config) {

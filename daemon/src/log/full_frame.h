@@ -1,3 +1,4 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
 #pragma once
 
 #include "log/frame_logger_base.h"

@@ -1,6 +1,10 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
 #pragma once
 
+#include <algorithm>
 #include <opencv2/imgproc.hpp>
+#include <utility>
+#include <vector>
 
 namespace deadeye {
 inline void MaskFrame(const cv::Mat& frame, cv::Mat& output,

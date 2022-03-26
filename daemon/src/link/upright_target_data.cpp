@@ -1,18 +1,19 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "upright_target_data.h"
 
 #include <fmt/core.h>
 
 #include <opencv2/imgproc.hpp>
+#include <string>
 #include <utility>
 
-using namespace deadeye;
+using ::deadeye::UprightTargetData;
 using json = nlohmann::json;
 
 UprightTargetData::UprightTargetData(std::string_view id, int sn, bool valid,
                                      cv::Rect bb)
-    : TargetData{id, sn, valid},
-      bb(bb),
-      center((bb.tl() + bb.br()) / 2) {}
+    : TargetData{id, sn, valid}, bb(bb), center((bb.tl() + bb.br()) / 2) {}
 
 void UprightTargetData::DrawMarkers(cv::Mat& preview) const {
   cv::drawMarker(preview, center, cv::Scalar::all(255));

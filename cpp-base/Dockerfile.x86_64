@@ -17,6 +17,7 @@ ARG CATCH2_VERSION="2.13.6"
 ARG LIBGPIOD_VERSION="1.4.5"
 ARG BUILD_LOG=/opt/build.log
 
+# hadolint ignore=DL3008
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
     autoconf \
@@ -50,7 +51,8 @@ RUN apt-get update \
     yasm \
     && rm -rf /var/lib/apt/lists/*
 
-RUN wget https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip -O opencv.zip \
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+RUN wget -q "https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip" -O opencv.zip \
     && unzip opencv.zip -d /opt \
     && rm -rf opencv.zip \
     && cmake \
@@ -76,14 +78,14 @@ RUN wget https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip -O openc
     -D WITH_QT=OFF \
     -D WITH_TBB=ON \
     -D WITH_V4L=ON \
-    /opt/opencv-${OPENCV_VERSION} \
+    "/opt/opencv-${OPENCV_VERSION}" \
     | tee -a ${BUILD_LOG} \
-    && make -j$(nproc) \
+    && make "-j$(nproc)" \
     && make install \
     && rm -rf /opt/build/* \
-    && rm -rf /opt/opencv-${OPENCV_VERSION} 
+    && rm -rf "/opt/opencv-${OPENCV_VERSION}" 
 
-RUN wget https://github.com/wpilibsuite/allwpilib/archive/v${WPILIB_VERSION}.zip -O wpilib.zip \
+RUN wget -q "https://github.com/wpilibsuite/allwpilib/archive/v${WPILIB_VERSION}.zip" -O wpilib.zip \
     && unzip wpilib.zip -d /opt \
     && rm -rf wpilib.zip \
     && cmake \
@@ -99,13 +101,13 @@ RUN wget https://github.com/wpilibsuite/allwpilib/archive/v${WPILIB_VERSION}.zip
     -D WITH_TESTS=OFF \
     -D WITH_WPILIB=OFF \
     -D WITH_WPIMATH=OFF \
-    /opt/allwpilib-${WPILIB_VERSION} \
-    && make -j$(nproc) \
+    "/opt/allwpilib-${WPILIB_VERSION}" \
+    && make "-j$(nproc)" \
     && make install \
     && rm -rf /opt/build/* \
-    && rm -rf /opt/allwpilib-${WPILIB_VERSION}
+    && rm -rf "/opt/allwpilib-${WPILIB_VERSION}"
 
-RUN wget  https://github.com/fmtlib/fmt/archive/${FMT_VERSION}.zip -O fmt.zip \
+RUN wget -q "https://github.com/fmtlib/fmt/archive/${FMT_VERSION}.zip" -O fmt.zip \
     && unzip fmt.zip -d /opt \
     && rm -rf fmt.zip \
     && cmake \
@@ -114,75 +116,75 @@ RUN wget  https://github.com/fmtlib/fmt/archive/${FMT_VERSION}.zip -O fmt.zip \
     -D CMAKE_INSTALL_PREFIX=/usr/local \
     -D FMT_DOC=OFF \
     -D FMT_TEST=OFF \
-    /opt/fmt-${FMT_VERSION} \
-    && make -j$(nproc) \
+    "/opt/fmt-${FMT_VERSION}" \
+    && make "-j$(nproc)" \
     && make install \
     && rm -rf /opt/build/* \
-    && rm -rf /opt/fmt-${FMT_VERSION}
+    && rm -rf "/opt/fmt-${FMT_VERSION}"
 
-RUN wget  https://github.com/gabime/spdlog/archive/v${SPDLOG_VERSION}.zip -O spdlog.zip \
+RUN wget -q "https://github.com/gabime/spdlog/archive/v${SPDLOG_VERSION}.zip" -O spdlog.zip \
     && unzip spdlog.zip -d /opt \
     && rm -rf spdlog.zip \
     && cmake \
     -D CMAKE_BUILD_TYPE=Release \
     -D CMAKE_INSTALL_PREFIX=/usr/local \
     -D SPDLOG_FMT_EXTERNAL=ON \
-    /opt/spdlog-${SPDLOG_VERSION} \
-    && make -j$(nproc) \
+    "/opt/spdlog-${SPDLOG_VERSION}" \
+    && make "-j$(nproc)" \
     && make install \
     && rm -rf /opt/build/* \
-    && rm -rf /opt/spdlog-${SPDLOG_VERSION}
+    && rm -rf "/opt/spdlog-${SPDLOG_VERSION}"
 
-RUN wget  https://github.com/nlohmann/json/archive/v${NLOHMANN_JSON_VERSION}.zip -O json.zip \
+RUN wget -q "https://github.com/nlohmann/json/archive/v${NLOHMANN_JSON_VERSION}.zip" -O json.zip \
     && unzip json.zip -d /opt \
     && rm -rf json.zip \
     && cmake \
     -D CMAKE_BUILD_TYPE=Release \
     -D CMAKE_INSTALL_PREFIX=/usr/local \
     -D JSON_BuildTests=OFF \
-    /opt/json-${NLOHMANN_JSON_VERSION} \
-    && make -j$(nproc) \
+    "/opt/json-${NLOHMANN_JSON_VERSION}" \
+    && make "-j$(nproc)" \
     && make install \
     && rm -rf /opt/build/* \
-    && rm -rf /opt/json-${NLOHMANN_JSON_VERSION}
+    && rm -rf "/opt/json-${NLOHMANN_JSON_VERSION}"
 
-RUN wget  https://github.com/LouisCharlesC/safe/archive/v${SAFE_VERSION}.zip -O safe.zip \
+RUN wget -q "https://github.com/LouisCharlesC/safe/archive/v${SAFE_VERSION}.zip" -O safe.zip \
     && unzip safe.zip -d /opt \
     && rm -rf safe.zip \
     && cmake \
     -D CMAKE_BUILD_TYPE=Release \
     -D CMAKE_INSTALL_PREFIX=/usr/local \
-    /opt/safe-${SAFE_VERSION} \
-    && make -j$(nproc) \
+    "/opt/safe-${SAFE_VERSION}" \
+    && make "-j$(nproc)" \
     && make install \
     && rm -rf /opt/build/* \
-    && rm -rf /opt/safe-${SAFE_VERSION}
+    && rm -rf "/opt/safe-${SAFE_VERSION}"
 
-RUN wget  https://github.com/cameron314/readerwriterqueue/archive/v${READERWRITERQUEUE_VERSION}.zip -O readerwriterqueue.zip \
+RUN wget -q "https://github.com/cameron314/readerwriterqueue/archive/v${READERWRITERQUEUE_VERSION}.zip" -O readerwriterqueue.zip \
     && unzip readerwriterqueue.zip -d /opt \
     && rm -rf readerwriterqueue.zip \
     && cmake \
     -D CMAKE_BUILD_TYPE=Release \
     -D CMAKE_INSTALL_PREFIX=/usr/local \
-    /opt/readerwriterqueue-${READERWRITERQUEUE_VERSION} \
-    && make -j$(nproc) \
+    "/opt/readerwriterqueue-${READERWRITERQUEUE_VERSION}" \
+    && make "-j$(nproc)" \
     && make install \
     && rm -rf /opt/build/* \
-    && rm -rf /opt/readerwriterqueue-${READERWRITERQUEUE_VERSION}
+    && rm -rf "/opt/readerwriterqueue-${READERWRITERQUEUE_VERSION}"
 
-RUN wget  https://github.com/jhh/tinyfsm/archive/v${TINYFSM_VERSION}.zip -O tinyfsm.zip \
+RUN wget -q "https://github.com/jhh/tinyfsm/archive/v${TINYFSM_VERSION}.zip" -O tinyfsm.zip \
     && unzip tinyfsm.zip -d /opt \
     && rm -rf tinyfsm.zip \
     && cmake \
     -D CMAKE_BUILD_TYPE=Release \
     -D CMAKE_INSTALL_PREFIX=/usr/local \
-    /opt/tinyfsm-${TINYFSM_VERSION} \
-    && make -j$(nproc) \
+    "/opt/tinyfsm-${TINYFSM_VERSION}" \
+    && make "-j$(nproc)" \
     && make install \
     && rm -rf /opt/build/* \
-    && rm -rf /opt/tinyfsm-${TINYFSM_VERSION}
+    && rm -rf "/opt/tinyfsm-${TINYFSM_VERSION}"
 
-RUN wget  https://github.com/catchorg/Catch2/archive/v${CATCH2_VERSION}.zip -O catch.zip \
+RUN wget -q "https://github.com/catchorg/Catch2/archive/v${CATCH2_VERSION}.zip" -O catch.zip \
     && unzip catch.zip -d /opt \
     && rm -rf catch.zip \
     && cmake \
@@ -190,20 +192,21 @@ RUN wget  https://github.com/catchorg/Catch2/archive/v${CATCH2_VERSION}.zip -O c
     -D CATCH_INSTALL_DOCS=OFF \
     -D CMAKE_BUILD_TYPE=Release \
     -D CMAKE_INSTALL_PREFIX=/usr/local \
-    /opt/Catch2-${CATCH2_VERSION} \
-    && make -j$(nproc) \
+    "/opt/Catch2-${CATCH2_VERSION}" \
+    && make "-j$(nproc)" \
     && make install \
     && rm -rf /opt/build/* \
-    && rm -rf /opt/Catch2-${CATCH2_VERSION} 
+    && rm -rf "/opt/Catch2-${CATCH2_VERSION}" 
 
-RUN wget https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/snapshot/libgpiod-${LIBGPIOD_VERSION}.tar.gz \
-    && tar -C /opt -xzf libgpiod-${LIBGPIOD_VERSION}.tar.gz \
-    && rm -f libgpiod-${LIBGPIOD_VERSION}.tar.gz \
-    && cd /opt/libgpiod-${LIBGPIOD_VERSION} \
+# hadolint ignore=DL3003
+RUN wget -q "https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/snapshot/libgpiod-${LIBGPIOD_VERSION}.tar.gz" \
+    && tar -C /opt -xzf "libgpiod-${LIBGPIOD_VERSION}.tar.gz" \
+    && rm -f "libgpiod-${LIBGPIOD_VERSION}.tar.gz" \
+    && cd "/opt/libgpiod-${LIBGPIOD_VERSION}" \
     && ./autogen.sh --enable-tools=no --prefix=/usr/local \
     && make install \
     && cd ./bindings/cxx \
     && make install \
     && /sbin/ldconfig \
-    && rm -rf /opt/libgpiod-${LIBGPIOD_VERSION}
+    && rm -rf "/opt/libgpiod-${LIBGPIOD_VERSION}"
 

@@ -88,8 +88,8 @@ class TargetDataTest {
     Point2D center = new Point2D(2, 3);
     double height = 4;
     double width = 5;
-    Point2D[] points = new Point2D[]{new Point2D(6, 7), new Point2D(8, 9), new Point2D(10, 11),
-        new Point2D(12, 13),};
+    Point2D[] points = new Point2D[]{ new Point2D(6, 7), new Point2D(8, 9), new Point2D(10, 11),
+        new Point2D(12, 13), };
     MinAreaRectTargetData exp = new MinAreaRectTargetData("Z1", 3, true, angle, center, width,
         height, points);
     @SuppressWarnings("unchecked") DeadeyeJsonAdapter<MinAreaRectTargetData> jsonAdapter = new MinAreaRectTargetData().getJsonAdapter();
@@ -103,8 +103,8 @@ class TargetDataTest {
     Point2D center = new Point2D(2, 3);
     double height = 4;
     double width = 5;
-    Point2D[] points = new Point2D[]{new Point2D(6, 7), new Point2D(8, 9), new Point2D(10, 11),
-        new Point2D(12, 13),};
+    Point2D[] points = new Point2D[]{ new Point2D(6, 7), new Point2D(8, 9), new Point2D(10, 11),
+        new Point2D(12, 13), };
     MinAreaRectTargetData expected = new MinAreaRectTargetData("Z1", 3, true, angle, center, width,
         height, points);
 

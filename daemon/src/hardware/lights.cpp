@@ -1,3 +1,5 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "lights.h"
 
 #include <spdlog/spdlog.h>
@@ -6,17 +8,16 @@
 #include <thread>
 #include <tinyfsm.hpp>
 
-using namespace deadeye;
-
 namespace {
-using namespace std::literals::chrono_literals;
+using namespace std::literals::  // NOLINT(build/namespaces_literals)
+    chrono_literals;
 constexpr auto kBlinkPeriod = 250ms;
 }  // namespace
 
 // ---------------------------------------------------------------------------
 // Lights states
 //
-namespace lights {
+namespace deadeye::lights {
 template <int inum>
 class Off;
 template <int inum>
@@ -33,11 +34,11 @@ class On : public Lights<inum> {
     base::on_ = true;
   }
 
-  void react(LightsBlink const &) override {
+  void react(LightsBlink const&) override {
     base::template transit<lights::Blinking<inum>>();
   }
 
-  void react(LightsOff const &) override {
+  void react(LightsOff const&) override {
     base::template transit<lights::Off<inum>>();
   }
 
@@ -75,7 +76,7 @@ class Blinking : public Lights<inum> {
     if (base::task_future_.valid()) {
       try {
         base::task_future_.get();
-      } catch (std::exception const &e) {
+      } catch (std::exception const& e) {
         spdlog::error("Lights<{}{}> error while cancelling blink: {}",
                       DEADEYE_UNIT, inum, e.what());
       }
@@ -83,12 +84,12 @@ class Blinking : public Lights<inum> {
   }
 #pragma clang diagnostic pop
 
-  void react(LightsOn const &) override {
+  void react(LightsOn const&) override {
     CancelTask();
     base::template transit<lights::On<inum>>();
   }
 
-  void react(LightsOff const &) override {
+  void react(LightsOff const&) override {
     CancelTask();
     base::template transit<lights::Off<inum>>();
   }
@@ -107,20 +108,20 @@ class Off : public Lights<inum> {
     base::on_ = false;
   }
 
-  void react(LightsOn const &) override {
+  void react(LightsOn const&) override {
     base::template transit<lights::On<inum>>();
   }
 
-  void react(LightsBlink const &) override {
+  void react(LightsBlink const&) override {
     base::template transit<lights::Blinking<inum>>();
   }
 
   void exit() override { base::SetStatus(DE_OFF, false); }
 };
-}  // namespace lights
+}  // namespace deadeye::lights
 
-FSM_INITIAL_STATE(Lights<0>, lights::Off<0>)
-FSM_INITIAL_STATE(Lights<1>, lights::Off<1>)
-FSM_INITIAL_STATE(Lights<2>, lights::Off<2>)
-FSM_INITIAL_STATE(Lights<3>, lights::Off<3>)
-FSM_INITIAL_STATE(Lights<4>, lights::Off<4>)
+FSM_INITIAL_STATE(deadeye::Lights<0>, deadeye::lights::Off<0>)
+FSM_INITIAL_STATE(deadeye::Lights<1>, deadeye::lights::Off<1>)
+FSM_INITIAL_STATE(deadeye::Lights<2>, deadeye::lights::Off<2>)
+FSM_INITIAL_STATE(deadeye::Lights<3>, deadeye::lights::Off<3>)
+FSM_INITIAL_STATE(deadeye::Lights<4>, deadeye::lights::Off<4>)

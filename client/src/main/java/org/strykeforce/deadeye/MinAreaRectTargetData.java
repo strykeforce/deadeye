@@ -13,8 +13,8 @@ import org.jetbrains.annotations.Nullable;
 /**
  * A <code>MinAreaRectTargetData</code> represents data returned from a Deadeye
  * <code>MinAreaRectPipeline</code>.
- * <p>
- * The target detected by the <code>MinAreaRectPipeline</code> is represented by an OpenCV
+ *
+ * <p>The target detected by the <code>MinAreaRectPipeline</code> is represented by an OpenCV
  * <a href="https://docs.opencv.org/4.5.4/db/dd6/classcv_1_1RotatedRect.html"><code>RotatedRect</code></a>
  * and so care must be given to interpreting the angle and corner points. See this
  * <a href="https://theailearner.com/tag/angle-of-rotation-by-cv2-minarearect/">blog post</a> for

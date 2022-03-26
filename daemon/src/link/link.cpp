@@ -1,3 +1,5 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "link.h"
 
 #include <arpa/inet.h>
@@ -14,7 +16,9 @@
 #include "controller.h"
 #include "link/upright_target_data.h"
 
-using namespace deadeye;
+using ::deadeye::Link;
+using ::deadeye::LinkConfig;
+
 Link::Link(int inum) : id_(DEADEYE_UNIT + std::to_string(inum)) {
   LinkConfig link_config = GetConfig();
   enabled_ = link_config.enabled;
@@ -33,7 +37,7 @@ Link::Link(int inum) : id_(DEADEYE_UNIT + std::to_string(inum)) {
   addr.sin_port = htons(link_config.port);
   inet_pton(AF_INET, link_config.address.c_str(), &addr.sin_addr);
 
-  if (connect(fd_, (sockaddr*)&addr, sizeof(addr)) == -1)
+  if (connect(fd_, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) == -1)
     spdlog::critical("Link<{}> connect error: {}", id_, strerror(errno));
 
   spdlog::info("Link<{}> connecting to {}:{}", id_, link_config.address,
@@ -50,7 +54,7 @@ LinkConfig Link::GetConfig() {
   auto nti = nt::NetworkTableInstance(nt::GetDefaultInstance());
   auto js = nti.GetEntry(DE_LINK_ENTRY).GetString("[]");
   auto j = json::parse(js);
-  return LinkConfig{j[0]};  // TODO: configure all links in list
+  return LinkConfig{j[0]};  // TODO(jhh): configure all links in list
 }
 
 void Link::Send(TargetData* const td) const {

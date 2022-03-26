@@ -1,4 +1,6 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
 #pragma once
+
 #include <safe/safe.h>
 
 #include <memory>
@@ -18,6 +20,8 @@ using PipelinePtr = std::unique_ptr<Pipeline>;
 
 class Runner {
  public:
+  Runner() = default;
+  ~Runner() = default;
   void SetPipeline(std::unique_ptr<Pipeline> pipeline);
   Pipeline* GetPipeline();
 
@@ -27,7 +31,7 @@ class Runner {
   void Configure(const StreamConfig& config);
 
   void Run();
-  void Stop() { cancel_ = true; };
+  void Stop() { cancel_ = true; }
 
  private:
   PipelinePtr pipeline_;

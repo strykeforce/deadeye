@@ -1,4 +1,6 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
 #pragma once
+
 #include <ntcore.h>
 
 #include <array>
@@ -30,7 +32,7 @@ class Controller {
     return instance;
   }
 
-  explicit Controller(Pipelines *pipelines);
+  explicit Controller(Pipelines* pipelines);
 
   void StartNetworkTables();
 

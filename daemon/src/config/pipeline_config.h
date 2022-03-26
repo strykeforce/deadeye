@@ -1,9 +1,12 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
 #pragma once
+
 #include <fmt/core.h>
 #include <networktables/NetworkTableValue.h>
 #include <spdlog/fmt/ostr.h>
 
 #include <iostream>
+#include <memory>
 #include <nlohmann/json.hpp>
 #include <opencv2/core/types.hpp>
 #include <string>
@@ -11,11 +14,9 @@
 #include "config/filter_config.h"
 #include "config/frame_log_config.h"
 
-namespace {
-std::string onoff(bool state) { return state ? "(on)" : "(off)"; }
-}  // namespace
-
 namespace deadeye {
+
+static std::string onoff(bool state) { return state ? "(on)" : "(off)"; }
 
 struct PipelineConfig {
   static constexpr auto kSerialKey = "sn";

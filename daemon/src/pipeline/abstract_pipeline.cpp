@@ -1,11 +1,16 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "abstract_pipeline.h"
 
+#include <memory>
+#include <string>
 #include <utility>
 
 #include "config.h"
 #include "pipeline/pipeline_ops.h"
 
-using namespace deadeye;
+using ::deadeye::AbstractPipeline;
+using ::deadeye::TargetData;
 
 AbstractPipeline::AbstractPipeline(int inum, std::string name)
     : Pipeline{inum, std::move(name)},

@@ -105,7 +105,7 @@ class LinkConfig {
     return inetAddress;
   }
 
-  static private InetAddress getDefaultInetAddress() {
+  private static InetAddress getDefaultInetAddress() {
     try {
       return InetAddress.getByName(DEFAULT.address);
     } catch (UnknownHostException ex) {
@@ -122,8 +122,8 @@ class LinkConfig {
     var addresses = getSiteLocalAddresses();
     boolean addressValid = addresses.contains(inetAddress);
     if (!addressValid) {
-      Link.logger.error("configuration address \"{}\" not in {}\n\t" +
-              "consider passing client IP address to Deadeye constructor.",
+      Link.logger.error(
+          "configuration address \"{}\" not in {}\n\tconsider passing client IP address to Deadeye constructor.",
           inetAddress.getHostAddress(),
           addresses);
     }
@@ -167,10 +167,7 @@ class LinkConfig {
 
   @Override
   public @NotNull String toString() {
-    return "LinkConfig{" +
-        "port=" + port +
-        ", enabled=" + enabled +
-        ", address='" + address + '\'' +
-        '}';
+    return "LinkConfig{port=" + port + ", enabled=" + enabled + ", address='" + address + '\''
+        + '}';
   }
 }

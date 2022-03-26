@@ -1,6 +1,6 @@
 ---
 - name: Unarchive sources
-  unarchive:
+  ansible.builtin.unarchive:
     src: https://github.com/wpilibsuite/allwpilib/archive/v{{ wpilib_version }}.tar.gz
     dest: /usr/local/src
     remote_src: true
@@ -8,14 +8,17 @@
     - wpilib
 
 - name: Create build directory
-  file:
+  ansible.builtin.file:
     path: /usr/local/src/allwpilib-{{ wpilib_version }}/build
     state: directory
+    owner: root
+    group: root
+    mode: 0755
   tags:
     - wpilib
 
 - name: Run cmake
-  command:
+  ansible.builtin.command:
     chdir: /usr/local/src/allwpilib-{{ wpilib_version }}/build
     argv:
       - /usr/bin/cmake
@@ -41,7 +44,7 @@
     - cmake
 
 - name: Build and install
-  command:
+  ansible.builtin.command:
     chdir: /usr/local/src/allwpilib-{{ wpilib_version }}/build
     argv:
       - /usr/bin/ninja
@@ -51,16 +54,19 @@
     - build
 
 - name: Copy ld config
-  copy:
+  ansible.builtin.copy:
     content: /usr/local/wpilib/lib
     dest: /etc/ld.so.conf.d/wpilib.conf
+    owner: root
+    group: root
+    mode: 0644
   register: wpilib_conf
   tags:
     - wpilib
     - build
 
 - name: Update ld cache
-  command: /sbin/ldconfig
+  ansible.builtin.command: /sbin/ldconfig
   when: wpilib_conf is changed
   tags:
     - wpilib

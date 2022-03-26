@@ -1,10 +1,16 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "state.h"
 
 #include <networktables/NetworkTableInstance.h>
 
+#include <string>
+
 #include "config.h"
 
-using namespace deadeye;
+using ::deadeye::FrameLoggerState;
+using ::deadeye::PipelineState;
+using ::deadeye::StateEntryPath;
 using json = nlohmann::json;
 
 // FrameLoggerState
@@ -22,7 +28,7 @@ void deadeye::from_json(const json& j, FrameLoggerState& fls) {
 // PipelineState
 PipelineState::PipelineState(int inum) : inum_(inum), frame_logger() {}
 PipelineState::PipelineState(int inum, FrameLoggerState frame_logger)
-    : inum_(inum), frame_logger(frame_logger){};
+    : inum_(inum), frame_logger(frame_logger) {}
 
 void deadeye::to_json(json& j, const PipelineState& pls) {
   j = json{{PipelineState::kFrameLogger, pls.frame_logger}};
@@ -50,7 +56,7 @@ void PipelineState::Store() {
 
 PipelineState PipelineState::Load(int inum) {
   std::string entry = get_entry(inum).GetString(kDefault);
-  if (entry == kDefault) return {inum};
+  if (entry == kDefault) return PipelineState{inum};
   PipelineState state = json::parse(entry);
   state.inum_ = inum;
   return state;

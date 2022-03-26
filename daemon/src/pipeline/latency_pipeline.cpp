@@ -1,13 +1,19 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "latency_pipeline.h"
 
 #include <fmt/core.h>
 
 #include <chrono>
+#include <memory>
 #include <opencv2/imgproc.hpp>
+#include <string>
+#include <utility>
 
 #include "link/latency_target_data.h"
 
-using namespace deadeye;
+using ::deadeye::LatencyPipeline;
+using ::deadeye::TargetData;
 
 [[maybe_unused]] LatencyPipeline::LatencyPipeline(int inum, std::string name)
     : AbstractPipeline{inum, std::move(name)},

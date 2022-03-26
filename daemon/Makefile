@@ -36,7 +36,7 @@ run:
 
 .PHONY: sync
 sync:
-	rsync --verbose --recursive --checksum --delete --exclude "*build*/" . deadeye-a:deadeye/
+	rsync --verbose --recursive --checksum --delete --exclude "*build*/" . deadeye-f:deadeye/
 
 .PHONY: clean
 clean:

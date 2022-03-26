@@ -1,14 +1,14 @@
 ---
 - name: Install node source
-  shell:
+  ansible.builtin.shell:
     cmd: curl -sL https://deb.nodesource.com/setup_{{ deadeye_node_version }} | sudo -E bash -
     creates: /etc/apt/sources.list.d/nodesource.list
   args:
-    warn: no
+    warn: false
 
 - name: Install node and npm
-  apt:
-    update_cache: yes
-    state: latest
+  ansible.builtin.apt:
+    update_cache: true
+    state: present
     name:
       - nodejs

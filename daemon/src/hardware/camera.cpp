@@ -1,10 +1,11 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "camera.h"
 
 #include <future>
+#include <string>
 
 #include "lights.h"
-
-using namespace std::chrono_literals;
 
 namespace deadeye::camera {
 
@@ -36,7 +37,7 @@ class On : public Camera<inum> {
     spdlog::info("Camera<{}{}> on", DEADEYE_UNIT, inum);
   }
 
-  void react(CameraOff const &) final {
+  void react(CameraOff const&) final {
     Lights<inum>::dispatch(LightsOff());
     base::pipeline_runner_.Stop();
 
@@ -44,7 +45,7 @@ class On : public Camera<inum> {
     if (base::pipeline_future_.valid()) {
       try {
         base::pipeline_future_.get();
-      } catch (std::exception const &e) {
+      } catch (std::exception const& e) {
         base::error_ = e.what();
         base::has_error_ = false;  // don't retrigger in controller
         base::template transit<camera::Error<inum>>();
@@ -69,7 +70,7 @@ class Off : public Camera<inum> {
     spdlog::info("Camera<{}{}> off", DEADEYE_UNIT, inum);
   }
 
-  void react(CameraOn const &) final {
+  void react(CameraOn const&) final {
     Lights<inum>::dispatch(LightsOn());
     base::template transit<camera::On<inum>>();
   }
@@ -90,13 +91,13 @@ class Error : public Camera<inum> {
     spdlog::error("Camera<{}{}> error: {}", DEADEYE_UNIT, inum, base::error_);
   }
 
-  void react(CameraOn const &) final {
+  void react(CameraOn const&) final {
     base::SetStatus(DE_ON, false);
     spdlog::warn("Camera<{}{}> attempting to turn on camera in error state: {}",
                  DEADEYE_UNIT, inum, base::error_);
   }
 
-  void react(CameraOff const &) final {
+  void react(CameraOff const&) final {
     base::SetStatus(DE_OFF, false);
     spdlog::warn(
         "Camera<{}{}> attempting to turn off camera in error state: {}",

@@ -1,8 +1,10 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "frame_log_config.h"
 
 #include <utility>
 
-using namespace deadeye;
+using ::deadeye::FrameLogConfig;
 using json = nlohmann::json;
 
 FrameLogConfig::FrameLogConfig(FrameLogType type, std::string path, int fps,

@@ -1,3 +1,4 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
 #pragma once
 
 #include <fmt/core.h>
@@ -8,10 +9,12 @@
 #include <atomic>
 #include <future>
 #include <memory>
+#include <string>
 #include <tinyfsm.hpp>
+#include <utility>
 
-#include "config/capture_config.h"
 #include "config.h"
+#include "config/capture_config.h"
 #include "config/pipeline_config.h"
 #include "config/stream_config.h"
 #include "pipeline/runner.h"
@@ -94,7 +97,7 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
 
 // state variable definitions
 template <int inum>
-Runner Camera<inum>::pipeline_runner_; // NOLINT
+Runner Camera<inum>::pipeline_runner_;
 
 template <int inum>
 std::future<void> Camera<inum>::pipeline_future_;
@@ -103,6 +106,6 @@ template <int inum>
 std::atomic<bool> Camera<inum>::has_error_{false};
 
 template <int inum>
-std::string Camera<inum>::error_;
+std::string Camera<inum>::error_;  // NOLINT(runtime/string)
 
 }  // namespace deadeye

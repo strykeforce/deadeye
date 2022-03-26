@@ -1,3 +1,5 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "capture/image_file.h"
 
 #include <fmt/core.h>
@@ -6,9 +8,10 @@
 #include <nlohmann/json.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
+#include <string>
 #include <thread>
 
-using namespace deadeye;
+using ::deadeye::ImageFile;
 using json = nlohmann::json;
 
 ImageFile::ImageFile(const CaptureConfig& config)

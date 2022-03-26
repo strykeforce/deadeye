@@ -1,11 +1,14 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "log/frame_logger_base.h"
 
 #include <dirent.h>
 #include <sys/stat.h>
 
+#include <string>
 #include <utility>
 
-using namespace deadeye::logger;
+using ::deadeye::logger::FrameLoggerBase;
 
 FrameLoggerBase::FrameLoggerBase(const int inum, const FrameLogConfig& config,
                                  FrameLoggerState& state,

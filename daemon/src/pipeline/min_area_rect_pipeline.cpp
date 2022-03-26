@@ -1,15 +1,21 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "min_area_rect_pipeline.h"
 
 #include <fmt/core.h>
 
+#include <memory>
 #include <opencv2/imgproc.hpp>
+#include <string>
 #include <utility>
 
 #include "link/min_area_target_data.h"
 
-using namespace deadeye;
+using ::deadeye::MinAreaRectPipeline;
+using ::deadeye::TargetData;
 
-[[maybe_unused]] MinAreaRectPipeline::MinAreaRectPipeline(int inum, std::string name)
+[[maybe_unused]] MinAreaRectPipeline::MinAreaRectPipeline(int inum,
+                                                          std::string name)
     : AbstractPipeline{inum, std::move(name)} {}
 
 void MinAreaRectPipeline::Configure(const CaptureConfig& config) {

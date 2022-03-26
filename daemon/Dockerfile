@@ -1,5 +1,6 @@
 # syntax=docker/dockerfile:1
 
+# hadolint ignore=DL3007
 FROM j3ff/deadeye-cpp-base:latest AS base
 LABEL maintainer=“jeff@j3ff.io”
 
@@ -18,7 +19,7 @@ RUN cmake \
     -D DEADEYE_CAMERA1_PIPELINE=deadeye::MinAreaRectPipeline \
     -D DEADEYE_CAMERA2_PIPELINE=deadeye::TargetListPipeline \
     /src \
-    && make -j$(nproc)
+    && make "-j$(nproc)"
 
 # production environment
 FROM base

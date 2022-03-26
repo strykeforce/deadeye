@@ -1,26 +1,27 @@
-#include "pipeline_tests.h"
+// Copyright (c) 2022 Stryke Force FRC 2767
 
-using namespace deadeye;
+#include "pipeline_tests.h"
 
 static double e = 1e-6;
 
 TEST_CASE("BM004: GeometricContoursFilter 1280x720",
           "[.][filter][benchmark][" DEADEYE_UNIT "]") {
   cv::Mat frame = cv::imread(kTargetMaster);
-  PipelineConfig pc{kTargetMasterPipelineConfig};
+  deadeye::PipelineConfig pc{kTargetMasterPipelineConfig};
 
   cv::Mat mask;
-  MaskFrame(frame, mask, pc.HsvLow(), pc.HsvHigh());
+  deadeye::MaskFrame(frame, mask, pc.HsvLow(), pc.HsvHigh());
 
-  Contours contours;
-  FindContours(mask, contours);
+  deadeye::Contours contours;
+  deadeye::FindContours(mask, contours);
   REQUIRE(contours.size() == kTargetMasterNumContours);
 
-  FilterConfig filter{{kAreaMin + e, kAreaMax},
-                      {kSolidityMin + e, kSolidityMax},
-                      {kAspectMin, kAspectMax - e}};
+  deadeye::FilterConfig filter{
+      {deadeye::kAreaMin + e, deadeye::kAreaMax},
+      {deadeye::kSolidityMin + e, deadeye::kSolidityMax},
+      {deadeye::kAspectMin, deadeye::kAspectMax - e}};
   filter.frame_area = frame.size().area();
-  Contours filtered_contours;
+  deadeye::Contours filtered_contours;
   BENCHMARK("all enabled") {
     GeometricContoursFilter(filter, contours, filtered_contours);
   };

@@ -1,21 +1,25 @@
 ---
 - name: Unarchive sources
-  unarchive:
-    src: https://github.com/cameron314/readerwriterqueue/archive/v{{ readerwriterqueue_version }}.tar.gz
+  ansible.builtin.unarchive:
+    src: https://github.com/cameron314/readerwriterqueue/archive\
+      /v{{ readerwriterqueue_version }}.tar.gz
     dest: /usr/local/src
     remote_src: true
   tags:
     - readerwriterqueue
 
 - name: Create build directory
-  file:
+  ansible.builtin.file:
     path: /usr/local/src/readerwriterqueue-{{ readerwriterqueue_version }}/build
     state: directory
+    owner: root
+    group: root
+    mode: 0755
   tags:
     - readerwriterqueue
 
 - name: Run cmake
-  command:
+  ansible.builtin.command:
     chdir: /usr/local/src/readerwriterqueue-{{ readerwriterqueue_version }}/build
     argv:
       - /usr/bin/cmake
@@ -29,7 +33,7 @@
     - cmake
 
 - name: Build and install
-  command:
+  ansible.builtin.command:
     chdir: /usr/local/src/readerwriterqueue-{{ readerwriterqueue_version }}/build
     argv:
       - /usr/bin/ninja

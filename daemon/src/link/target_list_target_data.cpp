@@ -1,3 +1,5 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "link/target_list_target_data.h"
 
 #include <fmt/core.h>
@@ -6,7 +8,7 @@
 #include <opencv2/imgproc.hpp>
 #include <utility>
 
-using namespace deadeye;
+using ::deadeye::TargetListTargetData;
 using json = nlohmann::json;
 
 namespace {

@@ -1,14 +1,19 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "pipeline/target_list_pipeline.h"
 
 #include <fmt/core.h>
 #include <spdlog/spdlog.h>
 
+#include <memory>
 #include <opencv2/imgproc.hpp>
+#include <string>
 #include <utility>
 
 #include "link/target_list_target_data.h"
 
-using namespace deadeye;
+using ::deadeye::TargetData;
+using ::deadeye::TargetListPipeline;
 
 [[maybe_unused]] TargetListPipeline::TargetListPipeline(int inum,
                                                         std::string name)

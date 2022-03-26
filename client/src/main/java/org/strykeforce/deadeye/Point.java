@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public final class Point {
 
+  // CHECKSTYLE:OFF
   /**
    * the X coordinate of this {@code Point}.
    */
@@ -18,6 +19,7 @@ public final class Point {
    * the Y coordinate of this {@code Point}.
    */
   public final int y;
+  // CHECKSTYLE:ON
 
   /**
    * Constructs and initializes a point at the specified (x,y) location in the coordinate space.
@@ -47,7 +49,7 @@ public final class Point {
    *
    * @return the length of the radius from the origin to this {@code Point}.
    */
-  public double r() {
+  public double radius() {
     return Math.sqrt(x * x + y * y);
   }
 

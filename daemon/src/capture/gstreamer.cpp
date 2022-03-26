@@ -1,10 +1,12 @@
+// Copyright (c) 2022 Stryke Force FRC 2767
+
 #include "capture/gstreamer.h"
 
 #include <spdlog/spdlog.h>
 
 #include <opencv2/imgproc.hpp>
 
-using namespace deadeye;
+using ::deadeye::Gstreamer;
 
 Gstreamer::~Gstreamer() {
   cap_.release();
