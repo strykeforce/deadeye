@@ -11,6 +11,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY dist/${wheel} .
+# hadolint ignore=DL3013
 RUN pip install --no-cache-dir ${wheel} && rm -rf ${wheel}
 
 EXPOSE 5000
