@@ -1,20 +1,21 @@
 ---
 - name: Install build prereqs
-  apt:
-    update_cache: no
+  ansible.builtin.apt:
+    update_cache: false
     name:
       - autoconf-archive
 
 - name: Unarchive sources
-  unarchive:
-    src: https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/snapshot/libgpiod-{{ libgpiod_version }}.tar.gz
+  ansible.builtin.unarchive:
+    src: https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git\
+      /snapshot/libgpiod-{{ libgpiod_version }}.tar.gz
     dest: /usr/local/src
     remote_src: true
   tags:
     - libgpiod
 
 - name: Run autogen
-  command:
+  ansible.builtin.command:
     chdir: /usr/local/src/libgpiod-{{ libgpiod_version }}
     creates: /usr/local/src/libgpiod-{{ libgpiod_version }}/config.status
     argv:
@@ -28,7 +29,7 @@
     - autogen
 
 - name: Build and Install C library
-  command:
+  ansible.builtin.command:
     chdir: /usr/local/src/libgpiod-{{ libgpiod_version }}
     argv:
       - /usr/bin/make
@@ -39,7 +40,7 @@
     - build
 
 - name: Build and Install C++ library
-  command:
+  ansible.builtin.command:
     chdir: /usr/local/src/libgpiod-{{ libgpiod_version }}/bindings/cxx
     argv:
       - /usr/bin/make
@@ -50,7 +51,7 @@
     - build
 
 - name: Register libraries
-  command:
+  ansible.builtin.command:
     argv:
       - /sbin/ldconfig
   when: libgpiod_autogen is changed

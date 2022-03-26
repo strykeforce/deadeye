@@ -12,7 +12,7 @@
   delegate_to: localhost
 
 - name: Install build prereqs
-  apt:
+  ansible.builtin.apt:
     update_cache: false
     name:
       - virtualenv
@@ -33,13 +33,13 @@
     mode: 0644
 
 - name: Install pip packages
-  pip:
+  ansible.builtin.pip:
     requirements: "/opt/deadeye/requirements.txt"
     virtualenv: /opt/deadeye
     virtualenv_python: python3
 
 - name: Install wheel
-  pip:
+  ansible.builtin.pip:
     virtualenv: /opt/deadeye
     virtualenv_python: python3
     name: file:///opt/deadeye/deadeye-{{ deadeye_version }}-py3-none-any.whl

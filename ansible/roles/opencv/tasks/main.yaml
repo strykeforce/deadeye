@@ -1,6 +1,6 @@
 ---
 - name: Install OpenCV prereqs
-  apt:
+  ansible.builtin.apt:
     update_cache: true
     name:
       - build-essential
@@ -34,7 +34,7 @@
     - opencv
 
 - name: Unarchive sources
-  unarchive:
+  ansible.builtin.unarchive:
     src: https://github.com/opencv/opencv/archive/{{ opencv_version }}.tar.gz
     dest: /usr/local/src
     remote_src: true
@@ -42,7 +42,7 @@
     - opencv
 
 - name: Create build directory
-  file:
+  ansible.builtin.file:
     path: /usr/local/src/opencv-{{ opencv_version }}/build
     state: directory
     mode: 0755
@@ -52,7 +52,7 @@
     - opencv
 
 - name: Run cmake
-  command:
+  ansible.builtin.command:
     chdir: /usr/local/src/opencv-{{ opencv_version }}/build
     argv:
       - /usr/bin/cmake
@@ -73,7 +73,7 @@
     - cmake
 
 - name: Build and install
-  command:
+  ansible.builtin.command:
     chdir: /usr/local/src/opencv-{{ opencv_version }}/build
     argv:
       - /usr/bin/ninja

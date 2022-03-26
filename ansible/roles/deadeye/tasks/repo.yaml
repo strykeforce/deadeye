@@ -1,6 +1,6 @@
 ---
 - name: create deadeye directory
-  file:
+  ansible.builtin.file:
     path: "{{ deadeye_dir }}"
     state: directory
     mode: 0755

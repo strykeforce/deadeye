@@ -1,6 +1,6 @@
 ---
 - name: Install build prereqs
-  apt:
+  ansible.builtin.apt:
     update_cache: true
     name:
       - build-essential

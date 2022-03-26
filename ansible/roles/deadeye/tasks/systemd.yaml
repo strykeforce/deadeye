@@ -41,9 +41,9 @@
     # state: "{{ item.state }}"
     daemon_reload: true
   loop:
-    - { name: "deadeye-daemon.service", state: "started" }
-    - { name: "deadeye-admin.service", state: "started" }
-    - { name: "nginx.service", state: "started" }
+    - {name: "deadeye-daemon.service", state: "started"}
+    - {name: "deadeye-admin.service", state: "started"}
+    - {name: "nginx.service", state: "started"}
 
 - name: Enable Nano systemd services
   ansible.builtin.systemd:
@@ -52,8 +52,8 @@
     # state: "{{ item.state }}"
     daemon_reload: true
   loop:
-    - { name: "deadeye-shutdown.service", state: "started" }
-    - { name: "var-opt-deadeye.mount", state: "started" }
+    - {name: "deadeye-shutdown.service", state: "started"}
+    - {name: "var-opt-deadeye.mount", state: "started"}
   when: ansible_architecture == "aarch64"
 
 - name: Reboot host and wait for it to restart

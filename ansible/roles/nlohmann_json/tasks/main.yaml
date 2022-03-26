@@ -1,6 +1,6 @@
 ---
 - name: Unarchive sources
-  unarchive:
+  ansible.builtin.unarchive:
     src: https://github.com/nlohmann/json/archive/v{{ nlohmann_json_version }}.tar.gz
     dest: /usr/local/src
     remote_src: true
@@ -8,7 +8,7 @@
     - nlohmann_json
 
 - name: Create build directory
-  file:
+  ansible.builtin.file:
     path: /usr/local/src/json-{{ nlohmann_json_version }}/build
     state: directory
     owner: root
@@ -18,7 +18,7 @@
     - nlohmann_json
 
 - name: Run cmake
-  command:
+  ansible.builtin.command:
     chdir: /usr/local/src/json-{{ nlohmann_json_version }}/build
     argv:
       - /usr/bin/cmake
@@ -33,7 +33,7 @@
     - cmake
 
 - name: Build and install
-  command:
+  ansible.builtin.command:
     chdir: /usr/local/src/json-{{ nlohmann_json_version }}/build
     argv:
       - /usr/bin/ninja
