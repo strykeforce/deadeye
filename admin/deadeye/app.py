@@ -1,7 +1,9 @@
-import os
 import json
+import os
+
 from flask import Flask, render_template, make_response, request, jsonify
 from werkzeug.utils import secure_filename
+
 from .models import Unit
 from .settings import DEADEYE_UPLOAD_DIR
 

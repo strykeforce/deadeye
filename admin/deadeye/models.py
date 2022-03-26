@@ -1,6 +1,7 @@
 # pylint: disable=no-member
 import json
 import time
+from typing import Dict
 from urllib.parse import urlparse
 
 from flask import current_app
@@ -9,7 +10,7 @@ from networktables import NetworkTables, NetworkTablesInstance
 
 class Unit:
 
-    units = {}
+    units: Dict[str, "Unit"] = {}
     api = None
 
     def __init__(self, unit_id, camera_inums):
