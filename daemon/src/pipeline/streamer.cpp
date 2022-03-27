@@ -43,7 +43,7 @@ Streamer::Streamer(const Pipeline* pipeline, const cv::Size size)
   } else if (wr == 16 && hr == 9) {
     tb_border_ = h / 6;
   } else if (wr == 9 && hr == 16) {
-    lr_border_ = w * 5 / 4;
+    lr_border_ = w * 2 / 3;
     frame_tb_border_ = 1;
   } else {
     spdlog::error("Streamer: invalid aspect ratio: {}:{}", wr, hr);
