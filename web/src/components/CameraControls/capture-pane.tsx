@@ -27,6 +27,7 @@ const CapturePane = (props: Props) => {
 
   const displayRestartMessage = () => {
     if (!hasRestartDisplayed) {
+      // noinspection JSIgnoredPromiseFromCall
       message.warn({
         content: "Restart camera capture for changes to take effect.",
         style: {
@@ -78,7 +79,7 @@ const CapturePane = (props: Props) => {
             </Col>
           </Row>
         </Col>
-        <Col span={2}></Col>
+        <Col span={2}/>
         <Col span={11}>{subPane()}</Col>
       </Row>
       {debug && (

@@ -18,6 +18,7 @@ const CameraMenu = (props: Props) => {
 
   const handleClick = (id: string) => {
     setSelectedId(id);
+    // noinspection JSIgnoredPromiseFromCall
     navigate(`/id/${id}`);
   };
 
@@ -47,7 +48,7 @@ const CameraMenu = (props: Props) => {
           key="settings"
           icon={<SettingOutlined />}
           onClick={() => navigate("/settings")}
-        ></Menu.Item>
+        />
       </Menu>
     </>
   );

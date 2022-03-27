@@ -19,6 +19,7 @@ const DefaultPage = (props: Props) => {
     console.info(
       `default page: route = ${route}, id=${id}, ids=${JSON.stringify(ids)}`
     );
+    // noinspection JSIgnoredPromiseFromCall
     navigate(route);
     return null;
   }

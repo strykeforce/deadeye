@@ -39,6 +39,7 @@ const LinkPane = () => {
 
   const onFinish = (values: any) => {
     configLink([values]);
+    // noinspection JSIgnoredPromiseFromCall
     message.info({
       content: "Link configuration updated.",
       style: {

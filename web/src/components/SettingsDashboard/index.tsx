@@ -6,7 +6,7 @@ import LinkPane from "./link-pane";
 type Props = {};
 const { TabPane } = Tabs;
 
-const SettingsDashboard = (props: Props) => {
+const SettingsDashboard = (_: Props) => {
   return (
     <div className="settings-dash">
       <Tabs className="settings-dash__controls" defaultActiveKey="S1">

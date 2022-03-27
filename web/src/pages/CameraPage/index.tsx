@@ -24,6 +24,7 @@ const CameraPage = (props: Props) => {
 
   if (ids.length === 0) {
     console.warn("no camera ids, navigating to /");
+    // noinspection JSIgnoredPromiseFromCall
     navigate("/");
   }
 
