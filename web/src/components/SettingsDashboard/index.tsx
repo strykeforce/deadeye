@@ -3,7 +3,7 @@ import React from "react";
 import "./settings-dashboard.less";
 import LinkPane from "./link-pane";
 
-type Props = never;
+type Props = unknown;
 const { TabPane } = Tabs;
 
 const SettingsDashboard = (_: Props): JSX.Element => {
