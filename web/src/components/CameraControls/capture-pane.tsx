@@ -28,7 +28,7 @@ const CapturePane = (props: Props): JSX.Element => {
   const displayRestartMessage = () => {
     if (!hasRestartDisplayed) {
       // noinspection JSIgnoredPromiseFromCall
-      message.warn({
+      void message.warn({
         content: "Restart camera capture for changes to take effect.",
         style: {
           marginTop: messageOffset,

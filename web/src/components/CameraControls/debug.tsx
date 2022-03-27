@@ -21,7 +21,7 @@ const DebugPane = (props: Props): JSX.Element => {
     fetch("http://localhost:5000/json")
       .then((res) => res.json())
       .then(
-        (result) => {
+        (result: Units) => {
           setIsLoaded(true);
           setUnits(result);
         },
@@ -42,6 +42,7 @@ const DebugPane = (props: Props): JSX.Element => {
       section = camera ? camera.pipeline.filter : {};
     }
     return (
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       <SyntaxHighlighter language="json" style={dark}>
         {JSON.stringify(section, null, 2)}
       </SyntaxHighlighter>

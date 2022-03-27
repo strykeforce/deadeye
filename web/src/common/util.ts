@@ -6,6 +6,7 @@ export const get =
   (p: string[]) =>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-module-boundary-types
   (o: any): Camera =>
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return,@typescript-eslint/no-unsafe-member-access
     p.reduce((xs, x) => (xs && xs[x] ? xs[x] : null), o);
 
 export const getCamera = (id: string, units: Units): Camera => {

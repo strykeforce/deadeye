@@ -25,7 +25,7 @@ const CameraPage = (props: Props): JSX.Element => {
   if (ids.length === 0) {
     console.warn("no camera ids, navigating to /");
     // noinspection JSIgnoredPromiseFromCall
-    navigate("/");
+    void navigate("/");
   }
 
   const selectedId = ids.includes(id) ? id : ids[0];

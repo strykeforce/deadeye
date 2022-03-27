@@ -23,6 +23,7 @@ const LinkPane = (): JSX.Element => {
   const link = useRef<Link>();
   useEffect(() => {
     const handleLinkChange = (json: string) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const linkConfig: Link[] = JSON.parse(json);
       link.current = linkConfig[0];
       form.setFieldsValue(link.current);
@@ -40,7 +41,7 @@ const LinkPane = (): JSX.Element => {
   const onFinish = (values: Link) => {
     configLink([values]);
     // noinspection JSIgnoredPromiseFromCall
-    message.info({
+    void message.info({
       content: "Link configuration updated.",
       style: {
         marginTop: messageOffset,

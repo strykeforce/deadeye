@@ -32,7 +32,7 @@ const UploadControl = (props: CaptureControlProps) => {
       configImageUpload(unit, inum, info.file.name);
       enableCamera(unit, inum, false);
       // noinspection JSIgnoredPromiseFromCall
-      message.success({
+      void message.success({
         content: `${info.file.name} file uploaded successfully`,
         style: {
           marginTop: messageOffset,
@@ -40,7 +40,7 @@ const UploadControl = (props: CaptureControlProps) => {
       });
     } else if (info.file.status === "error") {
       // noinspection JSIgnoredPromiseFromCall
-      message.error({
+      void message.error({
         content: `${info.file.name} file upload failed.`,
         style: {
           marginTop: messageOffset,

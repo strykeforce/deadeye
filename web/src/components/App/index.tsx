@@ -12,6 +12,7 @@ const App = (): JSX.Element => {
 
   useEffect(() => {
     const handleUnitsChange = (units: string): void => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       setUnits(JSON.parse(units));
     };
 
@@ -38,7 +39,7 @@ const App = (): JSX.Element => {
 
   return (
     <Router>
-      <DefaultPage units={units} default />
+      <DefaultPage id={"Z9"} units={units} default />
       {unitPages}
     </Router>
   );

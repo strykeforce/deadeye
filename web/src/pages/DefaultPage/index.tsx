@@ -5,7 +5,7 @@ import { Units } from "../../common/models";
 import { getIds } from "../../common/util";
 
 interface Props extends RouteComponentProps {
-  id?: string;
+  id: string;
   units?: Units;
 }
 
@@ -15,12 +15,12 @@ const DefaultPage = (props: Props): JSX.Element | null => {
   const ids = getIds(units);
 
   if (ids.length > 0) {
-    const route = ids.includes(String(id)) ? `/id/${id}` : `/id/${ids[0]}`;
+    const route = ids.includes(id) ? `/id/${id}` : `/id/${ids[0]}`;
     console.info(
       `default page: route = ${route}, id=${id}, ids=${JSON.stringify(ids)}`
     );
     // noinspection JSIgnoredPromiseFromCall
-    navigate(route);
+    void navigate(route);
     return null;
   }
 
