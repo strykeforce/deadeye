@@ -36,12 +36,15 @@ Streamer::Streamer(const Pipeline* pipeline, const cv::Size size)
 
   tb_border_ = 0;
   lr_border_ = 0;
+  frame_tb_border_ = 2;
+  frame_lr_border_ = 2;
   if (wr == 4 && hr == 3) {  // 4:3
     // no change
   } else if (wr == 16 && hr == 9) {
     tb_border_ = h / 6;
   } else if (wr == 9 && hr == 16) {
     lr_border_ = w * 5 / 4;
+    frame_tb_border_ = 1;
   } else {
     spdlog::error("Streamer: invalid aspect ratio: {}:{}", wr, hr);
     tb_border_ = 0;
@@ -65,6 +68,9 @@ void Streamer::Process(const cv::Mat& frame, const TargetData* target) {
       if (config_.contour != Contour::none) {
         output_ = cv::Mat::zeros(frame.size(), CV_8UC3);
       }
+      cv::copyMakeBorder(output_, output_, frame_tb_border_, frame_tb_border_,
+                         frame_lr_border_, frame_lr_border_,
+                         cv::BORDER_CONSTANT, cv::Scalar(255, 255, 255));
       break;
     case View::original:
       if (config_.contour != Contour::none) {
@@ -76,6 +82,9 @@ void Streamer::Process(const cv::Mat& frame, const TargetData* target) {
       break;
     case View::mask:
       cv::cvtColor(pipeline_->GetMask(), output_, cv::COLOR_GRAY2BGR);
+      cv::copyMakeBorder(output_, output_, frame_tb_border_, frame_tb_border_,
+                         frame_lr_border_, frame_lr_border_,
+                         cv::BORDER_CONSTANT, cv::Scalar(255, 255, 255));
       break;
   }
 
