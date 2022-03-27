@@ -5,7 +5,7 @@ import { key } from "../../../common/util";
 import "../camera-controls.less";
 import { CaptureControlProps } from "../capture-pane";
 
-const TestConfigSubPane = (props: CaptureControlProps) => {
+const TestConfigSubPane = (props: CaptureControlProps): JSX.Element => {
   const { unit, inum } = props;
 
   return (

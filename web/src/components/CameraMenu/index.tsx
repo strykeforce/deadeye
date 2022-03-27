@@ -11,7 +11,7 @@ type Props = {
   ids: string[];
 };
 
-const CameraMenu = (props: Props) => {
+const CameraMenu = (props: Props): JSX.Element => {
   const { id, ids } = props;
   const [selectedId, setSelectedId] = useState<Id>(id);
   const navigate = useNavigate();

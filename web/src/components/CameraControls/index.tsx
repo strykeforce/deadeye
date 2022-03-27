@@ -14,7 +14,7 @@ type Props = {
 
 const { TabPane } = Tabs;
 
-const CameraControls = (props: Props) => {
+const CameraControls = (props: Props): JSX.Element => {
   const { camera } = props;
 
   return (

@@ -14,7 +14,7 @@ type Props = {
 
 const prefix = "camera-stream-controls";
 
-const Controls = (props: Props) => {
+const Controls = (props: Props): JSX.Element => {
   const { unit, inum, config } = props;
 
   const handleChange = (name: string) => (event: RadioChangeEvent) => {

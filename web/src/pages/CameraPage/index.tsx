@@ -14,7 +14,7 @@ interface Props extends RouteComponentProps {
   units: Units;
 }
 
-const CameraPage = (props: Props) => {
+const CameraPage = (props: Props): JSX.Element => {
   const units = props.units;
   const id = String(props.id);
 

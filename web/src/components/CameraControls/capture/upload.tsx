@@ -7,7 +7,7 @@ import "../camera-controls.less";
 import { CaptureControlProps } from "../capture-pane";
 import { messageOffset } from "../../../common/util";
 
-const UploadConfigSubPane = (props: CaptureControlProps) => {
+const UploadConfigSubPane = (props: CaptureControlProps): JSX.Element => {
   return (
     <>
       <Row>

@@ -14,7 +14,7 @@ type Props = {
   config: PipelineConfig;
 };
 
-const LogPane = (props: Props) => {
+const LogPane = (props: Props): JSX.Element => {
   const debug = false;
   return (
     <>

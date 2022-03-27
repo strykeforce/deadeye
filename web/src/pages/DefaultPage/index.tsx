@@ -9,7 +9,7 @@ interface Props extends RouteComponentProps {
   units?: Units;
 }
 
-const DefaultPage = (props: Props) => {
+const DefaultPage = (props: Props): JSX.Element | null => {
   const { id, units } = props;
 
   const ids = getIds(units);

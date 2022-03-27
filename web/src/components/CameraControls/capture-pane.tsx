@@ -16,7 +16,7 @@ type Props = {
   config: CaptureConfig;
 };
 
-const CapturePane = (props: Props) => {
+const CapturePane = (props: Props): JSX.Element => {
   const {
     config: { type },
   } = props;
@@ -79,7 +79,7 @@ const CapturePane = (props: Props) => {
             </Col>
           </Row>
         </Col>
-        <Col span={2}/>
+        <Col span={2} />
         <Col span={11}>{subPane()}</Col>
       </Row>
       {debug && (

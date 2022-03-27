@@ -17,7 +17,7 @@ const tailLayout = {
   wrapperCol: { offset: 4, span: 20 },
 };
 
-const LinkPane = () => {
+const LinkPane = (): JSX.Element => {
   const [form] = Form.useForm();
 
   const link = useRef<Link>();
@@ -37,7 +37,7 @@ const LinkPane = () => {
     refreshLink();
   }, []);
 
-  const onFinish = (values: any) => {
+  const onFinish = (values: Link) => {
     configLink([values]);
     // noinspection JSIgnoredPromiseFromCall
     message.info({

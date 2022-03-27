@@ -11,7 +11,7 @@ type Props = {
   config: PipelineConfig;
 };
 
-const MaskPane = (props: Props) => {
+const MaskPane = (props: Props): JSX.Element => {
   const { unit, inum, config } = props;
 
   const onChange = (name: string) => (value: [number, number] | undefined) => {

@@ -3,10 +3,10 @@ import React from "react";
 import "./settings-dashboard.less";
 import LinkPane from "./link-pane";
 
-type Props = {};
+type Props = never;
 const { TabPane } = Tabs;
 
-const SettingsDashboard = (_: Props) => {
+const SettingsDashboard = (_: Props): JSX.Element => {
   return (
     <div className="settings-dash">
       <Tabs className="settings-dash__controls" defaultActiveKey="S1">

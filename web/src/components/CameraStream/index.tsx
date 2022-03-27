@@ -11,7 +11,7 @@ type Props = {
   config: StreamConfig;
 };
 
-const CameraStream = (props: Props) => {
+const CameraStream = (props: Props): JSX.Element => {
   const { unit, inum, enabled, config } = props;
 
   const streamEnabled =

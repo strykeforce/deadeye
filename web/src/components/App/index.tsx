@@ -7,7 +7,7 @@ import DefaultPage from "../../pages/DefaultPage";
 import "./app.less";
 import SettingsPage from "../../pages/SettingsPage";
 
-const App = () => {
+const App = (): JSX.Element => {
   const [units, setUnits] = useState<Units>();
 
   useEffect(() => {

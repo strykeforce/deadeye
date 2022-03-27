@@ -13,7 +13,7 @@ interface Props extends RouteComponentProps {
   units: Units;
 }
 
-const SettingsPage = (props: Props) => {
+const SettingsPage = (props: Props): JSX.Element => {
   const { units } = props;
 
   return (

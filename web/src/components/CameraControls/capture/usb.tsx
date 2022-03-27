@@ -6,7 +6,7 @@ import { key } from "../../../common/util";
 import "../camera-controls.less";
 import { CaptureControlProps } from "../capture-pane";
 
-const UsbConfigSubPane = (props: CaptureControlProps) => {
+const UsbConfigSubPane = (props: CaptureControlProps): JSX.Element => {
   return (
     <>
       <Row>

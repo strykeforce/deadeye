@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { dark } from "react-syntax-highlighter/dist/esm/styles/hljs";
-import { CaptureConfig, Units, PipelineConfig } from "../../common/models";
+import { CaptureConfig, PipelineConfig, Units } from "../../common/models";
 import { getCamera } from "../../common/util";
 
 // import "./index.less";
@@ -13,7 +13,7 @@ type Props = {
   section: string;
 };
 
-const DebugPane = (props: Props) => {
+const DebugPane = (props: Props): JSX.Element => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [units, setUnits] = useState<Units>({});
 
