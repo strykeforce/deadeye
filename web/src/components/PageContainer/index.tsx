@@ -13,7 +13,7 @@ interface Props extends RouteComponentProps {
   children: React.ReactNode;
 }
 
-const PageContainer = (props: Props) => {
+const PageContainer = (props: Props): JSX.Element => {
   const { id, ids, children } = props;
 
   return (

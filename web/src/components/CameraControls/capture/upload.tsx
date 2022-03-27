@@ -7,7 +7,7 @@ import "../camera-controls.less";
 import { CaptureControlProps } from "../capture-pane";
 import { messageOffset } from "../../../common/util";
 
-const UploadConfigSubPane = (props: CaptureControlProps) => {
+const UploadConfigSubPane = (props: CaptureControlProps): JSX.Element => {
   return (
     <>
       <Row>
@@ -31,14 +31,16 @@ const UploadControl = (props: CaptureControlProps) => {
     if (info.file.status === "done") {
       configImageUpload(unit, inum, info.file.name);
       enableCamera(unit, inum, false);
-      message.success({
+      // noinspection JSIgnoredPromiseFromCall
+      void message.success({
         content: `${info.file.name} file uploaded successfully`,
         style: {
           marginTop: messageOffset,
         },
       });
     } else if (info.file.status === "error") {
-      message.error({
+      // noinspection JSIgnoredPromiseFromCall
+      void message.error({
         content: `${info.file.name} file upload failed.`,
         style: {
           marginTop: messageOffset,

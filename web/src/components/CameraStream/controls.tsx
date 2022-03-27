@@ -14,10 +14,11 @@ type Props = {
 
 const prefix = "camera-stream-controls";
 
-const Controls = (props: Props) => {
+const Controls = (props: Props): JSX.Element => {
   const { unit, inum, config } = props;
 
   const handleChange = (name: string) => (event: RadioChangeEvent) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const newConfig = Object.assign(config, { [name]: event.target.value });
     configStream(unit, inum, newConfig);
   };

@@ -11,14 +11,15 @@ type Props = {
   ids: string[];
 };
 
-const CameraMenu = (props: Props) => {
+const CameraMenu = (props: Props): JSX.Element => {
   const { id, ids } = props;
   const [selectedId, setSelectedId] = useState<Id>(id);
   const navigate = useNavigate();
 
   const handleClick = (id: string) => {
     setSelectedId(id);
-    navigate(`/id/${id}`);
+    // noinspection JSIgnoredPromiseFromCall
+    void navigate(`/id/${id}`);
   };
 
   const menuItems = ids.map((id) => (
@@ -46,8 +47,8 @@ const CameraMenu = (props: Props) => {
         <Menu.Item
           key="settings"
           icon={<SettingOutlined />}
-          onClick={() => navigate("/settings")}
-        ></Menu.Item>
+          onClick={() => void navigate("/settings")}
+        />
       </Menu>
     </>
   );

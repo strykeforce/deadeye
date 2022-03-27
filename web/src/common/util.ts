@@ -2,9 +2,12 @@ import { Camera, Units } from "./models";
 
 export const messageOffset = "60px";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const get = (p: string[]) => (o: any) =>
-  p.reduce((xs, x) => (xs && xs[x] ? xs[x] : null), o);
+export const get =
+  (p: string[]) =>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/explicit-module-boundary-types
+  (o: any): Camera =>
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return,@typescript-eslint/no-unsafe-member-access
+    p.reduce((xs, x) => (xs && xs[x] ? xs[x] : null), o);
 
 export const getCamera = (id: string, units: Units): Camera => {
   const u = id.charAt(0);
@@ -12,7 +15,7 @@ export const getCamera = (id: string, units: Units): Camera => {
   return get([u, "cameras", c])(units);
 };
 
-export const getIds = (units?: Units) => {
+export const getIds = (units?: Units): string[] => {
   if (units) {
     return Object.values(units)
       .flatMap((u) => Object.values(u.cameras).map((c) => c.id))
@@ -21,5 +24,5 @@ export const getIds = (units?: Units) => {
   return [];
 };
 
-export const key = (unit: string, inum: number, id: number) =>
+export const key = (unit: string, inum: number, id: number): string =>
   `${unit}${inum}${id}`;

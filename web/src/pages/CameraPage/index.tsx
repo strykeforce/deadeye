@@ -14,7 +14,7 @@ interface Props extends RouteComponentProps {
   units: Units;
 }
 
-const CameraPage = (props: Props) => {
+const CameraPage = (props: Props): JSX.Element => {
   const units = props.units;
   const id = String(props.id);
 
@@ -24,7 +24,8 @@ const CameraPage = (props: Props) => {
 
   if (ids.length === 0) {
     console.warn("no camera ids, navigating to /");
-    navigate("/");
+    // noinspection JSIgnoredPromiseFromCall
+    void navigate("/");
   }
 
   const selectedId = ids.includes(id) ? id : ids[0];

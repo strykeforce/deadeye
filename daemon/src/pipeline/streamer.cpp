@@ -34,17 +34,24 @@ Streamer::Streamer(const Pipeline* pipeline, const cv::Size size)
   int hr = h / r;
   spdlog::debug("Streamer: capture output: {}x{} ({}:{})", w, h, wr, hr);
 
+  tb_border_ = 0;
+  lr_border_ = 0;
+  frame_tb_border_ = 2;
+  frame_lr_border_ = 2;
   if (wr == 4 && hr == 3) {  // 4:3
-    border_ = 0;
+    // no change
   } else if (wr == 16 && hr == 9) {
-    border_ = h / 6;
+    tb_border_ = h / 6;
+  } else if (wr == 9 && hr == 16) {
+    lr_border_ = w * 2 / 3;
+    frame_tb_border_ = 1;
   } else {
     spdlog::error("Streamer: invalid aspect ratio: {}:{}", wr, hr);
-    border_ = 0;
+    tb_border_ = 0;
   }
 
-  spdlog::debug("Streamer border: {} {}", border_,
-                resize_ ? "[output resized]" : "");
+  spdlog::debug("Streamer tb_border: {}, lr_border_ {} {}", tb_border_,
+                lr_border_, resize_ ? "[output resized]" : "");
 
   server_.SetSource(source_);
   spdlog::info("{} streaming on port {}", *pipeline_, server_.GetPort());
@@ -61,6 +68,9 @@ void Streamer::Process(const cv::Mat& frame, const TargetData* target) {
       if (config_.contour != Contour::none) {
         output_ = cv::Mat::zeros(frame.size(), CV_8UC3);
       }
+      cv::copyMakeBorder(output_, output_, frame_tb_border_, frame_tb_border_,
+                         frame_lr_border_, frame_lr_border_,
+                         cv::BORDER_CONSTANT, cv::Scalar(255, 255, 255));
       break;
     case View::original:
       if (config_.contour != Contour::none) {
@@ -72,6 +82,9 @@ void Streamer::Process(const cv::Mat& frame, const TargetData* target) {
       break;
     case View::mask:
       cv::cvtColor(pipeline_->GetMask(), output_, cv::COLOR_GRAY2BGR);
+      cv::copyMakeBorder(output_, output_, frame_tb_border_, frame_tb_border_,
+                         frame_lr_border_, frame_lr_border_,
+                         cv::BORDER_CONSTANT, cv::Scalar(255, 255, 255));
       break;
   }
 
@@ -90,8 +103,12 @@ void Streamer::Process(const cv::Mat& frame, const TargetData* target) {
       break;
   }
 
-  if (border_ != 0)
-    cv::copyMakeBorder(output_, output_, border_, border_, 0, 0,
+  if (tb_border_ != 0)
+    cv::copyMakeBorder(output_, output_, tb_border_, tb_border_, 0, 0,
+                       cv::BORDER_CONSTANT, cv::Scalar(0, 0, 0));
+
+  if (lr_border_ != 0)
+    cv::copyMakeBorder(output_, output_, 0, 0, lr_border_, lr_border_,
                        cv::BORDER_CONSTANT, cv::Scalar(0, 0, 0));
 
   if (resize_) cv::resize(output_, output_, kStreamSize, 0, 0, cv::INTER_AREA);

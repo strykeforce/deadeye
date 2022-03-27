@@ -23,8 +23,7 @@ const Image = (props: Props) => {
 };
 
 const areEqual = (prev: Props, next: Props) => {
-  const equal = prev.enabled === next.enabled && prev.url === next.url;
-  return equal;
+  return prev.enabled === next.enabled && prev.url === next.url;
 };
 
 export default React.memo(Image, areEqual);

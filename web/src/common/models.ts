@@ -36,7 +36,7 @@ export interface CaptureConfig {
   w: number;
   h: number;
   fps: number;
-  config: object;
+  config: unknown;
 }
 
 export interface FilterConfig {

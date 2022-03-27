@@ -16,7 +16,7 @@ type Props = {
   config: CaptureConfig;
 };
 
-const CapturePane = (props: Props) => {
+const CapturePane = (props: Props): JSX.Element => {
   const {
     config: { type },
   } = props;
@@ -27,7 +27,8 @@ const CapturePane = (props: Props) => {
 
   const displayRestartMessage = () => {
     if (!hasRestartDisplayed) {
-      message.warn({
+      // noinspection JSIgnoredPromiseFromCall
+      void message.warn({
         content: "Restart camera capture for changes to take effect.",
         style: {
           marginTop: messageOffset,
@@ -78,7 +79,7 @@ const CapturePane = (props: Props) => {
             </Col>
           </Row>
         </Col>
-        <Col span={2}></Col>
+        <Col span={2} />
         <Col span={11}>{subPane()}</Col>
       </Row>
       {debug && (
@@ -145,6 +146,7 @@ const DIMENSIONS = {
   ],
   test: [
     [1280, 720],
+    [720, 1280],
     [960, 540],
     [640, 360],
     [320, 180],

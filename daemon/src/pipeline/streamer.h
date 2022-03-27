@@ -24,7 +24,10 @@ class Streamer {
   const Pipeline* pipeline_;
   cv::Mat output_;
   StreamConfig config_;
-  int border_;
+  int tb_border_;
+  int lr_border_;
+  int frame_tb_border_;
+  int frame_lr_border_;
   bool resize_;
   cs::MjpegServer server_;
   cs::CvSource source_;

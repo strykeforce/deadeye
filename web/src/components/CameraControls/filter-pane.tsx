@@ -11,7 +11,7 @@ type Props = {
   config: PipelineConfig;
 };
 
-const FilterPane = (props: Props) => {
+const FilterPane = (props: Props): JSX.Element => {
   const { unit, inum, config } = props;
   const { filter } = config;
 

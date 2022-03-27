@@ -7,6 +7,7 @@ using ::deadeye::LedDrive;
 #ifdef __aarch64__
 #include <cassert>
 using ::gpiod::chip;
+using ::gpiod::line_request;
 
 LedDrive::LedDrive(int inum) {
   assert(inum >= 0 && inum < 5);

@@ -5,21 +5,22 @@ import { Units } from "../../common/models";
 import { getIds } from "../../common/util";
 
 interface Props extends RouteComponentProps {
-  id?: string;
+  id: string;
   units?: Units;
 }
 
-const DefaultPage = (props: Props) => {
+const DefaultPage = (props: Props): JSX.Element | null => {
   const { id, units } = props;
 
   const ids = getIds(units);
 
   if (ids.length > 0) {
-    const route = ids.includes(String(id)) ? `/id/${id}` : `/id/${ids[0]}`;
+    const route = ids.includes(id) ? `/id/${id}` : `/id/${ids[0]}`;
     console.info(
       `default page: route = ${route}, id=${id}, ids=${JSON.stringify(ids)}`
     );
-    navigate(route);
+    // noinspection JSIgnoredPromiseFromCall
+    void navigate(route);
     return null;
   }
 

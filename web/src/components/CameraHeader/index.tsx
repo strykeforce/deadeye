@@ -11,7 +11,7 @@ interface Props extends RouteComponentProps {
   camera?: Camera;
 }
 
-const CameraHeader = (props: Props) => {
+const CameraHeader = (props: Props): JSX.Element => {
   if (!props.camera)
     return (
       <div className="camera-header">

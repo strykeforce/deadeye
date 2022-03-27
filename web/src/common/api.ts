@@ -1,13 +1,13 @@
 import io from "socket.io-client";
-import { CaptureConfig, PipelineConfig, StreamConfig, Link } from "./models";
+import { CaptureConfig, Link, PipelineConfig, StreamConfig } from "./models";
 
 const socket = io("http://" + document.domain + ":" + window.location.port);
 
-socket.on("connect_error", (error: object) => {
+socket.on("connect_error", (error: Error) => {
   console.error(error);
 });
 
-socket.on("error", (error: object) => {
+socket.on("error", (error: Error) => {
   console.error(error);
 });
 
@@ -23,7 +23,8 @@ export const subscribeToLinkUpdates = (
   socket.on("link", (data: string) => handleLinksChange(data));
 };
 
-export const unsubscribeFromLinkUpdates = () => {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export const unsubscribeFromLinkUpdates = (): void => {
   socket.off("link");
 };
 
@@ -32,8 +33,10 @@ export const close = (): void => {
   console.debug("closed socket.io connection");
 };
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const refreshLink = () => socket.emit("link_refresh", "pls");
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const sendMessage = (msg: string) => socket.emit("message", msg);
 
 export const enableCamera = (
@@ -96,7 +99,7 @@ export const configImageUpload = (
   // console.log(`configImageUpload: ${JSON.stringify(message)}`);
 };
 
-export const configLink = (link: Link[]) => {
+export const configLink = (link: Link[]): void => {
   const message = { link };
   socket.emit("link_config", message);
   console.log(`configLink: ${JSON.stringify(message)}`);

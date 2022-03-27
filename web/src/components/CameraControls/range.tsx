@@ -11,7 +11,7 @@ type Props = {
   onChange: (value: [number, number] | undefined) => void;
 };
 
-const Range = (props: Props) => {
+const Range = (props: Props): JSX.Element => {
   const { name, min = 0, max = 255, step = 1, values, onChange } = props;
 
   const onMinChange = (value: string | number | null | undefined) => {

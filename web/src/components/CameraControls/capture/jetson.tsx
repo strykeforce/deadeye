@@ -13,7 +13,7 @@ import { CaptureControlProps } from "../capture-pane";
 // wb mode?
 // flip
 
-const JetsonConfigSubPane = (props: CaptureControlProps) => {
+const JetsonConfigSubPane = (props: CaptureControlProps): JSX.Element => {
   return (
     <>
       <Row>
@@ -223,7 +223,7 @@ const GainRange = (props: GainRangeProps) => {
           key={key(unit, inum, 16)}
         />
       </Col>
-      <Col span={2}/>
+      <Col span={2} />
       <Col span={8}>
         <InputNumber
           min={range[0]}

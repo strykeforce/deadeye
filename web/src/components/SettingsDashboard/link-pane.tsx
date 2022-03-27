@@ -17,12 +17,13 @@ const tailLayout = {
   wrapperCol: { offset: 4, span: 20 },
 };
 
-const LinkPane = () => {
+const LinkPane = (): JSX.Element => {
   const [form] = Form.useForm();
 
   const link = useRef<Link>();
   useEffect(() => {
     const handleLinkChange = (json: string) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const linkConfig: Link[] = JSON.parse(json);
       link.current = linkConfig[0];
       form.setFieldsValue(link.current);
@@ -37,9 +38,10 @@ const LinkPane = () => {
     refreshLink();
   }, []);
 
-  const onFinish = (values: any) => {
+  const onFinish = (values: Link) => {
     configLink([values]);
-    message.info({
+    // noinspection JSIgnoredPromiseFromCall
+    void message.info({
       content: "Link configuration updated.",
       style: {
         marginTop: messageOffset,

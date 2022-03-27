@@ -8,7 +8,7 @@ type Props = {
   camera: Camera;
 };
 
-const CameraDashboard = (props: Props) => {
+const CameraDashboard = (props: Props): JSX.Element => {
   const { camera } = props;
 
   return (

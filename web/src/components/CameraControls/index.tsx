@@ -14,7 +14,7 @@ type Props = {
 
 const { TabPane } = Tabs;
 
-const CameraControls = (props: Props) => {
+const CameraControls = (props: Props): JSX.Element => {
   const { camera } = props;
 
   return (
@@ -48,7 +48,7 @@ const CameraControls = (props: Props) => {
           unit={camera.unit}
           inum={camera.inum}
           config={camera.pipeline}
-        ></LogPane>
+        />
       </TabPane>
     </Tabs>
   );
