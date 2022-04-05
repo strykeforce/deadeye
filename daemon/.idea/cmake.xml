@@ -2,6 +2,7 @@
 <project version="4">
   <component name="CMakeSharedSettings">
     <configurations>
+      <configuration PROFILE_NAME="Remote" ENABLED="true" CONFIG_NAME="Debug" TOOLCHAIN_NAME="Remote Host" GENERATION_OPTIONS="-DDEADEYE_NT_SERVER=192.168.1.30 -DDEADEYE_STREAM_ADDRESS=clion-01.local -DDEADEYE_UNIT_ID=C -DDEADEYE_CAMERA0_PIPELINE=deadeye::UprightRectPipeline -DDEADEYE_CAMERA1_PIPELINE=deadeye::MinAreaRectPipeline -DDEADEYE_CAMERA2_PIPELINE=deadeye::TargetListPipeline" BUILD_OPTIONS="-- -j10" />
       <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" GENERATION_OPTIONS="-G Ninja -DCMAKE_PREFIX_PATH=/usr/local/opt/wpilib -DDEADEYE_NT_SERVER=100.105.34.15 -DDEADEYE_STREAM_ADDRESS=127.0.0.1 -DDEADEYE_UNIT_ID=E -DDEADEYE_CAMERA0_PIPELINE=deadeye::UprightRectPipeline -DDEADEYE_CAMERA1_PIPELINE=deadeye::MinAreaRectPipeline -DDEADEYE_CAMERA2_PIPELINE=deadeye::TargetListPipeline" />
     </configurations>
   </component>

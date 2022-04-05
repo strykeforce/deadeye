@@ -15,6 +15,14 @@ deadeye:
       camera_0_pipeline: deadeye::TargetListPipeline
       camera_1_pipeline: deadeye::UprightRectPipeline
       camera_2_pipeline: deadeye::MinAreaRectPipeline
+    clion:
+      deadeye_unit: C
+      camera_0_pipeline: deadeye::TargetListPipeline
+      camera_1_pipeline: deadeye::UprightRectPipeline
+      camera_2_pipeline: deadeye::MinAreaRectPipeline
+      install_opencv: true
+      ansible_user: jeff
+      deadeye_nt_server: 192.168.1.30
     deadeye-d:
       ansible_host: deadeye-d
       deadeye_unit: D

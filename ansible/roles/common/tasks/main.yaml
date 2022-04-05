@@ -7,5 +7,9 @@
       - cmake
       - ninja-build
       - curl
+      - gdb
+      - cmake-curses-gui
+      - pkg-config
+      - libsystemd-dev
   tags:
     - common

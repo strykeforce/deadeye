@@ -1,2 +1,4 @@
 ---
 readerwriterqueue_version: 1.0.6
+readerwriterqueue_dir: readerwriterqueue-{{ readerwriterqueue_version }}
+readerwriterqueue_repo: https://github.com/cameron314/readerwriterqueue/archive
