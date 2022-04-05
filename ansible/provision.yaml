@@ -29,7 +29,7 @@
     - role: spdlog
       tags: spdlog
     - role: nlohmann_json
-      tags: [ json, nlohmann_json ]
+      tags: [json, nlohmann_json]
     - role: catch
       tags: catch
     - role: fmt
