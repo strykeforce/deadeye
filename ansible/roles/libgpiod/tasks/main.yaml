@@ -7,8 +7,7 @@
 
 - name: Unarchive sources
   ansible.builtin.unarchive:
-    src: https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git\
-      /snapshot/libgpiod-{{ libgpiod_version }}.tar.gz
+    src: "{{ libgpiod_repo }}/snapshot/{{ libgpiod_dir }}.tar.gz"
     dest: /usr/local/src
     remote_src: true
   tags:
@@ -16,10 +15,10 @@
 
 - name: Run autogen
   ansible.builtin.command:
-    chdir: /usr/local/src/libgpiod-{{ libgpiod_version }}
-    creates: /usr/local/src/libgpiod-{{ libgpiod_version }}/config.status
+    chdir: /usr/local/src/{{ libgpiod_dir }}
+    creates: /usr/local/src/{{ libgpiod_dir }}/config.status
     argv:
-      - /usr/local/src/libgpiod-{{ libgpiod_version }}/autogen.sh
+      - /usr/local/src/{{ libgpiod_dir }}/autogen.sh
       - --enable-tools=yes
       - --prefix=/usr/local
   register: libgpiod_autogen
@@ -30,7 +29,7 @@
 
 - name: Build and Install C library
   ansible.builtin.command:
-    chdir: /usr/local/src/libgpiod-{{ libgpiod_version }}
+    chdir: /usr/local/src/{{ libgpiod_dir }}
     argv:
       - /usr/bin/make
       - install
@@ -41,7 +40,7 @@
 
 - name: Build and Install C++ library
   ansible.builtin.command:
-    chdir: /usr/local/src/libgpiod-{{ libgpiod_version }}/bindings/cxx
+    chdir: /usr/local/src/{{ libgpiod_dir }}/bindings/cxx
     argv:
       - /usr/bin/make
       - install

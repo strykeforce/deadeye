@@ -42,7 +42,4 @@
       tags: readerwriterqueue
     - role: tinyfsm
       tags: tinyfsm
-    - role: node
-      tags: node
-    # - role: seapi
-    #   tags: seapi
+
