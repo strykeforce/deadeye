@@ -41,6 +41,7 @@ class FrameLogger {
   }
 
   void Run() {
+    cancel_ = false;
     future_ = std::async(std::launch::async, &logger::FrameLoggerBase::Run,
                          logger_.get());
     spdlog::debug("Logger::Run starting async logging task");
@@ -54,7 +55,7 @@ class FrameLogger {
 
   void Stop() {
     cancel_ = true;
-    future_.wait();
+    if (future_.valid()) future_.wait();
     spdlog::debug("Logger::Stop stopped async logging task");
   }
 

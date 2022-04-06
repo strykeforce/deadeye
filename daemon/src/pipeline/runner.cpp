@@ -44,6 +44,10 @@ void Runner::Configure(const StreamConfig& config) {
   stream_config_ready_ = true;
 }
 
+void Runner::SetLoggingEnabled(bool enabled) {
+  logging_enabled_ = enabled && log_config_.fps > 0;
+}
+
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "NullDereference"
 /**
@@ -70,20 +74,18 @@ void Runner::Run() {
   bool stream_enabled{false};
 
   Link link{pipeline_->GetInum()};
-  bool frame_log_enabled = log_config_.fps > 0;
-
+  int log_interval = 0;
   std::unique_ptr<FrameLogger> frame_logger;
-  if (frame_log_enabled) {
+  if (log_config_.fps > 0) {
     frame_logger = std::make_unique<FrameLogger>(
         pipeline_->GetInum(), capture_config_, *pipeline_config_.readAccess(),
         log_config_, state.frame_logger);
-    frame_logger->Run();
     spdlog::info("{}: logging enabled", *pipeline_);
+    log_interval = fps / log_config_.fps;
   } else {
     spdlog::warn("{}: logging disabled", *pipeline_);
   }
 
-  int log_interval = frame_log_enabled ? fps / log_config_.fps : 0;
   int log_counter = log_interval;
   int sn = 0;
 
@@ -93,10 +95,12 @@ void Runner::Run() {
 
   cv::TickMeter tm;
 
+  bool logging{false};
+
   while (true) {  // Loop until pipeline cancelled
     if (cancel_.load()) {
       double avg = tm.getTimeSec() / static_cast<double>(tm.getCounter());
-      if (frame_log_enabled) frame_logger->Stop();
+      if (log_config_.fps > 0) frame_logger->Stop();
       state.Store();
       client_logger.Info(
           fmt::format("{}: stopped, avg. time = {:6.3f} ms, FPS = {:5.2f}",
@@ -105,6 +109,16 @@ void Runner::Run() {
     }
 
     tm.start();
+
+    if (logging_enabled_.load() != logging) {
+      logging = logging_enabled_.load();
+      if (logging) {
+        frame_logger->Run();
+      } else {
+        frame_logger->Stop();
+        state.Store();
+      }
+    }
 
     // Check for updated configs
     if (pipeline_config_ready_.load()) {
@@ -140,7 +154,7 @@ void Runner::Run() {
     if (stream_enabled) streamer.Process(frame, target_data.get());
 
     // Log frame if necessary
-    if (frame_log_enabled && --log_counter == 0) {
+    if (logging && --log_counter == 0) {
       frame_logger->Log(frame, pipeline_->GetFilteredContours(),
                         std::move(target_data));
       log_counter = log_interval;

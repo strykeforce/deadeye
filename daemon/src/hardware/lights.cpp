@@ -8,6 +8,8 @@
 #include <thread>
 #include <tinyfsm.hpp>
 
+#include "camera.h"
+
 namespace {
 using namespace std::literals::  // NOLINT(build/namespaces_literals)
     chrono_literals;
@@ -29,7 +31,7 @@ class On : public Lights<inum> {
 
   void entry() override {
     base::SetStatus(DE_ON, true);
-    spdlog::info("Lights<{}{}> on", DEADEYE_UNIT, inum);
+    spdlog::info("Lights<{}> on", CameraId(inum));
     base::led_.On();
     base::on_ = true;
   }
@@ -39,6 +41,7 @@ class On : public Lights<inum> {
   }
 
   void react(LightsOff const&) override {
+    Camera<inum>::dispatch(LightsOff());
     base::template transit<lights::Off<inum>>();
   }
 
@@ -55,18 +58,18 @@ class Blinking : public Lights<inum> {
     base::cancel_task_ = false;
     base::task_future_ = std::async(std::launch::async, [] {
       while (true) {
-        spdlog::trace("Lights<{}{}> on", DEADEYE_UNIT, inum);
+        spdlog::trace("Lights<{}> on", CameraId(inum));
         base::led_.On();
         std::this_thread::sleep_for(kBlinkPeriod);
         if (base::cancel_task_.load()) break;
 
-        spdlog::trace("Lights<{}{}> off", DEADEYE_UNIT, inum);
+        spdlog::trace("Lights<{}> off", CameraId(inum));
         base::led_.Off();
         std::this_thread::sleep_for(kBlinkPeriod);
         if (base::cancel_task_.load()) break;
       }
     });
-    spdlog::info("Lights<{}{}> blink", DEADEYE_UNIT, inum);
+    spdlog::info("Lights<{}> blink", CameraId(inum));
   }
 
 #pragma clang diagnostic push
@@ -77,8 +80,8 @@ class Blinking : public Lights<inum> {
       try {
         base::task_future_.get();
       } catch (std::exception const& e) {
-        spdlog::error("Lights<{}{}> error while cancelling blink: {}",
-                      DEADEYE_UNIT, inum, e.what());
+        spdlog::error("Lights<{}> error while cancelling blink: {}",
+                      CameraId(inum), e.what());
       }
     }
   }
@@ -103,12 +106,13 @@ class Off : public Lights<inum> {
 
   void entry() override {
     base::SetStatus(DE_OFF, true);
-    spdlog::info("Lights<{}{}> off", DEADEYE_UNIT, inum);
+    spdlog::info("Lights<{}> off", CameraId(inum));
     base::led_.Off();
     base::on_ = false;
   }
 
   void react(LightsOn const&) override {
+    Camera<inum>::dispatch(LightsOn());
     base::template transit<lights::On<inum>>();
   }
 

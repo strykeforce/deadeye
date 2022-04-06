@@ -3,6 +3,7 @@
 #include "state.h"
 
 #include <networktables/NetworkTableInstance.h>
+#include <spdlog/spdlog.h>
 
 #include <string>
 
@@ -41,7 +42,9 @@ void deadeye::from_json(const json& j, PipelineState& pls) {
 namespace {
 nt::NetworkTableEntry get_entry(int inum) {
   nt::NetworkTableInstance nti = nt::NetworkTableInstance::GetDefault();
-  return nti.GetEntry(StateEntryPath(inum));
+  auto entry = nti.GetEntry(StateEntryPath(inum));
+  entry.SetPersistent();
+  return entry;
 }
 
 constexpr std::string_view kDefault = "DEFAULT";
@@ -50,8 +53,9 @@ constexpr std::string_view kDefault = "DEFAULT";
 void PipelineState::Store() {
   auto entry = get_entry(inum_);
   json j = *this;
-  entry.SetString(j.dump());
-  entry.SetPersistent();
+  auto j_str = j.dump();
+  entry.SetString(j_str);
+  spdlog::debug("PipelineState<{}> stored: {}", inum_, j_str);
 }
 
 PipelineState PipelineState::Load(int inum) {

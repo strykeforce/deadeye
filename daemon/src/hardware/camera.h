@@ -17,6 +17,7 @@
 #include "config/capture_config.h"
 #include "config/pipeline_config.h"
 #include "config/stream_config.h"
+#include "events.h"
 #include "pipeline/runner.h"
 
 namespace deadeye {
@@ -25,21 +26,6 @@ class Pipeline;
 
 template <class T>
 using owner [[maybe_unused]] = T;
-
-// ---------------------------------------------------------------------------
-// Events
-//
-struct CameraOn : tinyfsm::Event {};
-struct CameraOff : tinyfsm::Event {};
-struct ConfigCapture : tinyfsm::Event {
-  CaptureConfig config;
-};
-struct ConfigPipeline : tinyfsm::Event {
-  PipelineConfig config;
-};
-struct ConfigStream : tinyfsm::Event {
-  StreamConfig config;
-};
 
 // ---------------------------------------------------------------------------
 // Camera FSM
@@ -69,6 +55,8 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
 
   [[maybe_unused]] virtual void react(CameraOn const&) {}
   [[maybe_unused]] virtual void react(CameraOff const&) {}
+  [[maybe_unused]] virtual void react(LightsOn const&) {}
+  [[maybe_unused]] virtual void react(LightsOff const&) {}
   [[maybe_unused]] virtual void react(ConfigCapture const& c) {
     Camera<inum>::pipeline_runner_.Configure(c.config);
   }
@@ -97,7 +85,7 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
 
 // state variable definitions
 template <int inum>
-Runner Camera<inum>::pipeline_runner_;
+Runner Camera<inum>::pipeline_runner_;  // NOLINT(cert-err58-cpp)
 
 template <int inum>
 std::future<void> Camera<inum>::pipeline_future_;
