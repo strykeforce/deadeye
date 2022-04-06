@@ -29,6 +29,7 @@ class Runner {
   void Configure(const FrameLogConfig& config);
   void Configure(const PipelineConfig& config);
   void Configure(const StreamConfig& config);
+  void SetLoggingEnabled(bool enabled);
 
   void Run();
   void Stop() { cancel_ = true; }
@@ -44,5 +45,6 @@ class Runner {
   std::atomic<bool> stream_config_ready_{false};
   SafePipelineConfig pipeline_config_;
   std::atomic<bool> pipeline_config_ready_{false};
+  std::atomic<bool> logging_enabled_{false};
 };
 }  // namespace deadeye

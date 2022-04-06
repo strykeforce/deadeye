@@ -6,7 +6,6 @@
 #include <sys/stat.h>
 
 #include <string>
-#include <utility>
 
 using ::deadeye::logger::FrameLoggerBase;
 
@@ -16,20 +15,26 @@ FrameLoggerBase::FrameLoggerBase(const int inum, const FrameLogConfig& config,
                                  std::atomic<bool>& cancel)
     : id_{CameraId(inum)},
       enabled_{config.fps > 0 && CheckMount(config) && CheckDir(config)},
+      state_{state},
       queue_(queue),
       cancel_{cancel},
       client_logger_{inum} {
-  template_ =
-      fmt::format("{}/{}/{}-{{}}.jpg", config.path, id_, state.sequence++);
+  base_template_ =
+      fmt::format("{}/{}/{{:04d}}-{{{{:04d}}}}.jpg", config.path, id_);
+  spdlog::debug("FrameLoggerBase<{}>: base_template_ = {}", id_,
+                base_template_);
 }
 
 void FrameLoggerBase::Run() {
-  client_logger_.Info(
-      fmt::format("FrameLogger<{}>: first log {}", id_, GetFrameImagePath(1)));
+  seq_template_ = fmt::format(base_template_, state_.sequence++);
+  spdlog::debug("FrameLoggerBase<{}>: seq_template_ = {}", id_, seq_template_);
+
+  client_logger_.Info(fmt::format("FrameLoggerBase<{}>: first log {}", id_,
+                                  GetFrameImagePath(1)));
 
   RunLoop();
 
-  client_logger_.Info(fmt::format("FrameLogger<{}>: last log {}", id_,
+  client_logger_.Info(fmt::format("FrameLoggerBase<{}>: last log {}", id_,
                                   GetFrameImagePath(frame_count_ - 1)));
 }
 

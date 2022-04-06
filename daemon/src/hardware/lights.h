@@ -12,15 +12,10 @@
 #include <tinyfsm.hpp>
 
 #include "config.h"
+#include "events.h"
 #include "led_drive.h"
 
 namespace deadeye {
-// ---------------------------------------------------------------------------
-// Events
-//
-struct LightsOn : tinyfsm::Event {};
-struct LightsOff : tinyfsm::Event {};
-struct LightsBlink : tinyfsm::Event {};
 
 // ---------------------------------------------------------------------------
 // Lights FSM

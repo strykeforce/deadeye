@@ -34,25 +34,24 @@ class On : public Camera<inum> {
         std::rethrow_exception(std::current_exception());
       }
     });
-    spdlog::info("Camera<{}{}> on", DEADEYE_UNIT, inum);
+    base::pipeline_runner_.SetLoggingEnabled(true);
+    spdlog::info("Camera<{}> on", CameraId(inum));
   }
 
   void react(CameraOff const&) final {
     Lights<inum>::dispatch(LightsOff());
-    base::pipeline_runner_.Stop();
 
-    // future will not be valid at start-up since pipeline task not started yet
-    if (base::pipeline_future_.valid()) {
-      try {
-        base::pipeline_future_.get();
-      } catch (std::exception const& e) {
-        base::error_ = e.what();
-        base::has_error_ = false;  // don't retrigger in controller
-        base::template transit<camera::Error<inum>>();
-        return;
-      }
-    }
     base::template transit<camera::Off<inum>>();
+  }
+
+  void react(LightsOff const&) final {
+    base::pipeline_runner_.SetLoggingEnabled(false);
+    spdlog::debug("Camera<{}> stop logging", CameraId(inum));
+  }
+
+  void react(LightsOn const&) final {
+    base::pipeline_runner_.SetLoggingEnabled(true);
+    spdlog::debug("Camera<{}> start logging", CameraId(inum));
   }
 
   void exit() final { base::SetStatus(DE_ON, false); }
@@ -67,7 +66,21 @@ class Off : public Camera<inum> {
 
   void entry() final {
     base::SetStatus(DE_OFF, true);
-    spdlog::info("Camera<{}{}> off", DEADEYE_UNIT, inum);
+    base::pipeline_runner_.SetLoggingEnabled(false);
+    base::pipeline_runner_.Stop();
+
+    // future will not be valid at start-up since pipeline task not started yet
+    if (base::pipeline_future_.valid()) {
+      try {
+        base::pipeline_future_.get();
+      } catch (std::exception const& e) {
+        base::error_ = e.what();
+        base::has_error_ = false;  // don't re-trigger in controller
+        base::template transit<camera::Error<inum>>();
+        return;
+      }
+    }
+    spdlog::info("Camera<{}> off", CameraId(inum));
   }
 
   void react(CameraOn const&) final {
@@ -88,20 +101,20 @@ class Error : public Camera<inum> {
   void entry() final {
     base::SetStatus(DE_ERROR, true);
     Lights<inum>::dispatch(LightsOff());
-    spdlog::error("Camera<{}{}> error: {}", DEADEYE_UNIT, inum, base::error_);
+    spdlog::error("Camera<{}> error: {}", CameraId(inum), base::error_);
   }
 
   void react(CameraOn const&) final {
     base::SetStatus(DE_ON, false);
-    spdlog::warn("Camera<{}{}> attempting to turn on camera in error state: {}",
-                 DEADEYE_UNIT, inum, base::error_);
+    spdlog::warn("Camera<{}> attempting to turn on camera in error state: {}",
+                 CameraId(inum), base::error_);
   }
 
   void react(CameraOff const&) final {
     base::SetStatus(DE_OFF, false);
     spdlog::warn(
         "Camera<{}{}> attempting to turn off camera in error state: {}",
-        DEADEYE_UNIT, inum, base::error_);
+        CameraId(inum), base::error_);
   }
 
   void exit() final { base::SetStatus(DE_ERROR, false); }

@@ -39,7 +39,7 @@ class FrameLoggerBase {
   virtual ~FrameLoggerBase() = default;
 
   inline std::string GetFrameImagePath(int frame_count) {
-    return fmt::format(template_, frame_count);
+    return fmt::format(seq_template_, frame_count);
   }
 
   void Run();
@@ -47,7 +47,9 @@ class FrameLoggerBase {
  protected:
   std::string id_;
   bool enabled_;
-  std::string template_;
+  FrameLoggerState& state_;
+  std::string base_template_;
+  std::string seq_template_;
   int frame_count_{1};
   std::atomic<bool>& cancel_;
   FrameLoggerQueue& queue_;
