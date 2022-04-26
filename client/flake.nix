@@ -14,7 +14,7 @@
       {
         devShell = pkgs.mkShell {
           packages = [
-            pkgs.jdk11
+            pkgs.jdk11_headless
           ];
         };
       });

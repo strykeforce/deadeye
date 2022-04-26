@@ -1,5 +1,5 @@
 {
-  description = "Application packaged using poetry2nix";
+  description = "Deadeye Admin Server";
 
   inputs.flake-utils.url = "github:numtide/flake-utils";
   inputs.nixpkgs.url = "github:NixOS/nixpkgs";
