@@ -14,7 +14,7 @@
       {
         devShell = pkgs.mkShell {
           packages = [
-            pkgs.python310Packages.poetry
+            pkgs.python39Packages.poetry
           ];
         };
       });
