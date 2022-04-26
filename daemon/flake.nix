@@ -30,7 +30,7 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        buildHeaderOnlyLib = name: version: src: pkgs.stdenv.mkDerivation
+        buildHeaderOnlyLib = name: version: src: pkgs.gcc7Stdenv.mkDerivation
           rec {
             pname = name;
             inherit src version;
@@ -42,7 +42,7 @@
             doCheck = false;
           };
 
-        wpilib = pkgs.stdenv.mkDerivation {
+        wpilib = pkgs.gcc7Stdenv.mkDerivation {
           pname = "wpilib";
           version = "2022.4.1";
           src = wpilib-src;
@@ -79,6 +79,7 @@
           buildInputs = [
             pkgs.cmake
             pkgs.ninja
+            pkgs.gcc-unwrapped
           ] ++ pkgs.lib.optional pkgs.stdenv.isLinux [
             pkgs.catch2
             pkgs.cmakeCurses
