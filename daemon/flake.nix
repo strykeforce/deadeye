@@ -74,7 +74,8 @@
         };
       in
       {
-        devShell = pkgs.mkShell {
+        devShell = pkgs.gcc7Stdenv.mkDerivation {
+          name = "shell";
           buildInputs = [
             pkgs.cmake
             pkgs.ninja
