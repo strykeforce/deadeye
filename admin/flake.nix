@@ -1,21 +1,28 @@
 {
-  description = "Deadeye Admin Server";
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    utils.url = "github:numtide/flake-utils";
+  };
 
-  inputs.flake-utils.url = "github:numtide/flake-utils";
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs";
-
-  outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = import nixpkgs {
-          inherit system;
-        };
+  outputs = { self, nixpkgs, utils }:
+    let out = system:
+      let pkgs = nixpkgs.legacyPackages."${system}";
       in
       {
+
         devShell = pkgs.mkShell {
-          packages = [
-            pkgs.python38Packages.poetry
+          buildInputs = with pkgs; [
+            python38Packages.poetry
           ];
         };
-      });
+
+        packages = {
+          default = with pkgs.poetry2nix; mkPoetryApplication {
+            projectDir = ./.;
+            preferWheels = true;
+          };
+        };
+
+      }; in with utils.lib; eachSystem defaultSystems out;
+
 }
