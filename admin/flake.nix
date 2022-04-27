@@ -10,10 +10,12 @@
       in
       {
 
-        devShell = pkgs.mkShell {
-          buildInputs = with pkgs; [
-            python38Packages.poetry
-          ];
+        devShells = {
+          default = pkgs.mkShell {
+            buildInputs = with pkgs; [
+              python38Packages.poetry
+            ];
+          };
         };
 
         packages = {
