@@ -1,20 +1,19 @@
 {
-  description = "Deadeye Ansible playbooks";
+  description = "Deadeye provisioning and deployment Ansible playbooks";
 
-  inputs.flake-utils.url = "github:numtide/flake-utils";
+  inputs.utils.url = "github:numtide/flake-utils";
   inputs.nixpkgs.url = "github:NixOS/nixpkgs";
 
-  outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs = { self, nixpkgs, utils }:
+    utils.lib.eachDefaultSystem (system:
       let
-        pkgs = import nixpkgs {
-          inherit system;
-        };
+        pkgs = nixpkgs.legacyPackages.${system};
       in
       {
-        devShell = pkgs.mkShell {
+        devShell = with pkgs; mkShell {
           packages = [
-            pkgs.python39Packages.poetry
+            ansible
+            ansible-lint
           ];
         };
       });
