@@ -90,13 +90,13 @@
         system = "x86_64-linux";
         modules = [
           self.nixosModules.default
-          ({ pkgs, ... }: {
+          ({ config, pkgs, ... }: {
             # Only allow this to boot as a container
             boot.isContainer = true;
             networking.hostName = "deadeye-admin";
 
             # Allow nginx through the firewall
-            networking.firewall.allowedTCPPorts = [ 5000 ];
+            networking.firewall.allowedTCPPorts = [ config.deadeye.admin.port ];
 
             deadeye.admin.enable = true;
             deadeye.admin.ntServerAddress = "192.168.1.30";
