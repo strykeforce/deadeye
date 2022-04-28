@@ -9,7 +9,7 @@
       let
         pkgs = import nixpkgs { inherit system; };
         version = "22.2.0";
-        # nodeDependencies = (pkgs.callPackage ./default.nix { }).nodeDependencies;
+        nodeDependencies = (pkgs.callPackage ./default.nix { }).nodeDependencies;
       in
       {
         packages.default = pkgs.stdenv.mkDerivation {
@@ -20,32 +20,29 @@
 
           phases = "buildPhase";
 
-          #ln -s ${nodeDependencies}/lib/node_modules ./node_modules
-          #export PATH="${nodeDependencies}/bin:$PATH"
-          #export NODE_PATH="${nodeDependencies}/lib/node_modules"
+          # ln -s ${nodeDependencies}/lib/node_modules ./node_modules
           buildPhase = ''
             ln -s $src/src ./src
             ln -s $src/public ./public
             ln -s $src/package.json ./package.json
             ln -s $src/craco.config.js ./craco.config.js
             ln -s $src/tsconfig.json ./tsconfig.json
+            export PATH="${nodeDependencies}/bin:$PATH"
+            export NODE_PATH="${nodeDependencies}/lib/node_modules"
 
-            npm install
-
-
+            npm run build
+            cp -rvf build $out/
             #ls -l node_modules/ > $out
             #cp env-vars $out
             #npm config ls -l > $out
-            #npm run build
-            #cp -rvf build $out/
           '';
         };
 
-        # devShells.default = with pkgs; mkShell {
-        #   packages = [
-        #     nodejs-14_x
-        #     nodePackages.node2nix
-        #   ];
-        # };
+        devShells.default = with pkgs; mkShell {
+          packages = [
+            nodejs-14_x
+            nodePackages.node2nix
+          ];
+        };
       });
 }
