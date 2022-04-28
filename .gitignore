@@ -10,3 +10,5 @@ npm-debug.log
 *.pyc
 /networktables.ini*
 scripts/.vscode/
+
+web/result
