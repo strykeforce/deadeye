@@ -24,6 +24,10 @@
     "react-scripts": "^4.0.3",
     "react-syntax-highlighter": "^15.5.0",
     "socket.io-client": "^4.4.1",
+    "@typescript-eslint/eslint-plugin": "^5.16.0",
+    "@typescript-eslint/parser": "^5.16.0",
+    "npm-check": "^5.9.2",
+    "prettier": "^2.6.1",
     "typescript": "^4.6.3"
   },
   "scripts": {
@@ -58,12 +62,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.16.0",
-    "@typescript-eslint/parser": "^5.16.0",
-    "npm-check": "^5.9.2",
-    "prettier": "^2.6.1"
   },
   "jest": {
     "transformIgnorePatterns": [

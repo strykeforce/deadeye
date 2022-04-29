@@ -20,19 +20,19 @@
 
           phases = "buildPhase";
 
-          # ln -s ${nodeDependencies}/lib/node_modules ./node_modules
           buildPhase = ''
             ln -s $src/src ./src
             ln -s $src/public ./public
             ln -s $src/package.json ./package.json
             ln -s $src/craco.config.js ./craco.config.js
             ln -s $src/tsconfig.json ./tsconfig.json
+            ln -s ${nodeDependencies}/lib/node_modules ./node_modules
             export PATH="${nodeDependencies}/bin:$PATH"
             export NODE_PATH="${nodeDependencies}/lib/node_modules"
 
             npm run build
             cp -rvf build $out/
-            #ls -l $NODE_PATH > $out
+            #ls -l ./node_modules/ > $out
             #cp env-vars $out
             #npm config ls -l > $out
           '';
