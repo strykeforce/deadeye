@@ -32,7 +32,7 @@
 
             npm run build
             cp -rvf build $out/
-            #ls -l node_modules/ > $out
+            #ls -l $NODE_PATH > $out
             #cp env-vars $out
             #npm config ls -l > $out
           '';
