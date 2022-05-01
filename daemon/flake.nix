@@ -54,6 +54,11 @@
           ];
           propagatedBuildInputs = [ pkgs.opencv4 ];
 
+          preConfigure = ''
+            substituteInPlace cmake/modules/CompileWarnings.cmake --replace "-Werror" ""
+            sed -i '7 a #include <algorithm>' wpiutil/src/main/native/macOS/ResolverThread.cpp
+          '';
+
           cmakeFlags = [
             "-DCMAKE_BUILD_TYPE=Release"
             "-DWITH_JAVA=OFF"
@@ -66,6 +71,8 @@
             "-DWITH_GUI=OFF"
             "-DWITH_SIMULATION_MODULES=OFF"
           ];
+
+          hardeningDisable = [ "all" ];
 
           outputs = [ "out" ];
 
@@ -80,7 +87,7 @@
             pkgs.cmake
             pkgs.ninja
             pkgs.gcc-unwrapped
-          ] ++ pkgs.lib.optional pkgs.stdenv.isLinux [
+
             pkgs.catch2
             pkgs.cmakeCurses
             pkgs.gst_all_1.gst-plugins-base
@@ -90,11 +97,12 @@
             pkgs.nlohmann_json
             pkgs.pkg-config
             pkgs.spdlog.dev
-            pkgs.systemd.dev
             wpilib
             (buildHeaderOnlyLib "readerwriterqueue" "1.0.5" readerwriterqueue)
             (buildHeaderOnlyLib "safe" "1.0.0" safe)
             (buildHeaderOnlyLib "tinyfsm" "0.3.3" tinyfsm)
+          ] ++ pkgs.lib.optional pkgs.stdenv.isLinux [
+            pkgs.systemd.dev
           ];
         };
       }
