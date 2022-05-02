@@ -41,11 +41,11 @@
               default = 5000;
             };
 
-            ntServerAddress = mkOption {
+            ntServerAddress = mkOption rec {
               description = "Address of the NetworkTables server";
               type = types.str;
               default = "127.0.0.1";
-              example = "192.168.1.30";
+              example = default;
             };
 
             ntServerPort = mkOption {
@@ -53,48 +53,55 @@
               type = types.port;
               default = 1735;
             };
-          };
 
-          config = mkIf cfg.enable {
-            systemd.services.deadeye-admin = {
-              wantedBy = [ "multi-user.target" ];
+            uploadDir = mkOption rec {
+              description = "Directory used for image uploads.";
+              type = types.str;
+              default = "/tmp/deadeye";
+              example = default;
+            };
 
-              environment = {
-                DEADEYE_ADMIN_PORT = "${toString cfg.port}";
-                DEADEYE_NT_PORT = "${toString cfg.ntServerPort}";
-                DEADEYE_NT_SERVER = cfg.ntServerAddress;
-                DEADEYE_NT_WAIT_MS = "500";
-                DEADEYE_UPLOAD_DIR = "/tmp";
-                FLASK_ENV = "production";
-              };
+            config = mkIf cfg.enable {
+              systemd.tmpfiles.rules = [ "d ${cfg.uploadDir} 1777 root root 1d" ];
+              systemd.services.deadeye-admin = {
+                wantedBy = [ "multi-user.target" ];
 
-              serviceConfig =
-                let pkg = self.packages.${pkgs.system}.default;
-                in
-                {
-                  Restart = "on-failure";
-                  ExecStart = "${pkg}/bin/deadeye-server";
+                environment = {
+                  DEADEYE_ADMIN_PORT = "${toString cfg.port}";
+                  DEADEYE_NT_PORT = "${toString cfg.ntServerPort}";
+                  DEADEYE_NT_SERVER = cfg.ntServerAddress;
+                  DEADEYE_NT_WAIT_MS = "500";
+                  DEADEYE_UPLOAD_DIR = cfg.uploadDir;
+                  FLASK_ENV = "production";
                 };
+
+                serviceConfig =
+                  let pkg = self.packages.${pkgs.system}.default;
+                  in
+                  {
+                    Restart = "on-failure";
+                    ExecStart = "${pkg}/bin/deadeye-server";
+                  };
+              };
             };
           };
+
+          nixosConfigurations.container = nixpkgs.lib.nixosSystem {
+            system = "x86_64-linux";
+            modules = [
+              self.nixosModules.default
+              ({ config, pkgs, ... }: {
+                # Only allow this to boot as a container
+                boot.isContainer = true;
+                networking.hostName = "deadeye-admin";
+
+                # Allow nginx through the firewall
+                networking.firewall.allowedTCPPorts = [ config.deadeye.admin.port ];
+
+                deadeye.admin.enable = true;
+                deadeye.admin.ntServerAddress = "192.168.1.30";
+              })
+            ];
+          };
         };
-
-      nixosConfigurations.container = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        modules = [
-          self.nixosModules.default
-          ({ config, pkgs, ... }: {
-            # Only allow this to boot as a container
-            boot.isContainer = true;
-            networking.hostName = "deadeye-admin";
-
-            # Allow nginx through the firewall
-            networking.firewall.allowedTCPPorts = [ config.deadeye.admin.port ];
-
-            deadeye.admin.enable = true;
-            deadeye.admin.ntServerAddress = "192.168.1.30";
-          })
-        ];
-      };
-    };
-}
+    }
