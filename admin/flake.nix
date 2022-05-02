@@ -64,7 +64,7 @@
                 DEADEYE_NT_PORT = "${toString cfg.ntServerPort}";
                 DEADEYE_NT_SERVER = cfg.ntServerAddress;
                 DEADEYE_NT_WAIT_MS = "500";
-                DEADEYE_UPLOAD_DIR = "/var/cache/deadeye";
+                DEADEYE_UPLOAD_DIR = "/tmp";
                 FLASK_ENV = "production";
               };
 
@@ -75,8 +75,6 @@
                   Restart = "on-failure";
                   ExecStart = "${pkg}/bin/deadeye-server";
                   DynamicUser = "yes";
-                  CacheDirectory = "deadeye";
-                  CacheDirectoryMode = "0755";
                 };
             };
           };
