@@ -108,7 +108,6 @@
             buildInputs = [
               pkgs.cmake
               pkgs.gcc-unwrapped
-              pkgs.gst_all_1.gstreamer.dev
               pkgs.catch2
               pkgs.nlohmann_json
               pkgs.pkg-config
@@ -122,6 +121,7 @@
             ];
 
             propagatedBuildInputs = [
+              pkgs.gst_all_1.gstreamer.dev
               pkgs.gst_all_1.gst-plugins-base
               pkgs.gst_all_1.gst-plugins-good
             ];
