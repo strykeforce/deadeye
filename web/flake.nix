@@ -87,6 +87,10 @@
                   proxyWebsockets = true;
                 };
 
+                "/upload/" = {
+                  proxyPass = "http://127.0.0.1:5000";
+                };
+
                 "/stream/0/" = { proxyPass = "http://127.0.0.1:5805/stream.mjpg"; };
                 "/stream/1/" = { proxyPass = "http://127.0.0.1:5806/stream.mjpg"; };
                 "/stream/2/" = { proxyPass = "http://127.0.0.1:5807/stream.mjpg"; };
