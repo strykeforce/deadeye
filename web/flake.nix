@@ -71,6 +71,7 @@
 
           config = mkIf cfg.enable {
             services.nginx.enable = true;
+            services.nginx.recommendedProxySettings = true;
             services.nginx.virtualHosts.${cfg.domain} = {
               default = true;
 
