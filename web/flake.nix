@@ -84,7 +84,7 @@
 
                 "/socket.io/" = {
                   proxyPass = "http://127.0.0.1:5000";
-                  proxyWebSockets = true;
+                  proxyWebsockets = true;
                 };
 
                 "/stream/0/" = { proxyPass = "http://127.0.0.1:5805/stream.mjpg"; };
