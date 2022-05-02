@@ -1,24 +1,15 @@
 import { Radio } from "antd";
-import { RadioChangeEvent } from "antd/lib/radio";
 import React from "react";
 import { configStream } from "../../common/api";
-import { StreamConfig } from "../../common/models";
 import { key } from "../../common/util";
 import "./camera-stream.less";
 
-type Props = {
-  unit: string;
-  inum: number;
-  config: StreamConfig;
-};
-
 const prefix = "camera-stream-controls";
 
-const Controls = (props: Props): JSX.Element => {
+const Controls = (props) => {
   const { unit, inum, config } = props;
 
-  const handleChange = (name: string) => (event: RadioChangeEvent) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const handleChange = (name) => (event) => {
     const newConfig = Object.assign(config, { [name]: event.target.value });
     configStream(unit, inum, newConfig);
   };

@@ -3,9 +3,8 @@ import React from "react";
 import { configCapture, enableCamera } from "../../../common/api";
 import { key } from "../../../common/util";
 import "../camera-controls.less";
-import { CaptureControlProps } from "../capture-pane";
 
-const TestConfigSubPane = (props: CaptureControlProps): JSX.Element => {
+const TestConfigSubPane = (props) => {
   const { unit, inum } = props;
 
   return (
@@ -39,12 +38,12 @@ const TestConfigSubPane = (props: CaptureControlProps): JSX.Element => {
 
 export default TestConfigSubPane;
 
-const PatternSelect = (props: CaptureControlProps) => {
+const PatternSelect = (props) => {
   const { unit, inum, config, onChange: displayRestartMessage } = props;
-  const options = config.config as { pattern: string };
+  const options = config.config;
   const { Option } = Select;
 
-  const handleChange = (value: string) => {
+  const handleChange = (value) => {
     const newConfig = Object.assign(config.config, { pattern: value });
     const newCapture = Object.assign(config, newConfig);
     configCapture(unit, inum, newCapture);
@@ -72,18 +71,10 @@ const PatternSelect = (props: CaptureControlProps) => {
   );
 };
 
-type ColorSelectProps = CaptureControlProps & { name: string };
-
-class ColorInput extends React.Component<
-  ColorSelectProps,
-  { value: string | undefined }
-> {
-  constructor(props: ColorSelectProps) {
+class ColorInput extends React.Component {
+  constructor(props) {
     super(props);
-    const innerConfig = this.props.config.config as {
-      foregroundColor?: string;
-      backgroundColor?: string;
-    };
+    const innerConfig = this.props.config.config;
     const init =
       this.props.name === "foregroundColor"
         ? innerConfig.foregroundColor
@@ -91,7 +82,7 @@ class ColorInput extends React.Component<
     this.state = { value: init };
   }
 
-  handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  handleChange = (event) => {
     this.setState({ value: event.currentTarget.value });
   };
 

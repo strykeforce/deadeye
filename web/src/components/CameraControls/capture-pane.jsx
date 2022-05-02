@@ -1,7 +1,6 @@
 import { Col, message, Row, Select, Slider } from "antd";
 import React, { useState } from "react";
 import { configCapture, enableCamera } from "../../common/api";
-import { CaptureConfig } from "../../common/models";
 import { key, messageOffset } from "../../common/util";
 import "./camera-controls.less";
 import JetsonConfigSubPane from "./capture/jetson";
@@ -10,13 +9,8 @@ import UploadConfigSubPane from "./capture/upload";
 import UsbConfigSubPane from "./capture/usb";
 import DebugPane from "./debug";
 
-type Props = {
-  unit: string;
-  inum: number;
-  config: CaptureConfig;
-};
 
-const CapturePane = (props: Props): JSX.Element => {
+const CapturePane = (props) => {
   const {
     config: { type },
   } = props;
@@ -95,13 +89,11 @@ const CapturePane = (props: Props): JSX.Element => {
 
 export default CapturePane;
 
-export type CaptureControlProps = Props & { onChange: () => void };
-
-const TypeSelect = (props: CaptureControlProps) => {
+const TypeSelect = (props) => {
   const { unit, inum, config, onChange: displayRestartMessage } = props;
   const { Option } = Select;
 
-  const handleChange = (value: string) => {
+  const handleChange = (value) => {
     const newConfig = Object.assign(config, { type: value });
     configCapture(unit, inum, newConfig);
     enableCamera(unit, inum, false);
@@ -160,14 +152,14 @@ const DIMENSIONS = {
   ],
 };
 
-const DimensionSelect = (props: CaptureControlProps) => {
+const DimensionSelect = (props) => {
   const { unit, inum, config, onChange: displayRestartMessage } = props;
   const values = [config.w, config.h];
   const { Option } = Select;
 
   const dims = `${values[0]}x${values[1]}`;
 
-  const handleChange = (value: string) => {
+  const handleChange = (value) => {
     const [w, h] = value.split("x", 2).map((n) => parseInt(n));
     const newConfig = Object.assign(config, { w: w, h: h });
     configCapture(unit, inum, newConfig);
@@ -175,7 +167,7 @@ const DimensionSelect = (props: CaptureControlProps) => {
     displayRestartMessage();
   };
 
-  const options = DIMENSIONS[config.type as keyof typeof DIMENSIONS].map(
+  const options = DIMENSIONS[config.type].map(
     (dims) => {
       const key = `${dims[0]}x${dims[1]}`;
       return (
@@ -200,10 +192,10 @@ const DimensionSelect = (props: CaptureControlProps) => {
   );
 };
 
-const FpsSlider = (props: CaptureControlProps) => {
+const FpsSlider = (props) => {
   const { unit, inum, config, onChange: displayRestartMessage } = props;
 
-  const handleChange = (value: number) => {
+  const handleChange = (value) => {
     const newConfig = Object.assign(config, { fps: value });
     configCapture(unit, inum, newConfig);
     enableCamera(unit, inum, false);

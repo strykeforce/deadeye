@@ -1,13 +1,8 @@
 import React from "react";
-import standBy from "./deadeye.png";
 import "./camera-stream.less";
+import standBy from "./deadeye.png";
 
-interface Props {
-  enabled: boolean;
-  url: string;
-}
-
-const Image = (props: Props) => {
+const Image = (props) => {
   const { enabled, url } = props;
 
   return (
@@ -22,7 +17,7 @@ const Image = (props: Props) => {
   );
 };
 
-const areEqual = (prev: Props, next: Props) => {
+const areEqual = (prev, next) => {
   return prev.enabled === next.enabled && prev.url === next.url;
 };
 

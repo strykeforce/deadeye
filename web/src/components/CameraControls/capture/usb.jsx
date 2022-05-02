@@ -1,12 +1,11 @@
 import { Col, Input, InputNumber, Row, Space } from "antd";
-import Checkbox, { CheckboxChangeEvent } from "antd/lib/checkbox/Checkbox";
+import Checkbox from "antd/lib/checkbox/Checkbox";
 import React, { useState } from "react";
 import { configCapture, enableCamera } from "../../../common/api";
 import { key } from "../../../common/util";
 import "../camera-controls.less";
-import { CaptureControlProps } from "../capture-pane";
 
-const UsbConfigSubPane = (props: CaptureControlProps): JSX.Element => {
+const UsbConfigSubPane = (props) => {
   return (
     <>
       <Row>
@@ -35,18 +34,16 @@ const UsbConfigSubPane = (props: CaptureControlProps): JSX.Element => {
 
 export default UsbConfigSubPane;
 
-const DeviceInput = (props: CaptureControlProps) => {
+const DeviceInput = (props) => {
   const { unit, inum, config, onChange: displayRestartMessage } = props;
 
-  const innerConfig = config.config as {
-    device?: string;
-  };
+  const innerConfig = config.config;
 
-  const [value, setValue] = useState<string>(
+  const [value, setValue] = useState < string > (
     innerConfig.device || "/dev/video0"
   );
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event) => {
     setValue(event.currentTarget.value);
   };
 
@@ -76,18 +73,15 @@ const DeviceInput = (props: CaptureControlProps) => {
   );
 };
 
-const ExposureControls = (props: CaptureControlProps) => {
+const ExposureControls = (props) => {
   const { unit, inum, config, onChange: displayRestartMessage } = props;
 
-  const innerConfig = config.config as {
-    aeLock?: boolean;
-    exposure?: number;
-  };
+  const innerConfig = config.config;
 
   const aeLock = innerConfig.aeLock !== undefined ? innerConfig.aeLock : true;
   const exposure = innerConfig.exposure;
 
-  const handleAELockChange = (e: CheckboxChangeEvent) => {
+  const handleAELockChange = (e) => {
     const newConfig = Object.assign(innerConfig, { aeLock: e.target.checked });
     const newCapture = Object.assign(config, { config: newConfig });
     configCapture(unit, inum, newCapture);
@@ -95,7 +89,7 @@ const ExposureControls = (props: CaptureControlProps) => {
     displayRestartMessage();
   };
 
-  const handleExposureChange = (value: string | number | null | undefined) => {
+  const handleExposureChange = (value) => {
     const n = Number(value);
     const newConfig = Object.assign(innerConfig, { exposure: n });
     const newCapture = Object.assign(config, { config: newConfig });
@@ -127,16 +121,14 @@ const ExposureControls = (props: CaptureControlProps) => {
   );
 };
 
-const BrightnessInput = (props: CaptureControlProps) => {
+const BrightnessInput = (props) => {
   const { unit, inum, config, onChange: displayRestartMessage } = props;
 
-  const innerConfig = config.config as {
-    brightness?: number;
-  };
+  const innerConfig = config.config;
 
   const brightness = innerConfig.brightness;
 
-  const handleChange = (value: string | number | null | undefined) => {
+  const handleChange = (value) => {
     const n = Number(value);
     const newConfig = Object.assign(innerConfig, { brightness: n });
     const newCapture = Object.assign(config, { config: newConfig });
@@ -162,19 +154,16 @@ const BrightnessInput = (props: CaptureControlProps) => {
   );
 };
 
-const WhiteBalanceControls = (props: CaptureControlProps) => {
+const WhiteBalanceControls = (props) => {
   const { unit, inum, config, onChange: displayRestartMessage } = props;
 
-  const innerConfig = config.config as {
-    awbLock?: boolean;
-    wbTemp?: number;
-  };
+  const innerConfig = config.config;
 
   const awbLock =
     innerConfig.awbLock !== undefined ? innerConfig.awbLock : true;
   const wbTemp = innerConfig.wbTemp;
 
-  const handleWBLockChange = (e: CheckboxChangeEvent) => {
+  const handleWBLockChange = (e) => {
     const newConfig = Object.assign(innerConfig, { awbLock: e.target.checked });
     const newCapture = Object.assign(config, { config: newConfig });
     configCapture(unit, inum, newCapture);
@@ -182,7 +171,7 @@ const WhiteBalanceControls = (props: CaptureControlProps) => {
     displayRestartMessage();
   };
 
-  const handleWBTempChange = (value: string | number | null | undefined) => {
+  const handleWBTempChange = (value) => {
     const n = Number(value);
     const newConfig = Object.assign(innerConfig, { wbTemp: n });
     const newCapture = Object.assign(config, { config: newConfig });

@@ -1,20 +1,13 @@
 import { Checkbox, Col, Input, Row, Select, Slider } from "antd";
-import { CheckboxChangeEvent } from "antd/es/checkbox";
 import React, { useState } from "react";
 import { configPipeline } from "../../common/api";
-import { PipelineConfig } from "../../common/models";
 import { key } from "../../common/util";
 import DebugPane from "./debug";
 
 // import "./index.less";
 
-type Props = {
-  unit: string;
-  inum: number;
-  config: PipelineConfig;
-};
 
-const LogPane = (props: Props): JSX.Element => {
+const LogPane = (props) => {
   const debug = false;
   return (
     <>
@@ -39,13 +32,13 @@ const LogPane = (props: Props): JSX.Element => {
 
 export default LogPane;
 
-const TypeSelect = (props: Props) => {
+const TypeSelect = (props) => {
   const { unit, inum, config } = props;
   const { log } = config;
 
   const { Option } = Select;
 
-  const handleChange = (value: string) => {
+  const handleChange = (value) => {
     const newLog = Object.assign(log, { type: value });
     const newConfig = Object.assign(config, { log: newLog });
     configPipeline(unit, inum, newConfig);
@@ -70,11 +63,11 @@ const TypeSelect = (props: Props) => {
   );
 };
 
-const FpsSelect = (props: Props) => {
+const FpsSelect = (props) => {
   const { unit, inum, config } = props;
   const { log } = config;
 
-  const handleChange = (value: number) => {
+  const handleChange = (value) => {
     const newLog = Object.assign(log, { fps: value });
     const newConfig = Object.assign(config, { log: newLog });
     configPipeline(unit, inum, newConfig);
@@ -110,13 +103,13 @@ const FpsSelect = (props: Props) => {
   );
 };
 
-const DirectoryInput = (props: Props) => {
+const DirectoryInput = (props) => {
   const { unit, inum, config } = props;
   const { log } = config;
 
-  const [value, setValue] = useState<string>(log.path);
+  const [value, setValue] = useState(log.path);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event) => {
     setValue(event.currentTarget.value);
   };
 
@@ -145,11 +138,11 @@ const DirectoryInput = (props: Props) => {
   );
 };
 
-const MountCheckbox = (props: Props) => {
+const MountCheckbox = (props) => {
   const { unit, inum, config } = props;
   const { log } = config;
 
-  const handleChange = (event: CheckboxChangeEvent) => {
+  const handleChange = (event) => {
     const value = event.target.checked;
     const newLog = Object.assign(log, { mount: value });
     const newConfig = Object.assign(config, { log: newLog });

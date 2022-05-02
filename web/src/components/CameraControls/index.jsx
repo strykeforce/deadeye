@@ -1,20 +1,17 @@
 import { Tabs } from "antd";
 import React from "react";
-import { Camera } from "../../common/models";
 import { key } from "../../common/util";
 import "./camera-controls.less";
 import CapturePane from "./capture-pane";
 import FilterPane from "./filter-pane";
-import MaskPane from "./mask-pane";
 import LogPane from "./log-pane";
+import MaskPane from "./mask-pane";
 
-type Props = {
-  camera: Camera;
-};
+
 
 const { TabPane } = Tabs;
 
-const CameraControls = (props: Props): JSX.Element => {
+const CameraControls = (props) => {
   const { camera } = props;
 
   return (

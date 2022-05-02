@@ -1,14 +1,9 @@
 import React from "react";
-import { Camera } from "../../common/models";
 import CameraControls from "../CameraControls";
 import CameraStream from "../CameraStream";
 import "./camera-dashboard.less";
 
-type Props = {
-  camera: Camera;
-};
-
-const CameraDashboard = (props: Props): JSX.Element => {
+const CameraDashboard = (props) => {
   const { camera } = props;
 
   return (

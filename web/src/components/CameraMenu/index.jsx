@@ -1,24 +1,18 @@
 import { SettingOutlined, VideoCameraOutlined } from "@ant-design/icons";
-import { useNavigate } from "@reach/router";
+import { useNavigate } from "@gatsbyjs/reach-router";
 import { Menu } from "antd";
 import React, { useState } from "react";
-import { Id } from "../../common/models";
 import "./camera-menu.less";
 import logo from "./deadeye.png";
 
-type Props = {
-  id?: string;
-  ids: string[];
-};
 
-const CameraMenu = (props: Props): JSX.Element => {
+const CameraMenu = (props) => {
   const { id, ids } = props;
-  const [selectedId, setSelectedId] = useState<Id>(id);
+  const [selectedId, setSelectedId] = useState(id);
   const navigate = useNavigate();
 
-  const handleClick = (id: string) => {
+  const handleClick = (id) => {
     setSelectedId(id);
-    // noinspection JSIgnoredPromiseFromCall
     void navigate(`/id/${id}`);
   };
 

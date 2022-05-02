@@ -1,4 +1,3 @@
-import { RouteComponentProps } from "@reach/router";
 import { Layout, Typography } from "antd";
 import React from "react";
 import CameraMenu from "../CameraMenu";
@@ -7,13 +6,7 @@ import "./page-container.less";
 const { Footer, Sider } = Layout;
 const { Text, Link } = Typography;
 
-interface Props extends RouteComponentProps {
-  id?: string;
-  ids: string[];
-  children: React.ReactNode;
-}
-
-const PageContainer = (props: Props): JSX.Element => {
+const PageContainer = (props) => {
   const { id, ids, children } = props;
 
   return (

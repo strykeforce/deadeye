@@ -3,7 +3,6 @@ import React from "react";
 import { configCapture, enableCamera } from "../../../common/api";
 import { key } from "../../../common/util";
 import "../camera-controls.less";
-import { CaptureControlProps } from "../capture-pane";
 
 // capture frame dimensions ✔
 // exposure ✔
@@ -13,7 +12,7 @@ import { CaptureControlProps } from "../capture-pane";
 // wb mode?
 // flip
 
-const JetsonConfigSubPane = (props: CaptureControlProps): JSX.Element => {
+const JetsonConfigSubPane = (props) => {
   return (
     <>
       <Row>
@@ -52,13 +51,10 @@ const JetsonConfigSubPane = (props: CaptureControlProps): JSX.Element => {
 
 export default JetsonConfigSubPane;
 
-const DimensionSelect = (props: CaptureControlProps) => {
+const DimensionSelect = (props) => {
   const { unit, inum, config, onChange: displayRestartMessage } = props;
 
-  const innerConfig = config.config as {
-    captureWidth?: number;
-    captureHeight?: number;
-  };
+  const innerConfig = config.config;
 
   const values = [
     innerConfig.captureWidth ? innerConfig.captureWidth : 1280,
@@ -68,7 +64,7 @@ const DimensionSelect = (props: CaptureControlProps) => {
 
   const type = `${values[0]}x${values[1]}`;
 
-  const handleChange = (value: string) => {
+  const handleChange = (value) => {
     const [w, h] = value.split("x", 2).map((n) => parseInt(n));
     const newConfig = Object.assign(innerConfig, {
       captureWidth: w,
@@ -97,13 +93,9 @@ const DimensionSelect = (props: CaptureControlProps) => {
   );
 };
 
-type FloatProps = CaptureControlProps & {
-  name: string;
-  min: number;
-  max: number;
-};
 
-const Float = (props: FloatProps) => {
+
+const Float = (props) => {
   const {
     unit,
     inum,
@@ -114,10 +106,7 @@ const Float = (props: FloatProps) => {
     max,
   } = props;
 
-  const innerConfig = config.config as {
-    exposure?: number;
-    saturation?: number;
-  };
+  const innerConfig = config.config;
 
   let value;
   switch (name) {
@@ -132,7 +121,7 @@ const Float = (props: FloatProps) => {
       break;
   }
 
-  const handleChange = (value: string | number | null | undefined) => {
+  const handleChange = (value) => {
     let val = Number(value);
     if (val > max) {
       val = max;
@@ -165,16 +154,12 @@ const Float = (props: FloatProps) => {
   );
 };
 
-type GainRangeProps = CaptureControlProps & { name: string };
 
-const GainRange = (props: GainRangeProps) => {
+const GainRange = (props) => {
   const { unit, inum, config, onChange: displayRestartMessage, name } = props;
   const range = [1, 16];
 
-  const innerConfig = config.config as {
-    gainRange?: string;
-    ispDigitalGainRange?: string;
-  };
+  const innerConfig = config.config;
 
   const value =
     name === "gainRange"
@@ -185,7 +170,7 @@ const GainRange = (props: GainRangeProps) => {
     ? value.split(" ", 2).map((n) => parseInt(n))
     : range;
 
-  const saveChange = (value: string) => {
+  const saveChange = (value) => {
     const newConfig = Object.assign(innerConfig, {
       [name]: value,
     });
@@ -195,19 +180,17 @@ const GainRange = (props: GainRangeProps) => {
     displayRestartMessage();
   };
 
-  const handleChange =
-    (which: "lower" | "upper") =>
-    (value: string | number | null | undefined) => {
-      let n = Number(value);
-      if (which === "lower") {
-        n = n <= upper ? n : upper;
-        saveChange(`${n} ${upper}`);
-        return;
-      }
-      // which === "upper"
-      n = n >= lower ? n : lower;
-      saveChange(`${lower} ${n}`);
-    };
+  const handleChange = (which) => (value) => {
+    let n = Number(value);
+    if (which === "lower") {
+      n = n <= upper ? n : upper;
+      saveChange(`${n} ${upper}`);
+      return;
+    }
+    // which === "upper"
+    n = n >= lower ? n : lower;
+    saveChange(`${lower} ${n}`);
+  };
 
   return (
     <Row className="capture-pane-control">
@@ -237,18 +220,16 @@ const GainRange = (props: GainRangeProps) => {
   );
 };
 
-const FlipModeSelect = (props: CaptureControlProps) => {
+const FlipModeSelect = (props) => {
   const { unit, inum, config, onChange: displayRestartMessage } = props;
 
-  const innerConfig = config.config as {
-    flipMethod?: number;
-  };
+  const innerConfig = config.config;
   const { Option } = Select;
   const flipMode = innerConfig.flipMethod
     ? innerConfig.flipMethod.toString()
     : "0";
 
-  const handleChange = (value: string) => {
+  const handleChange = (value) => {
     const newConfig = Object.assign(innerConfig, { flipMethod: Number(value) });
     const newCapture = Object.assign(config, { config: newConfig });
     configCapture(unit, inum, newCapture);

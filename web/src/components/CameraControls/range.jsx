@@ -1,25 +1,17 @@
-import { Slider, InputNumber, Row, Col } from "antd";
+import { Col, InputNumber, Row, Slider } from "antd";
 import React from "react";
 import "./camera-controls.less";
 
-type Props = {
-  name: string;
-  min?: number;
-  max?: number;
-  step?: number;
-  values: [number, number];
-  onChange: (value: [number, number] | undefined) => void;
-};
 
-const Range = (props: Props): JSX.Element => {
+const Range = (props) => {
   const { name, min = 0, max = 255, step = 1, values, onChange } = props;
 
-  const onMinChange = (value: string | number | null | undefined) => {
+  const onMinChange = (value) => {
     const min = typeof value === "number" ? value : values[0];
     onChange([min, values[1]]);
   };
 
-  const onMaxChange = (value: string | number | null | undefined) => {
+  const onMaxChange = (value) => {
     const max = typeof value === "number" ? value : values[1];
     onChange([values[0], max]);
   };

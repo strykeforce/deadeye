@@ -1,13 +1,11 @@
 import { UploadOutlined } from "@ant-design/icons";
 import { Button, Col, message, Row, Upload } from "antd";
-import { UploadChangeParam } from "antd/es/upload";
 import React from "react";
 import { configImageUpload, enableCamera } from "../../../common/api";
-import "../camera-controls.less";
-import { CaptureControlProps } from "../capture-pane";
 import { messageOffset } from "../../../common/util";
+import "../camera-controls.less";
 
-const UploadConfigSubPane = (props: CaptureControlProps): JSX.Element => {
+const UploadConfigSubPane = (props) => {
   return (
     <>
       <Row>
@@ -21,10 +19,10 @@ const UploadConfigSubPane = (props: CaptureControlProps): JSX.Element => {
 
 export default UploadConfigSubPane;
 
-const UploadControl = (props: CaptureControlProps) => {
+const UploadControl = (props) => {
   const { unit, inum } = props;
 
-  const handleChange = (info: UploadChangeParam) => {
+  const handleChange = (info) => {
     if (info.file.status !== "uploading") {
       console.log(info.file, info.fileList);
     }

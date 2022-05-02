@@ -1,15 +1,10 @@
-import { navigate, RouteComponentProps } from "@reach/router";
+import { navigate } from "@gatsbyjs/reach-router";
 import { Spin } from "antd";
 import React from "react";
-import { Units } from "../../common/models";
 import { getIds } from "../../common/util";
 
-interface Props extends RouteComponentProps {
-  id: string;
-  units?: Units;
-}
 
-const DefaultPage = (props: Props): JSX.Element | null => {
+const DefaultPage = (props) => {
   const { id, units } = props;
 
   const ids = getIds(units);

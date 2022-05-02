@@ -1,20 +1,14 @@
 import React from "react";
-import { PipelineConfig } from "../../common/models";
-import Range from "./range";
 import { configPipeline } from "../../common/api";
+import Range from "./range";
 
 // import "./index.less";
 
-type Props = {
-  unit: string;
-  inum: number;
-  config: PipelineConfig;
-};
 
-const MaskPane = (props: Props): JSX.Element => {
+const MaskPane = (props) => {
   const { unit, inum, config } = props;
 
-  const onChange = (name: string) => (value: [number, number] | undefined) => {
+  const onChange = (name) => (value) => {
     if (value === undefined) return;
     const newConfig = Object.assign(config, { [name]: value });
     configPipeline(unit, inum, newConfig);

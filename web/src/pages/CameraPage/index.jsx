@@ -1,7 +1,6 @@
-import { RouteComponentProps, useNavigate } from "@reach/router";
+import { useNavigate } from "@gatsbyjs/reach-router";
 import { Layout } from "antd";
 import React from "react";
-import { Units } from "../../common/models";
 import { getCamera, getIds } from "../../common/util";
 import CameraDashboard from "../../components/CameraDashboard";
 import CameraHeader from "../../components/CameraHeader";
@@ -9,12 +8,7 @@ import PageContainer from "../../components/PageContainer";
 
 const { Header, Content } = Layout;
 
-interface Props extends RouteComponentProps {
-  id?: string;
-  units: Units;
-}
-
-const CameraPage = (props: Props): JSX.Element => {
+const CameraPage = (props) => {
   const units = props.units;
   const id = String(props.id);
 

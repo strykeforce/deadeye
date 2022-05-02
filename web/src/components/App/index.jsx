@@ -1,18 +1,16 @@
-import { Router } from "@reach/router";
+import { Router } from "@gatsbyjs/reach-router";
 import React, { useEffect, useState } from "react";
 import { close, sendMessage, subscribeToUnitUpdates } from "../../common/api";
-import { Units } from "../../common/models";
 import CameraPage from "../../pages/CameraPage";
 import DefaultPage from "../../pages/DefaultPage";
 import "./app.less";
 import SettingsPage from "../../pages/SettingsPage";
 
-const App = (): JSX.Element => {
-  const [units, setUnits] = useState<Units>();
+const App = () => {
+  const [units, setUnits] = useState();
 
   useEffect(() => {
-    const handleUnitsChange = (units: string): void => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    const handleUnitsChange = (units) => {
       setUnits(JSON.parse(units));
     };
 

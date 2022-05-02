@@ -1,27 +1,19 @@
 import React, { useEffect, useState } from "react";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { dark } from "react-syntax-highlighter/dist/esm/styles/hljs";
-import { CaptureConfig, PipelineConfig, Units } from "../../common/models";
 import { getCamera } from "../../common/util";
 
 // import "./index.less";
 
-type Props = {
-  unit: string;
-  inum: number;
-  config: CaptureConfig | PipelineConfig;
-  section: string;
-};
-
-const DebugPane = (props: Props): JSX.Element => {
+const DebugPane = (props) => {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [units, setUnits] = useState<Units>({});
+  const [units, setUnits] = useState < Units > ({});
 
   useEffect(() => {
     fetch("http://localhost:5000/json")
       .then((res) => res.json())
       .then(
-        (result: Units) => {
+        (result) => {
           setIsLoaded(true);
           setUnits(result);
         },

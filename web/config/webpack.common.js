@@ -1,5 +1,6 @@
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const paths = require('./paths')
 
@@ -13,6 +14,7 @@ module.exports = {
   output: {
     path: paths.build,
     filename: '[name].bundle.js',
+    publicPath: '/',
   },
   module: {
     rules: [
@@ -48,9 +50,24 @@ module.exports = {
 
   },
   plugins: [
+    // Copies files from target to destination folder
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: paths.public,
+          to: 'assets',
+          globOptions: {
+            ignore: ['*.DS_Store'],
+          },
+          noErrorOnMissing: true,
+        },
+      ],
+    }),
+
+    // Generates an HTML file from a template
     new HtmlWebpackPlugin({
-      title: 'webpack Boilerplate',
-      template: paths.src + '/template.html', // template file
+      title: 'Deadeye',
+      template: paths.public + '/index.html', // template file
       filename: 'index.html', // output file
     }),
     new CleanWebpackPlugin(),

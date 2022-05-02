@@ -4,9 +4,8 @@ import {
   configLink,
   refreshLink,
   subscribeToLinkUpdates,
-  unsubscribeFromLinkUpdates,
+  unsubscribeFromLinkUpdates
 } from "../../common/api";
-import { Link } from "../../common/models";
 import { messageOffset } from "../../common/util";
 
 const layout = {
@@ -17,14 +16,14 @@ const tailLayout = {
   wrapperCol: { offset: 4, span: 20 },
 };
 
-const LinkPane = (): JSX.Element => {
+const LinkPane = () => {
   const [form] = Form.useForm();
 
-  const link = useRef<Link>();
+  const link = useRef();
   useEffect(() => {
-    const handleLinkChange = (json: string) => {
+    const handleLinkChange = (json) => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const linkConfig: Link[] = JSON.parse(json);
+      const linkConfig = JSON.parse(json);
       link.current = linkConfig[0];
       form.setFieldsValue(link.current);
     };
@@ -38,7 +37,7 @@ const LinkPane = (): JSX.Element => {
     refreshLink();
   }, []);
 
-  const onFinish = (values: Link) => {
+  const onFinish = (values) => {
     configLink([values]);
     // noinspection JSIgnoredPromiseFromCall
     void message.info({

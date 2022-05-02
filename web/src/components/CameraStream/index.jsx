@@ -1,17 +1,10 @@
 import React from "react";
-import { StreamConfig } from "../../common/models";
 import "./camera-stream.less";
 import Controls from "./controls";
 import Image from "./image";
 
-type Props = {
-  unit: string;
-  inum: number;
-  enabled: boolean;
-  config: StreamConfig;
-};
 
-const CameraStream = (props: Props): JSX.Element => {
+const CameraStream = (props) => {
   const { unit, inum, enabled, config } = props;
 
   const streamEnabled =

@@ -1,17 +1,9 @@
 import { Switch } from "antd";
-import { SwitchClickEventHandler } from "antd/lib/switch";
 import React from "react";
 import { enableCamera, enableLight } from "../../common/api";
-import { Camera } from "../../common/models";
 import "./camera-header.less";
-import { RouteComponentProps } from "@reach/router";
 
-interface Props extends RouteComponentProps {
-  title?: string;
-  camera?: Camera;
-}
-
-const CameraHeader = (props: Props): JSX.Element => {
+const CameraHeader = (props) => {
   if (!props.camera)
     return (
       <div className="camera-header">
@@ -21,11 +13,11 @@ const CameraHeader = (props: Props): JSX.Element => {
 
   const { camera } = props;
 
-  const handleCameraChange: SwitchClickEventHandler = (checked) => {
+  const handleCameraChange = (checked) => {
     enableCamera(camera.unit, camera.inum, checked);
   };
 
-  const handleLightChange: SwitchClickEventHandler = (checked) => {
+  const handleLightChange = (checked) => {
     enableLight(camera.unit, camera.inum, checked);
   };
 
