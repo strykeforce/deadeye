@@ -74,7 +74,6 @@
                 {
                   Restart = "on-failure";
                   ExecStart = "${pkg}/bin/deadeye-server";
-                  DynamicUser = "yes";
                 };
             };
           };
