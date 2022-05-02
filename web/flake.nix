@@ -1,47 +1,52 @@
 {
-  description = "Deadeye web front-end";
+  description = "Webpack Tutorial";
 
   inputs.utils.url = "github:numtide/flake-utils";
   inputs.nixpkgs.url = "github:NixOS/nixpkgs";
+  inputs.n2n.url = "github:jhh/node2nix";
 
-  outputs = { self, nixpkgs, utils }:
+  outputs = { self, nixpkgs, utils, n2n }:
     utils.lib.eachDefaultSystem (system:
       let
-        pkgs = import nixpkgs { inherit system; };
-        version = "22.2.0";
-        nodeDependencies = (pkgs.callPackage ./default.nix { }).nodeDependencies;
+        pkgs = import nixpkgs
+          {
+            inherit system;
+            overlays = [ n2n.overlays.${system} ];
+          };
+        version = "1.0.0";
+        nodeDependencies = (pkgs.callPackage ./config/default.nix { }).nodeDependencies;
       in
       {
         packages.default = pkgs.stdenv.mkDerivation {
-          pname = "deadeye-web";
+          pname = "webpack-tutorial";
           inherit version;
           src = ./.;
-          buildInputs = with pkgs; [ nodejs-14_x ];
+          buildInputs = with pkgs; [ nodejs-16_x ];
 
           phases = "buildPhase";
 
+          # ln -s $src/public ./public
           buildPhase = ''
-            ln -s $src/src ./src
-            ln -s $src/public ./public
-            ln -s $src/package.json ./package.json
-            ln -s $src/craco.config.js ./craco.config.js
-            ln -s $src/tsconfig.json ./tsconfig.json
-            ln -s ${nodeDependencies}/lib/node_modules ./node_modules
             export PATH="${nodeDependencies}/bin:$PATH"
             export NODE_PATH="${nodeDependencies}/lib/node_modules"
+            export NODE_ENV=production
+            export BUILD_DIR="$out"
+            ln -s $src/src .
+            ln -s $src/config .
+            ln -s $src/package.json .
+            ln -s $src/webpack.config.js .
+            ln -s $src/postcss.config.json .
+            ln -s $NODE_PATH .
 
             npm run build
-            cp -rvf build $out/
-            #ls -l ./node_modules/ > $out
-            #cp env-vars $out
-            #npm config ls -l > $out
           '';
         };
 
         devShells.default = with pkgs; mkShell {
           packages = [
-            nodejs-14_x
-            nodePackages.node2nix
+            nodejs-16_x
+            node2nix
+            nodePackages.http-server
           ];
         };
       });
