@@ -58,30 +58,30 @@
               type = types.str;
               default = "/tmp/deadeye";
             };
+          };
 
-            config = mkIf cfg.enable {
-              systemd.tmpfiles.rules = [ "d ${cfg.uploadDir} 1777 root root 1d" ];
+          config = mkIf cfg.enable {
+            systemd.tmpfiles.rules = [ "d ${cfg.uploadDir} 1777 root root 1d" ];
 
-              systemd.services.deadeye-admin = {
-                wantedBy = [ "multi-user.target" ];
+            systemd.services.deadeye-admin = {
+              wantedBy = [ "multi-user.target" ];
 
-                environment = {
-                  DEADEYE_ADMIN_PORT = "${toString cfg.port}";
-                  DEADEYE_NT_PORT = "${toString cfg.ntServerPort}";
-                  DEADEYE_NT_SERVER = cfg.ntServerAddress;
-                  DEADEYE_NT_WAIT_MS = "500";
-                  DEADEYE_UPLOAD_DIR = cfg.uploadDir;
-                  FLASK_ENV = "production";
-                };
-
-                serviceConfig =
-                  let pkg = self.packages.${pkgs.system}.default;
-                  in
-                  {
-                    Restart = "on-failure";
-                    ExecStart = "${pkg}/bin/deadeye-server";
-                  };
+              environment = {
+                DEADEYE_ADMIN_PORT = "${toString cfg.port}";
+                DEADEYE_NT_PORT = "${toString cfg.ntServerPort}";
+                DEADEYE_NT_SERVER = cfg.ntServerAddress;
+                DEADEYE_NT_WAIT_MS = "500";
+                DEADEYE_UPLOAD_DIR = cfg.uploadDir;
+                FLASK_ENV = "production";
               };
+
+              serviceConfig =
+                let pkg = self.packages.${pkgs.system}.default;
+                in
+                {
+                  Restart = "on-failure";
+                  ExecStart = "${pkg}/bin/deadeye-server";
+                };
             };
           };
         };
