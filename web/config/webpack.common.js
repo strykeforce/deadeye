@@ -55,7 +55,7 @@ module.exports = {
       patterns: [
         {
           from: paths.public,
-          to: 'assets',
+          // to: 'assets',
           globOptions: {
             ignore: ['*.DS_Store'],
           },
@@ -67,7 +67,7 @@ module.exports = {
     // Generates an HTML file from a template
     new HtmlWebpackPlugin({
       title: 'Deadeye',
-      template: paths.public + '/index.html', // template file
+      template: paths.src + '/template.html', // template file
       filename: 'index.html', // output file
     }),
     new CleanWebpackPlugin(),
