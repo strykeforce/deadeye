@@ -84,24 +84,26 @@
                   };
               };
             };
-          };
 
-          nixosConfigurations.container = nixpkgs.lib.nixosSystem {
-            system = "x86_64-linux";
-            modules = [
-              self.nixosModules.default
-              ({ config, pkgs, ... }: {
-                # Only allow this to boot as a container
-                boot.isContainer = true;
-                networking.hostName = "deadeye-admin";
 
-                # Allow nginx through the firewall
-                networking.firewall.allowedTCPPorts = [ config.deadeye.admin.port ];
+            nixosConfigurations.container = nixpkgs.lib.nixosSystem {
+              system = "x86_64-linux";
+              modules = [
+                self.nixosModules.default
+                ({ config, pkgs, ... }: {
+                  # Only allow this to boot as a container
+                  boot.isContainer = true;
+                  networking.hostName = "deadeye-admin";
 
-                deadeye.admin.enable = true;
-                deadeye.admin.ntServerAddress = "192.168.1.30";
-              })
-            ];
+                  # Allow nginx through the firewall
+                  networking.firewall.allowedTCPPorts = [ config.deadeye.admin.port ];
+
+                  deadeye.admin.enable = true;
+                  deadeye.admin.ntServerAddress = "192.168.1.30";
+                })
+              ];
+            };
           };
         };
-    }
+    };
+}
