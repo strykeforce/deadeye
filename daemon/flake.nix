@@ -83,13 +83,12 @@
               pkgs.cmake
               pkgs.ninja
               pkgs.gcc-unwrapped
+              pkgs.cmakeCurses
 
               pkgs.catch2
-              pkgs.cmakeCurses
               pkgs.gst_all_1.gst-plugins-base
               pkgs.gst_all_1.gst-plugins-good
               pkgs.gst_all_1.gstreamer.dev
-              pkgs.ninja
               pkgs.nlohmann_json
               pkgs.pkg-config
               pkgs.spdlog.dev
@@ -106,7 +105,27 @@
             pname = "deadeye-daemon";
             version = "22.2.0";
             src = ./.;
-            buildInputs = self.devShell.${system}.buildInputs;
+            buildInputs = [
+              pkgs.cmake
+              pkgs.gcc-unwrapped
+              pkgs.gst_all_1.gstreamer.dev
+              pkgs.catch2
+              pkgs.nlohmann_json
+              pkgs.pkg-config
+              pkgs.spdlog.dev
+              wpilib
+              (buildHeaderOnlyLib "readerwriterqueue" "1.0.5" readerwriterqueue)
+              (buildHeaderOnlyLib "safe" "1.0.0" safe)
+              (buildHeaderOnlyLib "tinyfsm" "0.3.3" tinyfsm)
+            ] ++ pkgs.lib.optional pkgs.stdenv.isLinux [
+              pkgs.systemd.dev
+            ];
+
+            propagatedBuildInputs = [
+              pkgs.gst_all_1.gst-plugins-base
+              pkgs.gst_all_1.gst-plugins-good
+            ];
+
             cmakeFlags = [
               "-DCMAKE_BUILD_TYPE=Release"
               "-DDEADEYE_UNIT_ID=N"
