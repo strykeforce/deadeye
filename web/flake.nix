@@ -84,13 +84,7 @@
 
                 "/socket.io/" = {
                   proxyPass = "http://127.0.0.1:5000";
-                  # proxySetHeader = [
-                  #   "Upgrade $http_upgrade"
-                  #   "Connection \"Upgrade\""
-                  #   "X-Forwarded-For $proxy_add_x_forwarded_for"
-                  #   "Host $host"
-                  # ];
-                  # proxyHttpVersion = "1.1";
+                  proxyWebSockets = true;
                 };
 
                 "/stream/0/" = { proxyPass = "http://127.0.0.1:5805/stream.mjpg"; };
