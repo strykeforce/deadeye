@@ -105,6 +105,12 @@
           options.deadeye.web = {
             enable = mkEnableOption "Enable the Deadeye web console";
 
+            adminAddress = mkOption {
+              description = "Address of the Deadeye admin middleware service";
+              type = types.str;
+              default = "127.0.0.1";
+            };
+
             domain = mkOption rec {
               type = types.str;
               default = "deadeye.strykeforce.org";
@@ -154,19 +160,19 @@
                   };
 
                   "/socket.io/" = {
-                    proxyPass = "http://127.0.0.1:5000";
+                    proxyPass = "http://${cfg.web.adminAddress}:${toString cfg.admin.port}";
                     proxyWebsockets = true;
                   };
 
                   "/upload" = {
-                    proxyPass = "http://127.0.0.1:5000";
+                    proxyPass = "http://${cfg.web.adminAddress}:${toString cfg.admin.port}";
                   };
 
-                  "/stream/0/" = { proxyPass = "http://127.0.0.1:5805/stream.mjpg"; };
-                  "/stream/1/" = { proxyPass = "http://127.0.0.1:5806/stream.mjpg"; };
-                  "/stream/2/" = { proxyPass = "http://127.0.0.1:5807/stream.mjpg"; };
-                  "/stream/3/" = { proxyPass = "http://127.0.0.1:5808/stream.mjpg"; };
-                  "/stream/4/" = { proxyPass = "http://127.0.0.1:5809/stream.mjpg"; };
+                  # "/stream/0/" = { proxyPass = "http://127.0.0.1:5805/stream.mjpg"; };
+                  # "/stream/1/" = { proxyPass = "http://127.0.0.1:5806/stream.mjpg"; };
+                  # "/stream/2/" = { proxyPass = "http://127.0.0.1:5807/stream.mjpg"; };
+                  # "/stream/3/" = { proxyPass = "http://127.0.0.1:5808/stream.mjpg"; };
+                  # "/stream/4/" = { proxyPass = "http://127.0.0.1:5809/stream.mjpg"; };
                 };
               };
             })
@@ -188,8 +194,8 @@
             # Allow nginx through the firewall
             networking.firewall.allowedTCPPorts = [ config.deadeye.admin.port ];
 
-            deadeye.admin.enable = true;
-            deadeye.web.enable = false;
+            deadeye.admin.enable = false;
+            deadeye.web.enable = true;
             deadeye.ntServerAddress = "192.168.1.30";
           })
         ];
