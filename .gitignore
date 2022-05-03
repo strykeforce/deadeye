@@ -10,3 +10,9 @@ npm-debug.log
 *.pyc
 /networktables.ini*
 scripts/.vscode/
+
+web/result
+
+# Nix stuff
+.tmp
+result
