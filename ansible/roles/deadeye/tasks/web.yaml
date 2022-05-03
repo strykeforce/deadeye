@@ -21,7 +21,7 @@
     path: "{{ item }}"
     state: absent
   loop:
-    - "{{ playbook_dir }}/../web/build/"
+    - "{{ playbook_dir }}/../web/dist/"
     - "{{ playbook_dir }}/../web/node_modules/"
   delegate_to: localhost
 
@@ -55,6 +55,6 @@
 
 - name: Copy admin front-end to HTML dir
   ansible.builtin.copy:
-    src: "{{ playbook_dir }}/../web/build/"
+    src: "{{ playbook_dir }}/../web/dist/"
     dest: "{{ nginx_html }}"
     mode: preserve

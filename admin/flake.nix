@@ -12,8 +12,8 @@
         {
 
           devShells.default = pkgs.mkShell {
-            buildInputs = with pkgs; [
-              python38Packages.poetry
+            nativeBuildInputs = with pkgs; [
+              poetry
             ];
           };
 

@@ -44,7 +44,7 @@
           };
 
           devShells.default = with pkgs; mkShell {
-            packages = [
+            nativeBuildInputs = [
               nodejs-16_x
               node2nix
               nodePackages.http-server
