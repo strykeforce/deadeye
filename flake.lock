@@ -66,11 +66,64 @@
         "type": "github"
       }
     },
+    "readerwriterqueue-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1628973707,
+        "narHash": "sha256-g7NX7Ucl5GWw3u6TiUOITjhv7492ByTzACtWR0Ph2Jc=",
+        "owner": "cameron314",
+        "repo": "readerwriterqueue",
+        "rev": "8e7627d18c2108aca178888d88514179899a044f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "cameron314",
+        "repo": "readerwriterqueue",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "n2n": "n2n",
         "nixpkgs": "nixpkgs_2",
-        "utils": "utils"
+        "readerwriterqueue-src": "readerwriterqueue-src",
+        "safe-src": "safe-src",
+        "tinyfsm-src": "tinyfsm-src",
+        "utils": "utils",
+        "wpilib-src": "wpilib-src"
+      }
+    },
+    "safe-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1602615737,
+        "narHash": "sha256-bcYEUvrteF+V0LbiB0In02mVhO1kronGXlhMOdmyW1Q=",
+        "owner": "LouisCharlesC",
+        "repo": "safe",
+        "rev": "2cffe68a262ccd9ab3bf8f122d03dd4361d11a13",
+        "type": "github"
+      },
+      "original": {
+        "owner": "LouisCharlesC",
+        "repo": "safe",
+        "type": "github"
+      }
+    },
+    "tinyfsm-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1595029365,
+        "narHash": "sha256-5LfDKrX9cY47ydaVotEi0WQl2FXF+OFkCOt0Y+uIiLE=",
+        "owner": "jhh",
+        "repo": "tinyfsm",
+        "rev": "10d10cc24cfc43e9b3b73b7c0c66b7aade071b9d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "jhh",
+        "ref": "cmake",
+        "repo": "tinyfsm",
+        "type": "github"
       }
     },
     "utils": {
@@ -85,6 +138,23 @@
       "original": {
         "owner": "numtide",
         "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "wpilib-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1645897774,
+        "narHash": "sha256-8BMUTAGJwUPp3butmn+jMHNUS0Swtv9BqNBnAxJQ9KA=",
+        "owner": "wpilibsuite",
+        "repo": "allwpilib",
+        "rev": "d66555e42f3fb558ebe7609602fcbeee252be287",
+        "type": "github"
+      },
+      "original": {
+        "owner": "wpilibsuite",
+        "ref": "v2022.4.1",
+        "repo": "allwpilib",
         "type": "github"
       }
     }
