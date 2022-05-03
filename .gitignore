@@ -12,4 +12,7 @@ npm-debug.log
 scripts/.vscode/
 
 web/result
+
+# Nix stuff
 .tmp
+result
