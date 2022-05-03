@@ -12,3 +12,4 @@ npm-debug.log
 scripts/.vscode/
 
 web/result
+.tmp
