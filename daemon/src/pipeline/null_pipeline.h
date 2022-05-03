@@ -11,9 +11,10 @@
 namespace deadeye {
 class NullPipeline : public Pipeline {
  public:
-  explicit NullPipeline(int inum)
-      : Pipeline{inum, "NullPipeline"},
+  NullPipeline(int inum, std::string name): Pipeline{inum, name},
         id_{DEADEYE_UNIT + std::to_string(inum_)} {}
+
+  explicit NullPipeline(int inum): NullPipeline(inum, "NullPipeline") {}
 
   void Configure(CaptureConfig const& config) override {}
   void Configure(PipelineConfig const& config) override {}
