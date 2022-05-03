@@ -111,16 +111,18 @@
               '';
             };
 
-          packages.wpilib = pkgs.gcc7Stdenv.mkDerivation {
+          packages.wpilib = pkgs.stdenv.mkDerivation {
             pname = "wpilib";
             version = "2022.4.1";
             src = wpilib-src;
             nativeBuildInputs = [
               pkgs.cmake
             ];
+
             buildInputs = [
               pkgs.gcc-unwrapped
             ];
+
             propagatedBuildInputs = [ pkgs.opencv4 ];
 
             cmakeFlags = [
@@ -372,7 +374,7 @@
                 };
 
                 serviceConfig =
-                  let pkg = self.packages.${pkgs.system}.daemon.overrideAttrs (_: rec {
+                  let pkg = self.packages.${pkgs.system}.daemon.overrideAttrs (oldAttrs: rec {
                     cmakeFlags = [
                       "-DCMAKE_BUILD_TYPE=Release"
                       "-DDEADEYE_BUILD_TESTS=OFF"
@@ -390,7 +392,7 @@
                   in
                   {
                     Restart = "on-failure";
-                    ExecStart = "${self.packages.${pkgs.system}.daemon}/bin/deadeyed";
+                    ExecStart = "${pkg}/bin/deadeyed";
                   };
               };
             })
