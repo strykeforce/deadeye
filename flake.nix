@@ -73,8 +73,7 @@
               pkgs.nlohmann_json
               pkgs.pkg-config
               pkgs.spdlog.dev
-              self.packages.${system}.wpilib
-            ];
+            ] ++ pkgs.lib.optionals pkgs.stdenv.isLinux [ self.packages.${system}.wpilib pkgs.systemd.dev ];
           };
 
           packages.admin = with pkgs.poetry2nix; mkPoetryApplication {
@@ -428,5 +427,3 @@
       };
     };
 }
-
-
