@@ -39,6 +39,7 @@ constexpr spdlog::level::level_enum level2spdlog(ClientLogger::Level level) {
     case ClientLogger::Level::error:
       return spdlog::level::err;
   }
+  return spdlog::level::info;
 }
 }  // namespace
 
