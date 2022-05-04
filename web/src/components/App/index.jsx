@@ -9,13 +9,13 @@ import SettingsPage from "../../pages/SettingsPage";
 const App = () => {
   const [units, setUnits] = useState();
 
-  useEffect(() => {
-    const handleUnitsChange = (units) => {
-      setUnits(JSON.parse(units));
-    };
+  const handleUnitsChange = (units) => {
+    setUnits(JSON.parse(units));
+  };
 
+  useEffect(() => {
     subscribeToUnitUpdates(handleUnitsChange);
-    return () => close();
+    return () => console.log("useEffect cleanup");
   }, []);
 
   // If admin server connects to NetworkTables when we subscribe, the "message"
