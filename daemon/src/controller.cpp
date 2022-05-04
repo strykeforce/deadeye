@@ -12,7 +12,6 @@
 #include <csignal>
 #include <future>
 #include <memory>
-#include <tinyfsm.hpp>
 #include <utility>
 
 #include "config.h"
@@ -49,7 +48,7 @@ void signal_handler([[maybe_unused]] int signal) { quit = true; }
  * From http://www.rioki.org/2016/03/31/cpp-switch-string.html
  */
 constexpr unsigned int hash(const char* str, int h = 0) {
-  return !str[h] ? 5381 : (hash(str, h + 1) * 33) ^ str[h];
+  return str[h] == 0 ? 5381 : (hash(str, h + 1) * 33) ^ str[h];
 }
 #pragma clang diagnostic pop
 }  // namespace
@@ -81,8 +80,12 @@ Controller::Controller(Pipelines* pipelines)
     }
   }
 
-  std::signal(SIGINT, signal_handler);
-  std::signal(SIGTERM, signal_handler);
+  constexpr std::string_view kSignalHandlerError =
+      "error installing {} signal handler";
+  if (SIG_ERR == std::signal(SIGINT, signal_handler))
+    spdlog::critical(kSignalHandlerError, "SIGINT");
+  if (SIG_ERR == std::signal(SIGTERM, signal_handler))
+    spdlog::critical(kSignalHandlerError, "SIGTERM");
 
   Camera<0>::SetPipeline(std::move((*pipelines)[0]));
   Camera<1>::SetPipeline(std::move((*pipelines)[1]));
@@ -120,6 +123,8 @@ Controller::~Controller() {
   spdlog::info("Deadeye Controller exiting.");
 }
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "readability-function-cognitive-complexity"
 /**
  * Run listens for commands and config changes.
  */
@@ -432,6 +437,7 @@ void Controller::Run() {
     }
   }
 }
+#pragma clang diagnostic pop
 
 void Controller::ShutDown() {
   nt::DestroyEntryListenerPoller(poller_);
@@ -481,15 +487,15 @@ void Controller::StartNetworkTables() {
       [](const nt::LogMessage& msg) {
         spdlog::log(Nt2spdlogLevel(msg), msg.message);
       },
-      0, UINT_MAX);
+      0, std::numeric_limits<unsigned int>::max());
 
   char* env_nt_server = std::getenv("DEADEYE_NT_SERVER");
-  const char* nt_server = env_nt_server ? env_nt_server : NT_SERVER;
+  const char* nt_server = env_nt_server != nullptr ? env_nt_server : NT_SERVER;
 
   char* env_nt_port = std::getenv("DEADEYE_NT_PORT");
   const unsigned int nt_port =
-      env_nt_port ? static_cast<unsigned int>(std::stoi(env_nt_port))
-                  : NT_DEFAULT_PORT;
+      env_nt_port != nullptr ? static_cast<unsigned int>(std::stoi(env_nt_port))
+                             : NT_DEFAULT_PORT;
 
   // create own NT server if DEADEYE_NT_SERVER=127.0.0.1
   if (std::strncmp("127.0.0.1", nt_server, 15) == 0) {
@@ -504,7 +510,7 @@ void Controller::StartNetworkTables() {
   std::future<void> barrier_future = barrier.get_future();
 
   auto conn_listener = nt::AddConnectionListener(
-      inst_, [&](auto event) mutable { barrier.set_value(); }, true);
+      inst_, [&](auto /*event*/) mutable { barrier.set_value(); }, true);
 
   spdlog::info("Starting NetworkTables client connecting to {}", nt_server);
   nt::StartClient(inst_, nt_server, nt_port);

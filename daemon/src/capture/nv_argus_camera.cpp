@@ -34,7 +34,7 @@ std::string deadeye::NvArgusCameraPipeline(const CaptureConfig& config) {
   auto ae_lock = j.value("aeLock", true);
   auto awb_lock = j.value("awbLock", false);
 
-  auto src_fmt =
+  const char* src_fmt =
       "nvarguscamerasrc "
       "silent={} "
       "wbmode={} "
@@ -51,7 +51,7 @@ std::string deadeye::NvArgusCameraPipeline(const CaptureConfig& config) {
   auto cap_width = j.value("captureWidth", 1280);
   auto cap_height = j.value("captureHeight", 720);
 
-  auto cap_format_fmt =
+  const char* cap_format_fmt =
       "video/x-raw(memory:NVMM),"
       "width=(int){},"
       "height=(int){},"
@@ -63,7 +63,7 @@ std::string deadeye::NvArgusCameraPipeline(const CaptureConfig& config) {
 
   auto flip_method = j.value("flipMethod", 0);
 
-  auto output_fmt =
+  const char* output_fmt =
       "nvvidconv "
       "flip-method={} ! "
       "video/x-raw,format=UYVY,"

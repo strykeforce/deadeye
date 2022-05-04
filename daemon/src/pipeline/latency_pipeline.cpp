@@ -30,7 +30,7 @@ std::unique_ptr<TargetData> LatencyPipeline::ProcessContours(
   if (contours.empty())
     return std::make_unique<LatencyTargetData>(
         id_, 0, false, cv::Rect{0, 0, 0, 0}, IsLedOn(), elapsed);
-  auto contour = contours[0];
+  const auto& contour = contours[0];
   cv::Rect bb = cv::boundingRect(contour);
 
   return std::make_unique<LatencyTargetData>(id_, 0, true, bb, IsLedOn(),

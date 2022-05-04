@@ -5,7 +5,6 @@
 #include <fmt/core.h>
 
 #include <memory>
-#include <sstream>
 #include <utility>
 
 #include "config.h"
@@ -70,7 +69,7 @@ std::ostream& operator<<(std::ostream& os, const StreamConfig& sc) {
 namespace {
 
 std::string stream_url(int inum) {
-  if (std::getenv("DEADEYE_DOCKER")) {
+  if (std::getenv("DEADEYE_DOCKER") != nullptr) {
     return fmt::format("/stream/{}/?s=0", inum);
   }
   return fmt::format("http://{}:{}/stream.mjpg?s=0", DEADEYE_STREAM_ADDRESS,

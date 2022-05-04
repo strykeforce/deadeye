@@ -29,7 +29,7 @@ std::unique_ptr<TargetData> MinAreaRectPipeline::ProcessContours(
   if (contours.empty())
     return std::make_unique<MinAreaTargetData>(id_, 0, false, cv::RotatedRect(),
                                                center2f_);
-  auto contour = contours[0];
+  const auto& contour = contours[0];
   cv::RotatedRect rect = cv::minAreaRect(contour);
   return std::make_unique<MinAreaTargetData>(id_, 0, true, rect, center2f_);
 }

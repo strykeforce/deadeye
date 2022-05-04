@@ -24,7 +24,7 @@ std::string deadeye::BuildV4L2Pipeline(const CaptureConfig& config) {
 
   auto device = j.value("device", "/dev/video0");
 
-  auto src_fmt =
+  const char* src_fmt =
       "v4l2src "
       "device={}";
 
@@ -34,7 +34,7 @@ std::string deadeye::BuildV4L2Pipeline(const CaptureConfig& config) {
   auto cap_height = j.value("captureHeight", 480);
   auto format = j.value("format", "YUY2");
 
-  auto cap_format_fmt =
+  const char* cap_format_fmt =
       "video/x-raw,"
       "format={},"
       "width=(int){},"
@@ -44,7 +44,7 @@ std::string deadeye::BuildV4L2Pipeline(const CaptureConfig& config) {
   auto cap_format = fmt::format(cap_format_fmt, format, cap_width, cap_height,
                                 config.frame_rate);
 
-  auto output = "videoconvert ! video/x-raw, format=(string)BGR";
+  const char* output = "videoconvert ! video/x-raw, format=(string)BGR";
 
   auto pipeline = src + " ! " + cap_format + " ! " + output + " !  appsink";
   return pipeline;

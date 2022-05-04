@@ -18,9 +18,9 @@ void deadeye::log::Configure(const std::string& name) {
 
 #ifdef __linux__
   const char* journal = std::getenv("JOURNAL_STREAM");
-  if (journal) {  // started by systemd
-    struct stat es;
-    if (fstat(STDERR_FILENO, &es)) {
+  if (journal != nullptr) {  // started by systemd
+    struct stat es{};
+    if (fstat(STDERR_FILENO, &es) != 0) {
       spdlog::error("Failed to stat stderr: {}", std::strerror(errno));
       return;
     }
