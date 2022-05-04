@@ -1,12 +1,12 @@
-const { merge } = require('webpack-merge')
+const { merge } = require("webpack-merge");
 
-const common = require('./webpack.common')
+const common = require("./webpack.common");
 
 module.exports = merge(common, {
-  mode: 'development',
+  mode: "development",
 
   // Control how source maps are generated
-  devtool: 'inline-source-map',
+  devtool: "inline-source-map",
 
   devServer: {
     historyApiFallback: true,
@@ -15,8 +15,9 @@ module.exports = merge(common, {
     hot: true,
     port: 8080,
     proxy: {
-      '/socket.io': 'http://localhost:5000'
-    }
+      "/socket.io": "http://localhost:5000",
+      ws: true,
+    },
   },
 
   module: {
@@ -25,22 +26,23 @@ module.exports = merge(common, {
       {
         test: /\.(less|css)$/,
         use: [
-          'style-loader',
+          "style-loader",
           {
-            loader: 'css-loader',
+            loader: "css-loader",
             options: { sourceMap: true, importLoaders: 1, modules: false },
           },
-          { loader: 'postcss-loader', options: { sourceMap: true } },
+          { loader: "postcss-loader", options: { sourceMap: true } },
           {
-            loader: 'less-loader',
+            loader: "less-loader",
             options: {
               sourceMap: true,
               lessOptions: {
                 javascriptEnabled: true,
-              }
-            }
-          }
+              },
+            },
+          },
         ],
-      },]
-  }
-})
+      },
+    ],
+  },
+});

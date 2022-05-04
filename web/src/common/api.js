@@ -1,6 +1,7 @@
 import io from "socket.io-client";
 
-const socket = io("http://" + document.domain + ":" + window.location.port);
+// const socket = io("http://" + document.domain + ":" + window.location.port);
+const socket = io("http://" + document.domain + ":" + 5000);
 
 socket.on("connect_error", (error) => {
   console.error(error);
@@ -18,18 +19,17 @@ export const subscribeToLinkUpdates = (handleLinksChange) => {
   socket.on("link", (data) => handleLinksChange(data));
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const unsubscribeFromLinkUpdates = () => { socket.off("link"); };
+export const unsubscribeFromLinkUpdates = () => {
+  socket.off("link");
+};
 
 export const close = () => {
   socket.close();
   console.debug("closed socket.io connection");
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const refreshLink = () => socket.emit("link_refresh", "pls");
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const sendMessage = (msg) => socket.emit("message", msg);
 
 export const enableCamera = (unit, inum, enabled) => {
