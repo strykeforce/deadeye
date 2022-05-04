@@ -51,12 +51,12 @@ class Camera : public tinyfsm::Fsm<Camera<inum>> {
   }
 
  private:
-  [[maybe_unused]] void react(tinyfsm::Event const&) {}
+  [[maybe_unused]] void react(tinyfsm::Event const& /*unused*/) {}
 
-  [[maybe_unused]] virtual void react(CameraOn const&) {}
-  [[maybe_unused]] virtual void react(CameraOff const&) {}
-  [[maybe_unused]] virtual void react(LightsOn const&) {}
-  [[maybe_unused]] virtual void react(LightsOff const&) {}
+  [[maybe_unused]] virtual void react(CameraOn const& /*unused*/) {}
+  [[maybe_unused]] virtual void react(CameraOff const& /*unused*/) {}
+  [[maybe_unused]] virtual void react(LightsOn const& /*unused*/) {}
+  [[maybe_unused]] virtual void react(LightsOff const& /*unused*/) {}
   [[maybe_unused]] virtual void react(ConfigCapture const& c) {
     Camera<inum>::pipeline_runner_.Configure(c.config);
   }

@@ -29,11 +29,11 @@ class Lights : public tinyfsm::Fsm<Lights<inum>> {
 
  private:
   // default reaction for unhandled events
-  [[maybe_unused]] void react(tinyfsm::Event const&) {}
+  [[maybe_unused]] void react(tinyfsm::Event const& /*unused*/) {}
 
-  [[maybe_unused]] virtual void react(LightsOn const&) {}
-  [[maybe_unused]] virtual void react(LightsOff const&) {}
-  [[maybe_unused]] virtual void react(LightsBlink const&) {}
+  [[maybe_unused]] virtual void react(LightsOn const& /*unused*/) {}
+  [[maybe_unused]] virtual void react(LightsOff const& /*unused*/) {}
+  [[maybe_unused]] virtual void react(LightsBlink const& /*unused*/) {}
 
   [[maybe_unused]] virtual void entry() = 0;
   virtual void exit() = 0;

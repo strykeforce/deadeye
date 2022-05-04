@@ -1,5 +1,5 @@
-// Copyright (c) 2022 Stryke Force FRC 2767
 #pragma once
+// Copyright (c) 2022 Stryke Force FRC 2767
 
 #include <nlohmann/json.hpp>
 #include <string>

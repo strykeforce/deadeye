@@ -38,18 +38,18 @@ class On : public Camera<inum> {
     spdlog::info("Camera<{}> on", CameraId(inum));
   }
 
-  void react(CameraOff const&) final {
+  void react(CameraOff const& /*unused*/) final {
     Lights<inum>::dispatch(LightsOff());
 
     base::template transit<camera::Off<inum>>();
   }
 
-  void react(LightsOff const&) final {
+  void react(LightsOff const& /*unused*/) final {
     base::pipeline_runner_.SetLoggingEnabled(false);
     spdlog::debug("Camera<{}> stop logging", CameraId(inum));
   }
 
-  void react(LightsOn const&) final {
+  void react(LightsOn const& /*unused*/) final {
     base::pipeline_runner_.SetLoggingEnabled(true);
     spdlog::debug("Camera<{}> start logging", CameraId(inum));
   }
@@ -83,7 +83,7 @@ class Off : public Camera<inum> {
     spdlog::info("Camera<{}> off", CameraId(inum));
   }
 
-  void react(CameraOn const&) final {
+  void react(CameraOn const& /*unused*/) final {
     Lights<inum>::dispatch(LightsOn());
     base::template transit<camera::On<inum>>();
   }
@@ -104,13 +104,13 @@ class Error : public Camera<inum> {
     spdlog::error("Camera<{}> error: {}", CameraId(inum), base::error_);
   }
 
-  void react(CameraOn const&) final {
+  void react(CameraOn const& /*unused*/) final {
     base::SetStatus(DE_ON, false);
     spdlog::warn("Camera<{}> attempting to turn on camera in error state: {}",
                  CameraId(inum), base::error_);
   }
 
-  void react(CameraOff const&) final {
+  void react(CameraOff const& /*unused*/) final {
     base::SetStatus(DE_OFF, false);
     spdlog::warn(
         "Camera<{}{}> attempting to turn off camera in error state: {}",
