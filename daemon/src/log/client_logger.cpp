@@ -25,6 +25,7 @@ constexpr std::string_view level2string(ClientLogger::Level level) {
     case ClientLogger::Level::error:
       return "error";
   }
+  return "unknown";
 }
 
 constexpr spdlog::level::level_enum level2spdlog(ClientLogger::Level level) {
