@@ -1,7 +1,6 @@
 import io from "socket.io-client";
 
-// const socket = io("http://" + document.domain + ":" + window.location.port);
-const socket = io("http://" + document.domain + ":" + 5000);
+const socket = io("http://" + document.domain + ":" + window.location.port);
 
 socket.on("connect_error", (error) => {
   console.error(error);
