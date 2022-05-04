@@ -38,7 +38,7 @@
               overlays = [ n2n.overlays.${system} ];
             };
 
-          buildHeaderOnlyLib = name: version: src: pkgs.gcc7Stdenv.mkDerivation
+          buildHeaderOnlyLib = name: version: src: pkgs.stdenv.mkDerivation
             rec {
               pname = name;
               inherit src version;
@@ -68,12 +68,7 @@
               nodePackages.http-server
             ];
 
-            buildInputs = [
-              pkgs.catch2
-              pkgs.nlohmann_json
-              pkgs.pkg-config
-              pkgs.spdlog.dev
-            ] ++ pkgs.lib.optionals pkgs.stdenv.isLinux [ self.packages.${system}.wpilib pkgs.systemd.dev ];
+            buildInputs = self.packages.${system}.daemon.buildInputs;
           };
 
           packages.admin = with pkgs.poetry2nix; mkPoetryApplication {
@@ -165,8 +160,8 @@
                 pkgs.nlohmann_json
                 pkgs.spdlog.dev
                 self.packages.${system}.wpilib
-                (buildHeaderOnlyLib "readerwriterqueue" "1.0.5" readerwriterqueue-src)
-                (buildHeaderOnlyLib "safe" "1.0.0" safe-src)
+                (buildHeaderOnlyLib "readerwriterqueue" "1.0.6" readerwriterqueue-src)
+                (buildHeaderOnlyLib "safe" "1.0.1" safe-src)
                 (buildHeaderOnlyLib "tinyfsm" "0.3.3" tinyfsm-src)
               ] ++ pkgs.lib.optional pkgs.stdenv.isLinux pkgs.systemd.dev;
 
@@ -352,12 +347,6 @@
                   "/upload" = {
                     proxyPass = "http://${cfg.web.adminAddress}:${toString cfg.admin.port}";
                   };
-
-                  # "/stream/0/" = { proxyPass = "http://127.0.0.1:5805/stream.mjpg"; };
-                  # "/stream/1/" = { proxyPass = "http://127.0.0.1:5806/stream.mjpg"; };
-                  # "/stream/2/" = { proxyPass = "http://127.0.0.1:5807/stream.mjpg"; };
-                  # "/stream/3/" = { proxyPass = "http://127.0.0.1:5808/stream.mjpg"; };
-                  # "/stream/4/" = { proxyPass = "http://127.0.0.1:5809/stream.mjpg"; };
                 };
               };
             })
@@ -410,7 +399,6 @@
             boot.isContainer = true;
             networking.hostName = "deadeye-admin";
 
-            # Allow nginx through the firewall
             networking.firewall.allowedTCPPorts = [ config.deadeye.admin.port ];
 
             deadeye.admin.enable = false;
