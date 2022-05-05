@@ -105,19 +105,19 @@
               '';
             };
 
-          packages.wpilib = pkgs.stdenv.mkDerivation {
+          packages.wpilib = with pkgs; stdenv.mkDerivation {
             pname = "wpilib";
             version = "2022.4.1";
             src = wpilib-src;
             nativeBuildInputs = [
-              pkgs.cmake
+              cmake
             ];
 
             buildInputs = [
-              pkgs.gcc-unwrapped
-            ];
+              gcc-unwrapped
+            ] ++ lib.optional stdenv.isDarwin darwin.apple_sdk.frameworks.ApplicationServices;
 
-            propagatedBuildInputs = [ pkgs.opencv4 ];
+            propagatedBuildInputs = [ opencv4 ];
 
             cmakeFlags = [
               "-DCMAKE_BUILD_TYPE=Release"
@@ -139,31 +139,31 @@
           };
 
 
-          packages.daemon =
+          packages.daemon = with pkgs;
             let
-              gst = with pkgs.gst_all_1; [ gstreamer gst-plugins-base gst-plugins-good ];
-              gstPluginPath = "--prefix GST_PLUGIN_PATH : ${pkgs.lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" gst}";
+              gst = with gst_all_1; [ gstreamer gst-plugins-base gst-plugins-good ];
+              gstPluginPath = "--prefix GST_PLUGIN_PATH : ${lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" gst}";
             in
-            pkgs.stdenv.mkDerivation rec {
+            stdenv.mkDerivation rec {
               pname = "deadeye-daemon";
               inherit version;
               src = ./daemon;
 
               nativeBuildInputs = [
-                pkgs.cmake
-                pkgs.pkg-config
-                pkgs.makeWrapper
+                cmake
+                pkg-config
+                makeWrapper
               ];
 
               buildInputs = [
-                pkgs.catch2
-                pkgs.nlohmann_json
-                pkgs.spdlog.dev
+                catch2
+                nlohmann_json
+                spdlog.dev
                 self.packages.${system}.wpilib
                 (buildHeaderOnlyLib "readerwriterqueue" "1.0.6" readerwriterqueue-src)
                 (buildHeaderOnlyLib "safe" "1.0.1" safe-src)
                 (buildHeaderOnlyLib "tinyfsm" "0.3.3" tinyfsm-src)
-              ] ++ pkgs.lib.optional pkgs.stdenv.isLinux pkgs.systemd.dev;
+              ] ++ lib.optional stdenv.isLinux systemd.dev;
 
               cmakeFlags = [
                 "-DCMAKE_BUILD_TYPE=Release"
