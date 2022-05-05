@@ -163,7 +163,7 @@
                 (buildHeaderOnlyLib "readerwriterqueue" "1.0.6" readerwriterqueue-src)
                 (buildHeaderOnlyLib "safe" "1.0.1" safe-src)
                 (buildHeaderOnlyLib "tinyfsm" "0.3.3" tinyfsm-src)
-              ] ++ lib.optional stdenv.isLinux systemd.dev;
+              ] ++ lib.optional stdenv.isLinux systemd;
 
               cmakeFlags = [
                 "-DCMAKE_BUILD_TYPE=Release"
