@@ -22,7 +22,7 @@ deadeye:
       camera_2_pipeline: deadeye::MinAreaRectPipeline
       install_opencv: true
       ansible_user: jeff
-      deadeye_nt_server: 192.168.1.30
+      deadeye_nt_server: 192.168.1.7
     deadeye-d:
       ansible_host: deadeye-d
       deadeye_unit: D
@@ -35,7 +35,7 @@ deadeye:
       camera_2_pipeline: deadeye::TargetListPipeline
       install_opencv: true
       ansible_user: deadeye
-      deadeye_nt_server: 192.168.1.30
+      deadeye_nt_server: 192.168.1.7
     deadeye-h:
       ansible_host: deadeye-h
       deadeye_unit: H

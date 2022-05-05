@@ -54,6 +54,10 @@
 
           devShells.default = pkgs.mkShell {
             nativeBuildInputs = with pkgs; [
+              # ansible
+              ansible
+              ansible-lint
+
               # daemon
               cmake
               cmakeCurses
