@@ -43,7 +43,7 @@ deadeye:
       camera_1_pipeline: deadeye::MinAreaRectPipeline
       camera_2_pipeline: deadeye::TargetListPipeline
       install_opencv: true
-      deadeye_nt_server: 192.168.3.3
+      deadeye_nt_server: 192.168.3.20
     deadeye-i:
       ansible_host: deadeye-i
       deadeye_unit: I
@@ -51,7 +51,7 @@ deadeye:
       camera_1_pipeline: deadeye::MinAreaRectPipeline
       camera_2_pipeline: deadeye::TargetListPipeline
       install_opencv: true
-      deadeye_nt_server: 192.168.3.3
+      deadeye_nt_server: 192.168.3.20
     deadeye-j:
       ansible_host: deadeye-j
       deadeye_unit: J
@@ -59,7 +59,7 @@ deadeye:
       camera_1_pipeline: deadeye::MinAreaRectPipeline
       camera_2_pipeline: deadeye::TargetListPipeline
       install_opencv: true
-      deadeye_nt_server: 192.168.3.3
+      deadeye_nt_server: 192.168.3.20
     deadeye-k:
       ansible_host: deadeye-k
       deadeye_unit: K
@@ -67,7 +67,7 @@ deadeye:
       camera_1_pipeline: deadeye::MinAreaRectPipeline
       camera_2_pipeline: deadeye::TargetListPipeline
       install_opencv: true
-      deadeye_nt_server: 192.168.3.3
+      deadeye_nt_server: 192.168.3.20
   vars:
     ansible_python_interpreter: /usr/bin/python3
     ansible_user: deadeye
