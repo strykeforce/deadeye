@@ -6846,8 +6846,8 @@ let
     };
   };
   args = {
-    name = "webpack-tutorial";
-    packageName = "webpack-tutorial";
+    name = "deadeye-web";
+    packageName = "deadeye-web";
     version = "1.0.0";
     src = ./..;
     dependencies = [
