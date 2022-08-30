@@ -1,7 +1,7 @@
 // Copyright (c) 2022 Stryke Force FRC 2767
 #pragma once
 
-#ifdef __aarch64__
+#if defined(__aarch64__) && defined(__linux__)
 #include <gpiod.hpp>
 #endif
 
@@ -15,7 +15,7 @@ class LedDrive {
   void Off();
 
  private:
-#ifdef __aarch64__
+#if defined(__aarch64__) && defined(__linux__)
   gpiod::line line_;
 #endif
 };
