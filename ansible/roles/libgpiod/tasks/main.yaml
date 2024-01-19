@@ -4,6 +4,7 @@
     update_cache: false
     name:
       - autoconf-archive
+      - libtool
 
 - name: Unarchive sources
   ansible.builtin.unarchive:

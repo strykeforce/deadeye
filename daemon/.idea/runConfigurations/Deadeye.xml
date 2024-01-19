@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Deadeye" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Deadeye" TARGET_NAME="Deadeye_deadeyed" CONFIG_NAME="Remote" RUN_TARGET_PROJECT_NAME="Deadeye" RUN_TARGET_NAME="Deadeye_deadeyed">
+  <configuration default="false" name="Deadeye" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Project" TARGET_NAME="Deadeye_deadeyed" CONFIG_NAME="Remote" RUN_TARGET_PROJECT_NAME="Project" RUN_TARGET_NAME="Deadeye_deadeyed">
     <envs>
       <env name="SPDLOG_LEVEL" value="debug" />
       <env name="DEADEYE_NT_SERVER" value="192.168.1.30" />

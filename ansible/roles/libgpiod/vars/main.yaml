@@ -1,4 +1,4 @@
 ---
-libgpiod_version: 1.4.5
+libgpiod_version: 1.6.4
 libgpiod_dir: libgpiod-{{ libgpiod_version }}
 libgpiod_repo: https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git
