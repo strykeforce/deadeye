@@ -39,7 +39,7 @@ const DeviceInput = (props) => {
 
   const innerConfig = config.config;
 
-  const [value, setValue] = useState < string > (
+  const [value, setValue] = useState (
     innerConfig.device || "/dev/video0"
   );
 
