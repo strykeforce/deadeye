@@ -15,7 +15,7 @@ module.exports = merge(common, {
     hot: true,
     port: 8080,
     proxy: {
-      "/socket.io": "http://localhost:5000",
+      "/socket.io": "http://10.1.0.45:5000",
       ws: true,
     },
   },
