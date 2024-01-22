@@ -16,9 +16,8 @@ RUN cmake \
     -D DEADEYE_UNIT_ID=D \
     -D DEADEYE_NT_SERVER=10.27.67.2 \
     -D DEADEYE_STREAM_ADDRESS=10.27.67.11 \
-    -D DEADEYE_CAMERA0_PIPELINE=deadeye::UprightRectPipeline \
-    -D DEADEYE_CAMERA1_PIPELINE=deadeye::MinAreaRectPipeline \
-    -D DEADEYE_CAMERA2_PIPELINE=deadeye::TargetListPipeline \
+    -D DEADEYE_CAMERA0_PIPELINE=deadeye::TargetListPipeline \
+    -D DEADEYE_CAMERA1_PIPELINE=deadeye::UprightRectPipeline \
     /src \
     && make "-j$(nproc)"
 
