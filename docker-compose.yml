@@ -1,8 +1,8 @@
 version: "3.4"
 
 x-common-environment: &common-environment
-  DEADEYE_DOCKER: 1
-  DEADEYE_NT_SERVER: 192.168.1.11
+  DEADEYE_NT_SERVER: 10.27.67.2
+  DEADEYE_NT_PORT: 1735
 
 x-common-restart: &common-restart
   restart: on-failure
@@ -22,9 +22,9 @@ services:
       - 5809:5809
     volumes:
       - upload_data:/upload
-      - /tmp/argus_socket:/tmp/argus_socket
     devices:
       - /dev/gpiochip0
+      - /dev/video0
     environment: *common-environment
     <<: *common-restart
   admin:
