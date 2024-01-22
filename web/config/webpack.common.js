@@ -9,7 +9,7 @@ module.exports = {
 
   resolve: {
     extensions: ['.jsx', '.js'],
-    modules: ['node_modules', process.env.NODE_PATH],
+    modules: ['node_modules'],
   },
   output: {
     path: paths.build,
