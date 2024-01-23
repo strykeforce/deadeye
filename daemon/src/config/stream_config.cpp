@@ -69,10 +69,9 @@ std::ostream& operator<<(std::ostream& os, const StreamConfig& sc) {
 namespace {
 
 std::string stream_url(int inum) {
-  if (std::getenv("DEADEYE_DOCKER") != nullptr) {
-    return fmt::format("/stream/{}/?s=0", inum);
-  }
-  return fmt::format("http://{}:{}/stream.mjpg?s=0", DEADEYE_STREAM_ADDRESS,
+  char* env_stream_host = std::getenv("DEADEYE_STREAM_HOST");
+  const char* stream_host = env_stream_host != nullptr ? env_stream_host : DEADEYE_STREAM_ADDRESS;
+  return fmt::format("http://{}:{}/stream.mjpg?s=0", stream_host,
                      5805 + inum);
 }
 
