@@ -14,6 +14,7 @@
           devShells.default = pkgs.mkShell {
             nativeBuildInputs = with pkgs; [
               nodejs_18
+              node2nix
             ];
           };
 

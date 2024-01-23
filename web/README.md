@@ -2,7 +2,7 @@
 
 This web-based adminstration dashboard is used to control, configure and monitor the camera pipeline daemon.
 
-It is typically served from the Deadeye camera processor and  communicates with the web admin dashboard server over websockets and streams camera preview video directly from the camera pipeline daemon over TCP as MJPEG.
+It is typically served from the Deadeye camera processor and communicates with the web admin dashboard server over websockets and streams camera preview video directly from the camera pipeline daemon over TCP as MJPEG.
 
 ## Developing
 
@@ -32,7 +32,7 @@ ls result/ # view build
 To rebuild the `node2nix` configuration:
 
 ```sh
-node2nix -16 -l package-lock.json -o config/node-packages.nix -c config/default.nix -e config/node-env.nix
+node2nix -18 -l package-lock.json -o config/node-packages.nix -c config/default.nix -e config/node-env.nix
 ```
 
 ### Container Testing
