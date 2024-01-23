@@ -5,7 +5,7 @@ x-common-environment: &common-environment
   DEADEYE_NT_PORT: 1735
 
 x-common-restart: &common-restart
-  restart: on-failure
+  restart: always
 
 volumes:
   upload_data:
