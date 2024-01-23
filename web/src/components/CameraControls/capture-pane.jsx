@@ -125,9 +125,19 @@ const TypeSelect = (props) => {
 };
 
 const DIMENSIONS = {
+  // Microsoft LifeCam: v4l2-ctl -d /dev/video0 --list-formats-ext
   usb: [
+    [1280, 720],
+    [960, 544],
+    [800, 600],
+    [800, 448],
     [640, 480],
     [640, 360],
+    [416, 240],
+    [352, 288],
+    [320, 240],
+    [176, 144],
+    [160, 120],
   ],
   file: [
     [1280, 720],
