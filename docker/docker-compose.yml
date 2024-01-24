@@ -5,7 +5,7 @@ x-common-environment: &common-environment
   DEADEYE_NT_PORT: 1735
 
 x-common-restart: &common-restart
-  restart: always
+  restart: on-failure
 
 volumes:
   upload_data:
@@ -24,10 +24,10 @@ services:
       - upload_data:/upload
     devices:
       - /dev/gpiochip0
-      - /dev/video0
-    environment:
+      - "${CAMERA_DEV}:/dev/lifecam"
+    environment: 
       <<: *common-environment
-      DEADEYE_STREAM_HOST: 10.27.67.11
+      DEADEYE_STREAM_HOST: 10.27.67.219
     <<: *common-restart
   admin:
     image: j3ff/deadeye-admin

@@ -1,0 +1,19 @@
+[Unit]
+Description=Deadeye
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/bash -c '\
+  CAMERA_DEV=$(readlink --canonicalize --no-newline /dev/v4l/by-id/usb-Microsoft_Microsoft®_LifeCam_HD-3000-video-index0) \
+  docker compose -f /home/orangepi/deadeye/docker-compose.yml up --detach \
+  '
+ExecStop=/bin/bash -c '\
+  CAMERA_DEV=$(readlink --canonicalize --no-newline /dev/v4l/by-id/usb-Microsoft_Microsoft®_LifeCam_HD-3000-video-index0) \
+  docker compose -f /home/orangepi/deadeye/docker-compose.yml stop \
+  '
+
+[Install]
+WantedBy=multi-user.target
