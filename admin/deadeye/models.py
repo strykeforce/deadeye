@@ -117,7 +117,7 @@ class Camera:
         elif key == "Info":
             self.info = json.loads(value)
         else:
-            current_app.logger.error("unrecognized key: %s", key)
+            pass
 
         Unit.api.refresh_units = True
 
