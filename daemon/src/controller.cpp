@@ -225,6 +225,10 @@ void Controller::Run() {
           Camera<0>::dispatch(event);
           break;
         }
+
+        case hash(DE_LOG_ENTRY("0")):
+          break;
+
         //
         // Camera 1 events
         //
@@ -274,6 +278,9 @@ void Controller::Run() {
           Camera<1>::dispatch(event);
           break;
         }
+
+        case hash(DE_LOG_ENTRY("1")):
+          break;
 
         //
         // Camera 2 events
@@ -325,6 +332,9 @@ void Controller::Run() {
           break;
         }
 
+        case hash(DE_LOG_ENTRY("2")):
+          break;
+
         //
         // Camera 3 events
         //
@@ -375,6 +385,9 @@ void Controller::Run() {
           break;
         }
 
+        case hash(DE_LOG_ENTRY("3")):
+          break;
+
         //
         // Camera 4 events
         //
@@ -424,6 +437,9 @@ void Controller::Run() {
           Camera<4>::dispatch(event);
           break;
         }
+
+        case hash(DE_LOG_ENTRY("4")):
+          break;
 
         case hash(DE_LINK_ENTRY):
           spdlog::debug("Deadeye: {}", entry.value);
