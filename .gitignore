@@ -4,12 +4,13 @@
 jetson/
 dist/
 build/
-node_modules/
+node_modules
 npm-debug.log
 .DS_Store
 *.pyc
 /networktables.ini*
-scripts/.vscode/
+.venv
+
 
 web/result
 
