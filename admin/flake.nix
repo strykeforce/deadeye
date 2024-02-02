@@ -29,18 +29,19 @@
                 groups = [ "main" "dev" ];
               };
 
-            docker = pkgs.dockerTools.buildImage {
-              name = "deadeye-admin";
+            dockerImage = pkgs.dockerTools.streamLayeredImage {
+              name = "j3ff/deadeye-admin";
               tag = "latest";
-              copyToRoot = self.packages.${system}.deadeye-admin.dependencyEnv
-              ;
+              contents = [
+                self.packages.${system}.deadeye-admin.dependencyEnv
+              ];
               config.Cmd = [ "/bin/deadeye-server" ];
             };
           };
 
           devShells.default = pkgs.mkShell {
             inputsFrom = [ self.packages.${system}.deadeye-admin ];
-            packages = [ pkgs.poetry ];
+            packages = with pkgs; [ just poetry ];
           };
         });
 }

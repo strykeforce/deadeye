@@ -1,0 +1,22 @@
+# just manual: https://github.com/casey/just#readme
+
+default:
+  @just --list
+
+IMAGE := "j3ff/deadeye-admin"
+VERSION := `git rev-parse --short HEAD`
+
+docker:
+  nix build .#dockerImage
+  ./result | docker load
+  docker tag {{ IMAGE }}:latest {{ IMAGE }}:{{VERSION}}
+
+run: docker
+  docker run -it --rm --name deadeye-admin -p 5000:5000 --env-file .env {{IMAGE}}:{{VERSION}}
+
+
+deploy: docker
+  docker push {{ IMAGE }}:{{VERSION}}
+  
+venv:
+  nix build .#venv -o .venv
