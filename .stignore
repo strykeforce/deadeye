@@ -1,0 +1,14 @@
+/.git
+.direnv
+.vscode
+.idea
+.envrc
+.env
+.built*
+/admin/dist
+/admin/result
+/daemon/result
+/web/dist
+/web/result
+node_modules
+make_build_remote

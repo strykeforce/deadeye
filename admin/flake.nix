@@ -1,23 +1,47 @@
 {
+  description = "Deadeye admin server";
+
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    utils.url = "github:numtide/flake-utils";
+    flake-utils.url = "github:numtide/flake-utils";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    poetry2nix = {
+      # url = "github:nix-community/poetry2nix";
+      url = "github:jhh/poetry2nix/pynetworktables";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, utils }:
-    let
-      out = system:
+  outputs = { self, nixpkgs, flake-utils, poetry2nix }:
+    flake-utils.lib.eachDefaultSystem
+      (system:
         let
-          pkgs = import nixpkgs { inherit system; };
+          pkgs = nixpkgs.legacyPackages.${system};
+          inherit (poetry2nix.lib.mkPoetry2Nix { inherit pkgs; }) mkPoetryEnv mkPoetryApplication;
         in
         {
-          devShells.default = pkgs.mkShell {
-            packages = with pkgs; [
-              poetry
-            ];
+          packages = {
+            deadeye-admin = mkPoetryApplication { projectDir = self; };
+            default = self.packages.${system}.deadeye-admin;
+
+            venv = mkPoetryEnv
+              {
+                projectDir = self;
+                groups = [ "main" "dev" ];
+              };
+
+            dockerImage = pkgs.dockerTools.streamLayeredImage {
+              name = "j3ff/deadeye-admin";
+              tag = "latest";
+              contents = [
+                self.packages.${system}.deadeye-admin.dependencyEnv
+              ];
+              config.Cmd = [ "/bin/deadeye-server" ];
+            };
           };
 
-        };
-    in
-    with utils.lib; eachSystem defaultSystems out;
+          devShells.default = pkgs.mkShell {
+            inputsFrom = [ self.packages.${system}.deadeye-admin ];
+            packages = with pkgs; [ just poetry ];
+          };
+        });
 }
