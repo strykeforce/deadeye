@@ -56,12 +56,10 @@
                 }
               '';
             in
-            pkgs.dockerTools.buildLayeredImage {
-              name = "j3ff/deadeye-admin";
+            pkgs.dockerTools.buildImage {
+              name = "j3ff/deadeye-web";
               tag = "latest";
-              contents = with pkgs; [
-                bashInteractive
-                busybox
+              copyToRoot = with pkgs; [
                 nginx
               ];
 
@@ -92,7 +90,7 @@
           #
           devShells.default = pkgs.mkShell {
             # inputsFrom = [ self.packages.${system}.deadeye-admin ];
-            packages = with pkgs; [ nodejs_18 node2nix ];
+            packages = with pkgs; [ just nodejs_18 node2nix ];
           };
         });
 }
