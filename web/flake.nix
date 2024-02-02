@@ -48,9 +48,10 @@
                   access_log /dev/stdout;
                   server {
                     listen ${nginxPort};
-                    index index.html;
                     location / {
+                      index index.html;
                       root ${nginxWebRoot};
+                      try_files $uri $uri/ /index.html;
                     }
                       location /socket.io/ {
                         proxy_set_header Upgrade $http_upgrade;
