@@ -18,7 +18,7 @@ push: build
 .PHONY: run
 run:
 	# poetry run $(shell poetry env info -p)/bin/deadeye-server 2>&1 | grep -Ev '^(127|\()'
-	docker run -it --rm --name $(IMAGE) -p 5000:5000 --env-file .env $(NS)/$(IMAGE)
+	docker run -it --rm --name $(IMAGE) -p 5000:5000 --env-file .env $(IMAGE):latest
 
 .PHONY: venv
 venv:

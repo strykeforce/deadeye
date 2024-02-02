@@ -3,6 +3,7 @@
 .vscode
 .idea
 .envrc
+.env
 .built*
 /admin/dist
 /admin/result
