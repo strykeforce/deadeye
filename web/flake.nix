@@ -52,6 +52,50 @@
                     location / {
                       root ${nginxWebRoot};
                     }
+                      location /socket.io/ {
+                        proxy_set_header Upgrade $http_upgrade;
+                        proxy_set_header Connection "Upgrade";
+                        proxy_http_version 1.1;
+                        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                        proxy_set_header Host $host;
+                        proxy_pass http://admin:5000;
+                      }
+
+                      location /upload {
+                        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                        proxy_set_header Host $host;
+                        proxy_pass http://admin:5000;
+                      }
+
+                      location /stream/0/ {
+                        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                        proxy_set_header Host $host;
+                        proxy_pass http://daemon:5805/stream.mjpg;
+                      }
+
+                      location /stream/1/ {
+                        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                        proxy_set_header Host $host;
+                        proxy_pass http://daemon:5806/stream.mjpg;
+                      }
+
+                      location /stream/2/ {
+                        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                        proxy_set_header Host $host;
+                        proxy_pass http://daemon:5807/stream.mjpg;
+                      }
+
+                      location /stream/3/ {
+                        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                        proxy_set_header Host $host;
+                        proxy_pass http://daemon:5808/stream.mjpg;
+                      }
+
+                      location /stream/4/ {
+                        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                        proxy_set_header Host $host;
+                        proxy_pass http://daemon:5809/stream.mjpg;
+                      }
                   }
                 }
               '';
