@@ -39,87 +39,83 @@
               nginxPort = "80";
               nginxWebRoot = self.packages.${system}.deadeye-web;
               nginxConf = pkgs.writeText "nginx.conf" ''
-                user nginx nginx;
+                user nobody nobody;
                 daemon off;
                 error_log /dev/stdout info;
                 pid /dev/null;
                 events {}
                 http {
+                  include ${pkgs.nginx}/conf/mime.types;
                   access_log /dev/stdout;
                   server {
                     listen ${nginxPort};
+
                     location / {
-                      index index.html;
                       root ${nginxWebRoot};
+                      index index.html;
                       try_files $uri $uri/ /index.html;
                     }
-                      location /socket.io/ {
-                        proxy_set_header Upgrade $http_upgrade;
-                        proxy_set_header Connection "Upgrade";
-                        proxy_http_version 1.1;
-                        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                        proxy_set_header Host $host;
-                        proxy_pass http://admin:5000;
-                      }
 
-                      location /upload {
-                        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                        proxy_set_header Host $host;
-                        proxy_pass http://admin:5000;
-                      }
+                    location /socket.io/ {
+                      proxy_set_header Upgrade $http_upgrade;
+                      proxy_set_header Connection "Upgrade";
+                      proxy_http_version 1.1;
+                      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                      proxy_set_header Host $host;
+                      proxy_pass http://admin:5000;
+                    }
 
-                      location /stream/0/ {
-                        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                        proxy_set_header Host $host;
-                        proxy_pass http://daemon:5805/stream.mjpg;
-                      }
+                    location /upload {
+                      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                      proxy_set_header Host $host;
+                      proxy_pass http://admin:5000;
+                    }
 
-                      location /stream/1/ {
-                        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                        proxy_set_header Host $host;
-                        proxy_pass http://daemon:5806/stream.mjpg;
-                      }
+                    location /stream/0/ {
+                      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                      proxy_set_header Host $host;
+                      proxy_pass http://daemon:5805/stream.mjpg;
+                    }
 
-                      location /stream/2/ {
-                        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                        proxy_set_header Host $host;
-                        proxy_pass http://daemon:5807/stream.mjpg;
-                      }
+                    location /stream/1/ {
+                      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                      proxy_set_header Host $host;
+                      proxy_pass http://daemon:5806/stream.mjpg;
+                    }
 
-                      location /stream/3/ {
-                        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                        proxy_set_header Host $host;
-                        proxy_pass http://daemon:5808/stream.mjpg;
-                      }
+                    location /stream/2/ {
+                      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                      proxy_set_header Host $host;
+                      proxy_pass http://daemon:5807/stream.mjpg;
+                    }
 
-                      location /stream/4/ {
-                        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                        proxy_set_header Host $host;
-                        proxy_pass http://daemon:5809/stream.mjpg;
-                      }
+                    location /stream/3/ {
+                      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                      proxy_set_header Host $host;
+                      proxy_pass http://daemon:5808/stream.mjpg;
+                    }
+
+                    location /stream/4/ {
+                      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                      proxy_set_header Host $host;
+                      proxy_pass http://daemon:5809/stream.mjpg;
+                    }
                   }
                 }
               '';
             in
-            pkgs.dockerTools.buildImage {
+            pkgs.dockerTools.buildLayeredImage {
               name = "j3ff/deadeye-web";
               tag = "latest";
-              copyToRoot = with pkgs; [
+              contents = with pkgs; [
+                fakeNss
                 nginx
               ];
 
-              runAsRoot = ''
-                #!${pkgs.runtimeShell}
-                ${pkgs.dockerTools.shadowSetup}
-                groupadd --system nginx
-                useradd --system --gid nginx nginx
-              '';
-
               extraCommands = ''
-                # nginx still tries to read this directory even if error_log
-                # directive is specifying another file :/
                 mkdir -p var/log/nginx
                 mkdir -p var/cache/nginx
+                mkdir tmp
               '';
 
               config = {
