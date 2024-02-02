@@ -1,0 +1,19 @@
+# just manual: https://github.com/casey/just#readme
+
+default:
+  @just --list
+
+IMAGE := "j3ff/deadeye-web"
+VERSION := `git rev-parse --short HEAD`
+
+docker:
+  nix build .#dockerImage
+  docker load < result
+  docker tag {{ IMAGE }}:latest {{ IMAGE }}:{{VERSION}}
+
+run: docker
+  docker run -it --rm --name deadeye-web -p 80:80 {{IMAGE}}:{{VERSION}}
+
+
+deploy: docker
+  docker push {{ IMAGE }}:{{VERSION}}
