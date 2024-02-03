@@ -7,6 +7,7 @@
 let
   opencv-gstreamer = opencv.overrideAttrs {
     enableGStreamer = true;
+    enableContrib = false;
   };
 
   wpilibFlag = name: enabled: "-DWITH_${name}=${if enabled then "ON" else "OFF"}";
@@ -31,7 +32,6 @@ stdenv.mkDerivation rec {
   propagatedBuildInputs = [ opencv-gstreamer ];
 
   cmakeFlags = [
-    # (wpilibFlag "FLAT_INSTALL" true)
     (wpilibFlag "JAVA" false)
     (wpilibFlag "CSCORE" true)
     (wpilibFlag "WPIMATH" false)

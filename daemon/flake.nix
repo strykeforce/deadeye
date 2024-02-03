@@ -66,7 +66,7 @@
 
                 };
 
-            dockerImage = pkgs.dockerTools.streamLayeredImage {
+            dockerImage = pkgs.dockerTools.buildLayeredImage {
               name = "j3ff/deadeye-daemon";
               tag = "latest";
 
