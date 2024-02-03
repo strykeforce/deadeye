@@ -9,6 +9,7 @@ CTestTestfile.cmake
 build/
 cmake-build-*/
 tags
+.env
 .ignore
 .vaultpw
 networktables.ini
