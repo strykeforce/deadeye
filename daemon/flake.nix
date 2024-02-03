@@ -69,10 +69,12 @@
             dockerImage = pkgs.dockerTools.streamLayeredImage {
               name = "j3ff/deadeye-daemon";
               tag = "latest";
-              contents = [
-                self.packages.${system}.deadeye-daemon
-              ];
-              config.Cmd = [ "/bin/deadeyed" ];
+
+              config.Cmd =
+                let
+                  deadeyePkg = self.packages.${system}.deadeye-daemon;
+                in
+                [ "${deadeyePkg}/bin/deadeyed" ];
             };
           };
 
