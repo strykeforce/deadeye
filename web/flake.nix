@@ -73,7 +73,6 @@
 
           #
           devShells.default = pkgs.mkShell {
-            # inputsFrom = [ self.packages.${system}  .deadeye-admin ];
             packages = with pkgs; [ just nodejs_18 node2nix ];
           };
         });
