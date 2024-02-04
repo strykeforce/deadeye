@@ -1,23 +1,32 @@
 # Deadeye
 
 **Deadeye** is a vision system for FIRST<sup>®</sup> Robotics Competition
-robots designed to be run on a vision coprocessor, such as the [Jetson Nano
-Developer Kit][jndk]. It consists of several parts:
+robots designed to be run on a vision coprocessor, such as a Linux single-board
+computer. It has been actively used with the [Jetson Nano Developer Kit][jndk]
+and [Orange Pi 5 Plus][orangepi]. It consists of several parts:
 
 [jndk]: https://developer.nvidia.com/EMBEDDED/jetson-nano-developer-kit/
+[orangepi]: http://www.orangepi.org/index.html
 
 - Vision Daemon - C++ vision capture and processing pipeline.
 - Client Library - Java library for use with FRC robots and other clients
 - Admin Web UI - React web interface to manage Deadeye vision system.
 - Admin Server and Tools - Python web service to connect admin web UI to vision
   daemon backend.
-- Provisioning Tools - Ansible playbooks for provisioning and deploying the
-  system to vision coprocessors.
+- Deployment Tools - Ansible playbooks for provisioning and deploying the
+  system to vision coprocessors. **This method of deployment is deprecated in favor of using Docker (see below).**
 
 ## Documentation
 
-- [Installation and usage instructions](https://strykeforce.github.io/deadeye/)
+- [Installation and usage instructions](https://strykeforce.github.io/deadeye/) - these instructions are deprecated in favor of using Docker (see below).
 - The Java client library [javadocs](https://strykeforce.github.io/deadeye/javadoc/)
+
+## Docker Installation and Usage
+
+This is the preferred method of deploying and operating the Deadeye system.
+Docker is readily available on most, if not all, Linux distributions used on
+vision coproccessors. See the [installation and usage instructions](./docker/)
+in the docker subdirectory of this repo.
 
 ## Contributing
 
