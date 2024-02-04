@@ -12,7 +12,7 @@ volumes:
 
 services:
   daemon:
-    image: j3ff/deadeye-daemon
+    image: j3ff/deadeye-daemon:4aa540b
     privileged: true
     ports:
       - 5805:5805
@@ -24,13 +24,13 @@ services:
       - upload_data:/upload
     devices:
       - /dev/gpiochip0
-      - "${CAMERA_DEV}:/dev/lifecam"
-    environment: 
+      - "${CAMERA_DEV}:/dev/deadeye"
+    environment:
       <<: *common-environment
       DEADEYE_STREAM_HOST: 10.27.67.219
     <<: *common-restart
   admin:
-    image: j3ff/deadeye-admin
+    image: j3ff/deadeye-admin:4aa540b
     ports:
       - 5000:5000
     volumes:
@@ -38,7 +38,7 @@ services:
     environment:
       <<: *common-environment
       PYTHONPATH: /app
-      FLASK_ENV: development
+      FLASK_ENV: production
       DEADEYE_ADMIN_PORT: 5000
       DEADEYE_NT_WAIT_MS: 500
       DEADEYE_UPLOAD_DIR: /upload
@@ -46,7 +46,7 @@ services:
     stop_signal: SIGINT
     <<: *common-restart
   web:
-    image: j3ff/deadeye-web
+    image: j3ff/deadeye-web:4aa540b
     ports:
       - "0.0.0.0:80:80"
     <<: *common-restart
