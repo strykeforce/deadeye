@@ -1,16 +1,20 @@
 {
+  description = "Deadeye vision system admin dashboard";
+
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+    nix-filter.url = "github:numtide/nix-filter";
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
+  outputs = { self, nixpkgs, flake-utils, nix-filter }:
     flake-utils.lib.eachDefaultSystem
       (system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
           version = "22.2.0";
           nodeDependencies = (pkgs.callPackage config/default.nix { }).nodeDependencies;
+          filter = nix-filter.lib;
         in
         {
           packages.nodeDependencies = nodeDependencies;
@@ -18,7 +22,18 @@
           packages.deadeye-web = pkgs.stdenv.mkDerivation {
             pname = "deadeye-web";
             inherit version;
-            src = ./.;
+            src = filter {
+              root = self;
+              include = [
+                ./config
+                "nginx.conf"
+                "package.json"
+                "package-lock.json"
+                "postcss.config.js"
+                ./public
+                ./src
+              ];
+            };
 
             buildInputs = with pkgs; [ nodejs_18 ];
 
@@ -71,7 +86,6 @@
 
           packages.default = self.packages.${system}.deadeye-web;
 
-          #
           devShells.default = pkgs.mkShell {
             packages = with pkgs; [ just nodejs_18 node2nix ];
           };

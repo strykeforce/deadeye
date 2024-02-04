@@ -22,19 +22,20 @@
             deadeye-admin = mkPoetryApplication { projectDir = self; };
             default = self.packages.${system}.deadeye-admin;
 
-            venv = mkPoetryEnv
-              {
-                projectDir = self;
-                groups = [ "main" "dev" ];
-              };
+            venv = mkPoetryEnv {
+              projectDir = self;
+              groups = [ "main" "dev" ];
+            };
 
-            dockerImage = pkgs.dockerTools.streamLayeredImage {
+            dockerImage = pkgs.dockerTools.buildLayeredImage {
               name = "j3ff/deadeye-admin";
               tag = "latest";
-              contents = [
-                self.packages.${system}.deadeye-admin.dependencyEnv
-              ];
-              config.Cmd = [ "/bin/deadeye-server" ];
+
+              config.Cmd =
+                let
+                  deadeyePkg = self.packages.${system}.deadeye-admin.dependencyEnv;
+                in
+                [ "${deadeyePkg}/bin/deadeye-server" ];
             };
           };
 
