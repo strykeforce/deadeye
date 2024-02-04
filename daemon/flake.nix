@@ -77,11 +77,20 @@
               name = "j3ff/deadeye-daemon";
               tag = "latest";
 
-              config.Cmd =
-                let
-                  deadeyePkg = self.packages.${system}.deadeye-daemon;
-                in
-                [ "${deadeyePkg}/bin/deadeyed" ];
+              config = {
+                Cmd =
+                  let
+                    deadeyePkg = self.packages.${system}.deadeye-daemon;
+                  in
+                  [ "${deadeyePkg}/bin/deadeyed" ];
+                ExposedPorts = {
+                  "5805/tcp" = { };
+                  "5806/tcp" = { };
+                  "5807/tcp" = { };
+                  "5808/tcp" = { };
+                  "5809/tcp" = { };
+                };
+              };
             };
           };
 

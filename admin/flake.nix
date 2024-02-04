@@ -31,11 +31,14 @@
               name = "j3ff/deadeye-admin";
               tag = "latest";
 
-              config.Cmd =
-                let
-                  deadeyePkg = self.packages.${system}.deadeye-admin.dependencyEnv;
-                in
-                [ "${deadeyePkg}/bin/deadeye-server" ];
+              config = {
+                Cmd =
+                  let
+                    deadeyePkg = self.packages.${system}.deadeye-admin.dependencyEnv;
+                  in
+                  [ "${deadeyePkg}/bin/deadeye-server" ];
+                ExposedPorts = { "5000/tcp" = { }; };
+              };
             };
           };
 
