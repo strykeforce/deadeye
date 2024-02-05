@@ -1,0 +1,22 @@
+# just manual: https://github.com/casey/just#readme
+
+book:
+  mdbook build
+
+clean:
+  rm -rf book
+
+TMPDIR := `mktemp -d`
+USER := env('USER')
+
+publish:
+  git worktree add {{ TMPDIR }} gh-pages
+  rm -rf {{ TMPDIR }}/*
+  cp -rp book/* {{ TMPDIR }}
+  # cp -rp ../client/build/docs/javadoc {{ TMPDIR }}
+  cd {{ TMPDIR }}
+  git add --all
+  git commit --message="deployed by {{ USER }}"
+  git push origin gh-pages
+  git worktree remove {{ TMPDIR }}
+  rm -rf {{ TMPDIR }}

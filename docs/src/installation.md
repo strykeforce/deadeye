@@ -1,5 +1,9 @@
 # Installation
 
+> Note: This installation method is deprecated in favor of running Deadeye in
+> Docker on vision coprocessors. See Docker installation and usage
+> [instructions](https://github.com/strykeforce/deadeye/tree/main/docker).
+
 This section describes how to prepare a Jetson Nano for Deadeye deployment. We
 deploy the base Linux OS, and prepare the system for automated provisioning in
 the next section.
@@ -40,7 +44,7 @@ come with phones) only transmit power.
 
 ### First Boot
 
-> Note: Start with the Nano unpowered; we will connect to power supply in a
+> Note: Start with the Nano un-powered; we will connect to power supply in a
 > step below.
 
 1.  Download the [Jetson NANO Developer Kit SD Card image][sd-card] and install
