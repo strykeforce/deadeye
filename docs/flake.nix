@@ -14,7 +14,7 @@
         in
         {
           devShells.default = pkgs.mkShell {
-            packages = with pkgs; [ just mdbook ];
+            packages = with pkgs; [ jdk17_headless just mdbook ];
           };
         });
 }

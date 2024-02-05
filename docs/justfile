@@ -7,16 +7,18 @@ clean:
   rm -rf book
 
 TMPDIR := `mktemp -d`
-USER := env('USER')
 
-publish:
+javadoc:
+  just ../client/javadoc
+
+publish: book javadoc
   git worktree add {{ TMPDIR }} gh-pages
   rm -rf {{ TMPDIR }}/*
   cp -rp book/* {{ TMPDIR }}
-  # cp -rp ../client/build/docs/javadoc {{ TMPDIR }}
-  cd {{ TMPDIR }}
-  git add --all
-  git commit --message="deployed by {{ USER }}"
-  git push origin gh-pages
+  cp -rp ../client/build/docs/javadoc {{ TMPDIR }}
+  cd {{ TMPDIR }} \
+  && git add --all \
+  && git commit --message="deployed by {{ env('USER') }}" \
+  && git push origin gh-pages
   git worktree remove {{ TMPDIR }}
   rm -rf {{ TMPDIR }}

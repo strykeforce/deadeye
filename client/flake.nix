@@ -13,8 +13,9 @@
       in
       {
         devShell = pkgs.mkShell {
-          packages = [
-            pkgs.jdk11_headless
+          packages = with pkgs; [
+            jdk17_headless
+            just
           ];
         };
       });

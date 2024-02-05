@@ -1,0 +1,4 @@
+# just manual: https://github.com/casey/just#readme
+
+javadoc:
+  ./gradlew --no-daemon javadoc
