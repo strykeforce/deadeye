@@ -11,8 +11,31 @@ and operate Deadeye. The example commands below work on an Orange Pi running
 their Ubuntu jammy [server image](http://www.orangepi.org/html/hardWare/computerAndMicrocontrollers/service-and-support/Orange-pi-5.html).
 
 ```sh
-sudo apt update
-sudo apt install docker-compose-plugin
+$ # install commonly required packages
+$ sudo apt install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+
+# add the docker repository signing key
+$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+# add the docker repository
+$ echo \
+"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# update the package lists
+$ sudo apt update
+
+# install docker
+$ sudo apt install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+```
+
+### Docker permission
+
+Add the account you are using (`orangepi` in our case) to the `docker` group.
+
+```sh
+$ sudo usermod -a -G docker orangepi
+$ # login again to take effect
 ```
 
 ### Docker Compose
