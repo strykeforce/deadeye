@@ -8,8 +8,7 @@ vision coproccessors.
 
 We'll use the [Docker Compose](https://docs.docker.com/compose/) tool to deploy
 and operate Deadeye. The example commands below work on an Orange Pi running
-their Ubuntu based [Orange Pi OS
-(OH)](http://www.orangepi.org/html/softWare/orangePiOS/oh.html).
+their Ubuntu jammy [server image](http://www.orangepi.org/html/hardWare/computerAndMicrocontrollers/service-and-support/Orange-pi-5.html).
 
 ```sh
 sudo apt update
