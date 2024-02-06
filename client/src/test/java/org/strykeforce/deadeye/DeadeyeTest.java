@@ -43,7 +43,8 @@ class DeadeyeTest {
 
   @AfterEach
   void tearDown() {
-//    nti.deleteAllEntries();
+    NetworkTable table = nti.getTable(Link.DEADEYE_TABLE + "/Z/0");
+    table.getEntry("Info").unpublish();
   }
 
 
