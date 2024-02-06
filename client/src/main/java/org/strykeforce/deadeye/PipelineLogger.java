@@ -2,25 +2,21 @@ package org.strykeforce.deadeye;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
-import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableValue;
-import edu.wpi.first.networktables.TableEntryListener;
+
 import java.io.IOException;
 
-class PipelineLogger implements TableEntryListener {
+class PipelineLogger {
 
   private final JsonAdapter<Message> jsonAdapter;
 
   PipelineLogger(NetworkTable networkTable) {
     Moshi moshi = new Moshi.Builder().build();
     jsonAdapter = moshi.adapter(Message.class);
-    networkTable.addEntryListener(this,
-        EntryListenerFlags.kImmediate | EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
   }
 
-  @Override
   public void valueChanged(NetworkTable table, String key, NetworkTableEntry entry,
       NetworkTableValue value, int flags) {
     if (!value.isString()) {

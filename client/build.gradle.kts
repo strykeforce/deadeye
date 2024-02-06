@@ -8,13 +8,12 @@ group = "org.strykeforce"
 version = "22.2.0" // updated by scripts/bump.py
 
 repositories {
-    jcenter()
     maven(url = "https://frcmaven.wpi.edu/artifactory/release/")
     mavenCentral()
 }
 
 dependencies {
-    val wpiVersion = "2022.4.1"
+    val wpiVersion = "2024.2.1"
     val slf4jVersion = "1.7.36"
     val junitVersion = "5.8.2"
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
@@ -30,10 +29,12 @@ dependencies {
 
     // Use JUnit Jupiter Engine for testing.
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
-    testRuntimeOnly("edu.wpi.first.ntcore:ntcore-jni:$wpiVersion:osxx86-64")
+    testRuntimeOnly("edu.wpi.first.ntcore:ntcore-jni:$wpiVersion:osxuniversal")
     testRuntimeOnly("edu.wpi.first.ntcore:ntcore-jni:$wpiVersion:linuxx86-64")
     testRuntimeOnly("edu.wpi.first.wpiutil:wpiutil-java:$wpiVersion")
-    testRuntimeOnly("ch.qos.logback:logback-classic:1.2.11")
+    testRuntimeOnly("edu.wpi.first.wpiutil:wpiutil-jni:$wpiVersion:osxuniversal")
+    testRuntimeOnly("edu.wpi.first.wpiutil:wpiutil-jni:$wpiVersion:linuxx86-64")
+    testRuntimeOnly("ch.qos.logback:logback-classic:1.4.12")
 }
 
 java {

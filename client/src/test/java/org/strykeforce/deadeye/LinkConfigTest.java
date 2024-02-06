@@ -59,7 +59,7 @@ class LinkConfigTest {
   @AfterEach
   void tearDown() {
     entry.clearPersistent();
-    nti.deleteAllEntries();
+    // FIXME: delete all test entries
   }
 
   @Test

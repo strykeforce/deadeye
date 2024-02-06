@@ -10,12 +10,14 @@ import com.squareup.moshi.JsonAdapter;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+
 import okio.Buffer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -41,7 +43,7 @@ class DeadeyeTest {
 
   @AfterEach
   void tearDown() {
-    nti.deleteAllEntries();
+//    nti.deleteAllEntries();
   }
 
 
@@ -109,17 +111,17 @@ class DeadeyeTest {
     NetworkTable table = nti.getTable(Link.DEADEYE_TABLE + "/Z/0");
     NetworkTableEntry entry = table.getEntry("Capture");
     entry.setString("{\n"
-        + "  \"config\": {\n"
-        + "    \"captureWidth\": 3264,\n"
-        + "    \"captureHeight\": 2464,\n"
-        + "    \"ispDigitalGainRange\": \"1 8\"\n"
-        + "  },\n"
-        + "  \"fps\": 30,\n"
-        + "  \"h\": 480,\n"
-        + "  \"type\": \"test\",\n"
-        + "  \"w\": 640,\n"
-        + "  \"pattern\": \"ball\"\n"
-        + "}\n");
+            + "  \"config\": {\n"
+            + "    \"captureWidth\": 3264,\n"
+            + "    \"captureHeight\": 2464,\n"
+            + "    \"ispDigitalGainRange\": \"1 8\"\n"
+            + "  },\n"
+            + "  \"fps\": 30,\n"
+            + "  \"h\": 480,\n"
+            + "  \"type\": \"test\",\n"
+            + "  \"w\": 640,\n"
+            + "  \"pattern\": \"ball\"\n"
+            + "}\n");
     Deadeye<TargetData> deadeye = new Deadeye<>("Z0", TargetData.class, nti);
     Capture actual = deadeye.getCapture();
     assertEquals(expected, actual);
@@ -160,7 +162,7 @@ class DeadeyeTest {
     Point c = new Point(5, 6);
     UprightRectTargetData expected = new UprightRectTargetData("Z2", 3, true, tl, br, c);
     @SuppressWarnings("unchecked") DeadeyeJsonAdapter<UprightRectTargetData> jsonAdapter =
-        new UprightRectTargetData().getJsonAdapter();
+            new UprightRectTargetData().getJsonAdapter();
 
     Buffer buffer = new Buffer();
     buffer.writeUtf8(jsonAdapter.toJson(expected));
@@ -195,8 +197,8 @@ class DeadeyeTest {
     });
 
     DatagramPacket packet =
-        new DatagramPacket(payload.getBytes(), payload.getBytes().length,
-            InetAddress.getLoopbackAddress(), LinkConfig.DEFAULT.port);
+            new DatagramPacket(payload.getBytes(), payload.getBytes().length,
+                    InetAddress.getLoopbackAddress(), LinkConfig.DEFAULT.port);
     DatagramSocket socket = new DatagramSocket();
     for (int i = 0; i < counts; i++) {
       socket.send(packet);
