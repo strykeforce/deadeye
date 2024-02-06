@@ -76,7 +76,7 @@ idea {
 publishing {
     repositories {
         maven {
-            url = uri("s3://maven.strykeforce.org/repo")
+            url = uri("s3://packages.strykeforce.org/repo")
             credentials(AwsCredentials::class) {
                 accessKey = System.getenv("STRYKEFORCE_AWS_KEY")
                 secretKey = System.getenv("STRYKEFORCE_AWS_SECRET")
