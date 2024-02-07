@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "org.strykeforce"
-version = "24.0.0" // updated by scripts/bump.py
+version = "24.1.0" // updated by scripts/bump.py
 
 repositories {
     maven(url = "https://frcmaven.wpi.edu/artifactory/release/")
