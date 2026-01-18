@@ -22,6 +22,7 @@ services:
       - 5809:5809
     volumes:
       - upload_data:/upload
+      - /etc/opt/deadeye/:/etc/opt/deadeye/
     devices:
       - /dev/gpiochip0
       - "${CAMERA_DEV}:/dev/deadeye"

@@ -17,6 +17,7 @@ class LedDrive {
  private:
 #if defined(__aarch64__) && defined(__linux__)
   gpiod::line line_;
+  bool has_gpio_ = false;
 #endif
 };
 
