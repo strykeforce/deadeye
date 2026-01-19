@@ -1,5 +1,6 @@
 {
   pkgs,
+  perSystem,
 }:
 let
   opencv-gstreamer = pkgs.opencv.overrideAttrs {
@@ -22,14 +23,20 @@ pkgs.stdenv.mkDerivation rec {
 
   outputs = [ "out" ];
 
-  buildInputs = [ pkgs.stdenv.cc.cc.lib ];
+  buildInputs = [
+    perSystem.self.fmt-8.dev
+    pkgs.stdenv.cc.cc.lib
+  ];
 
   nativeBuildInputs = [ pkgs.cmake ];
 
   propagatedBuildInputs = [ opencv-gstreamer ];
 
   cmakeFlags = [
+    # TODO: check if needed when upgrading
     "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+    # use fmt from buildInputs
+    "-DUSE_VCPKG_FMTLIB=ON"
     (wpilibFlag "JAVA" false)
     (wpilibFlag "CSCORE" true)
     (wpilibFlag "WPIMATH" false)

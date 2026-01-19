@@ -17,3 +17,4 @@ web/result
 # Nix stuff
 .tmp
 result
+.envrc.local
