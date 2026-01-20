@@ -12,20 +12,26 @@ perSystem.devshell.mkShell {
     perSystem.self.wpilib
   ];
 
-  env = [
-    {
-      name = "DYLD_LIBRARY_PATH";
-      prefix = "${perSystem.self.wpilib}/wpilib/lib/";
-    }
-    {
-      name = "PKG_CONFIG_PATH";
-      value = pkgs.lib.makeSearchPathOutput "dev" "lib/pkgconfig" [
-        pkgs.systemd
-        pkgs.libcap
-        pkgs.libgpiod_1
-      ];
-    }
-  ];
+  env =
+    let
+      libPathEnv = if pkgs.stdenv.isDarwin then "DYLD_LIBRARY_PATH" else "LD_LIBRARY_PATH";
+    in
+    [
+      {
+        name = libPathEnv;
+        prefix = "${perSystem.self.wpilib}/wpilib/lib/";
+      }
+    ]
+    ++ pkgs.lib.optionals pkgs.stdenv.isLinux [
+      {
+        name = "PKG_CONFIG_PATH";
+        value = pkgs.lib.makeSearchPathOutput "dev" "lib/pkgconfig" [
+          pkgs.systemd
+          pkgs.libcap
+          pkgs.libgpiod_1
+        ];
+      }
+    ];
 
   commands =
     let
