@@ -2,6 +2,9 @@
 perSystem.devshell.mkShell {
   packages = [
     pkgs.ninja
+    pkgs.pkg-config
+    pkgs.systemd
+    pkgs.libgpiod_1
   ];
 
   packagesFrom = [
@@ -13,6 +16,14 @@ perSystem.devshell.mkShell {
     {
       name = "DYLD_LIBRARY_PATH";
       prefix = "${perSystem.self.wpilib}/wpilib/lib/";
+    }
+    {
+      name = "PKG_CONFIG_PATH";
+      value = pkgs.lib.makeSearchPathOutput "dev" "lib/pkgconfig" [
+        pkgs.systemd
+        pkgs.libcap
+        pkgs.libgpiod_1
+      ];
     }
   ];
 

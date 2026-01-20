@@ -49,10 +49,7 @@ pkgs.stdenv.mkDerivation rec {
   ];
 
   NIX_CFLAGS_COMPILE = [
-    "-Wno-error=deprecated-declarations"
-    "-Wno-error=unused-but-set-variable"
-    "-Wno-error=deprecated-literal-operator"
-    "-Wno-error=unnecessary-virtual-specifier"
+    "-Wno-error"
   ];
 
 }

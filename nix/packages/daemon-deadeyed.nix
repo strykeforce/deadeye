@@ -11,6 +11,7 @@ let
   ];
   gstPlugins = pkgs.lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0" gst;
   filter = inputs.nix-filter.lib;
+  libPathEnv = if pkgs.stdenv.isDarwin then "DYLD_LIBRARY_PATH" else "LD_LIBRARY_PATH";
 in
 pkgs.stdenv.mkDerivation {
   pname = "deadeye-daemon";
@@ -60,7 +61,7 @@ pkgs.stdenv.mkDerivation {
   postFixup = ''
     wrapProgram "$out/bin/deadeyed" \
       --prefix GST_PLUGIN_PATH : ${gstPlugins} \
-      --set DYLD_LIBRARY_PATH ${perSystem.self.wpilib}/wpilib/lib/
+      --set ${libPathEnv} ${perSystem.self.wpilib}/wpilib/lib/
   '';
 
 }

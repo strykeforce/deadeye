@@ -18,3 +18,4 @@ web/result
 .tmp
 result
 .envrc.local
+.direnv
