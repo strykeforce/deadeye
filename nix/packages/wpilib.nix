@@ -1,22 +1,20 @@
-{ lib
-, stdenv
-, fetchFromGitHub
-, cmake
-, opencv
+{
+  pkgs,
+  perSystem,
 }:
 let
-  opencv-gstreamer = opencv.overrideAttrs {
+  opencv-gstreamer = pkgs.opencv.overrideAttrs {
     enableGStreamer = true;
     enableContrib = false;
   };
 
   wpilibFlag = name: enabled: "-DWITH_${name}=${if enabled then "ON" else "OFF"}";
 in
-stdenv.mkDerivation rec {
+pkgs.stdenv.mkDerivation rec {
   pname = "wpilib";
   version = "2022.4.1";
 
-  src = fetchFromGitHub {
+  src = pkgs.fetchFromGitHub {
     owner = "wpilibsuite";
     repo = "allwpilib";
     rev = "v${version}";
@@ -25,13 +23,20 @@ stdenv.mkDerivation rec {
 
   outputs = [ "out" ];
 
-  buildInputs = [ stdenv.cc.cc.lib ];
+  buildInputs = [
+    perSystem.self.fmt-8.dev
+    pkgs.stdenv.cc.cc.lib
+  ];
 
-  nativeBuildInputs = [ cmake ];
+  nativeBuildInputs = [ pkgs.cmake ];
 
   propagatedBuildInputs = [ opencv-gstreamer ];
 
   cmakeFlags = [
+    # TODO: check if needed when upgrading
+    "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+    # use fmt from buildInputs
+    "-DUSE_VCPKG_FMTLIB=ON"
     (wpilibFlag "JAVA" false)
     (wpilibFlag "CSCORE" true)
     (wpilibFlag "WPIMATH" false)
@@ -44,11 +49,7 @@ stdenv.mkDerivation rec {
   ];
 
   NIX_CFLAGS_COMPILE = [
-    "-Wno-error=maybe-uninitialized"
-    "-Wno-error=dangling-pointer="
-    "-Wno-error=dangling-reference"
+    "-Wno-error"
   ];
 
 }
-
-

@@ -1,13 +1,11 @@
-{ lib
-, stdenv
-, fetchFromGitHub
-, cmake
+{
+  pkgs,
 }:
-stdenv.mkDerivation rec {
+pkgs.stdenv.mkDerivation rec {
   pname = "safe";
   version = "1.0.1";
 
-  src = fetchFromGitHub {
+  src = pkgs.fetchFromGitHub {
     owner = "LouisCharlesC";
     repo = pname;
     rev = "v${version}";
@@ -16,8 +14,6 @@ stdenv.mkDerivation rec {
 
   outputs = [ "out" ];
 
-  nativeBuildInputs = [ cmake ];
+  nativeBuildInputs = [ pkgs.cmake ];
 
 }
-
-

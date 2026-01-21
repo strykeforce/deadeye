@@ -2,6 +2,8 @@
 
 #include "led_drive.h"
 
+#include <spdlog/spdlog.h>
+
 using ::deadeye::LedDrive;
 
 #if defined(__aarch64__) && defined(__linux__)
@@ -12,16 +14,26 @@ using ::gpiod::line_request;
 LedDrive::LedDrive(int inum) {
   assert(inum >= 0 && inum < 5);
 
-  chip c{"gpiochip0", chip::OPEN_BY_NAME};
-  line_ = c.get_line(inum + 16);
+  try {
+    chip c{"gpiochip0", chip::OPEN_BY_NAME};
+    line_ = c.get_line(inum + 16);
 
-  line_request lr{"deadeyed", line_request::DIRECTION_OUTPUT, 0};
-  line_.request(lr, 1);
+    line_request lr{"deadeyed", line_request::DIRECTION_OUTPUT, 0};
+    line_.request(lr, 1);
+    has_gpio_ = true;
+  } catch (const std::exception& e) {
+    spdlog::warn("LedDrive: failed to initialize GPIO: {}", e.what());
+    has_gpio_ = false;
+  }
 }
 
-void LedDrive::On() { line_.set_value(0); }
+void LedDrive::On() {
+  if (has_gpio_) line_.set_value(0);
+}
 
-void LedDrive::Off() { line_.set_value(1); }
+void LedDrive::Off() {
+  if (has_gpio_) line_.set_value(1);
+}
 #else
 LedDrive::LedDrive([[maybe_unused]] int inum) {}
 void LedDrive::On() {}

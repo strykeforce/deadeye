@@ -17,3 +17,6 @@ web/result
 # Nix stuff
 .tmp
 result
+.envrc.local
+.direnv
+.cache/clangd/index

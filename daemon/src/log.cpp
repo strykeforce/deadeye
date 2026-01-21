@@ -14,8 +14,6 @@
 #endif
 
 void deadeye::log::Configure(const std::string& name) {
-  spdlog::cfg::load_env_levels();  // take from SPDLOG_LEVEL
-
 #ifdef __linux__
   const char* journal = std::getenv("JOURNAL_STREAM");
   if (journal != nullptr) {  // started by systemd
@@ -28,10 +26,12 @@ void deadeye::log::Configure(const std::string& name) {
     if (fmt::format("{}:{}", es.st_dev, es.st_ino) == std::string{journal}) {
       spdlog::set_default_logger(spdlog::systemd_logger_st(name));
       spdlog::set_pattern("[%t] %v");
+      spdlog::cfg::load_env_levels();
       spdlog::info("Configuring logging for systemd");
       return;
     }
   }
 #endif
   spdlog::set_pattern("[%H:%M:%S.%e] [%t] [%^%l%$]: %v");
+  spdlog::cfg::load_env_levels();
 }

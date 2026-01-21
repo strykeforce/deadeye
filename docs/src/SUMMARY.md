@@ -7,3 +7,4 @@
 - [Configuration](configuration.md)
 - [Architecture](architecture.md)
 - [Installation](installation.md)
+- [Deployment](deployment.md)

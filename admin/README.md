@@ -2,7 +2,8 @@
 
 ## Run in development
 
+Required environment variables are in `.env` (see `.env.example`).
+
 ```sh
-$ poetry shell
-$ python -m deadeye.scripts.server
+uv run deadeye-server
 ```

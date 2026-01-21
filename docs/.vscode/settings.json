@@ -1,8 +1,0 @@
-{
-    "restructuredtext.confPath": "${workspaceFolder}",
-    "restructuredtext.languageServer.disabled": true,
-    "cSpell.words": [
-        "Adafruit's",
-        "Jetson"
-    ]
-}

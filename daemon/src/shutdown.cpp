@@ -30,27 +30,32 @@ int main() {
   spdlog::info("Fast shutdown enabled: {}", fast_shutdown);
 
   spdlog::info("Configuring GPIO line.");
-  chip c{"gpiochip0", chip::OPEN_BY_NAME};
-  auto line = c.get_line(216);
-  line_request lr{"shutdownd", line_request::DIRECTION_INPUT, 0};
-  line.request(lr, 0);
+  try {
+    chip c{"gpiochip0", chip::OPEN_BY_NAME};
+    auto line = c.get_line(216);
+    line_request lr{"shutdownd", line_request::DIRECTION_INPUT, 0};
+    line.request(lr, 0);
 
-  int count = 0;
-  spdlog::info("Waiting for shutdown button press...");
-  while (true) {
-    int input = line.get_value();
-    if (input)
-      count++;
-    else
-      count = 0;
+    int count = 0;
+    spdlog::info("Waiting for shutdown button press...");
+    while (true) {
+      int input = line.get_value();
+      if (input)
+        count++;
+      else
+        count = 0;
 
-    if (count == 3) {
-      spdlog::info("Shutdown button triggered shutdown");
-      if (fast_shutdown) return do_fast_shutdown();
-      return do_normal_shutdown();
+      if (count == 3) {
+        spdlog::info("Shutdown button triggered shutdown");
+        if (fast_shutdown) return do_fast_shutdown();
+        return do_normal_shutdown();
+      }
+
+      std::this_thread::sleep_for(1s);
     }
-
-    std::this_thread::sleep_for(1s);
+  } catch (const std::exception& e) {
+    spdlog::error("Shutdown button disabled: {}", e.what());
+    while (true) std::this_thread::sleep_for(60s);
   }
 
   return EXIT_FAILURE;

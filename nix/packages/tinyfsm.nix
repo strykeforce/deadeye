@@ -1,13 +1,11 @@
-{ lib
-, stdenv
-, fetchFromGitHub
-, cmake
+{
+  pkgs,
 }:
-stdenv.mkDerivation rec {
+pkgs.stdenv.mkDerivation rec {
   pname = "tinyfsm";
   version = "0.3.3";
 
-  src = fetchFromGitHub {
+  src = pkgs.fetchFromGitHub {
     owner = "jhh";
     repo = pname;
     rev = "v${version}";
@@ -16,8 +14,6 @@ stdenv.mkDerivation rec {
 
   outputs = [ "out" ];
 
-  nativeBuildInputs = [ cmake ];
+  nativeBuildInputs = [ pkgs.cmake ];
 
 }
-
-

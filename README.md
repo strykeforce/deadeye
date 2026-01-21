@@ -18,7 +18,7 @@ and [Orange Pi 5 Plus][orangepi]. It consists of several parts:
 
 ## Documentation
 
-- [Installation and usage instructions](https://strykeforce.github.io/deadeye/) - these instructions are deprecated in favor of using Docker (see below).
+- [Architecture and Usage](https://strykeforce.github.io/deadeye/)
 - The Java client library [javadocs](https://strykeforce.github.io/deadeye/javadoc/)
 
 ## Docker Installation and Usage
