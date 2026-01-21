@@ -1,8 +1,13 @@
 { pkgs, perSystem }:
 perSystem.devshell.mkShell {
+
   packages = [
     pkgs.ninja
     pkgs.pkg-config
+    pkgs.python3
+    perSystem.uv2nix.uv-bin
+  ]
+  ++ pkgs.lib.optionals pkgs.stdenv.isLinux [
     pkgs.systemd
     pkgs.libgpiod_1
   ];
@@ -21,6 +26,14 @@ perSystem.devshell.mkShell {
         name = libPathEnv;
         prefix = "${perSystem.self.wpilib}/wpilib/lib/";
       }
+      {
+        name = "UV_PYTHON_DOWNLOADS";
+        value = "never";
+      }
+      {
+        name = "PYTHONPATH";
+        unset = true;
+      }
     ]
     ++ pkgs.lib.optionals pkgs.stdenv.isLinux [
       {
@@ -36,6 +49,7 @@ perSystem.devshell.mkShell {
   commands =
     let
       daemon-image = "j3ff/deadeye-daemon";
+      admin-image = "j3ff/deadeye-admin";
     in
     [
       {
@@ -76,6 +90,16 @@ perSystem.devshell.mkShell {
           nix build .#daemon-docker-image
           docker load < $PRJ_ROOT/result
           docker tag ${daemon-image}:latest ${daemon-image}:$(git rev-parse --short HEAD)
+        '';
+      }
+      {
+        name = "admin:image";
+        category = "docker";
+        help = "build and load the admin docker image";
+        command = ''
+          nix build .#admin-docker-image
+          docker load < $PRJ_ROOT/result
+          docker tag ${admin-image}:latest ${admin-image}:$(git rev-parse --short HEAD)
         '';
       }
     ];

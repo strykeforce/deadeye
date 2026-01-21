@@ -1,28 +1,26 @@
-[tool.poetry]
-authors = ["Jeff Hutchison <jeff@jeffhutchison.com>"]
+[project]
+authors = [{ name = "Jeff Hutchison", email = "jeff@jeffhutchison.com" }]
 description = "Deadeye admin console back-end"
 license = "MIT"
 name = "deadeye"
-version = "22.2.0"  # updated by scripts/bump.py
+version = "22.2.0"                                                        # updated by scripts/bump.py
+requires-python = ">=3.11"
 
-[tool.poetry.scripts]
+dependencies = [
+"click==8.0.4",
+  "eventlet==0.33.3",
+  "flask==2.0.3",
+  "flask-socketio==5.1.2",
+  "pynetworktables==2021.0.0",
+  "python-dotenv==0.18.0",
+  "werkzeug==2.3.8",
+  "dnspython==2.2.1",
+]
+
+[project.scripts]
 deadeye = "deadeye.scripts.cli:main"
 deadeye-server = "deadeye.scripts.server:main"
 
-[tool.poetry.dependencies]
-click = "~8.0"
-eventlet = "~0.33"
-flask = "~2.0"
-flask-socketio = "~5.1"
-pynetworktables = "~2021.0"
-python = "^3.9.0"
-python-dotenv = "^0.18"
-werkzeug = "^2.3.0"
-dnspython = "2.2.1"
-
-[tool.poetry.dev-dependencies]
-black = "*"
-
 [build-system]
-build-backend = "poetry.core.masonry.api"
-requires = ["poetry-core>=1.0.0"]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
