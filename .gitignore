@@ -19,3 +19,4 @@ web/result
 result
 .envrc.local
 .direnv
+.cache/clangd/index
