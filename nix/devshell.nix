@@ -50,6 +50,7 @@ perSystem.devshell.mkShell {
     let
       daemon-image = "j3ff/deadeye-daemon";
       admin-image = "j3ff/deadeye-admin";
+      web-image = "j3ff/deadeye-web";
     in
     [
       {
@@ -100,6 +101,16 @@ perSystem.devshell.mkShell {
           nix build .#admin-docker-image
           docker load < $PRJ_ROOT/result
           docker tag ${admin-image}:latest ${admin-image}:$(git rev-parse --short HEAD)
+        '';
+      }
+      {
+        name = "web:image";
+        category = "docker";
+        help = "build and load the web docker image";
+        command = ''
+          nix build .#web-docker-image
+          docker load < $PRJ_ROOT/result
+          docker tag ${web-image}:latest ${web-image}:$(git rev-parse --short HEAD)
         '';
       }
     ];
