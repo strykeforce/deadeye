@@ -1,18 +1,17 @@
 # Deadeye Server Installation {#sect_deployment}
 
+> [!WARNING]
+> This installation method is deprecated in favor of running Deadeye in
+> Docker on vision coprocessors. See Docker installation and usage
+> [instructions](https://github.com/strykeforce/deadeye/blob/main/docker/README.md).
+
 We use [Ansible](https://docs.ansible.com) to automate the deployment of
 the Deadeye system and its prerequisite development tools and libraries.
 Alternatively, you can install each of the Deadeye Server components
 manually.
 
-::: note
-::: title
-Note
-:::
-
 While the Deadeye server software can be installed on any Linux system,
 these Ansible playbooks have only been tested on Ubuntu 18.04 and up.
-:::
 
 ## Prerequisites
 
@@ -20,18 +19,18 @@ Ensure the following prerequisites are satisfied before installing the
 Deadeye server software. Here, *deployment host* is the computer you are
 running Ansible from (i.e. your development laptop).
 
-1.  Your has a connection to the internet.
-2.  The [strykeforce/deadeye
+1. Your has a connection to the internet.
+2. The [strykeforce/deadeye
     repository](https://github.com/strykeforce/deadeye) has been cloned
     to the deployment host.
-3.  Make sure you\'ve got **Python** and `pip`{.interpreted-text
+3. Make sure you\'ve got **Python** and `pip`{.interpreted-text
     role="command"}, and both are available from the command line on the
-    deployment host. Help can be found
-    [here](https://pipenv.pypa.io/en/latest/install/#make-sure-you-ve-got-python-pip).
-4.  The following build tools are installed on the deployment host:
-    -   [Node.js](https://nodejs.org/en/download/)
-    -   [Poetry](https://python-poetry.org)
-    -   [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
+    deployment host. Help can be found in the
+    [pip documentation](https://pipenv.pypa.io/en/latest/install/#make-sure-you-ve-got-python-pip).
+4. The following build tools are installed on the deployment host:
+    - [Node.js](https://nodejs.org/en/download/)
+    - [Poetry](https://python-poetry.org)
+    - [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
 
 ## Server Inventory
 
@@ -53,8 +52,8 @@ configured the way we want and provision the desired unit (deadeye-c, in
 this example):
 
 ``` console
-$ cd deadeye/ansible
-$ ansible-playbook -i inventory.yaml provision.yaml -l deadeye-c
+cd deadeye/ansible
+ansible-playbook -i inventory.yaml provision.yaml -l deadeye-c
 ```
 
 ## Deadeye Software Deployment
@@ -86,6 +85,6 @@ hosts:
 To actually start the build and installation, run:
 
 ``` console
-$ cd deadeye/ansible
-$ ansible-playbook -i inventory.yaml deploy.yaml -l deadeye-c
+cd deadeye/ansible
+ansible-playbook -i inventory.yaml deploy.yaml -l deadeye-c
 ```

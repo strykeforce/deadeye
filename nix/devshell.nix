@@ -1,16 +1,20 @@
 { pkgs, perSystem }:
 perSystem.devshell.mkShell {
 
-  packages = [
-    pkgs.ninja
-    pkgs.pkg-config
-    pkgs.python3
-    perSystem.uv2nix.uv-bin
-  ]
-  ++ pkgs.lib.optionals pkgs.stdenv.isLinux [
-    pkgs.systemd
-    pkgs.libgpiod_1
-  ];
+  packages =
+    with pkgs;
+    [
+      mdbook
+      ninja
+      pkg-config
+      python3
+      zulu17
+      perSystem.uv2nix.uv-bin
+    ]
+    ++ pkgs.lib.optionals pkgs.stdenv.isLinux [
+      pkgs.systemd
+      pkgs.libgpiod_1
+    ];
 
   packagesFrom = [
     perSystem.self.daemon-deadeyed
@@ -32,6 +36,10 @@ perSystem.devshell.mkShell {
       }
       {
         name = "PYTHONPATH";
+        unset = true;
+      }
+      {
+        name = "JAVA_HOME";
         unset = true;
       }
     ]
@@ -111,6 +119,58 @@ perSystem.devshell.mkShell {
           nix build .#web-docker-image
           docker load < $PRJ_ROOT/result
           docker tag ${web-image}:latest ${web-image}:$(git rev-parse --short HEAD)
+        '';
+      }
+      {
+        name = "docs:javadoc";
+        category = "documentation";
+        help = "build Java client documentation";
+        command = ''
+          pushd $PRJ_ROOT/client
+          ./gradlew  --no-daemon javadoc
+          popd
+        '';
+      }
+      {
+        name = "docs:mdbook";
+        category = "documentation";
+        help = "build documentation";
+        command = ''
+          pushd $PRJ_ROOT/docs
+          mdbook build
+          popd
+        '';
+      }
+      {
+        name = "docs:publish";
+        category = "documentation";
+        help = "publish documentation to https://strykeforce.github.io/deadeye/";
+        command = ''
+          docs:javadoc
+          docs:mdbook
+          pushd $PRJ_ROOT/docs
+          TMPDIR=$(mktemp -d)
+          git worktree add $TMPDIR gh-pages
+          rm -rf $TMPDIR/*
+          cp -rp book/* $TMPDIR
+          cp -rp ../client/build/docs/javadoc $TMPDIR
+          cd $TMPDIR \
+          && git add --all \
+          && git commit --message="deployed by $USER" \
+          && git push origin gh-pages
+          git worktree remove $TMPDIR
+          rm -rf $TMPDIR
+          popd
+        '';
+      }
+      {
+        name = "docs:preview";
+        category = "documentation";
+        help = "preview the documentation in a browser";
+        command = ''
+          pushd $PRJ_ROOT/docs/book
+          python -m http.server -b 127.0.0.1
+          popd
         '';
       }
     ];
